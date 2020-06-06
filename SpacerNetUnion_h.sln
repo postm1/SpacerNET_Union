@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SpacerNetUnion_h", "SpacerNetUnion_h\SpacerNetUnion_h.vcxproj", "{EE974C79-03DE-47FB-AD8B-7F77985E428B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		G1 Debug|x86 = G1 Debug|x86
+		G1 Release|x86 = G1 Release|x86
+		G1A Debug|x86 = G1A Debug|x86
+		G1A Release|x86 = G1A Release|x86
+		G2 Debug|x86 = G2 Debug|x86
+		G2 Release|x86 = G2 Release|x86
+		G2A Debug|x86 = G2A Debug|x86
+		G2A Release|x86 = G2A Release|x86
+		MP Debug|x86 = MP Debug|x86
+		MP Release|x86 = MP Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G1 Debug|x86.ActiveCfg = G1 Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G1 Debug|x86.Build.0 = G1 Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G1 Release|x86.ActiveCfg = G1 Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G1 Release|x86.Build.0 = G1 Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G1A Debug|x86.ActiveCfg = G1A Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G1A Debug|x86.Build.0 = G1A Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G1A Release|x86.ActiveCfg = G1A Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G1A Release|x86.Build.0 = G1A Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G2 Debug|x86.ActiveCfg = G2 Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G2 Debug|x86.Build.0 = G2 Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G2 Release|x86.ActiveCfg = G2 Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G2 Release|x86.Build.0 = G2 Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G2A Debug|x86.ActiveCfg = G2A Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G2A Debug|x86.Build.0 = G2A Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G2A Release|x86.ActiveCfg = G2A Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.G2A Release|x86.Build.0 = G2A Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.MP Debug|x86.ActiveCfg = MP Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.MP Debug|x86.Build.0 = MP Debug|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.MP Release|x86.ActiveCfg = MP Release|Win32
+		{EE974C79-03DE-47FB-AD8B-7F77985E428B}.MP Release|x86.Build.0 = MP Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
