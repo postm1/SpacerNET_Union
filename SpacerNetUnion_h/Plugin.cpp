@@ -6,16 +6,24 @@ namespace GOTHIC_ENGINE {
   // TO DO
   // Your code ...
 
+	MyPrint print;
+	PFXManager pfxManager;
+	SpacerApp theApp;
+	KeysManager keys;
+
+
   void Game_Entry() {
   }
 
   void Game_Init() {
+	  theApp.Init();
   }
 
   void Game_Exit() {
   }
 
   void Game_Loop() {
+	  theApp.PluginLoop();
   }
 
   // Information about current saving or loading world

@@ -2,7 +2,16 @@
 // Add your headers this
 
 // Automatically generated block
+
 #pragma region Includes
+#include "Macros.h"
+#include "Enums.h"
+#include "TSTACKTYPE.h"
+#include "MyPrint.h"
+#include "CSettings.h"
+#include "KeysManager.h"
+#include "PFXManager.h"
+#include "SpacerApp.h"
 #include "Plugin.h"
 #pragma endregion
 

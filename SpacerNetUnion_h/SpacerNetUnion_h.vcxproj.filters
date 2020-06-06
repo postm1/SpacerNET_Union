@@ -214,6 +214,36 @@
     <Filter Include="Engine SDK\4. Gothic II NoTR\Overloads">
       <UniqueIdentifier>{225cc81e-eae0-432b-9f39-e93512644977}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Headers">
+      <UniqueIdentifier>{b3994c6c-202a-44f3-b804-dcaa5ec2fb9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Interchange">
+      <UniqueIdentifier>{c75f4b87-a39d-4c81-a4fd-4f6696865f5b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Utils">
+      <UniqueIdentifier>{1384e0ba-3dc0-469e-be84-f5c1331f099a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Utils\MyPrint">
+      <UniqueIdentifier>{cd0b772f-6d00-4d5f-bfd5-d98f1e567614}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main">
+      <UniqueIdentifier>{f40bf72d-7383-4c98-883f-ccfe155cad44}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\SpacerApp">
+      <UniqueIdentifier>{f5bbf72e-62a1-421b-9a43-b786c9c5bad2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Settings">
+      <UniqueIdentifier>{007d17de-fa94-4059-82c8-0f65c0782b02}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\Render">
+      <UniqueIdentifier>{9cec7af9-2864-49c0-b786-2511de776ea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\Movement">
+      <UniqueIdentifier>{b5c470ef-02a0-4dc4-85ed-6c7b588938a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\SpacerApp\Misc">
+      <UniqueIdentifier>{b08a80da-663a-4266-81d0-1f338931bc57}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2776,6 +2806,93 @@
     </ClInclude>
     <ClInclude Include="Plugin.cpp">
       <Filter>Plugin\Workspace\Plugin</Filter>
+    </ClInclude>
+    <ClInclude Include="Enums.h">
+      <Filter>Plugin\Workspace\Plugin\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Macros.h">
+      <Filter>Plugin\Workspace\Plugin\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="TSTACKTYPE.h">
+      <Filter>Plugin\Workspace\Plugin\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="Interchange.cpp">
+      <Filter>Plugin\Workspace\Plugin\Interchange</Filter>
+    </ClInclude>
+    <ClInclude Include="Export.cpp">
+      <Filter>Plugin\Workspace\Plugin\Interchange</Filter>
+    </ClInclude>
+    <ClInclude Include="MyPrint.h">
+      <Filter>Plugin\Workspace\Plugin\Utils\MyPrint</Filter>
+    </ClInclude>
+    <ClInclude Include="MyPrint.cpp">
+      <Filter>Plugin\Workspace\Plugin\Utils\MyPrint</Filter>
+    </ClInclude>
+    <ClInclude Include="SpacerApp.h">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp</Filter>
+    </ClInclude>
+    <ClInclude Include="CSettings.h">
+      <Filter>Plugin\Workspace\Plugin\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="CSettings.cpp">
+      <Filter>Plugin\Workspace\Plugin\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="KeysManager.h">
+      <Filter>Plugin\Workspace\Plugin\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="KeysManager.cpp">
+      <Filter>Plugin\Workspace\Plugin\Settings</Filter>
+    </ClInclude>
+    <ClInclude Include="PFXManager.h">
+      <Filter>Plugin\Workspace\Plugin\Main\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="PFXManager.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Vob.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Spacer_Init.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Spacer_Loop.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.cpp">
+      <Filter>Plugin\Workspace\Plugin\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="World.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="VobManipulator.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Lists.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="TreeHierarchy.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Trigger.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="CreateVobs.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Waynet.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="NamesGenerator.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="SpacerApp.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp</Filter>
+    </ClInclude>
+    <ClInclude Include="API_Implementation.cpp">
+      <Filter>Plugin\Workspace\Plugin\Utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

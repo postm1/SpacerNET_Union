@@ -3,3 +3,6 @@
 // User API for zCSkyControler
 // Add your methods here
 
+
+
+static zCSkyControler*		GetActiveSkyControler() { return s_activeSkyControler; };

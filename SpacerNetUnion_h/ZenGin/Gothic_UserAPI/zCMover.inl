@@ -3,3 +3,6 @@
 // User API for zCMover
 // Add your methods here
 
+
+
+int						GetActKeyframe() const { return actKeyframe; };
