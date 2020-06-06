@@ -62,8 +62,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 		print.Init();
-		//RX_FIX
-		//LoadMat();
+		LoadMat();
 
 		auto enableInterface = (voidFuncPointer)GetProcAddress(theApp.module, "Form_EnableInterface");
 

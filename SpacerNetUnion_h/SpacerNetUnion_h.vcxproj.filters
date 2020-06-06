@@ -244,6 +244,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\SpacerApp\Misc">
       <UniqueIdentifier>{b08a80da-663a-4266-81d0-1f338931bc57}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\Materials">
+      <UniqueIdentifier>{bca999c4-7893-4640-9026-171b2995292a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2893,6 +2896,21 @@
     </ClInclude>
     <ClInclude Include="API_Implementation.cpp">
       <Filter>Plugin\Workspace\Plugin\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Play.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="Spacer_Hooks.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp</Filter>
+    </ClInclude>
+    <ClInclude Include="zCBinTree3DS.h">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="zCBinTree3DS.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="zProgMesh.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

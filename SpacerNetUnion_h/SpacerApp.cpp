@@ -425,7 +425,6 @@ namespace GOTHIC_ENGINE {
 			zVEC3 ray00, ray, p;
 			cam->camMatrixInv.GetTranslation(ray00);
 			p.n[VZ] = 1;
-			///RX_FIX
 			cam->BackProject(ax, ay, p);				// p im camSpace
 			p = cam->camMatrixInv * p;					// p im world(obj)Space  
 			ray = p - ray00;

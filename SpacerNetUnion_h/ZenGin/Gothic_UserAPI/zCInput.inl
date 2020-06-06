@@ -3,7 +3,6 @@
 // User API for zCInput
 // Add your methods here
 
-//RX_FIX
 void ClearKey(int key);
 
 

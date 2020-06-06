@@ -48,8 +48,7 @@ namespace GOTHIC_ENGINE {
 
 				if (theApp.g_bIsPlayingGame)
 				{
-					//RX_FIX
-					//theApp.GameLoop();
+					theApp.GameLoop();
 				}
 
 				//Base render
@@ -382,6 +381,7 @@ namespace GOTHIC_ENGINE {
 
 			view->SetFontColor(GFX_RED);
 			view->Print(40, 1750, GetLang("UNION_NOWORLD"));
+
 		}
 
 

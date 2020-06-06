@@ -18,6 +18,10 @@ namespace GOTHIC_ENGINE {
 		return angle;
 	}
 
+	void ClearLMB()
+	{
+		*(int*)0x8D1668 = 0;
+	}
 
 	void __cdecl PlaySoundGame(class zSTRING &)
 	{
@@ -84,10 +88,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	void ClearLMB()
-	{
-		*(int*)0x8D1668 = 0;
-	}
+	
 
 
 	int childrenCountVob = 0;
@@ -196,9 +197,8 @@ namespace GOTHIC_ENGINE {
 
 		wsPoint1 = v1->GetPositionWorld();
 		wsPoint2 = v2->GetPositionWorld();
-		//RX_FIX
-		//csPoint1 = cam->Transform(wsPoint1);
-		//csPoint2 = cam->Transform(wsPoint2);
+		csPoint1 = cam->Transform(wsPoint1);
+		csPoint2 = cam->Transform(wsPoint2);
 		Alg_ClipAtZ0(csPoint1, csPoint2);
 
 		if (csPoint1[VZ] >= 0)
@@ -581,9 +581,6 @@ namespace GOTHIC_ENGINE {
 
 		return false;
 	}
-
-
-
 
 	CString GetLang(CString key)
 	{

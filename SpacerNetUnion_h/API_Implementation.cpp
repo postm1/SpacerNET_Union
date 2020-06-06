@@ -28,6 +28,32 @@ namespace GOTHIC_ENGINE {
 		return camMatrix * point;
 	}
 
+	void zMAT4::GetTranslation(zVEC3& t) const
+	{
+		t.n[VX] = v[0][3];
+		t.n[VY] = v[1][3];
+		t.n[VZ] = v[2][3];
+	};
+
+
+#if ENGINE == Engine_G1
+#define ISUPPER3X3ORTHONORMAL 0x00505E40
+#elif ENGINE == Engine_G1A
+#define ISUPPER3X3ORTHONORMAL 0x00519D90
+#elif ENGINE == Engine_G2
+#define ISUPPER3X3ORTHONORMAL 0x00512C80
+#elif ENGINE == Engine_G2A
+#define ISUPPER3X3ORTHONORMAL 0x00515A50
+#endif
+
+
+	int zMAT4::IsUpper3x3Orthonormal() const
+	{
+		XCALL(ISUPPER3X3ORTHONORMAL);
+	}
+
+
+
 	inline void zCCamera::BackProject(const int xscr, const int yscr, zVEC3& p) const {
 		// coord-trafo: screen->3d
 		// Assumption : p.n[VZ] must have been set before call !

@@ -12,6 +12,7 @@
 #include "KeysManager.h"
 #include "PFXManager.h"
 #include "SpacerApp.h"
+#include "zCBinTree3DS.h"
 #include "Plugin.h"
 #pragma endregion
 

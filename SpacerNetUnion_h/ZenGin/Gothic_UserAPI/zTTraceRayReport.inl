@@ -3,3 +3,4 @@
 // User API for zTTraceRayReport
 // Add your methods here
 
+void		Clear() { memset(this, 0, sizeof(*this)); };
