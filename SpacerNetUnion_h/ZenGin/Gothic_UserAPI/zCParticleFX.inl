@@ -3,3 +3,5 @@
 // User API for zCParticleFX
 // Add your methods here
 
+
+zCParticleFX* zCParticleFX_Hook();

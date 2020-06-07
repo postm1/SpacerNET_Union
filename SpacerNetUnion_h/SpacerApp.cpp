@@ -310,7 +310,7 @@ namespace GOTHIC_ENGINE {
 		{
 			zCVisual* visual = foundVob->GetVisual();
 
-			if (visual && (visual->GetVisualName().Search(".PFX", 1, false) == -1 || visual->GetVisualName().Search(".pfx", 1, false) == -1))
+			if (visual && (visual->GetVisualName().Search(".PFX", 1) == -1 || visual->GetVisualName().Search(".pfx", 1) == -1))
 			{
 				foundVob = NULL;
 			}
@@ -448,8 +448,8 @@ namespace GOTHIC_ENGINE {
 					&& !dynamic_cast<zCVobLevelCompo*>(vob)
 					&& !dynamic_cast<zCZone*>(vob)
 					&& vob->GetVisual()
-					&& vob->GetVisual()->GetVisualName().Search(".PFX", 1, false) == -1
-					&& vob->GetVisual()->GetVisualName().Search(".pfx", 1, false) == -1
+					&& vob->GetVisual()->GetVisualName().Search(".PFX", 1) == -1
+					&& vob->GetVisual()->GetVisualName().Search(".pfx", 1) == -1
 					&& vob != currentVobRender
 					&& vob != pfxManager.testVob
 					)

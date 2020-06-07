@@ -50,8 +50,8 @@ namespace GOTHIC_ENGINE {
 				dynamic_cast< zCCamTrj_KeyFrame*>	(vob) ||
 				dynamic_cast< zCVobScreenFX*	>	(vob) ||
 				dynamic_cast< zCPFXControler*	>	(vob) ||
-				(visualName.Search(INVISIBLE_FILEPREFIX, 1, false) >= 0) ||
-				(visualName.Search("VOBBOX", 1, false) >= 0)
+				(visualName.Search(INVISIBLE_FILEPREFIX, 1) >= 0) ||
+				(visualName.Search("VOBBOX", 1) >= 0)
 				)
 			{
 				cmd << Col16(CMD_RED) << "Fix visual for: " << GetVobName(vob) << endl;

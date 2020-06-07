@@ -3,3 +3,4 @@
 // User API for zCBspTree
 // Add your methods here
 
+void AddVob_Hook(zCVob* vob);

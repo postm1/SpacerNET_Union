@@ -5,3 +5,4 @@
 
 
 inline zBOOL	HasWay(zCWaypoint *w1, zCWaypoint *w2) const { return (w1->HasWay(w2) != NULL); };
+void Unarchive_Hook(zCArchiver& arc);

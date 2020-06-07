@@ -3,3 +3,6 @@
 // User API for zCCSCamera
 // Add your methods here
 
+
+void Unarchive_Hook(zCArchiver &);
+zCVob* GetPlayerVob_Hook(zCVob* vob);

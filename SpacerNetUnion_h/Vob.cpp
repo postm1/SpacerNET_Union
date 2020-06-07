@@ -123,7 +123,7 @@ namespace GOTHIC_ENGINE {
 
 		//pVob->Release();
 
-		if (visual.Search("SWORD", 1, false) != -1)
+		if (visual.Search("SWORD", 1) != -1)
 		{
 			//pVob->RotateLocalX(90);
 		}
@@ -155,7 +155,7 @@ namespace GOTHIC_ENGINE {
 			);
 
 
-			if (theApp.currentVobRender->GetVobName().Search(".TGA", 1, false) == -1)
+			if (theApp.currentVobRender->GetVobName().Search(".TGA", 1) == -1)
 			{
 				theApp.currentVobRender->RotateLocalY(0.1 * ztimer->frameTimeFloat);
 				//currentVob->RotateLocalZ(0.04 * ztimer->frameTimeFloat);

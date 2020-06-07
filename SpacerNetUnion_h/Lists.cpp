@@ -45,7 +45,7 @@ namespace GOTHIC_ENGINE {
 		//MOBNAME_SIGH
 		for (int i = 0; i < parser->symtab.table.GetNumInList(); i++)
 		{
-			if (parser->symtab.table.GetSafe(i)->name.Search("MOBNAME_", 1, false) != -1)
+			if (parser->symtab.table.GetSafe(i)->name.Search("MOBNAME_", 1) != -1)
 			{
 				mobNames.Insert(parser->symtab.table.GetSafe(i)->name);
 			}

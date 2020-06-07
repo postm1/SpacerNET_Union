@@ -89,7 +89,7 @@ namespace GOTHIC_ENGINE {
 
 
 	typedef void(*sendIniValue)(char*);
-
+	typedef void(*sendKey)(int);
 	typedef void(*addClassNode)(int);
 
 	struct SpacerApp;

@@ -52,5 +52,6 @@ zTAnimationMode		GetVisualAniMode()	const { return m_AniMode; };
 zCClassDef*			GetVisualClass() const { return (visual ? visual->GetClassDef() : 0); };
 
 void SetVobPresetName_Hook(class zSTRING const &presetName);
+void Archive_Hook(zCArchiver&);
 
 

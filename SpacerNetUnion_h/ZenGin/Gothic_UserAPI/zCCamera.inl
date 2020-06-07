@@ -10,6 +10,7 @@ zVEC3 Transform(const zVEC3& point);
 inline void BackProject(const int xscr, const int yscr, zVEC3& p) const;
 
 
+
 // { connectedVob = vob; };
 //zCVob* GetVob(); // const;// { return connectedVob; };
 //zVEC3 Transform(const zVEC3& point);// const { return camMatrix * point; };	// cam should be 'acitve'

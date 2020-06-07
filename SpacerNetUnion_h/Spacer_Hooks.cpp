@@ -3,106 +3,10 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
-	typedef void(*sendKey)(int);
-
-	// ESC key crashfix
-	int __fastcall Ivk_CGameManager_HandleEvent(CGameManager*, void*, int);
-	CInvoke <int(__thiscall *) (CGameManager*, int)> pIvk_CGameManager_HandleEvent(0x0042AD50, Ivk_CGameManager_HandleEvent, IVK_AUTO);
-	int __fastcall Ivk_CGameManager_HandleEvent(CGameManager* _this, void*, int key)
-	{
-		static auto keySender = (sendKey)GetProcAddress(theApp.module, "AcceptKey");
-
-		//keys.SetKeyString(key);
-
-		keySender(key);
-
-		if (key == KEY_ESCAPE)
-			return FALSE;
-
-		return pIvk_CGameManager_HandleEvent(_this, key);
-	}
-
-	// CS Camera EV_PLAY crashfix
-	int __fastcall Ivk_CheckUnderWaterFX(zCAICamera*, void*);
-	CInvoke <int(__thiscall *) (zCAICamera*)> pInvk_CheckUnderWaterFX(0x004BD2E0, Ivk_CheckUnderWaterFX, IVK_AUTO);
-	int __fastcall Ivk_CheckUnderWaterFX(zCAICamera*, void*)
-	{
-		return FALSE;
-	}
-
-	// Def vobname Fix
-	HOOK Ivk_zCVob_SetVobPresetName   AS(0x005FE940, &zCVob::SetVobPresetName_Hook);
-	void zCVob::SetVobPresetName_Hook(class zSTRING const &presetName)
-	{
-		if (!vobPresetName) vobPresetName = zNEW(zSTRING(presetName));
-		else (*vobPresetName) = presetName;
-	}
-
-	// Start screen fix
-	void __fastcall Invk_InitScreen_Open(CGameManager*, void*);
-	CInvoke <void(__thiscall *) (CGameManager*)> pInvk_InitScreen_Open(0x00425F60, Invk_InitScreen_Open, IVK_AUTO);
-	void __fastcall Invk_InitScreen_Open(CGameManager*, void*)
-	{
-		return;
-	}
-
-	// VOB visual fix
-	void __fastcall Invk_zCParticleFX(zCParticleFX* _this, void*);
-	CInvoke<void(__thiscall*)(zCParticleFX*)> pInvk_zCParticleFX(0x005ACF70, Invk_zCParticleFX);
-	void __fastcall Invk_zCParticleFX(zCParticleFX* _this, void*)
-	{
-		pInvk_zCParticleFX(_this);
-		_this->dontKillPFXWhenDone = TRUE;
-	}
-
-	// PFX never die FIX
-	void __fastcall Invk_zCVobArchive(zCVob* _this, void*, class zCArchiver &);
-	CInvoke<void(__thiscall*)(zCVob* _this, class zCArchiver &)> pzCVobArchive(0x005FF140, Invk_zCVobArchive);
-	void __fastcall Invk_zCVobArchive(zCVob* _this, void*, class zCArchiver & arc)
-	{
-		if (zDYNAMIC_CAST<zCParticleFX>(_this->GetVisual()))
-			zDYNAMIC_CAST<zCParticleFX>(_this->GetVisual())->m_bVisualNeverDies = TRUE;
-		pzCVobArchive(_this, arc);
-	}
-
-	// Save world Waynet FIX
-	int __fastcall Invk_oCWorld_SaveWorld(oCWorld* _this, void*, class zSTRING const & fileName, enum zCWorld::zTWorldSaveMode saveMode, int writeBinary, int _saveLevelMesh);
-	CInvoke<int(__thiscall*)(oCWorld*, class zSTRING const &, enum zCWorld::zTWorldSaveMode, int, int)> poCWorldSave(0x0077FA50, Invk_oCWorld_SaveWorld);
-	int __fastcall Invk_oCWorld_SaveWorld(oCWorld* _this, void*, class zSTRING const & fileName, enum zCWorld::zTWorldSaveMode saveMode, int writeBinary, int _saveLevelMesh)
-	{
-		if (_this->GetWayNet())
-		{
-			if (_this->GetWayNet()) _this->GetWayNet()->UpdateVobDependencies();
-			_this->GetWayNet()->ClearVobDependencies();
-		}
-
-		int result = poCWorldSave(_this, fileName, saveMode, writeBinary, _saveLevelMesh);
 
 
-		if (_this->GetWayNet()) _this->GetWayNet()->CreateVobDependencies(_this);
-
-		return result;
-	}
-
-	// ‘икс вейнет
-	//0x007B2200 public: virtual void __thiscall zCWayNet::Unarchive(class zCArchiver &)
-	void __fastcall zCWayNet_Unarchive(zCWayNet* _this, void*, class zCArchiver &);
-	CInvoke <void(__thiscall*) (zCWayNet* _this, class zCArchiver & arc)> pzCWayNet_Unarchive(0x007B2200, zCWayNet_Unarchive, IVK_AUTO);
-	void __fastcall zCWayNet_Unarchive(zCWayNet* _this, void*, class zCArchiver & arc)
-	{
-		pzCWayNet_Unarchive(_this, arc);
-
-		_this->CreateVobDependencies(_this->world);
-	}
-
-
-	void __fastcall Invk_InitScreen_Close(CGameManager*, void*);
-	CInvoke <void(__thiscall *) (CGameManager*)> pInvk_InitScreen_Close(0x00426330, Invk_InitScreen_Close, IVK_AUTO);
-	void __fastcall Invk_InitScreen_Close(CGameManager*, void*)
-	{
-		return;
-	}
-
+	
+	/*
 
 	//0x00582800 public: virtual int __thiscall zCModel::TraceRay(class zVEC3 const &,class zVEC3 const &,int,struct zTTraceRayReport &)
 	int __fastcall Invk_TraceRay(zCModel* _this, void*, class zVEC3 const &, class zVEC3 const &, int, struct zTTraceRayReport &);
@@ -137,7 +41,7 @@ namespace GOTHIC_ENGINE {
 		return &(s_aoCollReportList[s_iCurrentCollReport++]);
 	}
 
-
+	*/
 
 	//0x005FFC70 protected: virtual void __thiscall zCVob::Unarchive(class zCArchiver &)
 	void __fastcall Invk_zCVobUnarchive(zCVob* _this, void*, class zCArchiver &);
@@ -189,55 +93,12 @@ namespace GOTHIC_ENGINE {
 		RecalcWPBBox(_this);
 	}
 
-	//убивает определенные триггеры, которые запускаютс€ автоматом, иначе в игре они будут не в нужном состо€нии
-	void __fastcall Invk_PostLoad(zCTriggerWorldStart*, void*);
-	CInvoke <void(__thiscall *) (zCTriggerWorldStart*)> pInvk_PostLoad(0x0061A4E0, Invk_PostLoad, IVK_AUTO);
-	void __fastcall Invk_PostLoad(zCTriggerWorldStart*, void*)
-	{
-
-	}
-
-	//0x006C2630 public: virtual void __thiscall oCGame::CloseSavescreen(void)
-	void __fastcall Invk_CloseSavescreen(oCGame*, void*);
-	CInvoke <void(__thiscall *) (oCGame*)> pInvk_CloseSavescreen(0x006C2630, Invk_CloseSavescreen, IVK_AUTO);
-	void __fastcall Invk_CloseSavescreen(oCGame*, void*)
-	{
-
-	}
-
-	//0x006C2250 public: virtual void __thiscall oCGame::OpenSavescreen(bool)
-	void __fastcall Invk_OpenSavescreen(oCGame*, void*, bool);
-	CInvoke <void(__thiscall *) (oCGame*, bool)> pInvk_OpenSavescreen(0x006C2250, Invk_OpenSavescreen, IVK_AUTO);
-	void __fastcall Invk_OpenSavescreen(oCGame*, void*, bool)
-	{
-
-	}
+	
 
 
 
+	/*
 
-	// ’ук на камеру, чтобы она летала по кадрам в инструменте работы с камерой
-	//0x004BFBC0 public: virtual void __thiscall zCCSCamera::Unarchive(class zCArchiver &)
-	void __fastcall Invk_zCCSCamera_Unarchive(zCCSCamera* _this, void*, class zCArchiver &);
-	CInvoke <void(__thiscall*) (zCCSCamera* _this, class zCArchiver &)> pInvk_zCCSCamera_Unarchive(0x004BFBC0, Invk_zCCSCamera_Unarchive, IVK_AUTO);
-	void __fastcall Invk_zCCSCamera_Unarchive(zCCSCamera* _this, void*, class zCArchiver & arch)
-	{
-		pInvk_zCCSCamera_Unarchive(_this, arch);
-
-		if (!arch.InProperties())
-		{
-			_this->SetSleeping(FALSE);
-		}
-	}
-
-
-	//”бивает внутриигровое меню
-	void __fastcall Invk_InitScreen_Menu(CGameManager* _this, void*);
-	CInvoke <void(__thiscall*) (CGameManager* _this)> pInvk_InitScreen_Menu(0x00426210, Invk_InitScreen_Menu, IVK_AUTO);
-	void __fastcall Invk_InitScreen_Menu(CGameManager* _this, void*)
-	{
-		return;
-	}
 
 
 	//ѕроверка на инициализацию парсера дл€ oCVisualFX, в спейсере именной такой код
@@ -253,86 +114,7 @@ namespace GOTHIC_ENGINE {
 		pInitParser();
 	}
 
-
-
-
-	// ”бивает запуск контроллера PFX в спейсере
-	//0x006148B0 public: virtual void __thiscall zCPFXControler::PostLoad(void)
-	void __fastcall zCPFXControler_PostLoad(zCPFXControler* _this, void*);
-	CInvoke <void(__thiscall*) (zCPFXControler* _this)> pzCPFXControler_PostLoad(0x006148B0, zCPFXControler_PostLoad, IVK_AUTO);
-	void __fastcall zCPFXControler_PostLoad(zCPFXControler* _this, void*)
-	{
-		return;
-	}
-	//0x00614960 public: virtual void __thiscall zCPFXControler::OnUntrigger(class zCVob *,class zCVob *)
-	void __fastcall zCPFXControler_OnUntrigger(zCPFXControler* _this, void*, class zCVob *, class zCVob *);
-	CInvoke <void(__thiscall*) (zCPFXControler* _this, class zCVob *, class zCVob *)> pzCPFXControler_OnUntrigger(0x00614960, zCPFXControler_OnUntrigger, IVK_AUTO);
-	void __fastcall zCPFXControler_OnUntrigger(zCPFXControler* _this, void*, class zCVob* otherVob, class zCVob* vobInstigator)
-	{
-		zCParticleFX *pfx = dynamic_cast<zCParticleFX*>(_this->GetVisual());
-		if (!pfx) return;
-
-		pfx->StopEmitterOutput();
-		// если убрать визуал, то PPX-дочерние не будут показывать (динамеческие, которые добавл€ютс€ при активации PFX)
-		//_this->SetVisual(0);
-	}
-
-
-
-	//¬ключает добавление зон в мир
-	//0x0061FA40 public: __thiscall zCWorld::zCWorld(void)
-	zCWorld* __fastcall zCWorld_Hooked(zCWorld* _this, void*);
-	CInvoke <zCWorld* (__thiscall*) (zCWorld* _this)> pzCWorld_Hooked(0x0061FA40, zCWorld_Hooked, IVK_AUTO);
-	zCWorld* __fastcall zCWorld_Hooked(zCWorld* _this, void*)
-	{
-		pzCWorld_Hooked(_this);
-		_this->addZonesToWorld = TRUE;
-		_this->SetWaveAnisEnabled(zoptions->ReadBool("SPACER", "zSpacerWaterAniEnabled", FALSE));
-		return _this;
-	}
-
-	// ‘икс звука после сохранени€ звукового воба
-	//0x0063E3D0 protected: virtual void __thiscall zCVobSound::Archive(class zCArchiver &)
-	void __fastcall zCVobSound_Archive(zCVobSound* _this, void*, class zCArchiver &);
-	CInvoke <void(__thiscall*) (zCVobSound* _this, class zCArchiver & arc)> pzCVobSound_Archive(0x0063E3D0, zCVobSound_Archive, IVK_AUTO);
-	void __fastcall zCVobSound_Archive(zCVobSound* _this, void*, class zCArchiver & arc)
-	{
-		pzCVobSound_Archive(_this, arc);
-
-		if (arc.InProperties())
-		{
-			_this->StopSound();
-			_this->StartSound(TRUE);
-		};
-	}
-
-	// ‘икс звука после загрузки звукового воба
-	//0x0063E540 protected: virtual void __thiscall zCVobSound::Unarchive(class zCArchiver &)
-	void __fastcall zCVobSound_Unarchive(zCVobSound* _this, void*, class zCArchiver &);
-	CInvoke <void(__thiscall*) (zCVobSound* _this, class zCArchiver & arc)> pzCVobSound_Unarchive(0x0063E540, zCVobSound_Unarchive, IVK_AUTO);
-	void __fastcall zCVobSound_Unarchive(zCVobSound* _this, void*, class zCArchiver & arc)
-	{
-		pzCVobSound_Unarchive(_this, arc);
-
-		if (arc.InProperties())
-		{
-			_this->StopSound();
-			_this->StartSound(TRUE);
-		};
-	}
-
-
-
-	//0x00643F20 private: int __thiscall zCRnd_D3D::XD3D_InitPerDX(long,int,int,int,int)
-	int __fastcall XD3D_InitPerDX(zCRnd_D3D*, void*, long, int, int, int, int);
-	CInvoke <int(__thiscall *) (zCRnd_D3D*, long, int, int, int, int)> pXD3D_InitPerDX(0x00643F20, XD3D_InitPerDX, IVK_AUTO);
-	int __fastcall XD3D_InitPerDX(zCRnd_D3D* _this, void*, long flags, int x, int y, int bpp, int id)
-	{
-		int result = pXD3D_InitPerDX(_this, 0, x, y, bpp, id);
-		return result;
-	}
-
-
+	*/
 
 	// ”бирает лишний код в обработке звука по зонам, нужно дл€ спейсера
 	//0x0063E8D0 public: virtual void __thiscall zCVobSound::
@@ -362,27 +144,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	//0x00531040 public: void __thiscall zCBspTree::AddVob(class zCVob *)
-	void __fastcall AddVob(zCBspTree*, void*, class zCVob *);
-	CInvoke <void(__thiscall *) (zCBspTree*, class zCVob *)> pAddVob(0x00531040, AddVob, IVK_AUTO);
-	void __fastcall AddVob(zCBspTree* _this, void*, class zCVob * vob)
-	{
-		if (vob)
-		{
-			if (theApp.treeIsReady && !theApp.nextInsertBlocked)
-			{
-				if (vob->GetVobName() != "Vob_PFX_Editor")
-				{
-					OutFile("zCBspTree::AddVob: (" + AHEX32((uint)vob) + ") Parent: " + AHEX32(vob->GetParent()) + " NodesCount: " + A(ogame->GetWorld()->globalVobTree.CountNodes() - 1), false);
-					theApp.OnCreateVob(vob, theApp.selectNextVob);
-					theApp.selectNextVob = false;
-				}
-
-			}
-		}
-
-		pAddVob(_this, vob);
-	}
+	
 
 	//0x004BE400 public: static class zCVob * __cdecl zCCSCamera::GetPlayerVob(void)
 	zCVob * __cdecl zCCSCamera_GetPlayerVob(zCCSCamera*);

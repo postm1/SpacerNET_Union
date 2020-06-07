@@ -11,3 +11,5 @@ typedef zCListSort<oCItem>		oTVobListItems;
 oTVobList*				GetVobList() { return voblist; };
 oTVobListNpcs*			GetVobListNpcs() { return voblist_npcs; };
 oTVobListItems*			GetVobListItems() { return voblist_items; };
+
+int SaveWorld_Hook(zSTRING const & fileName, enum zCWorld::zTWorldSaveMode saveMode, int writeBinary, int _saveLevelMesh);

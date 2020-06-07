@@ -587,15 +587,13 @@ namespace GOTHIC_ENGINE {
 
 	void ClearLangStrings()
 	{
-
-		for (auto i = wordsMap.begin(); i < wordsMap.end; i++)
-		{
-			wordsMap.Remove(i->GetKey());
-		}
+		wordsMap.Clear();
 	}
 
 	CString GetLang(CString key)
 	{
+		//cmd << "Key: " << key << endl;
+
 		auto& foundPair = wordsMap[key];
 
 		CString result = "";

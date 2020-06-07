@@ -3,3 +3,6 @@
 // User API for zCAICamera
 // Add your methods here
 
+
+
+int CheckUnderWaterFX_Hook();

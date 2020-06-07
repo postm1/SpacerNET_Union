@@ -20,6 +20,7 @@
 #include "Waynet.cpp"
 #include "NamesGenerator.cpp"
 #include "Camera.cpp"
+#include "Common.cpp"
 #include "VobManipulator.cpp"
 #include "zCBinTree3DS.cpp"
 #include "zProgMesh.cpp"

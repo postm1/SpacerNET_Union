@@ -3,3 +3,5 @@
 // User API for oCGame
 // Add your methods here
 
+void CloseSavescreen_Hook();
+void OpenSavescreen_Hook(bool);

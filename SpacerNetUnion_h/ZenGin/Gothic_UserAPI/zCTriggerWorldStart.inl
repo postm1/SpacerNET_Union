@@ -3,3 +3,4 @@
 // User API for zCTriggerWorldStart
 // Add your methods here
 
+void PostLoad_Hook();
