@@ -138,6 +138,7 @@ namespace GOTHIC_ENGINE {
 
 		if (vob)
 		{
+			/*
 			if (dynamic_cast<zCVobLevelCompo*>(vob))
 			{
 				if (vob->GetVisual())
@@ -159,6 +160,7 @@ namespace GOTHIC_ENGINE {
 				str = str + "]";
 			}
 			else
+			*/
 			{
 				// generate the name of the item	
 				if (!vob->GetVobName().IsEmpty())
@@ -617,4 +619,17 @@ namespace GOTHIC_ENGINE {
 		return result;
 		
 	}
+
+	int GetZenLevelCompoCount()
+	{
+		zCArray<zCVob*> resultList;
+		zCWorld* world = ogame->GetWorld();
+
+		world->SearchVobListByClass(zCVobLevelCompo::classDef, resultList, 0);
+
+		zCVob* parentVob = NULL;
+
+		return resultList.GetNumInList();
+	}
 }
+

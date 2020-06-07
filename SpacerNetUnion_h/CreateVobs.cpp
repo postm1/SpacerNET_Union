@@ -27,21 +27,34 @@ namespace GOTHIC_ENGINE {
 
 
 		}
+		else if (dynamic_cast<zCVobLevelCompo*>(newVob))
+		{
+			newVob->SetCollDetDyn(FALSE);
+			newVob->SetCollDetStat(FALSE);
+
+			if (newVob->GetVobName().IsEmpty())
+			{ 
+				int num = GetZenLevelCompoCount();
+
+				newVob->SetVobName("LEVEL-VOB-" + ToStr num);
+			}
+			ogame->GetGameWorld()->AddVob(newVob);
+		}
 		else
 		{
 
 			zCVobWaypoint* pickedVobWaypont = dynamic_cast<zCVobWaypoint*>(parentVobBase);
-			oCItem* pItem = dynamic_cast<oCItem*>(parentVobBase);
+			oCItem* pItemParent = dynamic_cast<oCItem*>(parentVobBase);
 
 
 			// Вставляем в родителя, только если он не Вейпоинт и не итем, иначе ищем compoLevel и он будет родителем нового воба
-			if (parentVobBase && !pickedVobWaypont && !pItem)
+			if (parentVobBase && !pickedVobWaypont && !pItemParent)
 			{
 				ogame->GetGameWorld()->AddVobAsChild(newVob, parentVobBase->globalVobTreeNode);
 				//std::cout << "Union: Add new vob INTO parent: " << (uint)pickedVob << " Name: " << GetVobName(pickedVob) << std::endl;
 				//std::cout << "OnCopy insert in vob: " << newVob->GetVobName() << " from " << (int)pickedVob << std::endl;
 
-				OutFile("InsertIntoWorld: newVob: " + AHEX32((uint)newVob) + " parent: " + AHEX32((uint)parentVobBase), true);
+				OutFile("InsertIntoWorld: newVob: " + AHEX32((uint)newVob) + " parent: " + A GetVobName(parentVobBase), true);
 			}
 			else
 			{
@@ -50,29 +63,42 @@ namespace GOTHIC_ENGINE {
 
 				world->SearchVobListByClass(zCVobLevelCompo::classDef, resultList, 0);
 
+				zCVob* parentVob = NULL;
+
 				if (resultList.GetNumInList() > 0)
 				{
-					zCVob* parentVob = resultList.GetSafe(rand() % resultList.GetNumInList());
-
-					if (parentVob)
-					{
-						OutFile("InsertIntoWorld: newVob: " + AHEX32((uint)newVob) + " parent compo: " + AHEX32((uint)parentVob), true);
-
-						ogame->GetGameWorld()->AddVobAsChild(newVob, parentVob->globalVobTreeNode);
-						//std::cout << "Union: Add new vob with parent compo: " << (uint)parentVob << std::endl;
-					}
-					else
-					{
-						std::cout << "Union: no compo parent found: " << std::endl;
-
-						WriteLine("Union: No compoLevel parent was found!");
-					}
-
+					parentVob = resultList.GetSafe(rand() % resultList.GetNumInList());
 				}
 				else
 				{
-					std::cout << "Union: Can't add vob to parent!!! " << newVob->GetVobName() << std::endl;
+					parentVob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance("zCVobLevelCompo"));
+					parentVob->SetCollDetDyn(FALSE);
+					parentVob->SetCollDetStat(FALSE);
+					parentVob->SetVobName("LEVEL-VOB-0");
+					ogame->GetGameWorld()->AddVob(parentVob);
+					zRELEASE(parentVob);
 				}
+
+				if (parentVob)
+				{
+					OutFile("InsertIntoWorld: newVob: " + AHEX32((uint)newVob) + " parent zCVobLevelCompo: " + A GetVobName(parentVob), true);
+
+					ogame->GetGameWorld()->AddVobAsChild(newVob, parentVob->globalVobTreeNode);
+					//std::cout << "Union: Add new vob with parent compo: " << (uint)parentVob << std::endl;
+
+					/*
+					auto updateName = (onUpdateVobName)GetProcAddress(theApp.module, "UpdateVobName");
+					Stack_PushString(GetVobName(parentVob));
+					updateName((uint)parentVob);
+					*/
+				}
+				else
+				{
+					std::cout << "Union: no compo parent found: " << std::endl;
+
+					WriteLine("Union: No compoLevel parent was found!");
+				}
+
 
 
 			}

@@ -157,6 +157,7 @@ namespace GOTHIC_ENGINE {
 		extern KeysManager keys; \
 		extern CString GetLang(CString key); \
 		extern void ClearLangStrings(); \
+		extern int GetZenLevelCompoCount(); \
 
 	UAPI extern void   Stack_PushString(const char* v);
 	UAPI extern void   Stack_PushInt(int v);

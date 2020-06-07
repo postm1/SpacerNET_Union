@@ -530,9 +530,13 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("VOB_COPY", true))
 		{
-			print.PrintRed(GetLang("VOB_COPY_OK"));
-			theApp.vobToCopy = theApp.pickedVob;
-			theApp.isVobParentChange = false;
+			if (!dynamic_cast<zCVobLevelCompo*>(theApp.pickedVob))
+			{
+				print.PrintRed(GetLang("VOB_COPY_OK"));
+				theApp.vobToCopy = theApp.pickedVob;
+				theApp.isVobParentChange = false;
+			}
+			
 		}
 
 		if (keys.KeyPressed("VOB_CUT", true))
@@ -647,6 +651,7 @@ namespace GOTHIC_ENGINE {
 				if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
 
 				theApp.SetSelectedVob(NULL);
+				theApp.pickedWaypoint2nd = NULL;
 				print.PrintRed(GetLang("TOOL_UNSELECT"));
 				(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
 			}
@@ -696,7 +701,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-				if (keys.KeyPressed("VOB_DELETE"))
+				if (keys.KeyPressed("VOB_DELETE", true))
 				{
 					theApp.RemoveVob(pickedVob);
 				}
