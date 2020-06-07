@@ -84,7 +84,7 @@ namespace Gothic_II_Classic {
 
 #if USING_UNION_STRING_METHODS
 #if !UNPROTECT_ZSTRING_METHODS
-  protected:
+  public:
 #endif
 #endif
     // Own methods

@@ -84,7 +84,7 @@ namespace Gothic_I_Addon {
 
 #if USING_UNION_STRING_METHODS
 #if !UNPROTECT_ZSTRING_METHODS
-  protected:
+  public:
 #endif
 #endif
     // Own methods

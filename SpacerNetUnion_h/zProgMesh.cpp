@@ -206,9 +206,9 @@ namespace GOTHIC_ENGINE {
 				{
 					f->Read(line);
 
-					if (line.Search("#")>0)
+					if (line.Search("#", 1)>0)
 					{
-						if (line.Search("\"") >= 0)
+						if (line.Search("\"", 1) >= 0)
 						{
 							line.Delete("\"", zSTR_TO);
 							matName = line.PickWord(1, "\"", "\"");
@@ -216,15 +216,15 @@ namespace GOTHIC_ENGINE {
 						else
 						{
 							matName = line.PickWord(1, "=", "=");
-							matName.TrimLeft();
-							matName.TrimRight();
+							matName.TrimLeft(' ');
+							matName.TrimRight(' ');
 						};
 						line.Delete("#", zSTR_TO);
 						zSTRING idStr = line;
 
 						//zERR_MESSAGE(7, 0, "B: SPC: Configuration: MaterialFilter " + item->name + ", #" + zSTRING(item->id));
 						item = new spcCMatFilter;
-						item->Init(matName.ToChar(), idStr.ToInt());
+						item->Init(matName.ToChar(), idStr.ToInt32());
 						matFilterList.Insert(item);
 						//cmd << "LoadMatlib: " << matName.ToChar() << endl;
 						LoadMatlib(matName.ToChar());
@@ -259,9 +259,9 @@ namespace GOTHIC_ENGINE {
 				{
 					f->Read(line);
 
-					if (line.Search("#")>0)
+					if (line.Search("#", 1)>0)
 					{
-						if (line.Search("\"") >= 0)
+						if (line.Search("\"", 1) >= 0)
 						{
 							line.Delete("\"", zSTR_TO);
 							matName = line.PickWord(1, "\"", "\"");
@@ -269,8 +269,8 @@ namespace GOTHIC_ENGINE {
 						else
 						{
 							matName = line.PickWord(1, "=", "=");
-							matName.TrimLeft();
-							matName.TrimRight();
+							matName.TrimLeft(' ');
+							matName.TrimRight(' ');
 						};
 						line.Delete("#", zSTR_TO);
 						//cmd << "LoadMatlib: " << matName.ToChar()  << endl;

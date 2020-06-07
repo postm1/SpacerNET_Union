@@ -582,13 +582,41 @@ namespace GOTHIC_ENGINE {
 		return false;
 	}
 
+
+	Common::Map<CString, CString> wordsMap;
+
+	void ClearLangStrings()
+	{
+
+		for (auto i = wordsMap.begin(); i < wordsMap.end; i++)
+		{
+			wordsMap.Remove(i->GetKey());
+		}
+	}
+
 	CString GetLang(CString key)
 	{
-		Stack_PushString(key);
+		auto& foundPair = wordsMap[key];
 
-		int codePage = 1251;
-		static auto caller = (voidFuncPointer)GetProcAddress(theApp.module, "GetLangString");
-		codePage = caller();
-		return Stack_PeekStringW().WToA(codePage);
+		CString result = "";
+
+		if (!foundPair.IsNull())
+		{
+			result =  foundPair.GetValue();
+		}
+		else
+		{
+			Stack_PushString(key);
+
+			int codePage = 1251;
+			static auto caller = (voidFuncPointer)GetProcAddress(theApp.module, "GetLangString");
+			codePage = caller();
+			result =  Stack_PeekStringW().WToA(codePage);
+			wordsMap.Insert(key, result);
+			//cmd << "Get new string from c#: " << result << endl;
+		}
+
+		return result;
+		
 	}
 }
