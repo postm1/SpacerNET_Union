@@ -3,7 +3,7 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
-	CSetting::CSetting(CSettingType type, zSTRING section, zSTRING name, zSTRING default_value)
+	CSetting::CSetting(CSettingType type, CString section, CString name, CString default_value)
 	{
 		this->type = type;
 		this->section = section;
@@ -13,96 +13,72 @@ namespace GOTHIC_ENGINE {
 
 
 
-	float CSettings::GetFloatVal(zSTRING key)
+	float CSettings::GetFloatVal(CString key)
 	{
-		for (int i = 0; i < list.GetNumInList(); i++)
+		auto& pair = list[key];
+		float result = 0.0f;
+		if (!pair.IsNull())
 		{
-			CSetting* set = list.Get(i);
-
-			if (set && set->name == key)
-			{
-				return set->value_float;
-			}
+			result = pair.GetValue()->value_float;
 		}
 
-		return 0;
+		return result;
 	}
 
-	int CSettings::GetIntVal(zSTRING key)
+	int CSettings::GetIntVal(CString key)
 	{
-		for (int i = 0; i < list.GetNumInList(); i++)
+		auto& pair = list[key];
+		int result = 0;
+		if (!pair.IsNull())
 		{
-			CSetting* set = list.Get(i);
-
-			if (set && set->name == key)
-			{
-				return set->value_int;
-			}
+			result = pair.GetValue()->value_int;
 		}
 
-		return 0;
+		return result;
 	}
 
-	zSTRING CSettings::GetVal(zSTRING key)
+	CString CSettings::GetVal(CString key)
 	{
-		for (int i = 0; i < list.GetNumInList(); i++)
-		{
-			CSetting* set = list.Get(i);
+		auto& pair = list[key];
+		CString result = "";
 
-			if (set && set->name == key)
-			{
-				//std::cout << "CSettings::GetVal key: " << key << " value: " << set->value_string << std::endl;
-				return set->value_string;
-			}
+		if (!pair.IsNull())
+		{
+			result = pair.GetValue()->value_string;
 		}
 
-		return zSTRING("");
+		return result;
 	}
 
-	void CSettings::SetFloatVal(zSTRING key, float val)
+	void CSettings::SetFloatVal(CString key, float val)
 	{
-		for (int i = 0; i < list.GetNumInList(); i++)
-		{
-			CSetting* set = list.Get(i);
+		auto& pair = list[key];
 
-			if (set && set->name == key)
-			{
-				set->value_float = val;
-				set->value_string = zSTRING(val, 6);
-				break;
-			}
+		if (!pair.IsNull())
+		{
+			pair.GetValue()->value_float = val;
+			pair.GetValue()->value_string = CString(val);
 		}
 	}
 
-	void CSettings::SetIntVal(zSTRING key, int val)
+	void CSettings::SetIntVal(CString key, int val)
 	{
-		for (int i = 0; i < list.GetNumInList(); i++)
-		{
-			CSetting* set = list.Get(i);
+		auto& pair = list[key];
 
-			if (set && set->name == key)
-			{
-				set->value_int = val;
-				set->value_string = zSTRING(val);
-				break;
-			}
+		if (!pair.IsNull())
+		{
+			pair.GetValue()->value_int = val;
+			pair.GetValue()->value_string = CString(val);
 		}
 	}
 
-	void CSettings::SetStringVal(zSTRING key, zSTRING val)
+	void CSettings::SetStringVal(CString key, CString val)
 	{
-		//std::cout << "CSettings::SetStringVal!!!!!! key: " << key << " value: " << val << std::endl;
+		auto& pair = list[key];
 
-		for (int i = 0; i < list.GetNumInList(); i++)
+		if (!pair.IsNull())
 		{
-			CSetting* set = list.Get(i);
-
-			if (set && set->name == key)
-			{
-				//std::cout << "CSettings::SetStringVal key: " << key << " value: " << val << std::endl;
-				set->value_string = val;
-				break;
-			}
+			pair.GetValue()->value_string = val;
 		}
 	}
 
@@ -112,11 +88,13 @@ namespace GOTHIC_ENGINE {
 	{
 		CString value;
 
-		WriteLine("Reading settings...");
+		WriteLine("CSettings: reading settings...");
 
-		for (int i = 0; i < list.GetNumInList(); i++)
+		auto arr = list.GetArray();
+
+		for (uint i = 0; i < arr.GetNum(); i++)
 		{
-			CSetting* set = list.Get(i);
+			CSetting* set = arr.GetSafe(i)->GetValue();
 
 			if (set)
 			{
@@ -133,7 +111,6 @@ namespace GOTHIC_ENGINE {
 					set->value_float = value.ToReal32();
 				}
 			}
-
 		}
 	}
 
@@ -141,10 +118,11 @@ namespace GOTHIC_ENGINE {
 	{
 		CString value;
 
+		auto arr = list.GetArray();
 
-		for (int i = 0; i < list.GetNumInList(); i++)
+		for (uint i = 0; i < arr.GetNum(); i++)
 		{
-			CSetting* set = list.Get(i);
+			CSetting* set = arr.GetSafe(i)->GetValue();
 
 			if (set)
 			{
@@ -190,169 +168,169 @@ namespace GOTHIC_ENGINE {
 
 
 
-	CSettings::~CSettings()
-	{
-
-		list.DeleteList();
-	}
-
+	
 	void CSettings::Init()
 	{
 
 		CSetting* set = NULL;
 
-
 		set = new CSetting(TYPE_INT, "CAMERA", "camTransSpeed", "16");
-		list.Insert(set);
+		list.Insert("camTransSpeed", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "camRotSpeed", "16");
-		list.Insert(set);
+		list.Insert("camRotSpeed", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "rangeWorld", "2000");
-		list.Insert(set);
+		list.Insert("rangeWorld", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "rangeVobs", "2000");
-		list.Insert(set);
+		list.Insert("rangeVobs", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showFps", "1");
-		list.Insert(set);
+		list.Insert("showFps", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showTris", "1");
-		list.Insert(set);
+		list.Insert("showTris", set);
 
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showVobsCount", "1");
-		list.Insert(set);
+		list.Insert("showVobsCount", set);
 
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showWaypointsCount", "1");
-		list.Insert(set);
+		list.Insert("showWaypointsCount", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showCamCoords", "1");
-		list.Insert(set);
+		list.Insert("showCamCoords", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showVobDist", "1");
-		list.Insert(set);
+		list.Insert("showVobDist", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showInvisibleVobs", "0");
-		list.Insert(set);
+		list.Insert("showInvisibleVobs", set);
 
 
 		set = new CSetting(TYPE_INT, "CAMERA", "hideCamWindows", "1");
-		list.Insert(set);
+		list.Insert("hideCamWindows", set);
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showWPNames", "1");
-		list.Insert(set);
+		list.Insert("showWPNames", set);
 
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "showVobs", "1");
-		list.Insert(set);
+		list.Insert("showVobs", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "showWaynet", "1");
-		list.Insert(set);
+		list.Insert("showWaynet", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "showHelpVobs", "1");
-		list.Insert(set);
+		list.Insert("showHelpVobs", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "drawBBoxGlobal", "0");
-		list.Insert(set);
+		list.Insert("drawBBoxGlobal", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "addDatePrefix", "1");
-		list.Insert(set);
+		list.Insert("addDatePrefix", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "maxFPS", "0");
-		list.Insert(set);
+		list.Insert("maxFPS", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "vobListRadius", "150");
-		list.Insert(set);
+		list.Insert("vobListRadius", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "showModelPreview", "1");
-		list.Insert(set);
+		list.Insert("showModelPreview", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "searchOnly3DS", "0");
-		list.Insert(set);
+		list.Insert("searchOnly3DS", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "musicVolume", "100");
-		list.Insert(set);
+		list.Insert("musicVolume", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "musicZenOff", "0");
-		list.Insert(set);
+		list.Insert("musicZenOff", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "askExitZen", "1");
-		list.Insert(set);
+		list.Insert("askExitZen", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "lightCompileType", "0");
-		list.Insert(set);
+		list.Insert("lightCompileType", set);
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "lightCompileRegionOn", "0");
-		list.Insert(set);
+		list.Insert("lightCompileRegionOn", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "lightCompileRadius", "2000");
-		list.Insert(set);
+		list.Insert("lightCompileRadius", set);
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "worldCompileType", "0");
-		list.Insert(set);
+		list.Insert("worldCompileType", set);
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "addWPToNet", "1");
-		list.Insert(set);
+		list.Insert("addWPToNet", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "addWPAutoName", "1");
-		list.Insert(set);
+		list.Insert("addWPAutoName", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "downFPToGround", "1");
-		list.Insert(set);
+		list.Insert("downFPToGround", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "addFPAutoName", "1");
-		list.Insert(set);
+		list.Insert("addFPAutoName", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "fullPathTitle", "0");
-		list.Insert(set);
+		list.Insert("fullPathTitle", set);
 
 
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
-		list.Insert(set);
+		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");
-		list.Insert(set);
+		list.Insert("meshPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "zenzPath", "");
-		list.Insert(set);
+		list.Insert("zenzPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "vobsPath", "");
-		list.Insert(set);
+		list.Insert("vobsPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "vobResPath", "");
-		list.Insert(set);
+		list.Insert("vobResPath", set);
 
 		set = new CSetting(TYPE_INT, "PATH", "openLastZen", "0");
-		list.Insert(set);
+		list.Insert("openLastZen", set);
 
 		set = new CSetting(TYPE_STRING, "PATH", "openLastZenPath", "");
-		list.Insert(set);
+		list.Insert("openLastZenPath", set);
 
 
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "vobTransSpeed", "60");
-		list.Insert(set);
+		list.Insert("vobTransSpeed", set);
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "vobRotSpeed", "32");
-		list.Insert(set);
+		list.Insert("vobRotSpeed", set);
 
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "vobInsertItemLevel", "1");
-		list.Insert(set);
+		list.Insert("vobInsertItemLevel", set);
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "vobInsertVobRotRand", "0");
-		list.Insert(set);
+		list.Insert("vobInsertVobRotRand", set);
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "vobInsertHierarchy", "1");
-		list.Insert(set);
+		list.Insert("vobInsertHierarchy", set);
 
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "wpTurnOn", "0");
-		list.Insert(set);
+		list.Insert("wpTurnOn", set);
 
 	}
+
+	CSettings::~CSettings()
+	{
+		list.Clear();
+	}
+
 }
 
 

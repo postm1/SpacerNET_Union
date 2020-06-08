@@ -2,7 +2,8 @@
 // Union HEADER file
 
 namespace GOTHIC_ENGINE {
-	// Add your code here . . .
+	
+
 	enum CSettingType
 	{
 		TYPE_INT,
@@ -13,23 +14,23 @@ namespace GOTHIC_ENGINE {
 	struct CSetting
 	{
 	public:
-		zSTRING default_value;
+		CString default_value;
 
 		CSettingType type;
-		zSTRING section;
-		zSTRING name;
+		CString section;
+		CString name;
 
 		int value_int;
 		float value_float;
-		zSTRING value_string;
+		CString value_string;
 
-		CSetting(CSettingType type, zSTRING section, zSTRING name, zSTRING default_value);
+		CSetting(CSettingType type, CString section, CString name, CString default_value);
 	};
 
 	class CSettings
 	{
 	private:
-		zCList<CSetting> list;
+		Common::Map<CString, CSetting*> list;
 
 	public:
 
@@ -41,13 +42,13 @@ namespace GOTHIC_ENGINE {
 		~CSettings();
 
 
-		float GetFloatVal(zSTRING key);
-		int GetIntVal(zSTRING key);
-		zSTRING GetVal(zSTRING key);
+		float GetFloatVal(CString key);
+		int GetIntVal(CString key);
+		CString GetVal(CString key);
 
-		void SetFloatVal(zSTRING key, float val);
-		void SetIntVal(zSTRING key, int val);
-		void SetStringVal(zSTRING key, zSTRING val);
+		void SetFloatVal(CString key, float val);
+		void SetIntVal(CString key, int val);
+		void SetStringVal(CString key, CString val);
 
 	};
 }
