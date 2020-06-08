@@ -581,6 +581,20 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+		if (keys.KeyPressed("VOB_DISABLE_SELECT", true))
+		{
+
+			if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
+			if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
+
+			theApp.SetSelectedVob(NULL);
+			theApp.pickedWaypoint2nd = NULL;
+			print.PrintRed(GetLang("TOOL_UNSELECT"));
+			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
+		}
+
+
+		
 		if (!zinput->GetMouseButtonPressedRight() && pickedVob)
 		{
 
@@ -644,17 +658,7 @@ namespace GOTHIC_ENGINE {
 			}
 
 
-			if (keys.KeyPressed("VOB_DISABLE_SELECT", true))
-			{
-
-				if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
-				if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
-
-				theApp.SetSelectedVob(NULL);
-				theApp.pickedWaypoint2nd = NULL;
-				print.PrintRed(GetLang("TOOL_UNSELECT"));
-				(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
-			}
+			
 
 
 
