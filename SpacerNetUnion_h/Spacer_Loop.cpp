@@ -142,7 +142,7 @@ namespace GOTHIC_ENGINE {
 
 			if (theApp.options.GetIntVal("showCamCoords"))
 			{
-				PrintDebug((zSTRING(GetLang("UNION_CAM_POS")) + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
+				PrintDebug((zSTRING(GetLang("UNION_CAM_POS")) + "(" + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
 
 					+ zSTRING(", ") + zSTRING(pos.n[2], 6) + zSTRING(")")));
 			}
@@ -177,10 +177,10 @@ namespace GOTHIC_ENGINE {
 
 				}
 
-
+			//PrintDebug(ToStr zCWorld::s_bWaveAnisEnabled);
 			screen->SetFontColor(zCOLOR(255, 255, 255));
 
-
+			
 		}
 	}
 

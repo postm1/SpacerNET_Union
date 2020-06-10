@@ -613,7 +613,7 @@ namespace GOTHIC_ENGINE {
 			codePage = caller();
 			result =  Stack_PeekStringW().WToA(codePage);
 			wordsMap.Insert(key, result);
-			//cmd << "Get new string from c#: " << result << endl;
+			//cmd << "Get new string from c#: " << result << " cp: " << codePage << endl;
 		}
 
 		return result;

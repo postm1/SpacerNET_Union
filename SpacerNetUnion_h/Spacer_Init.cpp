@@ -5,14 +5,13 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 	
 
-	char* dllName = "SpacerUnionInterface.dll";
+	CString INTERFACE_DLL_NAME = "SpacerUnionInterface.dll";
 
-	//CInvoke<void(__thiscall*)(CGameManager*, struct HWND__*&)> Ivk_CGameManager_Init(0x00424C70, &CGameManager::Init_Spacer, IVK_AUTO);
 	HOOK Ivk_CGameManager_Init AS(&CGameManager::Init, &CGameManager::Init_Spacer);
 
 	void CGameManager::Init_Spacer(struct HWND__ *& hwnd)
 	{
-		theApp.module = CPlugin::FindModule(dllName);
+		theApp.module = CPlugin::FindModule(INTERFACE_DLL_NAME);
 
 		if (theApp.module) {
 
@@ -41,8 +40,6 @@ namespace GOTHIC_ENGINE {
 
 
 		THISCALL(Ivk_CGameManager_Init)(hWndApp);
-
-		//Ivk_CGameManager_Init(this, hWndApp);
 	}
 
 	void SpacerApp::Init()

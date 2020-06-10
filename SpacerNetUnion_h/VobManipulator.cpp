@@ -186,7 +186,7 @@ namespace GOTHIC_ENGINE {
 		{
 			GetChildren(pickedVob->globalVobTreeNode, pickedVob);
 		}
-
+		
 		pickedVob->SetPositionWorld(pos);
 
 

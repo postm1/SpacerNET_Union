@@ -421,150 +421,58 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::ApplyPhysicsVob()
 	{
-		/*
+
 		zCVob* pVob = pickedVob;
 		zCWorld* world = ogame->GetWorld();
+		zVEC3 vec = ogame->GetCamera()->GetVob()->GetAtVectorWorld();
 
 		if (pVob && !pVob->staticVob && world)
 		{
-		zVEC3 cam = ogame->GetCamera()->GetVob()->GetAtVectorWorld();
+			zVEC3 cam = ogame->GetCamera()->GetVob()->GetAtVectorWorld();
 
 
 
-		if (dynamic_cast<zCVobWaypoint*>(pVob))
-		{
-		zCWayNet* waynet = world->GetWayNet();
-		zCWaypoint* wp = waynet->SearchWaypoint(dynamic_cast<zCVobWaypoint*>(pVob));
-		if (wp) wp->CorrectHeight(world);
-		return;
+			if (dynamic_cast<zCVobWaypoint*>(pVob))
+			{
+				zCWayNet* waynet = world->GetWayNet();
+				zCWaypoint* wp = waynet->SearchWaypoint(dynamic_cast<zCVobWaypoint*>(pVob));
+				if (wp) wp->CorrectHeight(world);
+				return;
+			}
+
+			if (!pVob->GetCollDetStat()) return;
+
+
+			if (pVob && pVob->GetRigidBody())
+			{
+
+				// aktuelle Position holen ...
+				zPOINT3 oldpos, pos, posneu;
+				oldpos = pVob->GetPositionWorld();
+				pos = posneu = oldpos;
+
+				// Sleepingmode und Physics entsprechend merken und setzen
+				// zTVobSleepingMode	mode	= _vob->GetSleepingMode();
+				zBOOL				physics = pVob->GetPhysicsEnabled();
+				pVob->SetSleeping(FALSE);
+				pVob->SetPhysicsEnabled(TRUE);
+
+				if (zinput->KeyPressed(KEY_LSHIFT))
+				{
+					vec = vec * 10000;
+				}
+				else
+				{
+					vec.n[VX] = 0;
+					vec.n[VZ] = 0;
+					vec.n[VY] = -300;
+				}
+				//zerr.Message("B: (Spacer) ApplyForceCM on Vob " + zSTRING(vec.n[VX]) + "/" + zSTRING(vec.n[VY]) + "/" + zSTRING(vec.n[VZ]));
+				pVob->GetRigidBody()->ApplyImpulseCM(vec);
+
+
+				//pVob->SetPhysicsEnabled(physics);
+			}
 		}
-
-		if (!pVob->GetCollDetStat()) return;
-
-
-		if (pVob && pVob->GetRigidBody())
-		{
-
-		// aktuelle Position holen ...
-		zPOINT3 oldpos, pos, posneu;
-		pVob->GetPositionWorld(oldpos);
-		pos = posneu = oldpos;
-
-		// Sleepingmode und Physics entsprechend merken und setzen
-		// zTVobSleepingMode	mode	= _vob->GetSleepingMode();
-		zBOOL				physics = pVob->GetPhysicsEnabled();
-		pVob->SetSleeping(FALSE);
-		pVob->SetPhysicsEnabled(TRUE);
-
-		if (zinput->KeyPressed(KEY_LSHIFT))
-		{
-		vec = vec * 10000;
-		}
-		else
-		{
-		vec.n[VX] = 0;
-		vec.n[VZ] = 0;
-		vec.n[VY] = -300;
-		}
-		//zerr.Message("B: (Spacer) ApplyForceCM on Vob " + zSTRING(vec.n[VX]) + "/" + zSTRING(vec.n[VY]) + "/" + zSTRING(vec.n[VZ]));
-		pVob->GetRigidBody()->ApplyImpulseCM(vec);
-
-		// Fall-Loop ...
-		int maxTime = 7;
-		zCTimer timer;
-		timer.ResetTimer();
-		zBOOL finished = FALSE;
-		zBOOL canceled = FALSE;
-		zDWORD frameCount = 0;
-
-		time_t startTime; time(&startTime);
-		time_t currentTime;
-		zDWORD difTime;
-
-		do
-		{
-		// Schleife (fallen und fallen und fallen ...)
-		int eqcount = 0;
-		do
-		{
-		pos = posneu;
-
-		// Naechster Frame ...
-		OnDraw(pDC);
-		while (!LastDrawSuccess()) OnDraw(pDC);
-		frameCount++;
-
-		// Ist der Vob ion Ruhe?
-		_vob->GetPositionWorld(posneu);
-		if (pos == posneu)
-		eqcount++;
-
-		zERR_MESSAGE(6, 0, "B: APPLYPHYSICS: Position " + zSTRING(posneu.n[VX]) + "," + zSTRING(posneu.n[VY]) + "," + zSTRING(posneu.n[VZ]));
-
-		time(&currentTime);
-		difTime = (zDWORD)difftime(currentTime, startTime);
-
-		} while
-		(
-		eqcount<3 &&
-		difTime<maxTime &&
-		!canceled
-		);
-
-		// Warum wurde Fall-Schleife beendet?
-		if (eqcount >= 3)
-		// RUhezustand erreicht
-		{
-		finished = TRUE;
-		}
-		else
-		{
-		if (timer.GetFrameTime() >= maxTime)
-		// Zeit abgelaufen
-		{
-		int result = MessageBox("Time elapsed\r\nContinue?", "Apply Physics", MB_YESNO);
-		finished = (result == IDNO);
-		if (!finished) time(&startTime);
-		}
-		else if (canceled)
-		// ESC gedrückt
-		{
-		int result = MessageBox("Cancelled\r\nStop?", "Apply Physics", MB_YESNO);
-		finished = (result == IDYES);
-		};
-
-		if (finished)
-		{
-		int result = MessageBox("Reset position of vob?", "Apply Physics", MB_YESNO);
-		if (result == IDYES)
-		{
-		zBOOL cdDyn = _vob->GetCollDetDyn();
-		zBOOL cdStat = _vob->GetCollDetStat();
-		_vob->SetSleeping(FALSE);
-		_vob->SetPhysicsEnabled(FALSE);
-		_vob->SetCollDetDyn(FALSE);
-		_vob->SetCollDetStat(FALSE);
-		_vob->SetPositionWorld(oldpos);
-		_vob->SetCollDetDyn(cdDyn);
-		_vob->SetCollDetStat(cdStat);
-		pos = oldpos;
-		};
-		}
-		}
-		} while (!finished);
-
-		//zerr.Message("B: SPC: calculated physics for " + zSTRING(frameCount) + " frames.");
-
-		// SleepingMOde und Physics restaurieren
-		// _vob->SetSleepingMode(mode);
-		//_vob->SetPhysicsEnabled(physics);
-
-		// Nochmal die aktuelle Position setzen
-		_vob->SetPositionWorld(pos);
-
-		zCView::MFC_KeyUp(KEY_LCTRL);
-		}
-		}
-		*/
 	}
 }
