@@ -470,6 +470,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="CameraKey.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="CameraKey.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Common.cpp">
       <SubType>
       </SubType>

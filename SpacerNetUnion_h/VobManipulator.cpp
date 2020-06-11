@@ -24,13 +24,13 @@ namespace GOTHIC_ENGINE {
 		zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
 		zCWorld* wld = vob->GetHomeWorld();
 
-		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -1000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN)) {
+		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -5000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN)) {
 			// Poly gefunden
 			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
 				// Schnittpunkt schnappen und Position neu setzen
 				zVEC3 newpos = wld->traceRayReport.foundIntersection;
 				// 4 cm bis zum Bodem, um Kollision zu vermeiden.
-				newpos[VY] += diff + 4;
+				newpos[VY] += diff + 2;
 				centerPos = newpos;
 				return TRUE;
 			}

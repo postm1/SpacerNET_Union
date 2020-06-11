@@ -11,6 +11,7 @@
 #include "CSettings.h"
 #include "KeysManager.h"
 #include "PFXManager.h"
+#include "CameraKey.h"
 #include "SpacerApp.h"
 #include "zCBinTree3DS.h"
 #include "Plugin.h"

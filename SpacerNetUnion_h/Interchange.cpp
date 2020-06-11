@@ -6,6 +6,13 @@ namespace GOTHIC_ENGINE {
 
 	static Array<TSTACKTYPE*> arrStack;
 
+
+	UAPI int GetStackSize() {
+		return arrStack.GetNum();
+		//cmd << "+ " << "push " << arrStack.GetNum() << "  " << value->GetTypeName() << endl;
+	}
+
+
 	UAPI void Stack_Push(TSTACKTYPE* value) {
 		arrStack += value;
 		//cmd << "+ " << "push " << arrStack.GetNum() << "  " << value->GetTypeName() << endl;

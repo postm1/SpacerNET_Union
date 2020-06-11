@@ -68,6 +68,8 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+		//zrenderer->Vid_SetScreenMode(zRND_SCRMODE_WINDOWED);
+
 		// PlaySoundGame(ToStr "SPACER_INIT");
 		//cmd << "Game_Init" << endl;
 	}

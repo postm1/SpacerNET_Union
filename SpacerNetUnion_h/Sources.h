@@ -22,6 +22,7 @@
 #include "Camera.cpp"
 #include "Common.cpp"
 #include "VobManipulator.cpp"
+#include "CameraKey.cpp"
 #include "zCBinTree3DS.cpp"
 #include "zProgMesh.cpp"
 #include "Play.cpp"

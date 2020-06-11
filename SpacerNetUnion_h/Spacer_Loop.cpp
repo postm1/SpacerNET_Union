@@ -6,15 +6,89 @@ namespace GOTHIC_ENGINE {
 
 
 	zCArray<HWND> childWindows;
+	CTimer mainTimer;
 
+
+
+	bool SetForegroundWindowEx(HWND Wnd)
+	{
+		BOOL Success = FALSE;
+
+#ifndef COMPILING_SPACER
+		// Validate param
+		if ((Wnd == NULL))
+			return FALSE;
+
+		DWORD	OwnProcessId = GetCurrentProcessId();
+		UINT	OwnThreadId = GetCurrentThreadId();
+		HWND	TargetWndHandle = GetForegroundWindow();
+		DWORD	TargetProcessId = GetCurrentProcessId();
+		UINT	TargetThreadId = GetWindowThreadProcessId(TargetWndHandle, &TargetProcessId);
+
+		// Window already owns the input focus
+		if ((Wnd == TargetWndHandle))
+			return TRUE;
+		// Our process already owns the input focus
+		if (OwnProcessId == TargetProcessId)
+		{
+			SetForegroundWindow(Wnd);
+			return TRUE;
+		}
+
+		// Attach to input queue of the thread of the window which has the focus
+		// (if not our won thread, and so on)
+		if ((TargetWndHandle != NULL) && (TargetThreadId != 0))
+		{
+			if ((OwnThreadId == TargetThreadId))
+			{
+				Success = (SetFocus(Wnd) != NULL);
+			}
+			else if (AttachThreadInput(OwnThreadId, TargetThreadId, TRUE))
+			{
+				// Set focus
+				Success = (SetFocus(Wnd) != NULL);
+				// Detach input queue
+				AttachThreadInput(OwnThreadId, TargetThreadId, FALSE);
+			}
+		}
+
+		// Call original function if no success
+		if (!Success)
+			Success = SetForegroundWindow(Wnd);
+
+		// [EDENFELD] neuen Code musste ich erst mal wieder deaktivierten, da es häufiger zu Crashes bei Focusverlust führt als der alte Code
+#else
+		SetForegroundWindow(Wnd);
+		return TRUE;
+#endif
+
+		return (Success != 0);
+	}
 
 	bool IsAppForeground()
 	{
-		bool result = (intFuncPointer)GetProcAddress(theApp.module, "IsAppActive");
+		static auto call = (appActivePointer)GetProcAddress(theApp.module, "IsAppActive");
+
+		bool result = call((uint)hWndApp);
 		return result;
 	}
 
-	CTimer mainTimer;
+	void sysSetFocus()
+	{
+		SetWindowPos(hWndApp, HWND_TOP, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOREDRAW | SWP_NOSENDCHANGING | SWP_NOSIZE);
+		SetForegroundWindowEx(hWndApp);
+		SetFocus(hWndApp);
+
+		ShowWindow(hWndApp, SW_RESTORE);							// Restore window position
+		ShowWindow(hWndApp, SW_SHOWNORMAL);							// Restore window position
+	}
+
+	//0x00503630 void __cdecl HandleFocusLoose(void)
+	void __cdecl HandleFocusLoose(void)
+	{
+		XCALL(0x00503630);
+	}
+	
 
 	HOOK Ivk_CGameManager_Run AS(&CGameManager::Run, &CGameManager::Run_Spacer);
 
@@ -40,6 +114,7 @@ namespace GOTHIC_ENGINE {
 		{
 			do
 			{
+				//AppWndProc->HandleFocusLoose[zrenderer->SetSurfaceLost(TRUE);, 
 				sysEvent();
 
 				POINT   mPos;
@@ -66,21 +141,43 @@ namespace GOTHIC_ENGINE {
 
 					mainTimer.Attach();
 
+					/*
+					//if (!IsAppForeground() && !ogame->singleStep)
+					if ((GetForegroundWindow() != hWndApp && GetForegroundWindow() != theApp.mainWin) && !ogame->singleStep)
+					{
+						zrenderer->SetSurfaceLost(TRUE);
+						ogame->Pause();
+						sysSetFocus();
+					}
+
+					*/
+
+					if ((GetForegroundWindow() != hWndApp && GetForegroundWindow() != theApp.mainWin))
+					{
+						//zrenderer->SetSurfaceLost(TRUE);
+						//zrenderer->Vid_SetScreenMode(zRND_SCRMODE_WINDOWED);
+					}
+					
+
 					if (mainTimer(1, 500))
 					{
-						if (!IsAppForeground() && !ogame->singleStep)
-						{
-							ogame->Pause(FALSE);
-						}
-
+						
 					}
+					
 
+					
 
-					if (ogame->singleStep && (GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin))
+				}
+				else if (ogame->singleStep)
+				{
+					if ((GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin))
 					{
-						ogame->Unpause();
+						//ogame->Unpause();
+						//sysSetFocus();
+						//zrenderer->Vid_SetScreenMode(zRND_SCRMODE_HIDE);
+						//zrenderer->SetSurfaceLost(FALSE);
 					}
-
+					
 				}
 				else
 				{
@@ -307,7 +404,7 @@ namespace GOTHIC_ENGINE {
 				playerLightInt = playerLightInt + 500;
 			}
 
-			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_INC") + ToStr playerLightInt);
+			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_INC") + " " + ToStr playerLightInt);
 			zinput->ClearKey(KEY_NUMPADPLUS);
 		}
 
@@ -318,7 +415,7 @@ namespace GOTHIC_ENGINE {
 				playerLightInt = playerLightInt - 500;
 			}
 
-			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_DEC") + ToStr playerLightInt);
+			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_DEC") + " "+ ToStr playerLightInt);
 			zinput->ClearKey(KEY_NUMPADMINUS);
 		}
 
@@ -327,7 +424,7 @@ namespace GOTHIC_ENGINE {
 
 		if (KeyPress(KEY_NUMPADSTAR))
 		{
-			playerLightInt = 0;
+			playerLightInt = 500;
 
 			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_ZERO"));
 
@@ -335,6 +432,8 @@ namespace GOTHIC_ENGINE {
 			{
 				zCSkyControler::GetActiveSkyControler()->SetLightDirty();
 			}
+
+			playerLightInt = 0;
 
 			zinput->ClearKey(KEY_NUMPADSTAR);
 		}

@@ -250,6 +250,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\SpacerApp\Hooks">
       <UniqueIdentifier>{635dfa42-5823-4f41-9f59-b10e6d1503e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera">
+      <UniqueIdentifier>{cdf11491-8b5a-4bd6-ac4b-9e279809f4c2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2917,6 +2920,12 @@
     </ClInclude>
     <ClInclude Include="Common.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Hooks</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraKey.h">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraKey.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

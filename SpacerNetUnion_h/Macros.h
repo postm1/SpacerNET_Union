@@ -66,7 +66,7 @@ namespace GOTHIC_ENGINE {
 	typedef void(*callIntFunc)(int);
 	typedef int(*voidFuncPointer)(void);
 	typedef int(*intFuncPointer)(void);
-
+	typedef int(*appActivePointer)(int);
 	typedef void(*addToVobList)(uint);
 
 	typedef void(*updateParentVobRemoveNode)(uint);
@@ -175,4 +175,5 @@ namespace GOTHIC_ENGINE {
 	UAPI extern float  Stack_PeekFloat();
 	UAPI extern double Stack_PeekDouble();
 	UAPI extern void   Stack_Pop();
+	UAPI extern int	   GetStackSize();
 }
