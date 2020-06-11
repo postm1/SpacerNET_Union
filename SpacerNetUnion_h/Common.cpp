@@ -232,6 +232,14 @@ namespace GOTHIC_ENGINE {
 		THISCALL(ivk_AddVob)(vob);
 	}
 
+	/*
+	//0x00624970 protected: virtual void __thiscall zCWorld::VobRemovedFromWorld(class zCVob *)
+	HOOK Ivk_VobRemovedFromWorld AS(&zCWorld::VobRemovedFromWorld, &zCWorld::VobRemovedFromWorld_Hook);
 
+	void zCWorld::VobRemovedFromWorld_Hook(zCVob* pVob)
+	{
+		THISCALL(Ivk_VobRemovedFromWorld)(pVob);
+	}
+	*/
 	
 }

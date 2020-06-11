@@ -13,6 +13,8 @@ namespace GOTHIC_ENGINE {
 		// спрятан ли курсор
 		bool hideCursor;
 
+		float lastFrameTime;
+
 		int vid_x;
 		int vid_y;
 
@@ -21,7 +23,7 @@ namespace GOTHIC_ENGINE {
 			yaw = 90.0f;
 			pitch = 0.0f;
 			hideCursor = false;
-
+			lastFrameTime = 0.0f;
 			vid_x = -1;
 			vid_y = -1;
 		}
@@ -65,6 +67,10 @@ namespace GOTHIC_ENGINE {
 
 		return flag;
 	}
+
+
+	float		now;
+	float		time_corr;
 
 
 	void CameraMoving()
@@ -213,10 +219,20 @@ namespace GOTHIC_ENGINE {
 		delta.x = (mouse.x - camMov.mousePrev.x);
 		delta.y = (camMov.mousePrev.y - mouse.y);
 
+		
+
 		camMov.mousePrev = mouse;
 
-		float rotSpeed = (float)(theApp.options.GetIntVal("camRotSpeed")) / 100;
+
+		float rotSpeed = (float)(theApp.options.GetIntVal("camRotSpeed")) / 100; // *currentFrameTime;
 		// углы поворота
+		// += 1.0f * time_corr - friction_rot * rotSpeed * time_corr;
+
+
+		
+
+
+
 		camMov.yaw -= delta.x * rotSpeed;
 		camMov.pitch += delta.y * rotSpeed;
 
@@ -234,6 +250,27 @@ namespace GOTHIC_ENGINE {
 		rot.n[1] = sin(Radian(camMov.pitch));
 		rot.n[2] = sin(Radian(camMov.yaw)) * cos(Radian(camMov.pitch));
 
-		movvob->SetHeadingAtWorld(rot.Normalize());
+		int slerpValue = theApp.options.GetIntVal("slerpRot");
+
+
+		if (slerpValue == 0)// || ztimer->frameTimeFloat >= 30.0f)
+		{
+			zVEC3 newDir = rot.Normalize();
+			movvob->SetHeadingAtWorld(newDir);
+		}
+		else if (slerpValue > 0)
+		{
+			float slerpVal = 1.0f - (float)slerpValue / 100.0;
+
+			//print.PrintRed(zSTRING(slerpVal, 6));
+
+			zVEC3 oldDir = movvob->GetAtVectorWorld();
+			zVEC3 newDir = Slerp(oldDir, rot.Normalize(), slerpVal);
+			movvob->SetHeadingAtWorld(newDir);
+		}
+		
+		
+
+		camMov.lastFrameTime = ztimer->frameTimeFloat;
 	}
 }

@@ -247,12 +247,6 @@ namespace GOTHIC_ENGINE {
 	};
 
 
-	template <class T>
-	inline void zClamp(T& x, const T min, const T max) {
-		if (x<min) x = min; else
-			if (x>max) x = max;
-	}
-
 	void zCBinTree3DS::CreateNodeList(int numVert, int numPoly)
 	{
 		// 15 verts pro Leaf im Schnitt

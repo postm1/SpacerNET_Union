@@ -631,5 +631,36 @@ namespace GOTHIC_ENGINE {
 
 		return resultList.GetNumInList();
 	}
+
+	template <class T>
+	inline T zLerp(const float t, const T& a, const T& b) {
+		return a + t*(b - a);
+	}
+
+	template <class T>
+	inline void zClamp(T& x, const T min, const T max) {
+		if (x<min) x = min; else
+			if (x>max) x = max;
+	}
+
+	zVEC3 Slerp(zVEC3 start, zVEC3 end, float percent)
+	{
+		// Dot product - the cosine of the angle between 2 vectors.
+		float dot = start.Dot(end);
+
+		// Clamp it to be in the range of Acos()
+		// This may be unnecessary, but floating point
+		// precision can be a fickle mistress.
+		zClamp(dot, -1.0f, 1.0f);
+		// Acos(dot) returns the angle between start and end,
+		// And multiplying that by percent returns the angle between
+		// start and the final result.
+		float theta = acos(dot)*percent;
+		zVEC3 RelativeVec = end - start*dot;
+		RelativeVec.Normalize();
+		// Orthonormal basis
+		// The final result.
+		return ((start*cos(theta)) + (RelativeVec*sin(theta)));
+	}
 }
 

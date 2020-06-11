@@ -370,8 +370,13 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
+			auto getVersion = (callVoidFunc)GetProcAddress(theApp.module, "GetSpacerVersion");
+			getVersion();
+
+			CString version = Stack_PeekString();
+
 			view->SetFontColor(zCOLOR(255, 255, 255, 255));
-			view->Print(40, 250, "Spacer.NET");
+			view->Print(40, 250, "Spacer.NET " + version);
 			view->Print(40, 500, GetLang("UNION_EDITOR"));
 			view->SetFontColor(GFX_GREEN);
 			view->Print(40, 750, GetLang("UNION_TEAM"));

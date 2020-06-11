@@ -31,5 +31,7 @@ namespace GOTHIC_ENGINE {
 		void UpdateKey(CString keyType, int code, int mod);
 
 		CString GetIniValue(CString key);
+
+		void ResetDefault();
 	};
 }

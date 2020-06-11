@@ -192,6 +192,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "CAMERA", "showTris", "1");
 		list.Insert("showTris", set);
 
+		set = new CSetting(TYPE_INT, "CAMERA", "slerpRot", "0");
+		list.Insert("slerpRot", set);
+
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showVobsCount", "1");
 		list.Insert("showVobsCount", set);

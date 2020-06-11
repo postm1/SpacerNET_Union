@@ -509,6 +509,12 @@ namespace GOTHIC_ENGINE {
 			ClearLangStrings();
 
 		}
+
+
+		__declspec(dllexport) void Extern_ResetKeysDefault() {
+			keys.ResetDefault();
+
+		}
 	}
 
 }

@@ -43,6 +43,16 @@ namespace GOTHIC_ENGINE {
 
 	*/
 
+	//0x00624970 protected: virtual void __thiscall zCWorld::VobRemovedFromWorld(class zCVob *
+	/*
+	void __fastcall Invk_zVobRemovedFromWorld(zCWorld* _this, void*, class zCVob *);
+	CInvoke<void(__thiscall*)(zCWorld* _this, class zCVob *)> pInvk_zCVobUnarchive(0x00624970, Invk_zVobRemovedFromWorld);
+	void __fastcall Invk_zVobRemovedFromWorld(zCWorld* _this, void*, class zCVob* pVob)
+	{
+
+
+	}
+	*/
 	//0x005FFC70 protected: virtual void __thiscall zCVob::Unarchive(class zCArchiver &)
 	void __fastcall Invk_zCVobUnarchive(zCVob* _this, void*, class zCArchiver &);
 	CInvoke<void(__thiscall*)(zCVob* _this, class zCArchiver &)> pInvk_zCVobUnarchive(0x005FFC70, Invk_zCVobUnarchive);

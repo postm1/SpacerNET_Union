@@ -1,3 +1,4 @@
+
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
@@ -5,6 +6,7 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 	Common::Map<CString, KeyEntry*> keysMap;
+	Common::Map<CString, CString> defaultValues;
 
 	bool KeysManager::KeyPressed(CString key, bool clearKey, bool ignoreMod)
 	{
@@ -35,9 +37,19 @@ namespace GOTHIC_ENGINE {
 		else
 		{
 
-			theApp.spcOpt.Read(value, "KEYS", key, "");
+			auto pair = defaultValues[key];
 
-			//cmd << "Read ini for: " << keyType << " " << value << endl;
+			if (!pair.IsNull())
+			{
+				theApp.spcOpt.Read(value, "KEYS", pair.GetKey(), pair.GetValue());
+			}
+			else
+			{
+				theApp.spcOpt.Read(value, "KEYS", key, "");
+			}
+			
+
+			//cmd << "Read ini for: " << key << " " << value << endl;
 			temp_str = value;
 			mod = atoi(temp_str.GetWord('_', 1));
 			temp_str = value;
@@ -90,66 +102,68 @@ namespace GOTHIC_ENGINE {
 
 	void KeysManager::InitValues()
 	{
+		cmd << "KeysManager: InitValues" << endl;
+
+		defaultValues.Insert("CAMERA_TRANS_FORWARD", "0_17");
+		defaultValues.Insert("CAMERA_TRANS_BACKWARD", "0_31");
+		defaultValues.Insert("CAMERA_TRANS_RIGHT", "0_32");
+		defaultValues.Insert("CAMERA_TRANS_LEFT", "0_30");
+		defaultValues.Insert("CAMERA_TRANS_UP", "0_57");
+		defaultValues.Insert("CAMERA_TRANS_DOWN", "0_45");
+		defaultValues.Insert("VOB_COPY", "2_46");
+		defaultValues.Insert("VOB_INSERT", "2_47");
+		defaultValues.Insert("VOB_CUT", "2_44");
+		defaultValues.Insert("VOB_NEAR_CAM", "0_6");
+		defaultValues.Insert("VOB_TRANSLATE", "0_2");
+		defaultValues.Insert("VOB_ROTATE", "0_3");
+		defaultValues.Insert("WP_TOGGLE", "0_4");
+		defaultValues.Insert("VOB_DISABLE_SELECT", "0_5");
+		defaultValues.Insert("VOB_FLOOR", "8_33");
+		defaultValues.Insert("VOB_RESET_AXIS", "8_19");
+		defaultValues.Insert("VOB_TRANS_FORWARD", "0_17");
+		defaultValues.Insert("VOB_TRANS_BACKWARD", "0_31");
+		defaultValues.Insert("VOB_TRANS_LEFT", "0_30");
+		defaultValues.Insert("VOB_TRANS_RIGHT", "0_32");
+		defaultValues.Insert("VOB_TRANS_UP", "0_57");
+		defaultValues.Insert("VOB_TRANS_DOWN", "0_45");
+		defaultValues.Insert("CAM_SPEED_X10", "8_1");
+		defaultValues.Insert("CAM_SPEED_MINUS_10", "2_1");
+		defaultValues.Insert("VOB_SPEED_X10", "8_1");
+		defaultValues.Insert("VOB_SPEED_MINUS_10", "2_1");
+		defaultValues.Insert("VOB_DELETE", "0_211");
+		defaultValues.Insert("VOB_ROT_VERT_RIGHT", "0_18");
+		defaultValues.Insert("VOB_ROT_VERT_LEFT", "0_16");
+		defaultValues.Insert("VOB_ROT_FORWARD", "0_17");
+		defaultValues.Insert("VOB_ROT_BACK", "0_31");
+		defaultValues.Insert("VOB_ROT_RIGHT", "0_32");
+		defaultValues.Insert("VOB_ROT_LEFT", "0_30");
+		defaultValues.Insert("VOBLIST_COLLECT", "0_59");
+		defaultValues.Insert("WP_CREATEFAST", "0_60");
+		defaultValues.Insert("WIN_HIDEALL", "0_61");
+		defaultValues.Insert("OPEN_CONTAINER", "8_20");
+		defaultValues.Insert("TOGGLE_VOBS", "8_2");
+		defaultValues.Insert("TOGGLE_WAYNET", "8_3");
+		defaultValues.Insert("TOGGLE_HELPERS", "8_4");
+		defaultValues.Insert("TOGGLE_BBOX", "8_5");
+		defaultValues.Insert("TOGGLE_INVIS", "8_6");
+
+
+		auto arr = defaultValues.GetArray();
+
 		CString value = "";
 
-		theApp.spcOpt.Read(value, "KEYS", "CAMERA_TRANS_FORWARD", "0_17");
-		theApp.spcOpt.Read(value, "KEYS", "CAMERA_TRANS_BACKWARD", "0_31");
-		theApp.spcOpt.Read(value, "KEYS", "CAMERA_TRANS_RIGHT", "0_32");
-		theApp.spcOpt.Read(value, "KEYS", "CAMERA_TRANS_LEFT", "0_30");
-		theApp.spcOpt.Read(value, "KEYS", "CAMERA_TRANS_UP", "0_57");
-		theApp.spcOpt.Read(value, "KEYS", "CAMERA_TRANS_DOWN", "0_45");
+		for (uint i = 0; i < arr.GetNum(); i++)
+		{
+			auto pair = arr.GetSafe(i);
 
+			if (!pair->IsNull())
+			{
+				theApp.spcOpt.Read(value, "KEYS", pair->GetKey(), pair->GetValue());
+			}
+			
+		}
 
-		theApp.spcOpt.Read(value, "KEYS", "VOB_COPY", "2_46");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_INSERT", "2_47");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_CUT", "2_44");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_NEAR_CAM", "0_6");
-
-
-		theApp.spcOpt.Read(value, "KEYS", "VOB_TRANSLATE", "0_2");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_ROTATE", "0_3");
-		theApp.spcOpt.Read(value, "KEYS", "WP_TOGGLE", "0_4");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_DISABLE_SELECT", "0_5");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_FLOOR", "8_33");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_RESET_AXIS", "8_19");
-
-
-		theApp.spcOpt.Read(value, "KEYS", "VOB_TRANS_FORWARD", "0_17");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_TRANS_BACKWARD", "0_31");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_TRANS_LEFT", "0_30");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_TRANS_RIGHT", "0_32");
-
-		theApp.spcOpt.Read(value, "KEYS", "VOB_TRANS_UP", "0_57");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_TRANS_DOWN", "0_45");
-
-
-		theApp.spcOpt.Read(value, "KEYS", "CAM_SPEED_X10", "8_1");
-		theApp.spcOpt.Read(value, "KEYS", "CAM_SPEED_MINUS_10", "2_1");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_SPEED_X10", "8_1");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_SPEED_MINUS_10", "2_1");
-
-		theApp.spcOpt.Read(value, "KEYS", "VOB_DELETE", "0_211");
-
-		theApp.spcOpt.Read(value, "KEYS", "VOB_ROT_VERT_RIGHT", "0_18");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_ROT_VERT_LEFT", "0_16");
-
-		theApp.spcOpt.Read(value, "KEYS", "VOB_ROT_FORWARD", "0_17");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_ROT_BACK", "0_31");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_ROT_RIGHT", "0_32");
-		theApp.spcOpt.Read(value, "KEYS", "VOB_ROT_LEFT", "0_30");
-
-
-		theApp.spcOpt.Read(value, "KEYS", "VOBLIST_COLLECT", "0_59");
-		theApp.spcOpt.Read(value, "KEYS", "WP_CREATEFAST", "0_60");
-		theApp.spcOpt.Read(value, "KEYS", "WIN_HIDEALL", "0_61");
-
-		theApp.spcOpt.Read(value, "KEYS", "OPEN_CONTAINER", "8_20");
-
-		theApp.spcOpt.Read(value, "KEYS", "TOGGLE_VOBS", "8_2");
-		theApp.spcOpt.Read(value, "KEYS", "TOGGLE_WAYNET", "8_3");
-		theApp.spcOpt.Read(value, "KEYS", "TOGGLE_HELPERS", "8_4");
-		theApp.spcOpt.Read(value, "KEYS", "TOGGLE_BBOX", "8_5");
-		theApp.spcOpt.Read(value, "KEYS", "TOGGLE_INVIS", "8_6");
+		
 	}
 
 	void KeysManager::UpdateKey(CString keyType, int code, int mod)
@@ -160,27 +174,11 @@ namespace GOTHIC_ENGINE {
 
 		auto& foundPair = keysMap[keyType];
 
-		//if (keysMap.SearchKeyIndex(keyType) != -1)
 		if (!foundPair.IsNull() && code >= 0)
 		{
 			foundPair.GetValue()->keyCode = code;
 			foundPair.GetValue()->modifier = mod;
 		}
-
-
-		/*if (keysMap.SearchKeyIndex(keyType) != -1 && code >= 0)
-		{
-			Pair<CString, KeyEntry*> found = keysMap.SearchKey(keyType);
-
-			if (found != 0)
-			{
-				found[0]->keyCode = code;
-				found[0]->modifier = mod;
-
-			}
-
-		}
-		*/
 		else
 		{
 			KeyEntry* entry = new KeyEntry();
@@ -203,9 +201,42 @@ namespace GOTHIC_ENGINE {
 	{
 		CString value = "";
 
-		theApp.spcOpt.Read(value, "KEYS", key, "");
+
+		auto pair = defaultValues[key];
+
+		if (!pair.IsNull())
+		{
+			theApp.spcOpt.Read(value, "KEYS", pair.GetKey(), pair.GetValue());
+		}
+		else
+		{
+			theApp.spcOpt.Read(value, "KEYS", key, "");
+		}
+
 
 		return value;
+	}
+
+
+	void KeysManager::ResetDefault()
+	{
+		keysMap.Clear();
+
+		auto arr = defaultValues.GetArray();
+
+		CString value = "";
+
+		for (uint i = 0; i < arr.GetNum(); i++)
+		{
+			auto pair = arr.GetSafe(i);
+
+			if (!pair->IsNull())
+			{
+				theApp.spcOpt.Write(pair->GetValue(), "KEYS", pair->GetKey());
+			}
+
+		}
+
 	}
 
 }
