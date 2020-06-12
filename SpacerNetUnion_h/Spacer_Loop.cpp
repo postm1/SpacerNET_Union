@@ -110,6 +110,8 @@ namespace GOTHIC_ENGINE {
 
 		InitScreen_Close();
 
+
+
 		if (!exitGame)
 		{
 			do

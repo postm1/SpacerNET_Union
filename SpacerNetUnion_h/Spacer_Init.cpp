@@ -11,7 +11,12 @@ namespace GOTHIC_ENGINE {
 
 	void CGameManager::Init_Spacer(struct HWND__ *& hwnd)
 	{
+
+		//cmd << "Init_Spacer" << endl;
+
 		theApp.module = CPlugin::FindModule(INTERFACE_DLL_NAME);
+
+		//cmd << "FindModule ok" << endl;
 
 		if (theApp.module) {
 
@@ -38,16 +43,18 @@ namespace GOTHIC_ENGINE {
 			exit(0);
 		}
 
+		//cmd << "Ivk_CGameManager_Init" << endl;
 
 		THISCALL(Ivk_CGameManager_Init)(hWndApp);
 	}
 
 	void SpacerApp::Init()
 	{
+		//cmd << "options" << endl;
 		theApp.options.Init();
 		theApp.options.Load();
 
-
+		//cmd << "InitValues" << endl;
 		keys.InitValues();
 		//zoptions->AddParameters("-MERGEVOBSWITHLEVEL");
 
@@ -57,6 +64,8 @@ namespace GOTHIC_ENGINE {
 		{
 			ztimer->LimitFPS(limitFps);
 		}
+
+		//cmd << "LoadMat" << endl;
 
 		print.Init();
 		LoadMat();

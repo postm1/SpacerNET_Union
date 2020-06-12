@@ -13,9 +13,11 @@ namespace GOTHIC_ENGINE {
 
 
   void Game_Entry() {
+	 // cmd << "Game_Entry" << endl;
   }
 
   void Game_Init() {
+	  //cmd << "Game_Init" << endl;
 	  theApp.Init();
   }
 
@@ -23,6 +25,7 @@ namespace GOTHIC_ENGINE {
   }
 
   void Game_Loop() {
+	  //cmd << "Game_Loop" << endl;
 	  theApp.PluginLoop();
   }
 
