@@ -1,4 +1,4 @@
-// Supported with union (c) 2020 Union team
+	// Supported with union (c) 2020 Union team
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
@@ -216,8 +216,9 @@ namespace GOTHIC_ENGINE {
 			{
 				zCVobLight* vobLight = dynamic_cast<zCVobLight*>(vob);
 
+				//oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(vob);
 
-				bool flag = vobLight && (vob->GetParent() == 0);
+				bool flag = (vobLight) && (vob->GetParent() == 0);
 
 				if (vob->GetVobName() != "Vob_PFX_Editor" && !flag)
 				{

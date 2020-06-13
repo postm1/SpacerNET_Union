@@ -300,6 +300,21 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(foundVob);
+		
+
+		if (pVisualVob)
+		{
+			
+			oCItem* pItem = dynamic_cast<oCItem*>(pVisualVob->origin);
+
+			if (pItem)
+			{
+				foundVob = pVisualVob->origin;
+			}
+
+		}
+
 		if (foundVob && (foundVob == pfxManager.testVob || foundVob == currentVobRender || foundVob == currenItemRender))
 		{
 			foundVob = NULL;
@@ -537,15 +552,11 @@ namespace GOTHIC_ENGINE {
 			{
 
 
-				std::cout << "Union: OnSelectVob " << GetVobName(theApp.pickedVob) << " in " << "PickVob" << std::endl;
+				std::cout << "Union: OnSelectVob " << GetVobName(theApp.pickedVob) << " Parent: " << theApp.pickedVob->GetParent() << std::endl;
 
 				auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectVob");
 				onSelect((int)theApp.pickedVob);
 			}
-
-
-
-			std::cout << "Union: SelectObject " << GetVobName(theApp.pickedVob) << " in " << "PickVob" << std::endl;
 			SelectObject(theApp.pickedVob);
 		}
 

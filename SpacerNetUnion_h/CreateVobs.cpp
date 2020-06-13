@@ -393,6 +393,15 @@ namespace GOTHIC_ENGINE {
 		OutFile("RemoveVob: vob: " + AHEX32((uint)pVob), true);
 
 
+
+		oCItem* isItem = dynamic_cast<oCItem*>(pVob);
+	
+		// удаляем из списка oCVisualFX от итема
+		if (isItem && isItem->effectVob)
+		{
+			theApp.OnRemoveVob(isItem->effectVob);
+		}
+
 		theApp.OnRemoveVob(pVob);
 
 		zCVobWaypoint* wpvob = dynamic_cast<zCVobWaypoint*>(pVob);
@@ -409,6 +418,8 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
+
+
 			OutFile("RemoveVob: vob " + A GetVobName(pVob) + " " + AHEX32((uint)pVob), true);
 			ogame->GetWorld()->RemoveVobSubtree(pVob);
 		}
