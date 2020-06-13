@@ -381,7 +381,7 @@ namespace GOTHIC_ENGINE {
 			}
 			*/
 
-			zinput->ClearKey(KEY_F4);
+			//zinput->ClearKey(KEY_F4);
 
 		}
 
@@ -395,11 +395,11 @@ namespace GOTHIC_ENGINE {
 			*/
 
 			//SaveCurrentWorldToMSH();
-			zinput->ClearKey(KEY_F5);
+			//zinput->ClearKey(KEY_F5);
 		}
 
 
-		if (KeyPress(KEY_NUMPADPLUS))
+		if (keys.KeyPressed("LIGHT_RAD_INC", true))
 		{
 			if (playerLightInt <= 20000)
 			{
@@ -407,10 +407,9 @@ namespace GOTHIC_ENGINE {
 			}
 
 			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_INC") + " " + ToStr playerLightInt);
-			zinput->ClearKey(KEY_NUMPADPLUS);
 		}
 
-		if (KeyPress(KEY_NUMPADMINUS))
+		if(keys.KeyPressed("LIGHT_RAD_DEC", true))
 		{
 			if (playerLightInt >= 500)
 			{
@@ -418,13 +417,9 @@ namespace GOTHIC_ENGINE {
 			}
 
 			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_DEC") + " "+ ToStr playerLightInt);
-			zinput->ClearKey(KEY_NUMPADMINUS);
 		}
 
-
-
-
-		if (KeyPress(KEY_NUMPADSTAR))
+		if (keys.KeyPressed("LIGHT_RAD_ZERO", true))
 		{
 			playerLightInt = 500;
 
@@ -437,7 +432,11 @@ namespace GOTHIC_ENGINE {
 
 			playerLightInt = 0;
 
-			zinput->ClearKey(KEY_NUMPADSTAR);
+			if (zCSkyControler::GetActiveSkyControler())
+			{
+				zCSkyControler::GetActiveSkyControler()->SetLightDirty();
+			}
+
 		}
 
 	}

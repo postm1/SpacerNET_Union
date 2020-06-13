@@ -109,6 +109,8 @@ namespace GOTHIC_ENGINE {
 
 		// убираем превью с экрана
 		AddVobToRender("", false);
+
+
 	}
 
 
@@ -234,7 +236,7 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
-			newvob->ResetXZRotationsWorld();
+			//newvob->ResetXZRotationsWorld();
 			newvob->SetCollDetDyn(dyn);
 			newvob->SetCollDetStat(stat);
 

@@ -1,3 +1,4 @@
+
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
@@ -144,6 +145,17 @@ namespace GOTHIC_ENGINE {
 
 		(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 	}
+
+	
+	void SpacerApp::MergeMesh(CString worldName)
+	{
+		zoptions->ChangeDir(DIR_MESHES);
+		ogame->GetWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED);
+
+		oCNpc::SetNpcAIDisabled(TRUE);
+		dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
+	}
+	
 
 
 	void SpacerApp::LoadMesh(zSTRING worldName)

@@ -64,19 +64,17 @@ namespace GOTHIC_ENGINE {
 		{
 			ztimer->LimitFPS(limitFps);
 		}
+		else
+		{
+			ztimer->minFrameTime = 0;
+		}
 
 		//cmd << "LoadMat" << endl;
 
 		print.Init();
 		LoadMat();
 
-		auto enableInterface = (voidFuncPointer)GetProcAddress(theApp.module, "Form_EnableInterface");
-
-		if (enableInterface) {
-			enableInterface();
-		}
-
-
+		(voidFuncPointer)GetProcAddress(theApp.module, "Form_EnableInterface")();
 		//zrenderer->Vid_SetScreenMode(zRND_SCRMODE_WINDOWED);
 
 		// PlaySoundGame(ToStr "SPACER_INIT");

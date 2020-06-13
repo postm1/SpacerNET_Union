@@ -219,6 +219,11 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "CAMERA", "showWPNames", "1");
 		list.Insert("showWPNames", set);
 
+		set = new CSetting(TYPE_INT, "CAMERA", "previewSpeed", "20");
+		list.Insert("previewSpeed", set);
+
+		
+
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "showVobs", "1");
@@ -327,6 +332,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "CONTROLS", "wpTurnOn", "0");
 		list.Insert("wpTurnOn", set);
 
+
+		set = new CSetting(TYPE_INT, "CONTROLS", "selectMoveWhenVobInsert", "0");
+		list.Insert("selectMoveWhenVobInsert", set);
 	}
 
 	CSettings::~CSettings()

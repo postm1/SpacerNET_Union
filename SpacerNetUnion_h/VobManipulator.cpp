@@ -277,7 +277,7 @@ namespace GOTHIC_ENGINE {
 					newVob->RotateLocalY(GetRandVal(0, 360));
 				}
 
-				newVob->ResetXZRotationsWorld();
+				//newVob->ResetXZRotationsWorld();
 
 				if (waypoint)
 				{
@@ -550,14 +550,19 @@ namespace GOTHIC_ENGINE {
 		if (keys.KeyPressed("VOB_INSERT", true))
 		{
 
-			SetSelectedTool(1);
-
 			if (theApp.isVobParentChange)
 			{
 				HandleParentChange(theApp.vobToCopy, pickedVob);
 			}
 			else
 			{
+
+
+				if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))
+				{
+					SetSelectedTool(1);
+				}
+
 				HandleInsertVobCopy(pickedVob);
 			}
 		}
@@ -595,6 +600,19 @@ namespace GOTHIC_ENGINE {
 
 
 		
+		if (keys.KeyPressed("VOB_TRANSLATE", true))
+		{
+			print.PrintRed(GetLang("TOOL_TRANS"));
+			SetSelectedTool(1);
+		}
+
+		if (keys.KeyPressed("VOB_ROTATE", true))
+		{
+			print.PrintRed(GetLang("TOOL_ROT"));
+			SetSelectedTool(2);
+		}
+
+
 		if (!zinput->GetMouseButtonPressedRight() && pickedVob)
 		{
 
@@ -640,17 +658,7 @@ namespace GOTHIC_ENGINE {
 			}
 
 
-			if (keys.KeyPressed("VOB_TRANSLATE", true))
-			{
-				print.PrintRed(GetLang("TOOL_TRANS"));
-				SetSelectedTool(1);
-			}
-
-			if (keys.KeyPressed("VOB_ROTATE", true))
-			{
-				print.PrintRed(GetLang("TOOL_ROT"));
-				SetSelectedTool(2);
-			}
+			
 
 			if (keys.KeyPressed("WP_TOGGLE", true))
 			{

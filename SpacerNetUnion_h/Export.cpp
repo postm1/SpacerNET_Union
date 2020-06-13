@@ -41,6 +41,14 @@ namespace GOTHIC_ENGINE {
 			PlaySoundGame(ToStr "CS_IAI_ME_ME");
 		}
 
+		__declspec(dllexport) void Extern_MergeMesh() {
+			CString path = Stack_PeekString().Upper();
+			theApp.MergeMesh(path);
+			//PlaySoundGame(ToStr "CS_IAI_ME_ME");
+		}
+
+
+
 		__declspec(dllexport) void Extern_MergeZen() {
 			CString path = Stack_PeekString().Upper();
 			theApp.MergeZen(path);

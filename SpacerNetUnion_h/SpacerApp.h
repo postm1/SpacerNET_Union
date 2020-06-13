@@ -185,6 +185,8 @@ namespace GOTHIC_ENGINE {
 
 		void SaveWorld(zSTRING worldName, int type);
 
+		void MergeMesh(CString worldName);
+
 		void LoadMesh(zSTRING worldName);
 
 		void MergeZen(zSTRING worldName);

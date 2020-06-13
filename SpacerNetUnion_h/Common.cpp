@@ -8,9 +8,9 @@ namespace GOTHIC_ENGINE {
 	HOOK Ivk_CGameManager_HandleEvent AS(&CGameManager::HandleEvent, &CGameManager::HandleEvent_Hook);
 	int CGameManager::HandleEvent_Hook(int key)
 	{
-		//static auto keySender = (sendKey)GetProcAddress(theApp.module, "AcceptKey");
+		static auto keySender = (sendKey)GetProcAddress(theApp.module, "AcceptKey");
 
-		//keySender(key);
+		keySender(key);
 
 		if (key == KEY_ESCAPE)
 			return FALSE;

@@ -155,9 +155,11 @@ namespace GOTHIC_ENGINE {
 			);
 
 
+			float speedRot = (float)theApp.options.GetIntVal("previewSpeed") / 70 * ztimer->frameTimeFloat;
+
 			if (theApp.currentVobRender->GetVobName().Search(".TGA", 1) == -1)
 			{
-				theApp.currentVobRender->RotateLocalY(0.1 * ztimer->frameTimeFloat);
+				theApp.currentVobRender->RotateLocalY(speedRot);
 				//currentVob->RotateLocalZ(0.04 * ztimer->frameTimeFloat);
 			}
 			else

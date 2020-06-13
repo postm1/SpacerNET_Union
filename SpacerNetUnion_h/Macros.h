@@ -157,6 +157,7 @@ namespace GOTHIC_ENGINE {
 		extern int GetZenLevelCompoCount(); \
 		extern float Lerp(float a, float b, float t); \
 		extern zVEC3 Slerp(zVEC3 start, zVEC3 end, float percent); \
+		extern void SetSelectedTool(int tool); \
 
 	UAPI extern void   Stack_PushString(const char* v);
 	UAPI extern void   Stack_PushInt(int v);
