@@ -100,7 +100,7 @@ namespace GOTHIC_ENGINE {
 
 
 			OutFile("Extern_RemoveVob: " + AHEX32(vob), false);
-			theApp.RemoveVob((zCVob*)vob);
+			theApp.RemoveVob	((zCVob*)vob);
 		}
 
 
@@ -217,14 +217,6 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		__declspec(dllexport) void Extern_CreateNewVob(int dyn, int stat) {
-
-			CString name = Stack_PeekString();
-			CString vobName = Stack_PeekString();
-
-			OutFile("Extern_CreateNewVob: vob " + A vobName, true);
-			theApp.CreateNewVob(name, vobName, "", dyn, stat);
-		}
 
 
 		__declspec(dllexport) void Extern_CreateNewVobVisual(int dyn, int stat) {

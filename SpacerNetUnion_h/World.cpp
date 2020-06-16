@@ -49,8 +49,8 @@ namespace GOTHIC_ENGINE {
 				dynamic_cast< zCVobWaypoint*	>	(vob) ||
 				dynamic_cast< zCCSCamera*		>	(vob) ||
 				dynamic_cast< zCCamTrj_KeyFrame*>	(vob) ||
-				dynamic_cast< zCVobScreenFX*	>	(vob) ||
-				dynamic_cast< zCPFXControler*	>	(vob) ||
+				//dynamic_cast< zCVobScreenFX*	>	(vob) ||
+				//dynamic_cast< zCPFXControler*	>	(vob) ||
 				(visualName.Search(INVISIBLE_FILEPREFIX, 1) >= 0) ||
 				(visualName.Search("VOBBOX", 1) >= 0)
 				)
@@ -84,12 +84,14 @@ namespace GOTHIC_ENGINE {
 			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
 
 
+		/*
 		zCTree<zCVob>* tree = ogame->GetWorld()->globalVobTree.GetFirstChild();
 		while (tree)
 		{
 			GetTreeChild(tree, callBackVob);
 			tree = tree->GetNextChild();
 		}
+		*/
 
 		cmd << Col16(CMD_WHITE);
 
@@ -304,7 +306,6 @@ namespace GOTHIC_ENGINE {
 				SetTime(12, 0);
 				zCTexture::RefreshTexMaxSize(16384);
 				zCSkyControler::s_activeSkyControler->m_fRelightTime = 0;
-
 				SetRangeVobs();
 				SetRangeWorld();
 			}
@@ -458,7 +459,7 @@ namespace GOTHIC_ENGINE {
 		//MessageBox(0, ToStr *(int*)vob, 0, 0);
 
 		//auto addNode = (strFuncPoiterTree)GetProcAddress(theApp.module, "AddTreeNode");
-		//theApp.OnCreateVob(vob);
+		
 
 		//MessageBox(0, s + " [3] " + zSTRING(parentId), 0, 0);
 		//addNode(GetVobName(vob), (int)vob, vob->GetParent(), vob->_GetClassDef()->className.ToChar());

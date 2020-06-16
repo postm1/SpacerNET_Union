@@ -218,13 +218,21 @@ namespace GOTHIC_ENGINE {
 
 				//oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(vob);
 
-				bool flag = (vobLight) && (vob->GetParent() == 0);
+				bool flag = (vobLight) && (vob->GetParent() == 0) || (vob->GetVobName() == "Vob_PFX_Editor");
 
-				if (vob->GetVobName() != "Vob_PFX_Editor" && !flag)
+				if (!flag)
 				{
 					OutFile("zCBspTree::AddVob: (" + AHEX32((uint)vob) + ") Parent: " + AHEX32(vob->GetParent()) + " NodesCount: " + A(ogame->GetWorld()->globalVobTree.CountNodes() - 1), false);
+					
+					if (theApp.selectNextVobForce)
+					{
+						theApp.selectNextVob = true;
+						theApp.selectNextVobForce = false;
+					}
+
 					theApp.OnCreateVob(vob, theApp.selectNextVob);
 					theApp.selectNextVob = false;
+					
 				}
 
 			}

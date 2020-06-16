@@ -42,6 +42,7 @@ namespace GOTHIC_ENGINE {
 			bool levelReady;
 			bool treeIsReady;
 			bool selectNextVob;
+			bool selectNextVobForce;
 			bool nextInsertBlocked;
 
 

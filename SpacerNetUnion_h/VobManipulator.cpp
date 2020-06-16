@@ -260,6 +260,8 @@ namespace GOTHIC_ENGINE {
 
 				if (freePoint || waypoint)
 				{
+					//cmd << "========================RESET====================" << endl;
+					
 
 					if (theApp.turnWpMode == TurnWpMode::AGAINST_CAMERA)
 					{
@@ -271,12 +273,14 @@ namespace GOTHIC_ENGINE {
 					{
 						newVob->SetHeadingWorld(pos);
 					}
+
+					newVob->ResetXZRotationsWorld();
 				}
 				else if (theApp.options.GetIntVal("vobInsertVobRotRand"))
 				{
 					newVob->RotateLocalY(GetRandVal(0, 360));
 				}
-
+			
 				//newVob->ResetXZRotationsWorld();
 
 				if (waypoint)

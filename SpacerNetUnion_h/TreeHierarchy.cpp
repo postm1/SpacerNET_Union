@@ -7,7 +7,7 @@ namespace GOTHIC_ENGINE {
 	void CreateTree()
 	{
 		//MessageBox(0, "Crate in c++", 0, 0);
-		auto addNode = (voidFuncPointer)GetProcAddress(theApp.module, "CreateTree");
+		static auto addNode = (voidFuncPointer)GetProcAddress(theApp.module, "CreateTree");
 		addNode();
 	}
 
@@ -43,13 +43,17 @@ namespace GOTHIC_ENGINE {
 	zSTRING base_class_name = "";
 	int parentId = 0;
 
+	const CString PRESET_ENTRY_NEWOBJECT = "[NEW]";
+	const CString POSTFIX_CLASS_SCRIPTED = "scripted";
+	const CString POSTFIX_CLASS_ABSTRACT = "abstract";
+	const CString POSTFIX_CLASS_CURRUPT = "currupt";
 
-
-	void BuildClassHierarchy(int parentId, zCClassDef *parentClassDef)
+	void BuildClassHierarchy(zCClassDef *parentClassDef)
 	{
 		zSTRING baseName;
 		zSTRING s;
-		parentId++;
+
+		static auto addNode = (callVoidFunc)GetProcAddress(theApp.module, "AddClassNode");
 
 		for (int i = 0; i<zCClassDef::GetNum(); i++)
 		{
@@ -69,8 +73,9 @@ namespace GOTHIC_ENGINE {
 
 				s = classDef->GetClassName_();
 
-				zSTRING postfix = "";
-				/*
+				CString postfix = "";
+				CString postfixStr = "";
+				
 				if (!baseOK)
 				{
 				if (!postfix.IsEmpty()) postfix += ",";
@@ -86,76 +91,138 @@ namespace GOTHIC_ENGINE {
 				if (!postfix.IsEmpty()) postfix += ",";
 				postfix += POSTFIX_CLASS_ABSTRACT;
 				}
-				if (!postfix.IsEmpty()) s = s + " (" + postfix + ")";
-				*/
+				if (!postfix.IsEmpty()) postfixStr = postfixStr + " (" + postfix + ")";
+				
 
 				//HTREEITEM newITEM = ctrl_classtree.InsertItem(s.ToChar(), parent);
 
 
-				auto addNode = (addClassNode)GetProcAddress(theApp.module, "AddClassNode");
+				
 
 				if (addNode)
 				{
 					Stack_PushString(baseName);
 					Stack_PushString(s);
+					Stack_PushString(postfixStr);
 					//MessageBox(0, s + " [3] " + zSTRING(parentId), 0, 0);
-					addNode(parentId);
+					addNode();
 				}
 
 				//parentId++;
-				BuildClassHierarchy(parentId, classDef);
+				BuildClassHierarchy(classDef);
 
 			}
 		}
 	}
 
-	bool SetBaseClass(zSTRING class_name)
+	zCClassDef* GetBaseEngineClassDef(CString classTypeName)
 	{
-		if (base_class_name != class_name)
+		int c = 0;
+		BOOL found = FALSE;
+		zCClassDef* vobClass = NULL;
+
+		while (c<zCClassDef::GetNum() && !found)
 		{
-			base_class_name = class_name;
-
-			BuildClassHierarchy();
-
-			return true; // changed
+			vobClass = zCClassDef::GetClassDefByIndex(c);
+			found = (A vobClass->GetClassName_() == classTypeName);
+			if (!found) c++;
 		}
-		else
+		return vobClass;
+	}
+
+
+	void GetClassesRecursive(zCClassDef* parentClassDef)
+	{
+		static auto addNode = (callVoidFunc)GetProcAddress(theApp.module, "AddClassNode");
+
+		CString baseName;
+		CString s;
+
+		for (int i = 0; i<zCClassDef::GetNum(); i++)
 		{
-			return false; // not changed
-		};
+			zCClassDef* classDef = zCClassDef::GetClassDefByIndex(i);
+
+			if (classDef->GetBaseClassDef() == parentClassDef) {
+
+
+				CString postfix = "";
+				CString postfixStr = "";
+
+				zBOOL baseOK;
+				if (classDef->GetBaseClassDef())
+				{
+					baseName = A classDef->GetBaseClassDef()->GetClassName_();
+					baseOK = (baseName == A classDef->GetBaseClassName());
+				}
+				else {
+					baseOK = (classDef->GetBaseClassName() == "NULL");
+				};
+
+				s = A classDef->GetClassName_();
+
+				
+
+				if (!baseOK)
+				{
+					if (!postfix.IsEmpty()) postfix += ",";
+					postfix += POSTFIX_CLASS_CURRUPT;
+				}
+				if (classDef->IsScriptedClass())
+				{
+					if (!postfix.IsEmpty()) postfix += ",";
+					postfix += POSTFIX_CLASS_SCRIPTED;
+				}
+				if (classDef->IsAbstractClass())
+				{
+					if (!postfix.IsEmpty()) postfix += ",";
+					postfix += POSTFIX_CLASS_ABSTRACT;
+				}
+				if (!postfix.IsEmpty()) postfixStr = postfixStr + " (" + postfix + ")";
+
+
+				//cmd << "baseName: " << baseName << " s: " << s << " postfixStr: " << postfixStr << endl;
+
+				if (addNode)
+				{
+					Stack_PushString(baseName);
+					Stack_PushString(s);
+					Stack_PushString(postfixStr);
+					addNode();
+				}
+
+				BuildClassHierarchy(classDef);
+
+			}
+		}
+
 	}
 
 	void BuildClassHierarchy()
 	{
-		int c = 0;
-		BOOL found = FALSE;
-		zCClassDef* vobClass = 0;
-		while (c<zCClassDef::GetNum() && !found)
+		zCClassDef* baseClassDef = GetBaseEngineClassDef("zCVob");
+
+		cmd << "BuildClassHierarchy" << endl;
+
+		if (!baseClassDef)
 		{
-			vobClass = zCClassDef::GetClassDefByIndex(c);
-			found = (vobClass->GetClassName_() == base_class_name);
-			if (!found) c++;
-		}
-		if (found)
-		{
-			zSTRING s = vobClass->GetClassName_();
-			//newITEM1 = ctrl_classtree.InsertItem(s.ToChar(), TVI_ROOT);
-
-			auto addNode = (addClassNode)GetProcAddress(theApp.module, "AddClassNode");
-
-			if (addNode)
-			{
-				Stack_PushString("");
-				Stack_PushString(s);
-
-				//MessageBox(0, s + " [1] " + zSTRING(parentId), 0, 0);
-				addNode(parentId);
-			}
-
-			BuildClassHierarchy(parentId, vobClass);
-
+			cmd << "GetBaseEngineClassDef fail!" << endl;
+			return;
 		}
 
+		static auto addNode = (callVoidFunc)GetProcAddress(theApp.module, "AddClassNode");
+
+		Stack_PushString("");
+		Stack_PushString("zCVob");
+		Stack_PushString("");
+		addNode();
+
+
+		GetClassesRecursive(baseClassDef);
+
+		(callVoidFunc)GetProcAddress(theApp.module, "FillClassNodes")();
+		
+
+		/*
 
 		zSTRING base_class_name3 = "zCVob";
 
@@ -174,11 +241,11 @@ namespace GOTHIC_ENGINE {
 			if (found)
 			{
 				zSTRING s = vobClass->GetClassName_();
-
+				CString prefix = "";
 				//newITEM2 = ctrl_classtree.InsertItem(s.ToChar(), TVI_ROOT);
 				//MessageBox(0, "Found", 0, 0);
 
-				auto addNode = (addClassNode)GetProcAddress(theApp.module, "AddClassNode");
+				
 
 				if (addNode)
 				{

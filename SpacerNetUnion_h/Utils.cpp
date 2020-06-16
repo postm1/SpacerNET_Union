@@ -138,7 +138,7 @@ namespace GOTHIC_ENGINE {
 
 		if (vob)
 		{
-			/*
+			
 			if (dynamic_cast<zCVobLevelCompo*>(vob))
 			{
 				if (vob->GetVisual())
@@ -151,16 +151,17 @@ namespace GOTHIC_ENGINE {
 					str = vob->GetVobName().ToChar();
 				}
 
-				str = str + " [Children Count: ";
+				/*str = str + " [Children Count: ";
 
 				childrenCountVob = 0;
 				GetChildrenCount(vob->globalVobTreeNode);
 
 				str = str + ToStr(childrenCountVob - 1);
 				str = str + "]";
+				*/
 			}
 			else
-			*/
+			
 			{
 				// generate the name of the item	
 				if (!vob->GetVobName().IsEmpty())

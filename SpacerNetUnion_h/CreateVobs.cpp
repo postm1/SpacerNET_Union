@@ -183,7 +183,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		OutFile("CreateNewVob: " + A vobName + " " + A className, true);
+		//OutFile("CreateNewVob: " + A vobName + " " + A className, true);
 
 		bool flag = nextInsertBlocked;
 		nextInsertBlocked = false;
@@ -240,6 +240,8 @@ namespace GOTHIC_ENGINE {
 			newvob->SetCollDetDyn(dyn);
 			newvob->SetCollDetStat(stat);
 
+			theApp.selectNextVobForce = true;
+
 			InsertIntoWorld(newvob, pickedVob);
 
 			newvob->Release();
@@ -247,8 +249,12 @@ namespace GOTHIC_ENGINE {
 
 			OutFile("CreateNewVob: after insert into world: " + AHEX32((uint)newvob), false);
 
-			//OnCreateVob(newvob);
+		
 			theApp.SetSelectedVob(newvob, "CreateNewVob");
+		}
+		else
+		{
+			cmd << "Creation Vob fail!!!!!!" << endl;
 		}
 
 		nextInsertBlocked = flag;
@@ -274,7 +280,7 @@ namespace GOTHIC_ENGINE {
 		InsertIntoWorld(pVob, pickedVob);
 
 		pVob->Release();
-		//OnCreateVob(pVob);
+		
 		theApp.SetSelectedVob(pVob, "CreatePFX");
 	}
 
@@ -319,7 +325,7 @@ namespace GOTHIC_ENGINE {
 
 		pItem->ResetXZRotationsWorld();
 		pItem->Release();
-		//OnCreateVob(pItem);
+	
 
 		//theApp.SetSelectedVob(pItem, "CreateItem");
 
@@ -333,7 +339,7 @@ namespace GOTHIC_ENGINE {
 		{
 			OutFile("OnCreateVob: vob: " + AHEX32((uint)vob), true);
 
-			auto addNode = (addNewVob)GetProcAddress(theApp.module, "OnVobInsert");
+			static auto addNode = (addNewVob)GetProcAddress(theApp.module, "OnVobInsert");
 
 			Stack_PushString(vob->_GetClassDef()->className);
 			Stack_PushString(GetVobName(vob));
