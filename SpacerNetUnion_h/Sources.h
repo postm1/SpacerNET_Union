@@ -27,6 +27,7 @@
 #include "zProgMesh.cpp"
 #include "Play.cpp"
 #include "World.cpp"
+#include "Search.cpp"
 #include "SpacerApp.cpp"
 #include "Spacer_Loop.cpp"
 #include "Export.cpp"

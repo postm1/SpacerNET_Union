@@ -455,7 +455,6 @@ namespace GOTHIC_ENGINE {
 		zCClassDef* lightClassdef = zCVob::classDef;
 
 
-
 		zTBBox3D box;
 
 		zCVob* camVob = ogame->GetCamera()->connectedVob;
@@ -463,15 +462,12 @@ namespace GOTHIC_ENGINE {
 		zVEC3 normCamera = camVob->GetAtVectorWorld().Normalize();
 
 
-
-
-
-
-
-
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearVobList")();
 
 		auto GetSearchRadius = (voidFuncPointer)GetProcAddress(theApp.module, "GetSearchRadius");
+
+
+
 
 		int radius = GetSearchRadius();
 
@@ -482,6 +478,8 @@ namespace GOTHIC_ENGINE {
 
 		ogame->GetWorld()->CollectVobsInBBox3D(resVobList, box);
 
+
+
 		//ogame->GetWorld()->SearchVobListByBaseClass(lightClassdef, resVobList, 0);
 
 		for (int i = 0; i < resVobList.GetNumInList(); i++)
@@ -491,12 +489,14 @@ namespace GOTHIC_ENGINE {
 
 			if (nextVob && (nextVob->GetDistanceToVob(*ogame->GetCamera()->connectedVob) <= radius * 2) && nextVob != ogame->GetCamera()->connectedVob)
 			{
-				addToVobList addEntry = (addToVobList)GetProcAddress(theApp.module, "AddToVobList");
+				static addToVobList addEntry = (addToVobList)GetProcAddress(theApp.module, "AddToVobList");
 				Stack_PushString(GetVobName(nextVob));
 				addEntry((uint)nextVob);
 				//vc->AddVob(nextVob);
 			}
 		}
+
+
 	}
 
 	void WriteLine(char* message)

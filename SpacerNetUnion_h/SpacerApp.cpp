@@ -34,6 +34,7 @@ namespace GOTHIC_ENGINE {
 		this->isVobParentChange = false;
 		this->firstZenLoad = false;
 		this->currenItemRender = NULL;
+		this->search.cur_vob = NULL;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}

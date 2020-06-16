@@ -27,6 +27,7 @@ namespace GOTHIC_ENGINE {
 
 			code = foundPair.GetValue()->keyCode;
 			mod = foundPair.GetValue()->modifier;
+
 			//if (found != 0)
 			{
 				//foundKey.GetKey();
@@ -37,19 +38,25 @@ namespace GOTHIC_ENGINE {
 		else
 		{
 
+
+
 			auto pair = defaultValues[key];
+
 
 			if (!pair.IsNull())
 			{
+
 				theApp.spcOpt.Read(value, "KEYS", pair.GetKey(), pair.GetValue());
 			}
 			else
 			{
+
 				theApp.spcOpt.Read(value, "KEYS", key, "");
 			}
 			
 
 			//cmd << "Read ini for: " << key << " " << value << endl;
+
 			temp_str = value;
 			mod = atoi(temp_str.GetWord('_', 1));
 			temp_str = value;

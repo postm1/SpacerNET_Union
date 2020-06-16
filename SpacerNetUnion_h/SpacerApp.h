@@ -19,6 +19,12 @@ namespace GOTHIC_ENGINE {
 			int m_kf_pos;
 			zCVob* event_sourcevob;
 		};
+		struct 
+		{
+			zCVob* cur_vob;
+			zSTRING lastClass;
+
+		} search;
 
 		struct
 		{
@@ -202,6 +208,14 @@ namespace GOTHIC_ENGINE {
 
 		void Init();
 
-	};
+		void SearchSelectVob(zCVob * pickedVob);
+
+		void SearchFillVobClass(CString vobClass);
+
+		bool SearchHandleVob(zCVob *& vob);
+
+		void SearchFillVobClass(bool derived);
+
+};
 
 }

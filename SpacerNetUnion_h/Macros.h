@@ -51,7 +51,7 @@ namespace GOTHIC_ENGINE {
 	#define zADDREF_ACCT(obj)			{(obj)->AddRef(); }
 	#define zRELEASE_ACCT(obj)			zRELEASE(obj)
 	#define zRELEASE_ACCT_NONULL(obj)	{(obj)->Release(); }
-	#define RELEASE_OBJECT(p) do { if(p) { p->Release(); p = NULL; }} while(FALSE)
+	#define RELEASE_OBJECT(p) do { if(p) { p->Release(); p = Null; }} while(FALSE)
 
 	#define DLLEXPORT __declspec(dllexport)
 	#define NOINLINE __declspec(noinline)
@@ -86,6 +86,8 @@ namespace GOTHIC_ENGINE {
 	typedef void(*loadZenAuto)();
 	typedef void(*strFuncPoiter)(char*, int, char*);
 	typedef void(*AddGlobalEntryPointer)(uint, uint);
+
+	typedef bool(*compareVobs)();
 
 
 	typedef void(*sendIniValue)(char*);

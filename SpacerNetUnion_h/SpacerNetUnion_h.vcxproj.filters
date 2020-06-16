@@ -2927,6 +2927,9 @@
     <ClInclude Include="CameraKey.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
     </ClInclude>
+    <ClInclude Include="Search.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

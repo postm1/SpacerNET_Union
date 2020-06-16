@@ -286,17 +286,21 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::KeysLoop()
 	{
 
-
 		if (keys.KeyPressed("VOBLIST_COLLECT", true))
 		{
+			
 			FindNearestVobs();
 		}
+
+
+		
 
 		if (keys.KeyPressed("WP_CREATEFAST", true))
 		{
 			CreateNewWaypointFromButtonClick();
 		}
 
+		
 
 
 		if (keys.KeyPressed("WIN_HIDEALL", true))

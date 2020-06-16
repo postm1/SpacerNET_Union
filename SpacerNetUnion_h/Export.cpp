@@ -515,6 +515,22 @@ namespace GOTHIC_ENGINE {
 			keys.ResetDefault();
 
 		}
+
+
+		__declspec(dllexport) void Extern_GetClassFields() {
+
+			theApp.SearchFillVobClass(Stack_PeekString());
+
+		}
+
+		__declspec(dllexport) void Extern_SearchVobs(bool derived) {
+
+			theApp.SearchFillVobClass(derived);
+
+		}
+
+
+		
 	}
 
 }
