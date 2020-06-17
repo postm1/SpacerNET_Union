@@ -214,7 +214,7 @@ namespace GOTHIC_ENGINE {
 
 		bool SearchHandleVob(zCVob *& vob);
 
-		void SearchFillVobClass(bool derived);
+		void SearchFillVobClass(bool derived, bool isName, bool isVisual);
 
 };
 

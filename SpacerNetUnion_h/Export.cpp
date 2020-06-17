@@ -523,9 +523,9 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		__declspec(dllexport) void Extern_SearchVobs(bool derived) {
+		__declspec(dllexport) void Extern_SearchVobs(bool derived, bool isName, bool isVisual) {
 
-			theApp.SearchFillVobClass(derived);
+			theApp.SearchFillVobClass(derived, isName, isVisual);
 
 		}
 

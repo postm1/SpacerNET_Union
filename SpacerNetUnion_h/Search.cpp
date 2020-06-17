@@ -75,7 +75,7 @@ namespace GOTHIC_ENGINE {
 		return true;
 	}
 
-	void SpacerApp::SearchFillVobClass(bool derived)
+	void SpacerApp::SearchFillVobClass(bool derived, bool isName, bool isVisual)
 	{
 
 		zCArray<zCVob*> result;
@@ -90,13 +90,57 @@ namespace GOTHIC_ENGINE {
 
 		int num = result.GetNumInList();
 
-		for (int i = 0; i<num; i++)
-		{
-			if (dynamic_cast<zCVobLevelCompo*>(result[i]))	continue;
-			if (result[i] == ogame->GetCamera()->GetVob())	continue;
 
-			SearchHandleVob(result[i]);
+		if (isName || isVisual)
+		{
+			for (int i = 0; i < num; i++)
+			{
+				zCVob* vob = result[i];
+				bool flag = false;
+
+				if (vob)
+				{
+
+					if (isName && isVisual)
+					{
+						if (vob->GetVobName() == search.cur_vob->GetVobName()
+							&& vob->GetVisual()
+							&& search.cur_vob->GetVisual()
+							&& vob->GetVisual()->GetVisualName() == search.cur_vob->GetVisual()->GetVisualName()
+							)
+						{
+							flag = true;
+						}
+					}
+					else if (isName && vob->GetVobName() == search.cur_vob->GetVobName())
+					{
+						flag = true;
+					}
+					else if (isVisual 
+						&& vob->GetVisual() 
+						&& search.cur_vob->GetVisual() 
+						&& vob->GetVisual()->GetVisualName() == search.cur_vob->GetVisual()->GetVisualName())
+					{
+						flag = true;
+					}
+				}
+
+				if (flag) resultFound.Insert(vob);
+			}
 		}
+		else
+		{
+			
+
+			for (int i = 0; i<num; i++)
+			{
+				if (dynamic_cast<zCVobLevelCompo*>(result[i]))	continue;
+				if (result[i] == ogame->GetCamera()->GetVob())	continue;
+
+				SearchHandleVob(result[i]);
+			}
+		}
+		
 
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
 		
