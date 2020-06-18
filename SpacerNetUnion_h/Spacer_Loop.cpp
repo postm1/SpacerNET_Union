@@ -347,62 +347,6 @@ namespace GOTHIC_ENGINE {
 			call(ToggleMenuType::ToggleInvis);
 		}
 
-		if (KeyPress(KEY_F4))
-		{
-			/*
-			zSTRING name = "DSDsdasds";
-			PlaySoundGame(name);
-
-			print.PrintRed("playing...");
-			/*
-
-			print.PrintRed("Vob...");
-
-
-
-			zCVob* vob = theApp.GetSelectedVob();
-
-			int& s_bAddVobsToMesh = *(int*)0x008D8870;
-
-			if (vob)
-			{
-
-			ogame->GetWorld()->cbspTree->BuildTree(1.0f);
-			ogame->GetWorld()->bspTree.Build(ogame->GetWorld()->cbspTree);
-			s_bAddVobsToMesh = TRUE;
-			ogame->GetWorld()->TraverseBspAddVobsToMesh(ogame->GetWorld()->cbspTree, vob->globalVobTreeNode);
-			s_bAddVobsToMesh = FALSE;
-
-			ogame->GetWorld()->cbspTree->DeleteTree();
-
-			MessageBox(0, "1232", 0, 0);
-			//ogame->GetWorld()->bspTree.DisposeTree();
-			//ogame->GetWorld()->UpdateVobTreeBspDependencies(&ogame->GetWorld()->globalVobTree);
-			//ogame->GetWorld()->cbspTree->CreateBspSectors();
-
-			//ogame->GetWorld()->UpdateVobTreeBspDependencies(ogame->GetWorld()->globalVobTree.GetFirstChild());
-			//ogame->GetWorld()->cbspTree->CreateBspSectors();
-			}
-			*/
-
-			//zinput->ClearKey(KEY_F4);
-
-		}
-
-
-		if (KeyPress(KEY_F5))
-		{
-			//ScaleVob(theApp.GetSelectedVob(), 0.5f);
-			/*
-			print.PrintRed("Playing the game...");
-			PlayTheGame();
-			*/
-
-			//SaveCurrentWorldToMSH();
-			//zinput->ClearKey(KEY_F5);
-		}
-
-
 		if (keys.KeyPressed("LIGHT_RAD_INC", true))
 		{
 			if (playerLightInt <= 20000)
@@ -425,7 +369,7 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("LIGHT_RAD_ZERO", true))
 		{
-			playerLightInt = 500;
+			playerLightInt = 0;
 
 			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_ZERO"));
 
@@ -434,13 +378,14 @@ namespace GOTHIC_ENGINE {
 				zCSkyControler::GetActiveSkyControler()->SetLightDirty();
 			}
 
-			playerLightInt = 0;
+			playerLightInt = 500;
 
 			if (zCSkyControler::GetActiveSkyControler())
 			{
 				zCSkyControler::GetActiveSkyControler()->SetLightDirty();
 			}
 
+			playerLightInt = 0;
 		}
 
 	}
