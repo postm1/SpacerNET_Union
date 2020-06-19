@@ -22,6 +22,7 @@ namespace GOTHIC_ENGINE {
 		struct 
 		{
 			zCVob* cur_vob;
+			zCVob* cur_vob_convert;
 			zSTRING lastClass;
 
 		} search;
@@ -210,11 +211,18 @@ namespace GOTHIC_ENGINE {
 
 		void SearchSelectVob(zCVob * pickedVob);
 
-		void SearchFillVobClass(CString vobClass);
+		void SearchFillVobClass(CString vobClass, bool isNewType=false);
+
+		void SearchGetSubClasses(CString className);
+
 
 		bool SearchHandleVob(zCVob *& vob);
 
-		void SearchFillVobClass(bool derived, bool isName, bool isVisual);
+		void SearchDoConvert(CString prop);
+
+		bool SearchHandleConvert(zCVob *& vob);
+
+		int SearchFillVobClass(bool derived, int type);
 
 };
 

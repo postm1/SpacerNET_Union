@@ -35,6 +35,7 @@ namespace GOTHIC_ENGINE {
 		this->firstZenLoad = false;
 		this->currenItemRender = NULL;
 		this->search.cur_vob = NULL;
+		this->search.cur_vob_convert = NULL;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}

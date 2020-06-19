@@ -353,8 +353,8 @@ namespace GOTHIC_ENGINE {
 	{
 		if (vob)
 		{
-			OutFile("OnRemoveVob: vob: " + AHEX32((uint)vob), true);
-			auto onRemove = (onVobRemove)GetProcAddress(theApp.module, "OnVobRemove");
+			//OutFile("OnRemoveVob: vob: " + AHEX32((uint)vob), true);
+			static auto onRemove = (onVobRemove)GetProcAddress(theApp.module, "OnVobRemove");
 			onRemove((uint)vob);
 		}
 
@@ -396,7 +396,7 @@ namespace GOTHIC_ENGINE {
 		theApp.pickedWaypoint2nd = NULL;
 
 
-		OutFile("RemoveVob: vob: " + AHEX32((uint)pVob), true);
+		//OutFile("RemoveVob: vob: " + AHEX32((uint)pVob), true);
 
 
 
@@ -418,7 +418,7 @@ namespace GOTHIC_ENGINE {
 			zCWaypoint* wp = waynet->SearchWaypoint(wpvob);
 			if (wp)
 			{
-				OutFile("RemoveVob: waypoint " + A wp->name + " " + AHEX32((uint)pVob), true);
+				//OutFile("RemoveVob: waypoint " + A wp->name + " " + AHEX32((uint)pVob), true);
 				waynet->DeleteWaypoint(wp);
 			}
 		}
@@ -426,7 +426,7 @@ namespace GOTHIC_ENGINE {
 		{
 
 
-			OutFile("RemoveVob: vob " + A GetVobName(pVob) + " " + AHEX32((uint)pVob), true);
+			//OutFile("RemoveVob: vob " + A GetVobName(pVob) + " " + AHEX32((uint)pVob), true);
 			ogame->GetWorld()->RemoveVobSubtree(pVob);
 		}
 

@@ -517,20 +517,30 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		__declspec(dllexport) void Extern_GetClassFields() {
+		__declspec(dllexport) void Extern_GetClassFields(bool isNew) {
 
-			theApp.SearchFillVobClass(Stack_PeekString());
-
-		}
-
-		__declspec(dllexport) void Extern_SearchVobs(bool derived, bool isName, bool isVisual) {
-
-			theApp.SearchFillVobClass(derived, isName, isVisual);
+			theApp.SearchFillVobClass(Stack_PeekString(), isNew);
 
 		}
 
+		__declspec(dllexport) int Extern_SearchVobs(bool derived, int type) {
 
+			return theApp.SearchFillVobClass(derived, type);
+
+		}
+
+		__declspec(dllexport) void Extern_GetConvertSubClasses() {
+
+			theApp.SearchGetSubClasses(Stack_PeekString());
+
+		}
 		
+
+		__declspec(dllexport) void Extern_AddConvertVob() {
+
+			theApp.SearchDoConvert(Stack_PeekString());
+
+		}
 	}
 
 }

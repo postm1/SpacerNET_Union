@@ -53,4 +53,12 @@ namespace GOTHIC_ENGINE {
 		ToggleBbox,
 		ToggleInvis
 	};
+
+	enum SearchVobType
+	{
+		Search = 0,
+		Convert,
+		ReplaceVobTree,
+		Remove
+	};
 }
