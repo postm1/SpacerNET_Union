@@ -1,4 +1,5 @@
 
+
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
@@ -253,7 +254,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	int SpacerApp::SearchFillVobClass(bool derived, int type)
+	int SpacerApp::SearchFillVobClass(bool derived, int type, int selectedCount)
 	{
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
 		int resultCount = 0;
@@ -284,8 +285,17 @@ namespace GOTHIC_ENGINE {
 		{
 			if (dynamic_cast<zCVobLevelCompo*>(result[i]))	continue;
 			if (result[i] == ogame->GetCamera()->GetVob())	continue;
+			if (!result[i])	continue;
 
-			SearchHandleVob(result[i]);
+			if (selectedCount > 0)
+			{
+				SearchHandleVob(result[i]);
+			}
+			else
+			{
+				resultFound.Insert(result[i]);
+			}
+			
 		}
 		
 		

@@ -525,7 +525,9 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) int Extern_SearchVobs(bool derived, int type) {
 
-			return theApp.SearchFillVobClass(derived, type);
+			int selectedCount = Stack_PeekInt();
+
+			return theApp.SearchFillVobClass(derived, type, selectedCount);
 
 		}
 

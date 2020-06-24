@@ -205,6 +205,11 @@ namespace GOTHIC_ENGINE {
 		auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 		load(0);
 
+		if (IsVirtualFile(worldName))
+		{
+			(callVoidFunc)GetProcAddress(theApp.module, "ShowVdfWarning")();
+		}
+
 
 		isMesh = false;
 		isMerged = false;

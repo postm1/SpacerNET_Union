@@ -663,5 +663,57 @@ namespace GOTHIC_ENGINE {
 		// The final result.
 		return ((start*cos(theta)) + (RelativeVec*sin(theta)));
 	}
+
+
+	bool IsVirtualFile(CString path)
+	{
+		path = path.Replace("/", "\\");
+
+		Array<string> pathes = (A path).Split("\\");
+
+		int workPos = path.Search("\\_WORK\\", 0, true);
+
+
+		path = "_WORK\\" + path.Copy(workPos, path.Length() - workPos);
+
+		//cmd << "path =  " << path << endl;
+
+		CString fileName = pathes[pathes.GetNum() - 1];
+
+		//cmd << "Checking for " << fileName << endl;
+
+
+		char matches[2048];
+		vdf_searchfile(fileName.ToChar(), matches);
+		Array<string> names = (A matches).Split("|");
+
+		for (uint i = 0; i < names.GetNum(); i++) {
+
+			cmd << names[i] << endl;
+
+			bool_t isVirtual = vdf_fexists(names[i].ToChar(), VDF_VIRTUAL);
+			bool_t isPhysical = vdf_fexists(names[i].ToChar(), VDF_PHYSICAL);
+
+			
+			cmd << isVirtual << endl;
+			cmd << isPhysical << endl;
+			
+
+			if (isVirtual && names[i] == path)
+			{
+				//cmd << "WARNING VIRTUAL!" << endl;
+				return true;
+			}
+			
+			
+			
+		}
+
+		return false;
+	}
+
+
+
+	
 }
 

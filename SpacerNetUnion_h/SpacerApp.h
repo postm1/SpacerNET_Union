@@ -222,7 +222,8 @@ namespace GOTHIC_ENGINE {
 
 		bool SearchHandleConvert(zCVob *& vob);
 
-		int SearchFillVobClass(bool derived, int type);
+		int SearchFillVobClass(bool derived, int type, int selectedCount);
+
 
 };
 
