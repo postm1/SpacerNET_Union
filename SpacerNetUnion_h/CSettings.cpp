@@ -130,6 +130,14 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+
+		auto getVersion = (callVoidFunc)GetProcAddress(theApp.module, "GetSpacerVersion");
+		getVersion();
+
+		CString version = Stack_PeekString();
+
+		theApp.spcOpt.Write(version, "INFO", "Version");
+
 		theApp.spcOpt.SaveAll();
 	}
 

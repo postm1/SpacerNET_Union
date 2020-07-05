@@ -396,7 +396,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::DoCompileWorld(int type)
 	{
-		if (!ogame->GetWorld() || ogame->GetWorld()->IsCompiled())
+		if (!ogame->GetWorld())// || ogame->GetWorld()->IsCompiled())
 		{
 			return;
 		}
