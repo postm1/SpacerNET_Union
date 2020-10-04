@@ -11,7 +11,7 @@ namespace GOTHIC_ENGINE {
 
 	void CGameManager::Init_Spacer(struct HWND__ *& hwnd)
 	{
-
+		//Gothic_II_Addon::hWndApp
 		//cmd << "Init_Spacer" << endl;
 
 		theApp.module = CPlugin::FindModule(INTERFACE_DLL_NAME);
@@ -53,6 +53,7 @@ namespace GOTHIC_ENGINE {
 		//cmd << "options" << endl;
 		theApp.options.Init();
 		theApp.options.Load();
+		theApp.visualEditorActive = false;
 
 		//cmd << "InitValues" << endl;
 		keys.InitValues();

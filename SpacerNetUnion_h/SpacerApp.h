@@ -12,6 +12,7 @@ namespace GOTHIC_ENGINE {
 
 		COption spcOpt;
 		CSettings options;
+		bool visualEditorActive;
 
 		struct
 		{
@@ -224,7 +225,9 @@ namespace GOTHIC_ENGINE {
 
 		int SearchFillVobClass(bool derived, int type, int selectedCount);
 
+		void GetAllPfx();
 
-};
+		void GetPFXInstanceProps(CString pfxName);
+	};
 
 }

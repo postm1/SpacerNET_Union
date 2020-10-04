@@ -6,7 +6,7 @@ namespace GOTHIC_ENGINE {
 
 
 	zCArray<HWND> childWindows;
-	CTimer mainTimer;
+	Timer mainTimer;
 
 
 
@@ -141,8 +141,8 @@ namespace GOTHIC_ENGINE {
 
 					gameSession->RenderBlit();
 
-					mainTimer.Attach();
-
+					//mainTimer.Attach();
+					mainTimer.ClearUnused();
 					/*
 					//if (!IsAppForeground() && !ogame->singleStep)
 					if ((GetForegroundWindow() != hWndApp && GetForegroundWindow() != theApp.mainWin) && !ogame->singleStep)
@@ -160,11 +160,6 @@ namespace GOTHIC_ENGINE {
 						//zrenderer->Vid_SetScreenMode(zRND_SCRMODE_WINDOWED);
 					}
 					
-
-					if (mainTimer(1, 500))
-					{
-						
-					}
 					
 
 					
@@ -285,6 +280,16 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::KeysLoop()
 	{
+
+		if (zinput->KeyPressed(KEY_Z))
+		{
+			visualEditorActive = !visualEditorActive;
+		}
+
+		if (visualEditorActive)
+		{
+			return;
+		}
 
 		if (keys.KeyPressed("VOBLIST_COLLECT", true))
 		{

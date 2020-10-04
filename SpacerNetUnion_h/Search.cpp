@@ -440,4 +440,128 @@ namespace GOTHIC_ENGINE {
 		//cmd << A resultCount << endl;
 		return resultCount;
 	}
+
+	typedef zCParticleEmitter *(*fptr)(class zSTRING const &);
+
+	zCArraySort<zCParticleEmitter*>&s_emitterPresetList = *(zCArraySort<zCParticleEmitter*>*)0x008D8E0C;
+	oCParticleControl*& pfxcGlobal = *(oCParticleControl**)0x00AB088C;
+
+	zCArray<oCVisualFX*>&s_worldVisFXList = *(zCArray<oCVisualFX*>*)0x008CE634;
+	zCParser*& visualParser = *(zCParser**)0x008CE6EC;
+	zCParser*& s_pfxParser = *(zCParser**)0x008D9234;
+	fptr SearchParticleEmitter = (fptr)0x005ADDE0;
+
+
+	zCParticleFX* m_pPfx = NULL;
+	int instanceFieldSize = 0;
+	// Add your code here . . .
+
+	void SpacerApp::GetAllPfx()
+	{
+		int size = s_emitterPresetList.GetNumInList();
+
+		auto addPFX = (callVoidFunc)GetProcAddress(this->module, "AddPfxInstancemName");
+
+	
+
+		for (int i = 0; i < size; i++)
+		{
+			Stack_PushString(s_emitterPresetList.GetSafe(i)->particleFXName);
+			addPFX();
+		}
+	}
+
+	void SpacerApp::GetPFXInstanceProps(CString name)
+	{
+
+		if (m_pPfx)
+		{
+			m_pPfx->StopEmitterOutput();
+			RELEASE_OBJECT(m_pPfx);
+		}
+
+		m_pPfx = new zCParticleFX();
+		m_pPfx->SetEmitter(SearchParticleEmitter(name), FALSE);
+
+
+		zCPar_Symbol* ps = s_pfxParser->GetSymbol(s_pfxParser->GetIndex(name));
+
+		if (!ps)
+		{
+			Message::Box("No PFX found with the name: " + name);
+			return;
+		}
+
+		int index = s_pfxParser->GetIndex(name);
+
+		int baseClassIndex = s_pfxParser->GetBaseClass(index);
+		int indClass = s_pfxParser->GetIndex(name);
+
+		zCPar_Symbol* base = s_pfxParser->GetSymbol(baseClassIndex);
+		zCPar_Symbol* pfx = s_pfxParser->GetSymbol(indClass);
+
+		void* addr = m_pPfx->emitter;
+		int type = 0;
+
+		if (!addr)
+		{
+			printWin("PFX instance pointer is NULL");
+			return;
+		}
+
+
+
+		instanceFieldSize = base->ele;
+		//Message::Box("FieldsSize: " + ToStr instanceFieldSize);
+
+		//MessageBox(0, zSTRING(base->m_sName) + zSTRING(base->f.tNumber), 0, 0);
+		for (int i = 0; i < instanceFieldSize; i++)
+		{
+			// берем следующие base->f.tNumber символов, они и €вл€ютс€ пол€ми инстанции
+			zCPar_Symbol* param = s_pfxParser->GetSymbol(baseClassIndex + i + 1);
+
+			if (!param)
+			{
+				continue;
+			}
+
+			zSTRING sName = param->name;
+
+			int pos = sName.Search(".", 1);
+			if (pos > 0)
+				sName = param->name.Substr(pos + 1, 255);
+
+			type = param->type;
+
+			if (param->type == zPAR_TYPE_FLOAT)
+			{
+				Stack_PushFloat(param->single_floatdata);
+				cmd << sName << " " << type << " " << param->single_floatdata << endl;
+			}
+			else if (param->type == zPAR_TYPE_INT)
+			{
+				Stack_PushInt(param->single_intdata);
+				cmd << sName << " " << type << " " << param->single_intdata << endl;
+			}
+			else if (param->type == zPAR_TYPE_STRING)
+			{
+				zSTRING value = *((zSTRING*)((BYTE*)addr + param->GetOffset()));
+				Stack_PushString(value);
+				cmd << sName << " " << type << " " << value << endl;
+			}
+			else
+			{
+				continue;
+			}
+
+			//Stack_PushInt((int)param->type);
+			//Stack_PushString(sName);
+
+			//prop->name = sName;
+			//prop->type = type;
+
+			//prop->addr = (BYTE*)addr + param->GetOffset();
+		}
+		//Stack_PushInt(instanceFieldSize);
+	}
 }

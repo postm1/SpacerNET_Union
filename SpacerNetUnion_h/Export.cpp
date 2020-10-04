@@ -4,6 +4,8 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 	// Функции вызываются из C#
+
+
 	extern "C"
 	{
 		__declspec(dllexport) void Extern_LoadWorld() {
@@ -462,7 +464,7 @@ namespace GOTHIC_ENGINE {
 			CString visual = Stack_PeekString();
 			AddVobToRender(visual, false);
 		}
-
+		
 		__declspec(dllexport) void Extern_RenderPFX() {
 			CString visual = Stack_PeekString();
 			pfxManager.RenderPFX(visual);
@@ -543,6 +545,18 @@ namespace GOTHIC_ENGINE {
 			theApp.SearchDoConvert(Stack_PeekString());
 
 		}
+
+
+		__declspec(dllexport) void Extern_GetInstanceProps() {
+
+			theApp.GetPFXInstanceProps(Stack_PeekString());
+		}
+
+		__declspec(dllexport) void Extern_GetAllPfx() {
+
+			theApp.GetAllPfx();
+		}
+		
 	}
 
 }
