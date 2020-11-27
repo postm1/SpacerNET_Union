@@ -186,7 +186,7 @@ namespace GOTHIC_ENGINE {
 		if (f->Exists())
 		{
 			//zERR_MESSAGE(7, 0, "B: SPC: Configuration: Loading file " + MATLIB_FILENAME);
-			if (f->Open(false) == zERR_NONE)
+			if (f->Open(false) == 0)
 			{
 				// Liste leeren
 				matFilterList.EmptyList();
@@ -251,7 +251,7 @@ namespace GOTHIC_ENGINE {
 		zerr->Separator("LOADENK METRIAL HUILTERS");
 		if (f->Exists())
 		{
-			if (f->Open(false) == zERR_NONE)
+			if (f->Open(false) == 0)
 			{
 				zSTRING line;
 				zSTRING matName;

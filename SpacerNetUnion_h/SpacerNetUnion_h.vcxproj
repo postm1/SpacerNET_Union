@@ -199,6 +199,7 @@
     <OutDir>$(SolutionDir)Bin\</OutDir>
     <IncludePath>$(SolutionDir)\$(ProjectName)\;$(SolutionDir)\$(ProjectName)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0h\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0h\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <TargetName>SpacerNet_G1</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MP Debug|Win32'">
     <ClCompile>
@@ -531,10 +532,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="NamesGenerator.cpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="PFXEditor.cpp">
       <SubType>
       </SubType>
     </ClInclude>

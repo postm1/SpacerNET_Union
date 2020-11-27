@@ -227,7 +227,11 @@ namespace GOTHIC_ENGINE {
 
 		void GetAllPfx();
 
+		
+
 		void GetPFXInstanceProps(CString pfxName);
+
+		void UpdatePFXField();
 	};
 
 }

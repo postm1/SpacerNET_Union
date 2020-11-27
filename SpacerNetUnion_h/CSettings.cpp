@@ -153,7 +153,7 @@ namespace GOTHIC_ENGINE {
 			zCVobLight::renderLightVisuals = GetIntVal("showHelpVobs");		// Включает визуалы для источников света
 			zCVob::SetShowHelperVisuals(zCVobLight::renderLightVisuals);          // Включает визуалы для тригерров, источников звука и прочего
 
-			ogame->GetWorld()->bspTree.drawVobBBox3D = GetIntVal("drawBBoxGlobal");
+			ogame->GetWorld()->bspTree.drawVobBBox3D = GetIntVal("drawBBoxGlobal");	
 
 			int maxFps = GetIntVal("maxFPS");
 

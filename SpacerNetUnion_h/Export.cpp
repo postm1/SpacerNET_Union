@@ -556,6 +556,11 @@ namespace GOTHIC_ENGINE {
 
 			theApp.GetAllPfx();
 		}
+
+		__declspec(dllexport) void Extern_UpdatePFXField() {
+
+			theApp.UpdatePFXField();
+		}
 		
 	}
 

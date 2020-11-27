@@ -205,8 +205,9 @@ namespace GOTHIC_ENGINE {
 		if (!pWorld || !oWorld) return;
 
 
-
+#if ENGINE > Engine_G1
 		zCPolygon::S_ResetMorphedVerts();
+#endif
 		zCVertex::ResetVertexTransforms();
 
 		cmd << Col16(CMD_YELLOW) << "Start removing" << endl;

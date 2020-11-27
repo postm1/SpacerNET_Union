@@ -61,9 +61,10 @@ namespace GOTHIC_ENGINE {
 	HOOK Invk_zCVobArchive   AS(&zCVob::Archive, &zCVob::Archive_Hook);
 	void zCVob::Archive_Hook(zCArchiver& arc)
 	{
+#if ENGINE > Engine_G1
 		if (zDYNAMIC_CAST<zCParticleFX>(this->GetVisual()))
 			zDYNAMIC_CAST<zCParticleFX>(this->GetVisual())->m_bVisualNeverDies = TRUE;
-
+#endif
 		THISCALL(Invk_zCVobArchive)(arc);
 	}
 
@@ -167,7 +168,9 @@ namespace GOTHIC_ENGINE {
 	zCWorld* zCWorld::zCWorld_Hook() {
 		THISCALL(ivk_zCWorld_zCWorld)();
 		addZonesToWorld = TRUE;
+#if ENGINE > Engine_G1
 		SetWaveAnisEnabled(zoptions->ReadBool("SPACER", "zSpacerWaterAniEnabled", FALSE));
+#endif
 		return this;
 	}
 

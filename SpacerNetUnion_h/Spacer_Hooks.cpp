@@ -93,14 +93,18 @@ namespace GOTHIC_ENGINE {
 		};
 
 		//
+#if ENGINE == Engine_G1
+		_this->UpdateVisualDependencies();
+#else
 		_this->UpdateVisualDependencies(TRUE);
-
 		const zREAL VOB_IGNORE_MIN_EXTEND = 10;
 		zREAL minExtend = _this->GetBBox3DWorld().GetMinExtent();
 		if (minExtend > VOB_IGNORE_MIN_EXTEND) _this->m_zBias = 0;
 
 
 		RecalcWPBBox(_this);
+#endif
+
 	}
 
 	

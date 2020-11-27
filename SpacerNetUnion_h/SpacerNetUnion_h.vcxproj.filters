@@ -2930,9 +2930,6 @@
     <ClInclude Include="Search.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="PFXEditor.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

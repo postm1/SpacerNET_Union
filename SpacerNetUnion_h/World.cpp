@@ -240,8 +240,9 @@ namespace GOTHIC_ENGINE {
 	{
 		oCNpc::SetNpcAIDisabled(TRUE);
 		dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
+#if ENGINE > Engine_G1
 		zCWorld::s_bAlternateRenderOrder = false;
-
+#endif
 		ogame->CamInit();
 		//ogame->EnvironmentInit();
 		ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
@@ -310,19 +311,22 @@ namespace GOTHIC_ENGINE {
 			{
 				SetTime(12, 0);
 				zCTexture::RefreshTexMaxSize(16384);
+#if ENGINE > Engine_G1
 				zCSkyControler::s_activeSkyControler->m_fRelightTime = 0;
+#endif
 				SetRangeVobs();
 				SetRangeWorld();
 			}
 
 			//zCBspTree::s_renderAllPortals = TRUE;
 			//zCBspTree::s_showPortals = TRUE;
+#if ENGINE > Engine_G1
 			ogame->GetWorld()->SetWaveAnisEnabled(FALSE);
 
 
 
 			zCWorld::s_bAlternateRenderOrder = FALSE;
-
+#endif
 
 			options.Apply();
 

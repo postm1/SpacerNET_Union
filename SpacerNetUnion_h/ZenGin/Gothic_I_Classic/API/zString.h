@@ -82,6 +82,15 @@ namespace Gothic_I_Classic {
     inline operator const char*() const  { return ToChar(); }
     inline int Length() const            { return length;   }
 
+	inline zSTRING Substr(unsigned int pos, unsigned long npos = -1) const
+	{
+		std::string s = this->ToChar();
+		std::string s1;
+		s1 = s.substr(pos, npos);
+		zSTRING tmp = s1.c_str();
+		return tmp;
+	}
+
 #if USING_UNION_STRING_METHODS
 #if !UNPROTECT_ZSTRING_METHODS
   public:

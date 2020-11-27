@@ -64,9 +64,9 @@ namespace GOTHIC_ENGINE {
 			search.cur_vob = (zCVob*)zCObject::CreateNewInstance(vobClass);
 			SearchSelectVob(search.cur_vob);
 		}
-		
 
-		
+
+
 	}
 
 	CString Characters(char ch, int anzahl)
@@ -89,7 +89,7 @@ namespace GOTHIC_ENGINE {
 		CString s;
 
 		// Abgeleitete Klassen von parentClassDef ermitteln
-		for (int i = 0; i<zCClassDef::GetNum(); i++)
+		for (int i = 0; i < zCClassDef::GetNum(); i++)
 		{
 			zCClassDef* classDef = zCClassDef::GetClassDefByIndex(i);
 
@@ -115,7 +115,7 @@ namespace GOTHIC_ENGINE {
 				s = A Characters(LIST_PREFIX, depth * 2 - 2) + s;
 				//s = Characters(LIST_PREFIX, depth * 2 - 2) + s;
 				// Den Klassenbezeichner der entsprechenden Listebox hinzufuegen
-			
+
 				Stack_PushString(s);
 				callFunc();
 
@@ -134,7 +134,7 @@ namespace GOTHIC_ENGINE {
 			int c = 0;
 			zBOOL found = FALSE;
 			zCClassDef* vobClass = 0;
-			while (c<zCClassDef::GetNum() && !found)
+			while (c < zCClassDef::GetNum() && !found)
 			{
 				vobClass = zCClassDef::GetClassDefByIndex(c);
 				found = zBOOL(A vobClass->GetClassName_() == className);
@@ -170,7 +170,7 @@ namespace GOTHIC_ENGINE {
 						count--;
 						s = Characters(LIST_PREFIX, count * 2) + A classDef->GetClassName_();
 						if (classDef->IsAbstractClass()) s = s + A LIST_ABSTRACT;
-						
+
 						entryCount++;
 						Stack_PushString(s);
 						callFunc();
@@ -277,11 +277,11 @@ namespace GOTHIC_ENGINE {
 		{
 			ogame->GetWorld()->SearchVobListByBaseClass(curTempVob->GetClassDef(), result, 0);
 		}
-		
+
 
 		int num = result.GetNumInList();
 
-		for (int i = 0; i<num; i++)
+		for (int i = 0; i < num; i++)
 		{
 			if (dynamic_cast<zCVobLevelCompo*>(result[i]))	continue;
 			if (result[i] == ogame->GetCamera()->GetVob())	continue;
@@ -295,10 +295,10 @@ namespace GOTHIC_ENGINE {
 			{
 				resultFound.Insert(result[i]);
 			}
-			
+
 		}
-		
-		
+
+
 		// search
 		if (searchType == SearchVobType::Search)
 		{
@@ -317,14 +317,14 @@ namespace GOTHIC_ENGINE {
 					resultCount += 1;
 				}
 
-				
+
 			}
 		}
 
 		//convert
 		if (searchType == SearchVobType::Convert)
 		{
-			
+
 
 			for (int i = 0; i < resultFound.GetNum(); i++)
 			{
@@ -341,19 +341,19 @@ namespace GOTHIC_ENGINE {
 
 					arr.Insert((uint)vob);
 				}
-				
+
 			}
 
 			//cmd << "Replace vobs: " << A resultCount << endl;
 		}
-		
+
 
 		if (searchType == SearchVobType::ReplaceVobTree)
 		{
 			theApp.SetSelectedVob(NULL);
 
 			zSTRING path = Stack_PeekString();
-			
+
 
 			for (int i = 0; i < resultFound.GetNum(); i++)
 			{
@@ -381,11 +381,11 @@ namespace GOTHIC_ENGINE {
 						newvob->SetTrafoObjToWorld(trafo);
 						newvob->SetCollDetDyn(lcddyn);
 						newvob->SetCollDetStat(lcdstat);
-						
+
 					}
 					else
 					{
-						
+
 					};
 
 					if (newvob) // vob loeschen, wenn ersetzt
@@ -397,14 +397,14 @@ namespace GOTHIC_ENGINE {
 						resultCount++;
 					}
 				}
-				
+
 			}
 
 			//MessageBox(0, "Замен: " + A resultFound.GetNum(), 0, 0);
 		}
 
 
-		
+
 		// remove
 		if (searchType == SearchVobType::Remove)
 		{
@@ -425,7 +425,7 @@ namespace GOTHIC_ENGINE {
 				{
 					//vob->SetDrawBBox3D(FALSE);
 					arr.Insert((uint)vob);
-					
+
 					RemoveVob(vob);
 					//vob->RemoveVobSubtreeFromWorld();
 					vob = NULL;
@@ -436,7 +436,7 @@ namespace GOTHIC_ENGINE {
 				vob = NULL;
 			}
 		}
-		
+
 		//cmd << A resultCount << endl;
 		return resultCount;
 	}
@@ -454,7 +454,10 @@ namespace GOTHIC_ENGINE {
 
 	zCParticleFX* m_pPfx = NULL;
 	int instanceFieldSize = 0;
-	// Add your code here . . .
+	zCVob* testVob = NULL;
+	zCWorld*	m_pWorld;
+	CString currentPFXName;
+
 
 	void SpacerApp::GetAllPfx()
 	{
@@ -462,7 +465,7 @@ namespace GOTHIC_ENGINE {
 
 		auto addPFX = (callVoidFunc)GetProcAddress(this->module, "AddPfxInstancemName");
 
-	
+
 
 		for (int i = 0; i < size; i++)
 		{
@@ -471,18 +474,17 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void SpacerApp::GetPFXInstanceProps(CString name)
+	void SpacerApp::UpdatePFXField()
 	{
+		CString name = currentPFXName;
+		CString pfxFieldName = Stack_PeekString();
+		pfxFieldName.Upper();
 
-		if (m_pPfx)
+
+		if (!m_pPfx || !m_pPfx->emitter)
 		{
-			m_pPfx->StopEmitterOutput();
-			RELEASE_OBJECT(m_pPfx);
+			return;
 		}
-
-		m_pPfx = new zCParticleFX();
-		m_pPfx->SetEmitter(SearchParticleEmitter(name), FALSE);
-
 
 		zCPar_Symbol* ps = s_pfxParser->GetSymbol(s_pfxParser->GetIndex(name));
 
@@ -491,6 +493,134 @@ namespace GOTHIC_ENGINE {
 			Message::Box("No PFX found with the name: " + name);
 			return;
 		}
+
+		int index = s_pfxParser->GetIndex(name);
+
+		int baseClassIndex = s_pfxParser->GetBaseClass(index);
+		int indClass = s_pfxParser->GetIndex(name);
+
+		zCPar_Symbol* base = s_pfxParser->GetSymbol(baseClassIndex);
+		zCPar_Symbol* pfx = s_pfxParser->GetSymbol(indClass);
+
+		void* addr = m_pPfx->emitter;
+		int type = 0;
+
+		if (!addr)
+		{
+			printWin("PFX instance pointer is NULL");
+			return;
+		}
+		bool found = false;
+
+
+		instanceFieldSize = base->ele;
+		//Message::Box("FieldsSize: " + ToStr instanceFieldSize);
+
+		//MessageBox(0, zSTRING(base->m_sName) + zSTRING(base->f.tNumber), 0, 0);
+		for (int i = 0; i < instanceFieldSize; i++)
+		{
+			// берем следующие base->f.tNumber символов, они и являются полями инстанции
+			zCPar_Symbol* param = s_pfxParser->GetSymbol(baseClassIndex + i + 1);
+
+			if (!param)
+			{
+				continue;
+			}
+
+			zSTRING sName = param->name.Upper();
+
+			int pos = sName.Search(".", 1);
+			if (pos > 0)
+				sName = param->name.Substr(pos + 1, 255);
+
+			type = param->type;
+
+			if (CString(sName) == pfxFieldName)
+			{
+				if (type == zPAR_TYPE_FLOAT)
+				{
+					float val = Stack_PeekFloat();
+					*((float*)addr + param->GetOffset()) = val;
+					cmd << "UpdateField: " << sName << " " << type << " " << zSTRING(val, 20) << endl;
+				}
+				else if (type == zPAR_TYPE_INT)
+				{
+					int val = Stack_PeekInt();
+					*((int*)addr + param->GetOffset()) = val;
+					cmd << "UpdateField: " << sName << " " << type << " " << zSTRING(val) << endl;
+				}
+				else if (type == zPAR_TYPE_STRING)
+				{
+					CString val = Stack_PeekString();
+					*(zSTRING*)((BYTE*)addr + param->GetOffset()) = val.ToChar();
+					cmd << "UpdateField: " << sName << " " << type << " " << val << endl;
+				}
+
+				
+
+
+				if (m_pPfx && m_pPfx->emitter)
+				{
+					m_pPfx->emitter->UpdateInternals();
+				}
+				
+				found = true;
+				break;
+			}
+		}
+
+		if (!found)
+		{
+			Message::Box("UpdateInternals fail! No field found");
+		}
+	}
+
+	
+	void SpacerApp::GetPFXInstanceProps(CString name)
+	{
+		//auto addPFXAddr = (callVoidFunc)GetProcAddress(this->module, "AddPfxAddr");
+
+		if (m_pPfx)
+		{
+			m_pPfx->StopEmitterOutput();
+			RELEASE_OBJECT(m_pPfx);
+		}
+
+		if (testVob)
+		{
+			testVob->RemoveVobFromWorld();
+		}
+
+		testVob = new zCVob();
+		m_pWorld = ogame->GetGameWorld();
+		testVob->SetVobName("Vob_PFX_Editor");
+		m_pWorld->AddVob(testVob);
+		testVob->SetCollDet(FALSE);
+		zVEC3 pos = ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 250 + ogame->GetCamera()->connectedVob->GetPositionWorld();
+		testVob->Move(pos[0], pos[1], pos[2]);
+
+
+		
+		m_pPfx = new zCParticleFX();
+		m_pPfx->SetEmitter(SearchParticleEmitter(name), FALSE);
+		testVob->SetVisual(m_pPfx);
+
+		if (testVob && m_pPfx && m_pPfx->emitter)
+		{
+			m_pPfx->SetAndStartEmitter(SearchParticleEmitter(name.Upper()), FALSE);
+			m_pPfx->dontKillPFXWhenDone = true;
+		}
+
+		zCPar_Symbol* ps = s_pfxParser->GetSymbol(s_pfxParser->GetIndex(name));
+		currentPFXName = name;
+
+		if (!ps)
+		{
+			Message::Box("No PFX found with the name: " + name);
+			return;
+		}
+
+		
 
 		int index = s_pfxParser->GetIndex(name);
 
@@ -533,21 +663,26 @@ namespace GOTHIC_ENGINE {
 
 			type = param->type;
 
+			BYTE* addrVal = (BYTE*)addr + param->GetOffset();
+
 			if (param->type == zPAR_TYPE_FLOAT)
 			{
-				Stack_PushFloat(param->single_floatdata);
-				cmd << sName << " " << type << " " << param->single_floatdata << endl;
+				float val = *((float*)addrVal);
+				Stack_PushFloat(val);
+				//cmd << sName << " " << type << " " << val << endl;
 			}
 			else if (param->type == zPAR_TYPE_INT)
 			{
-				Stack_PushInt(param->single_intdata);
-				cmd << sName << " " << type << " " << param->single_intdata << endl;
+				int val = *((int*)addrVal);
+				Stack_PushInt(val);
+
+				//cmd << sName << " " << type << " " << val << endl;
 			}
 			else if (param->type == zPAR_TYPE_STRING)
 			{
 				zSTRING value = *((zSTRING*)((BYTE*)addr + param->GetOffset()));
 				Stack_PushString(value);
-				cmd << sName << " " << type << " " << value << endl;
+				//cmd << sName << " " << type << " " << value << endl;
 			}
 			else
 			{
@@ -561,6 +696,9 @@ namespace GOTHIC_ENGINE {
 			//prop->type = type;
 
 			//prop->addr = (BYTE*)addr + param->GetOffset();
+
+			//Stack_PushUInt(*((BYTE*)addr + param->GetOffset()));
+		
 		}
 		//Stack_PushInt(instanceFieldSize);
 	}

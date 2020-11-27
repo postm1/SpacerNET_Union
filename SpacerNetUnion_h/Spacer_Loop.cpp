@@ -259,17 +259,36 @@ namespace GOTHIC_ENGINE {
 				PrintDebug(ToStr "WP 1: " + GetVobNameSafe(theApp.pickedWaypoint));
 				PrintDebug(ToStr "WP 2: " + GetVobNameSafe(theApp.pickedWaypoint2nd));
 			}
-			else
-				if (theApp.pickedVob)
+			else if (theApp.pickedVob)
+			{
+				PrintDebug(ToStr GetVobNameSafe(theApp.pickedVob) + " Ref: " + ToStr theApp.pickedVob->refCtr);
+
+				if (theApp.options.GetIntVal("showVobDist"))
 				{
-					PrintDebug(ToStr GetVobNameSafe(theApp.pickedVob) + " Ref: " + ToStr theApp.pickedVob->refCtr);
-
-					if (theApp.options.GetIntVal("showVobDist"))
-					{
-						PrintDebug(ToStr GetLang("UNION_DIST") + ToStr(int)Dist(ogame->GetCamera()->connectedVob, theApp.pickedVob));
-					}
-
+					PrintDebug(ToStr GetLang("UNION_DIST") + ToStr(int)Dist(ogame->GetCamera()->connectedVob, theApp.pickedVob));
 				}
+
+			}
+
+			if (ogame->GetGameWorld() && ogame->GetGameWorld()->GetBspTree() && ogame->GetCamera() && ogame->GetCamera()->connectedVob)
+			{
+				zSTRING* name = (zSTRING*)ogame->GetGameWorld()->GetBspTree()->GetSectorNameVobIsIn(ogame->GetCamera()->connectedVob);
+
+
+				if (name)
+				{
+					PrintDebug("Portal: " + *name);
+				}
+				else
+				{
+					PrintDebug("No portal");
+				}
+				
+				
+			}
+			
+		
+
 
 			//PrintDebug(ToStr zCWorld::s_bWaveAnisEnabled);
 			screen->SetFontColor(zCOLOR(255, 255, 255));
@@ -378,18 +397,19 @@ namespace GOTHIC_ENGINE {
 
 			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_ZERO"));
 
+#if ENGINE > Engine_G1
 			if (zCSkyControler::GetActiveSkyControler())
 			{
 				zCSkyControler::GetActiveSkyControler()->SetLightDirty();
 			}
-
+#endif
 			playerLightInt = 500;
-
+#if ENGINE > Engine_G1
 			if (zCSkyControler::GetActiveSkyControler())
 			{
 				zCSkyControler::GetActiveSkyControler()->SetLightDirty();
 			}
-
+#endif
 			playerLightInt = 0;
 		}
 

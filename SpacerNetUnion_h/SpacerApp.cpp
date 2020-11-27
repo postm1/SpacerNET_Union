@@ -714,4 +714,6 @@ namespace GOTHIC_ENGINE {
 	{
 		return mouseClicksBlockedTime > 0;
 	}
+
+
 }

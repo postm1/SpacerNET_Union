@@ -403,11 +403,12 @@ namespace GOTHIC_ENGINE {
 		oCItem* isItem = dynamic_cast<oCItem*>(pVob);
 	
 		// удаляем из списка oCVisualFX от итема
+#if ENGINE > Engine_G1
 		if (isItem && isItem->effectVob)
 		{
 			theApp.OnRemoveVob(isItem->effectVob);
 		}
-
+#endif
 		theApp.OnRemoveVob(pVob);
 
 		zCVobWaypoint* wpvob = dynamic_cast<zCVobWaypoint*>(pVob);
