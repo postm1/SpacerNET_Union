@@ -98,11 +98,13 @@ namespace GOTHIC_ENGINE {
 	struct PFXManager;
 	class KeysManager;
 	class MyPrint;
+	class MatManager;
 
 #define extFuncs 
 	extern int GetFPS(void); \
 		extern void	__cdecl sysEvent(); \
 		extern SpacerApp theApp; \
+		extern MatManager mm; \
 		extern void CameraMoving(); \
 		extern void VobMoving(); \
 		extern void SetTime(int hour, int min); \

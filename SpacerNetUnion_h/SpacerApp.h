@@ -105,6 +105,7 @@ namespace GOTHIC_ENGINE {
 		void CollectTargetListTrigger();
 		void CollectSourcerTriggerList();
 		void AfterRender();
+		void PickMaterial();
 		void PickVob();
 		void ToggleWP();
 		void ConnectWP();
@@ -113,7 +114,6 @@ namespace GOTHIC_ENGINE {
 		void Loop();
 		void SetMover();
 		bool GameFocused();
-
 		zCWorld * GetWorld(zBOOL getEmptyWorldToo);
 
 		bool IsAWorldLoaded();

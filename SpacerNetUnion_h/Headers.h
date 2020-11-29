@@ -14,6 +14,7 @@
 #include "CameraKey.h"
 #include "SpacerApp.h"
 #include "zCBinTree3DS.h"
+#include "MatManager.h"
 #include "Plugin.h"
 #pragma endregion
 

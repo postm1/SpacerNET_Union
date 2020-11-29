@@ -2,6 +2,45 @@
 // Union HEADER file
 
 namespace GOTHIC_ENGINE {
+
+
+	class zCSelPoly
+	{
+	public:
+		zCSelPoly::zCSelPoly(zCPolygon* _poly)
+		{
+			zERR_ASSERT(_poly);
+			poly = _poly;
+			mat = 0;
+			if (poly)
+			{
+				mat = poly->material;
+				if (mat) mat->AddRef();
+			}
+		};
+
+		zCSelPoly::~zCSelPoly()
+		{
+			poly = 0;
+			zRELEASE(mat);
+		};
+
+		void			SetMaterial(zCMaterial* _mat);
+		zCMaterial*		GetMaterial() { return mat; };
+		zCPolygon*		GetPolygon() { return poly; };
+
+	protected:
+		zCSelPoly() {};
+		zCPolygon*  poly;
+		zCMaterial* mat;
+	};
+
+	enum TLibFLags
+	{
+		MATLIB_VISIBLE, MATLIB_INVISIBLE
+	};
+
+
 	// Add your code here . . .
 	typedef zVEC2	zPOINT2;
 	typedef zVEC3	zPOINT3;

@@ -10,6 +10,7 @@ namespace GOTHIC_ENGINE {
 	PFXManager pfxManager;
 	SpacerApp theApp;
 	KeysManager keys;
+	MatManager mm;
 
 
   void Game_Entry() {

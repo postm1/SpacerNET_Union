@@ -168,6 +168,13 @@ namespace GOTHIC_ENGINE {
 			theApp.turnWpMode = (TurnWpMode)GetIntVal("wpTurnOn");
 			SetRangeVobs();
 			SetRangeWorld();
+
+			int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
+
+			if (!pickMode)
+			{
+				mm.CleanSelectMaterial();
+			}
 		}
 
 		this->Save();
@@ -220,6 +227,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "CAMERA", "showInvisibleVobs", "0");
 		list.Insert("showInvisibleVobs", set);
 
+		set = new CSetting(TYPE_INT, "CAMERA", "bTogglePickMaterial", "0");
+		list.Insert("bTogglePickMaterial", set);
+
 
 		set = new CSetting(TYPE_INT, "CAMERA", "hideCamWindows", "1");
 		list.Insert("hideCamWindows", set);
@@ -236,6 +246,9 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "showVobs", "1");
 		list.Insert("showVobs", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "autoCompileWorldAfterLoad", "0");
+		list.Insert("autoCompileWorldAfterLoad", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "showWaynet", "1");
 		list.Insert("showWaynet", set);

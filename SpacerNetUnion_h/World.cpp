@@ -80,6 +80,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::HandleWorldBeforeSave()
 	{
+		mm.CleanSelectMaterial();
 		if (ogame->GetCamera()->connectedVob && ogame->GetCamera()->connectedVob->GetHomeWorld())
 			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
 
@@ -92,8 +93,6 @@ namespace GOTHIC_ENGINE {
 			tree = tree->GetNextChild();
 		}
 		*/
-
-		cmd << Col16(CMD_WHITE);
 
 		treeIsReady = false;
 	}
@@ -162,6 +161,12 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::LoadMesh(zSTRING worldName)
 	{
+		
+
+
+		Reset();
+		mm.CleanSelectMaterial();
+
 		isMesh = true;
 
 		zoptions->ChangeDir(DIR_MESHES);
@@ -169,6 +174,12 @@ namespace GOTHIC_ENGINE {
 
 		oCNpc::SetNpcAIDisabled(TRUE);
 		dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
+
+		if (theApp.options.GetIntVal("autoCompileWorldAfterLoad"))
+		{
+			DoCompileWorld(1);
+			DoCompileLight(2, 0);
+		}
 	}
 
 
@@ -226,6 +237,13 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::WorldPreLoad()
 	{
 		theApp.SetSelectedVob(NULL, "WorldPreLoad");
+
+		if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
+		if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
+
+		theApp.pickedWaypoint2nd = NULL;
+		mm.CleanSelectMaterial();
+
 
 		Reset();
 

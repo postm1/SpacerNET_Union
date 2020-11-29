@@ -286,6 +286,13 @@ namespace GOTHIC_ENGINE {
 				
 				
 			}
+
+			if (ogame->GetGameWorld() && ogame->GetGameWorld()->GetBspTree())
+			{
+				mm.ShowInfo();
+				//mm.DrawAxes();
+				
+			}
 			
 		
 

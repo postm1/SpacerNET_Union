@@ -520,8 +520,50 @@ namespace GOTHIC_ENGINE {
 		selectedTool = tool;
 	}
 
+
+	void CopyClipBoard(zSTRING str)
+	{
+		const char* output = str.ToChar();
+		const size_t len = strlen(output) + 1;
+		HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
+		memcpy(GlobalLock(hMem), output, len);
+		GlobalUnlock(hMem);
+		OpenClipboard(0);
+		EmptyClipboard();
+		SetClipboardData(CF_TEXT, hMem);
+		CloseClipboard();
+	}
+
+	
+
 	void VobMoving()
 	{
+		/*
+		if (zinput->GetMouseButtonPressedRight() && selPolyList && selPolyList->GetNum() > 0)
+		{
+			selPolyList->Get(0)->GetMaterial()->SetTexture(zSTRING("AV_FIREDRAGON_GROUND_03.TGA"));
+		}
+		*/
+
+
+		/*
+		if (selectedVertext)
+		{
+			if (keys.KeyPressed("VOB_TRANS_UP", false, true))
+			{
+
+				selectedVertext->position[1] += 10;
+			}
+
+			if (keys.KeyPressed("VOB_TRANS_DOWN", false, true))
+			{
+
+				selectedVertext->position[1] -= 10;
+			}
+
+		}
+		*/
+
 
 
 		if (!selectedTool)
@@ -534,12 +576,22 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("VOB_COPY", true))
 		{
-			if (!dynamic_cast<zCVobLevelCompo*>(theApp.pickedVob))
+			int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
+
+			if (pickMode == 0)
 			{
-				print.PrintRed(GetLang("VOB_COPY_OK"));
-				theApp.vobToCopy = theApp.pickedVob;
-				theApp.isVobParentChange = false;
+				if (!dynamic_cast<zCVobLevelCompo*>(theApp.pickedVob))
+				{
+					print.PrintRed(GetLang("VOB_COPY_OK"));
+					theApp.vobToCopy = theApp.pickedVob;
+					theApp.isVobParentChange = false;
+				}
 			}
+			else
+			{
+				mm.CopyTextureName();
+			}
+			
 			
 		}
 
@@ -590,6 +642,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+
 		if (keys.KeyPressed("VOB_DISABLE_SELECT", true))
 		{
 
@@ -598,7 +651,14 @@ namespace GOTHIC_ENGINE {
 
 			theApp.SetSelectedVob(NULL);
 			theApp.pickedWaypoint2nd = NULL;
-			print.PrintRed(GetLang("TOOL_UNSELECT"));
+			int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
+
+			if (pickMode == 0)
+			{
+				print.PrintRed(GetLang("TOOL_UNSELECT"));
+			}
+			
+			mm.CleanSelectMaterial();
 			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
 		}
 

@@ -523,6 +523,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MatManager.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="MatManager.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="MyPrint.h">
       <SubType>
       </SubType>

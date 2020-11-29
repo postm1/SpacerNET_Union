@@ -253,6 +253,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera">
       <UniqueIdentifier>{cdf11491-8b5a-4bd6-ac4b-9e279809f4c2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\Materials\MatManager">
+      <UniqueIdentifier>{f1a84bbd-b6de-4191-ada4-347fcbf3b450}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2929,6 +2932,12 @@
     </ClInclude>
     <ClInclude Include="Search.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="MatManager.h">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MatManager.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

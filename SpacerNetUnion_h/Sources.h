@@ -31,6 +31,7 @@
 #include "SpacerApp.cpp"
 #include "Spacer_Loop.cpp"
 #include "Export.cpp"
+#include "MatManager.cpp"
 #include "Plugin.cpp"
 #pragma endregion
 

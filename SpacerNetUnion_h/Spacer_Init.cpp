@@ -75,6 +75,8 @@ namespace GOTHIC_ENGINE {
 		print.Init();
 		LoadMat();
 
+		mm.Init();
+
 		(voidFuncPointer)GetProcAddress(theApp.module, "Form_EnableInterface")();
 		//zrenderer->Vid_SetScreenMode(zRND_SCRMODE_WINDOWED);
 

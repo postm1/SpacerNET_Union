@@ -1,3 +1,5 @@
+
+
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
@@ -143,8 +145,17 @@ namespace GOTHIC_ENGINE {
 		{
 			if (zinput->GetMouseButtonPressedLeft())
 			{
+				int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
 
-				theApp.PickVob();
+				if (pickMode == 0)
+				{
+					theApp.PickVob();
+				}
+				else if (pickMode == 1)
+				{
+					theApp.PickMaterial();
+				}
+				
 
 
 				zinput->ClearKey(MOUSE_LEFT);
@@ -266,6 +277,36 @@ namespace GOTHIC_ENGINE {
 
 
 	*/
+
+
+
+	void SpacerApp::PickMaterial()
+	{
+		POINT  cur;
+		_GetCursorPos(&cur);
+
+		RECT rect;
+		GetWindowRect(hWndApp, &rect);
+
+		float rw = rect.right - rect.left;
+		float rh = rect.bottom - rect.top;
+
+		//print.PrintRed(zSTRING((float)cur.x, 6) + "/ " + zSTRING((float)cur.y, 6));
+
+		float ax = (float)cur.x / rw * (float)zrenderer->vid_xdim;
+		float ay = (float)cur.y / rh * (float)zrenderer->vid_ydim;
+
+
+		//print.PrintRed(zSTRING(ax, 6) + "// " + zSTRING(ay, 6));
+
+		if (ay <= 0)
+		{
+			return;
+		}
+
+		mm.OnPick(ax, ay);
+	}
+
 	void SpacerApp::PickVob()
 	{
 		//zCVob* CSpacerView::PickSingle()
