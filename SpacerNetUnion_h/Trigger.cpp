@@ -150,7 +150,7 @@ namespace GOTHIC_ENGINE {
 
 		if (dynamic_cast<oCMobWheel*>(pickedVob) || dynamic_cast<oCMobSwitch*>(pickedVob) || dynamic_cast<zCTrigger*>(pickedVob))
 		{
-			(selectMoversTab)GetProcAddress(theApp.module, "SelectMoversTab")();
+			//(selectMoversTab)GetProcAddress(theApp.module, "SelectMoversTab")();
 		}
 
 		if (moverVob)

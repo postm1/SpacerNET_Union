@@ -154,6 +154,9 @@ namespace GOTHIC_ENGINE {
 					PrintDebug("Texture: " + mat->texture->GetObjectName());
 				}
 
+				
+				PrintDebug("matGroup: " + mat->GetMatGroupString());
+				
 			}
 
 		}

@@ -156,6 +156,8 @@ namespace GOTHIC_ENGINE {
 
 					if ((GetForegroundWindow() != hWndApp && GetForegroundWindow() != theApp.mainWin))
 					{
+
+						//ogame->game_drawall = false;
 						//zrenderer->SetSurfaceLost(TRUE);
 						//zrenderer->Vid_SetScreenMode(zRND_SCRMODE_WINDOWED);
 					}
@@ -169,6 +171,7 @@ namespace GOTHIC_ENGINE {
 				{
 					if ((GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin))
 					{
+						//ogame->game_drawall = true;
 						//ogame->Unpause();
 						//sysSetFocus();
 						//zrenderer->Vid_SetScreenMode(zRND_SCRMODE_HIDE);

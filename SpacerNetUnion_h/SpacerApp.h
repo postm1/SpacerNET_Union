@@ -200,7 +200,8 @@ namespace GOTHIC_ENGINE {
 
 		void MergeZen(zSTRING worldName);
 
-		void LoadWorld(zSTRING worldName);
+		void LoadWorld(zSTRING worldName, int type);
+
 
 		void GameLoop();
 

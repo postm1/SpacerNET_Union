@@ -121,6 +121,11 @@ namespace GOTHIC_ENGINE {
 		treeIsReady = false;
 
 
+		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())
+		{
+			//ogame->GetWorld()->GetBspTree()->m_bRenderedFirstTime = TRUE;
+			//MessageBox(0, "First", 0, 0);
+		}
 	}
 
 

@@ -120,7 +120,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SaveWorld(zSTRING worldName, int type)
 	{
-		if (!ogame->GetWorld())
+		if (!ogame->GetWorld() || !ogame->world->globalVobTree.GetFirstChild())
 		{
 			return;
 		}
@@ -132,6 +132,19 @@ namespace GOTHIC_ENGINE {
 		//std::cout << "S1: " << zSTRING(ogame->GetWorld()->globalVobTree.CountNodes() - 1) << std::endl;
 
 		HandleWorldBeforeSave();
+
+
+		zCWorld* world = ogame->GetWorld();
+
+		if (world && !world->IsCompiled())
+		{
+			Message::Box("no compiled!");
+		}
+		else
+		{
+			//WorldAfterLoad();
+		}
+
 
 
 		zoptions->ChangeDir(DIR_WORLD);
@@ -162,10 +175,10 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::LoadMesh(zSTRING worldName)
 	{
 		
-
+		mm.CleanSelectMaterial();
 
 		Reset();
-		mm.CleanSelectMaterial();
+		
 
 		isMesh = true;
 
@@ -210,7 +223,7 @@ namespace GOTHIC_ENGINE {
 		WorldAfterLoad();
 	}
 
-	void SpacerApp::LoadWorld(zSTRING worldName)
+	void SpacerApp::LoadWorld(zSTRING worldName, int type)
 	{
 
 		auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
@@ -227,9 +240,29 @@ namespace GOTHIC_ENGINE {
 		WorldPreLoad();
 
 		zoptions->ChangeDir(DIR_WORLD);
-		ogame->GetGameWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED);
 
-		WorldAfterLoad();
+	
+
+		switch (type)
+		{
+			case 1: ogame->GetGameWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
+			case 2: ogame->GetGameWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
+			default: Message::Box("Bad load type"); break;
+		}
+		
+		zCWorld* world = ogame->GetWorld();
+
+		if (world && !world->IsCompiled())
+		{
+			
+		}
+		else
+		{
+			WorldAfterLoad();
+		}
+
+
+		
 
 		(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 	}

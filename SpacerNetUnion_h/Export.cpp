@@ -10,8 +10,11 @@ namespace GOTHIC_ENGINE {
 	{
 		__declspec(dllexport) void Extern_LoadWorld() {
 
+
 			CString path = Stack_PeekString().Upper();
-			theApp.LoadWorld(path);
+			int type = Stack_PeekInt();
+
+			theApp.LoadWorld(path, type);
 
 		}
 
