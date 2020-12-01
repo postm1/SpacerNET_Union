@@ -17,6 +17,7 @@ namespace GOTHIC_ENGINE {
 		void CleanSelectMaterial();
 		zCSelPoly* PolyIsSelected(zCPolygon * xPoly);
 		bool PolySelect(bool select, zCSelPoly* selPoly);
+		void Loop();
 		void OnPick(float x, float y);
 		void DrawAxes();
 		void ShowInfo();

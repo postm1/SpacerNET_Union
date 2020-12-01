@@ -117,9 +117,10 @@ namespace GOTHIC_ENGINE {
 				while (ShowCursor(FALSE) >= 0);
 
 
-				if (theApp.options.GetIntVal("hideCamWindows"))
+				if (theApp.options.GetIntVal("hideCamWindows") && !theApp.hideWindows)
 				{
 					(voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")();
+					theApp.hideWindows = true;
 				}
 
 
@@ -133,8 +134,9 @@ namespace GOTHIC_ENGINE {
 				camMov.hideCursor = false;
 				ShowCursor(TRUE);
 
-				if (!theApp.hideWindows)
+				if (theApp.hideWindows && !theApp.hideWindowsForce)
 				{
+					theApp.hideWindows = false;
 					(voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
 				}
 

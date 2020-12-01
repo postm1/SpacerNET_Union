@@ -155,14 +155,50 @@ namespace GOTHIC_ENGINE {
 				}
 
 				
-				PrintDebug("matGroup: " + mat->GetMatGroupString());
+				PrintDebug("MatGroup: " + mat->GetMatGroupString());
 				
 			}
 
 		}
 	}
 
+	void MatManager::Loop() 
+	{
+		
+		return;
 
+		if (selPolyList && selPolyList->GetNum() > 0)
+		{
+			if (!zinput->GetMouseButtonPressedRight())
+			{
+
+				float spd = 0.00003;
+
+				zCVertFeature** vert = selPolyList->Get(0)->GetPolygon()->feature;
+
+				if (keys.KeyPressed("VOB_TRANS_RIGHT", false, true))
+				{
+					(*vert)->texu += spd * ztimer->frameTimeFloat;
+				}
+
+				if (keys.KeyPressed("VOB_TRANS_LEFT", false, true))
+				{
+					(*vert)->texu -= spd  * ztimer->frameTimeFloat;
+				}
+
+
+				if (keys.KeyPressed("VOB_TRANS_FORWARD", false, true))
+				{
+					(*vert)->texv += spd  * ztimer->frameTimeFloat;
+				}
+
+				if (keys.KeyPressed("VOB_TRANS_BACKWARD", false, true))
+				{
+					(*vert)->texv -= spd  * ztimer->frameTimeFloat;
+				}
+			}
+		}
+	}
 	void MatManager::OnPick(float ax, float ay)
 	{
 
@@ -173,6 +209,7 @@ namespace GOTHIC_ENGINE {
 
 		auto xPoly = world->traceRayReport.foundPoly;
 		auto xVert = world->traceRayReport.foundVertex;
+		
 
 		if (xVert)
 		{
@@ -181,6 +218,8 @@ namespace GOTHIC_ENGINE {
 		//else 
 		if (xPoly)
 		{
+			theApp.SetSelectedVob(NULL, "");
+
 			zCSelPoly* selPoly = PolyIsSelected(xPoly);
 
 			if (selPoly)				// polygon is selected ---> deselect

@@ -56,6 +56,7 @@ namespace GOTHIC_ENGINE {
 
 			bool dataFilled;
 			bool hideWindows;
+			bool hideWindowsForce;
 			bool isExit;
 			bool selectedWpForCreateIsBlocked;
 			bool firstZenLoad;
@@ -114,6 +115,7 @@ namespace GOTHIC_ENGINE {
 		void Loop();
 		void SetMover();
 		bool GameFocused();
+		void ToggleWindowsVisible();
 		zCWorld * GetWorld(zBOOL getEmptyWorldToo);
 
 		bool IsAWorldLoaded();

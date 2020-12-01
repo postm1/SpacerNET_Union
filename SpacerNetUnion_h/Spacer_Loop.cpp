@@ -208,8 +208,11 @@ namespace GOTHIC_ENGINE {
 		RenderVobsLoop();
 
 		theApp.OnLevelReady();
+
+		mm.Loop();
 		theApp.KeysLoop();
 
+		
 		pfxManager.Loop();
 
 		ResetPrintDebug();
@@ -339,9 +342,7 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("WIN_HIDEALL", true))
 		{
-			hideWindows = !hideWindows;
-
-			hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
+			ToggleWindowsVisible();
 		}
 
 

@@ -21,6 +21,7 @@ namespace GOTHIC_ENGINE {
 		this->isMerged = false;
 		this->isMesh = false;
 		this->hideWindows = false;
+		this->hideWindowsForce = false;
 		this->treeToCopy = NULL;
 		this->moverVob = NULL;
 		this->m_kf_pos = 0;
@@ -79,6 +80,13 @@ namespace GOTHIC_ENGINE {
 		}
 
 		return false;
+	}
+
+	void SpacerApp::ToggleWindowsVisible()
+	{
+		hideWindows = !hideWindows;
+		hideWindowsForce = hideWindows;
+		hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
 	}
 
 	zCWorld* SpacerApp::GetWorld(zBOOL getEmptyWorldToo)
