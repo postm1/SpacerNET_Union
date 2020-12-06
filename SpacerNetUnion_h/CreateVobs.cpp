@@ -6,7 +6,7 @@ namespace GOTHIC_ENGINE {
 
 	void InsertIntoWorld(zCVob* newVob, zCVob* parentVobBase, bool selectVob)
 	{
-		OutFile("\n================\nInsertIntoWorld: NodesCount (pre-insert): " + A(ogame->GetWorld()->globalVobTree.CountNodes() - 1), false);
+		//OutFile("\n================\nInsertIntoWorld: NodesCount (pre-insert): " + A(ogame->GetWorld()->globalVobTree.CountNodes() - 1), false);
 
 
 		if (dynamic_cast<zCVobWaypoint*>(newVob))
@@ -22,7 +22,7 @@ namespace GOTHIC_ENGINE {
 				waynet->InsertWaypoint(wp);
 				waynet->CorrectHeight();
 
-				OutFile("Add new waypoint: " + AHEX32((uint)newVob), true);
+				//OutFile("Add new waypoint: " + AHEX32((uint)newVob), true);
 			}
 
 
@@ -54,7 +54,7 @@ namespace GOTHIC_ENGINE {
 				//std::cout << "Union: Add new vob INTO parent: " << (uint)pickedVob << " Name: " << GetVobName(pickedVob) << std::endl;
 				//std::cout << "OnCopy insert in vob: " << newVob->GetVobName() << " from " << (int)pickedVob << std::endl;
 
-				OutFile("InsertIntoWorld: newVob: " + AHEX32((uint)newVob) + " parent: " + A GetVobName(parentVobBase), true);
+				//OutFile("InsertIntoWorld: newVob: " + AHEX32((uint)newVob) + " parent: " + A GetVobName(parentVobBase), true);
 			}
 			else
 			{

@@ -36,6 +36,14 @@ namespace GOTHIC_ENGINE {
 				if (getMainWinHandle) {
 					theApp.mainWin = (HWND)getMainWinHandle();
 				}
+
+				auto vobsWinHandle = (intFuncPointer)GetProcAddress(theApp.module, "GetVobsWinHandler");
+
+				if (vobsWinHandle) {
+					theApp.vobsWin = (HWND)vobsWinHandle();
+				}
+
+				
 			}
 		}
 		else {

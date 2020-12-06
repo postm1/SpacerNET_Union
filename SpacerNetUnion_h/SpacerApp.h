@@ -7,6 +7,7 @@ namespace GOTHIC_ENGINE {
 	{
 		// handle ГЛАВНОЙ формы c#
 		HWND mainWin;
+		HWND vobsWin;
 		// Библиотека c#
 		HMODULE module;
 

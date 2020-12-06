@@ -10,6 +10,12 @@ namespace GOTHIC_ENGINE {
 
 	bool KeysManager::KeyPressed(CString key, bool clearKey, bool ignoreMod)
 	{
+		if ((GetForegroundWindow() != hWndApp && GetForegroundWindow() != theApp.mainWin && GetForegroundWindow() != theApp.vobsWin))
+		{
+			//print.PrintRed("blocked");
+			return false;
+		}
+
 		CString value;
 		CString temp_str;
 

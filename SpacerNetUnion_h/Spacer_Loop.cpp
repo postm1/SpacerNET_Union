@@ -199,7 +199,7 @@ namespace GOTHIC_ENGINE {
 
 		print.Loop();
 
-		if (GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin)
+		if (GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin || GetForegroundWindow() == theApp.vobsWin)
 		{
 			theApp.Loop();
 
