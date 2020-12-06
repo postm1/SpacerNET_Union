@@ -564,6 +564,17 @@ namespace GOTHIC_ENGINE {
 
 			theApp.UpdatePFXField();
 		}
+
+		__declspec(dllexport) void Extern_SetVobListType(int type) {
+
+			theApp.vobListSelectedIndex = type;
+		}
+
+		__declspec(dllexport) void Extern_FreezeTime(int enabled) {
+
+			theApp.SetHoldTime(enabled);
+		}
+
 		
 	}
 

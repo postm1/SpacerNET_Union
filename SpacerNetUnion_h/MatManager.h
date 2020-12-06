@@ -6,6 +6,7 @@ namespace GOTHIC_ENGINE {
 
 	class MatManager
 	{
+	public:
 		zCList<zCSelPoly>* selPolyList;
 		zCPolygon*	pickedPoly;
 		zCMaterial*	SelectMaterial;

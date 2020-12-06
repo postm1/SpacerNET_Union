@@ -59,6 +59,7 @@ namespace GOTHIC_ENGINE {
 		Search = 0,
 		Convert,
 		ReplaceVobTree,
-		Remove
+		Remove,
+		Rename
 	};
 }

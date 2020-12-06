@@ -60,6 +60,7 @@ namespace GOTHIC_ENGINE {
 			bool isExit;
 			bool selectedWpForCreateIsBlocked;
 			bool firstZenLoad;
+			int vobListSelectedIndex;
 
 			zCVob*		pickedWaypoint2nd;
 			zCVob*		pickedWaypoint;
@@ -116,6 +117,7 @@ namespace GOTHIC_ENGINE {
 		void SetMover();
 		bool GameFocused();
 		void ToggleWindowsVisible();
+		void SetHoldTime(int enabled);
 		zCWorld * GetWorld(zBOOL getEmptyWorldToo);
 
 		bool IsAWorldLoaded();

@@ -535,14 +535,126 @@ namespace GOTHIC_ENGINE {
 	}
 
 	
+	void MarkAlhpa()
+	{
+		static bool init = false;
 
+		if (init) return;
+
+		zCMaterial *mat = zNEW(zCMaterial("Occluder_Poly_Mat"));
+		mat->color = zCOLOR(255, 255, 255);
+
+		// [EDENFELD] 1.09 Crash bei ZMARK OCCLUDERPOLYS behoben
+		auto bspTree = ogame->GetWorld()->bspTree;
+
+		bspTree.mesh->CreateListsFromArrays();
+
+		for (int i = 0; i<bspTree.mesh->numPoly; i++) {
+			zCPolygon *poly = bspTree.mesh->Poly(i);
+			// [EDENFELD] 1.09 Portale werden nicht mit markiert
+			if (poly->flags.occluder || poly->flags.ghostOccluder) {
+				poly->SetMaterial(mat);
+			};
+		};
+
+		init = true;
+
+	}
 	void VobMoving()
 	{
+		
 		/*
 		if (zinput->KeyPressed(KEY_G))
 		{
-			zinput->ClearKeyBuffer();
+			static int val = 0;
 
+			if (val == 0) {
+				zrenderer->SetPolyDrawMode(zRND_DRAW_MATERIAL);
+			}
+			else
+				if (val == 1) {
+					zrenderer->SetPolyDrawMode(zRND_DRAW_MATERIAL_WIRE);
+				}
+				else
+					if (val == 2) {
+						zrenderer->SetPolyDrawMode(zRND_DRAW_FLAT);
+					}
+					else
+						if (val == 3) {
+							zrenderer->SetPolyDrawMode(zRND_DRAW_WIRE);
+						}
+			val++;
+			if (val > 3)
+			{
+				val = 0;
+			}
+			MarkAlhpa();
+			
+			zinput->ClearKey(KEY_G);
+		}
+		*/
+			/*
+			zinput->ClearKeyBuffer();
+			found = 0;
+
+			if (mm.selPolyList->GetNum() == 0)
+			{
+				return;
+			}
+
+			zTBBox3D  camBox;
+
+			zCPolygon **polyList;
+			int	numPolys = 0;
+
+			zVEC3 testPos = ogame->GetCamera()->connectedVob->GetPositionWorld();
+
+			camBox.mins = testPos - (zVEC3(1, 1, 1) * 40000);
+			camBox.maxs = testPos + (zVEC3(1, 1, 1) * 40000);
+			
+			
+			if (ogame->GetWorld()->GetBspTree()->bspRoot->CollectPolysInBBox3D(camBox, polyList, numPolys))
+			{
+				zCMaterial*		mat = 0;
+				int				planeClass;
+				for (int i = 0; i<numPolys; i++)
+				{
+					mat = polyList[i]->material;
+
+					if (mat->GetName() == mm.selPolyList->Get(0)->GetMaterial()->GetName())
+					{
+						polyList[i]->SetMaterial(mm.SelectMaterial);
+						found++;
+
+
+						//mm.selPolyList->Insert(polyList[i]);
+
+						//ogame->GetCamera()->connectedVob->SetPositionWorld((*polyList[i]->vertex)->position);
+					}
+				}
+			}
+
+			print.PrintRed("found: " + ToStr found);
+		}
+
+		
+		
+
+		if (zinput->KeyPressed(KEY_H))
+		{
+			for (int i = 0; i < polys.GetNumInList(); i++)
+			{
+				if (indexA == i)
+				{
+					ogame->GetCamera()->connectedVob->SetPositionWorld((*polys[i]->vertex)->position);
+					indexA++;
+					break;
+				}
+			}
+		}
+		*/	
+
+			/*
 			zCArray<zCVob*> vobs;
 			zCArray<zCVob*> vobsNeed;
 

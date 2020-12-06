@@ -452,7 +452,6 @@ namespace GOTHIC_ENGINE {
 	{
 		zCWorld* world = ogame->GetWorld();
 		zCVob* pickedVob = theApp.GetSelectedVob();
-		zCClassDef* lightClassdef = zCVob::classDef;
 
 
 		zTBBox3D box;
@@ -461,12 +460,13 @@ namespace GOTHIC_ENGINE {
 
 		zVEC3 normCamera = camVob->GetAtVectorWorld().Normalize();
 
+		int type = theApp.vobListSelectedIndex;
+		zCArray<zCVob*>resVobList;
+		zCArray<zCVob*>finalResultList;
 
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearVobList")();
 
 		auto GetSearchRadius = (voidFuncPointer)GetProcAddress(theApp.module, "GetSearchRadius");
-
-
 
 
 		int radius = GetSearchRadius();
@@ -474,17 +474,64 @@ namespace GOTHIC_ENGINE {
 		box.maxs = camVob->GetPositionWorld() + zVEC3(radius, radius, radius);
 		box.mins = camVob->GetPositionWorld() - zVEC3(radius, radius, radius);
 
-		zCArray<zCVob*>resVobList;
+		
 
 		ogame->GetWorld()->CollectVobsInBBox3D(resVobList, box);
 
-
+		for (int i = 0; i < resVobList.GetNumInList(); i++)
+		{
+			if (type == 0)
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
+			else if (type == 1 && resVobList.GetSafe(i)->_GetClassDef()->GetClassName_() == "zCVob")
+			{
+				if (resVobList.GetSafe(i)->GetVisual())
+				{
+					if (resVobList.GetSafe(i)->GetVisual()->GetVisualName().Upper().Search(".TGA", 1) == -1)
+					{
+						finalResultList.Insert(resVobList.GetSafe(i));
+					}
+				}
+				else
+				{
+					finalResultList.Insert(resVobList.GetSafe(i));
+				}
+					
+					
+				
+			}
+			else if (type == 2 && dynamic_cast<oCItem*>(resVobList.GetSafe(i)))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
+			else if (type == 3 && dynamic_cast<zCVobSpot*>(resVobList.GetSafe(i)))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
+			else if (type == 4 && dynamic_cast<zCVobWaypoint*>(resVobList.GetSafe(i)))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
+			else if (type == 5 && dynamic_cast<zCVobSound*>(resVobList.GetSafe(i)))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
+			else if (type == 6 && resVobList.GetSafe(i)->GetVisual())
+			{
+				if (resVobList.GetSafe(i)->GetVisual()->GetVisualName().Upper().Search(".TGA", 1) != -1 )
+				{
+					finalResultList.Insert(resVobList.GetSafe(i));
+				}
+				
+			}
+		}
 
 		//ogame->GetWorld()->SearchVobListByBaseClass(lightClassdef, resVobList, 0);
 
-		for (int i = 0; i < resVobList.GetNumInList(); i++)
+		for (int i = 0; i < finalResultList.GetNumInList(); i++)
 		{
-			zCVob* nextVob = resVobList.GetSafe(i);
+			zCVob* nextVob = finalResultList.GetSafe(i);
 
 
 			if (nextVob && (nextVob->GetDistanceToVob(*ogame->GetCamera()->connectedVob) <= radius * 2) && nextVob != ogame->GetCamera()->connectedVob)

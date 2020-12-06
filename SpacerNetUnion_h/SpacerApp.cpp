@@ -39,6 +39,7 @@ namespace GOTHIC_ENGINE {
 		this->currenItemRender = NULL;
 		this->search.cur_vob = NULL;
 		this->search.cur_vob_convert = NULL;
+		this->vobListSelectedIndex = 0;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}
@@ -87,6 +88,12 @@ namespace GOTHIC_ENGINE {
 		hideWindows = !hideWindows;
 		hideWindowsForce = hideWindows;
 		hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
+	}
+
+	void SpacerApp::SetHoldTime(int enabled)
+	{
+		int& holdTime = *(int*)0xAB0888;
+		holdTime = enabled;
 	}
 
 	zCWorld* SpacerApp::GetWorld(zBOOL getEmptyWorldToo)

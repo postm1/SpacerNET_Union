@@ -175,6 +175,8 @@ namespace GOTHIC_ENGINE {
 			{
 				mm.CleanSelectMaterial();
 			}
+
+			theApp.SetHoldTime(theApp.options.GetIntVal("holdTime"));
 		}
 
 		this->Save();
@@ -265,7 +267,7 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "maxFPS", "0");
 		list.Insert("maxFPS", set);
 
-		set = new CSetting(TYPE_INT, "SPACER", "vobListRadius", "150");
+		set = new CSetting(TYPE_INT, "SPACER", "vobListRadius", "200");
 		list.Insert("vobListRadius", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "showModelPreview", "1");
@@ -312,6 +314,9 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "fullPathTitle", "0");
 		list.Insert("fullPathTitle", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "holdTime", "0");
+		list.Insert("holdTime", set);
 
 
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");

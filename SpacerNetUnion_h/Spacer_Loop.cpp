@@ -300,6 +300,20 @@ namespace GOTHIC_ENGINE {
 				
 			}
 			
+			/*
+			int day, hour, min, nFont;
+			ogame->GetTime(day, hour, min);
+
+			if (min >= 10)
+			{
+				PrintDebug(zSTRING(day + 1) + " " + zSTRING(hour) + ":" + zSTRING(min));
+			}
+			else
+			{
+				PrintDebug(zSTRING(day + 1) + " " + +zSTRING(hour) + ":0" + zSTRING(min));
+
+			}
+			*/
 		
 
 
@@ -313,6 +327,7 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::KeysLoop()
 	{
 
+		/*
 		if (zinput->KeyPressed(KEY_Z))
 		{
 			visualEditorActive = !visualEditorActive;
@@ -322,6 +337,8 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+		*/
+
 
 		if (keys.KeyPressed("VOBLIST_COLLECT", true))
 		{
