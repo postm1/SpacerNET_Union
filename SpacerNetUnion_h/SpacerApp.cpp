@@ -40,6 +40,7 @@ namespace GOTHIC_ENGINE {
 		this->search.cur_vob = NULL;
 		this->search.cur_vob_convert = NULL;
 		this->vobListSelectedIndex = 0;
+		this->firstTimeZenSaved = false;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}
@@ -134,6 +135,7 @@ namespace GOTHIC_ENGINE {
 		isMesh = false;
 		levelReady = false;
 		treeIsReady = false;
+		firstTimeZenSaved = false;
 
 
 		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())

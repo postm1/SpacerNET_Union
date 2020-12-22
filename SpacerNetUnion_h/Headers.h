@@ -7,6 +7,7 @@
 #include "Macros.h"
 #include "Enums.h"
 #include "TSTACKTYPE.h"
+#include "zCSparseArray.h"
 #include "MyPrint.h"
 #include "CSettings.h"
 #include "KeysManager.h"

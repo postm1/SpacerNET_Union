@@ -3,9 +3,184 @@
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
+
+	#define MAXSIZE 24
+	#define d(i) (((char *)data)+(i)*size)
+	static zCSparseArray<const void *, int>& s_polyVertIndex = *(zCSparseArray<const void *, int>*)(0x8D8798);
+
+	void insertionsort(void *data, size_t num, size_t size, int(__cdecl *compare)(const void *, const void *), bool falltoqs) {
+		char swapplace[MAXSIZE];
+
+		OutFile("Sort: num: " + ToStr (int)num + " size: " + ToStr(int)size, true);
+
+		if (size>MAXSIZE) {
+			qsort(data, num, size, compare);
+			return;
+		}
+
+		int swaps = 0;
+		for (int i = 1; i<(int)num; i++) {
+			void *lower = d(i);
+			for (int j = i - 1; j >= 0; j--) {
+				void *upper = lower;
+				lower = d(j);
+				if ((*compare)(upper, lower) < 0) { // ok. Ist im Moment BubbleSort. Was solls...
+					swaps++;
+					memcpy(&swapplace, upper, size);
+					memcpy(upper, lower, size);
+					memcpy(lower, &swapplace, size);
+				}
+				else
+					j = 0; // hier kann man die innere Schleife schon abbrechen.
+			}
+			if (falltoqs && swaps > 5 * i + 5) {
+				qsort(data, num, size, compare);
+				return;
+			}
+		}
+
+	}
+
+	static int S_ComparePolyVerts(const void *A_, const void *B) {
+		void *a = *((void **)A_);
+		void *b = *((void **)B);
+
+		int *AI = s_polyVertIndex[a];
+		int *BI = s_polyVertIndex[b];
+
+		if (!AI || !BI)
+			return 0;
+
+		int ai = *AI;
+		int bi = *BI;
+
+		if (ai < bi)
+			return -1;
+		if (ai > bi)
+			return 1;
+
+		return 0;
+	}
+
 	// Add your code here . . .
+	//0x00572DC0 public: void __thiscall zCMesh::SortPolysByList(class zCPolygon * *,int)
+	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
+	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
+	{
+		if (theApp.firstTimeZenSaved)
+		{
+			OutFile("No sorting polygons anymore...", true);
+			return;
+		}
+
+		THISCALL(Invk_SortPolysByList)(list, listLength);
+		theApp.firstTimeZenSaved = true;
+		return;
+
+		OutFile("SortPolysByList_Hook Start: " + ToStr listLength, true);
+
+
+		int i = 0;
+		
+		//zCMesh::DeleteAll();
+
+		OutFile("ArraysToLists", false);
+		this->ClearLists();
+		this->ArraysToLists();
+
+		
+		//this->s_usesVertexCache = 0;
+		OutFile("s_polyVertIndex.Clear()", false);
+		s_polyVertIndex.Clear();
+		
+		
+
+		
+
+		OutFile("listLength: " + ToStr listLength, false);
+
+		OutFile("Insert", false);
+
+		for (i = listLength - 1; i >= 0; i--)
+			*(s_polyVertIndex.Insert(list[i])) = i;
+
+		
+		
+		OutFile("numPoly: " + ToStr numPoly, false);
+		OutFile("s_numVertListScene: " + ToStr (*polyList)->s_numVertListScene, false);
+		OutFile("s_numFeatListScene: " + ToStr(*polyList)->s_numFeatListScene, false);
+		OutFile("polyNumVert: " + ToStr(*polyList)->polyNumVert, false);
+		OutFile("s_actNumClipVert: " + ToStr(*polyList)->s_actNumClipVert, false);
+		
+
+		OutFile("insertionsort", false);
+		insertionsort(polyList, numPoly, sizeof(void *), &S_ComparePolyVerts, true);
+
+		
+
+		if (featList)
+		{
+			OutFile("=================featList", false);
+			//OutFile("s_actNumClipVert: " + ToStr((*featList)->, false);
+			//zERR_MESSAGE(5, 0, "M: Assigning indices to features...    ");
+			OutFile("s_polyVertIndex.Insert", false);
+			OutFile("numPoly: " + ToStr numPoly, false);
+			OutFile("numFeat: " + ToStr numFeat, false);
+			OutFile("numVert: " + ToStr numVert, false);
+
+			OutFile("polyNumVert: " + ToStr(*polyList)->polyNumVert, false);
+			//		 gib den Vertices dann die Nummer des Polygons, in dem sie zuerst auftauchen
+			for (i = numPoly - 1; i >= 0; i--)
+			{
+				zCPolygon *p = polyList[i];
+				//OutFile(" => numPoly: " + ToStr (p->polyNumVert), false);
+				for (int j = p->polyNumVert - 1; j >= 0; j--)
+					*(s_polyVertIndex.Insert(p->feature[j])) = i;
+			}
+			
+			
+			OutFile("numFeat: " + ToStr this->numFeat, false);
+			OutFile("insertionsort 2", false);
+			insertionsort(featList, numFeat, sizeof(void *), &S_ComparePolyVerts, false);
+			
+		}
+		else
+		{
+			OutFile("!featList", false);
+		}
+
+
+		OutFile("s_polyVertIndex.Clear()", false);
+		s_polyVertIndex.Clear();
+		OutFile("SortPolysByList_Hook End: " + ToStr listLength, false);
+		
+	}
+
 	void SpacerApp::SaveFile(zSTRING worldName, int type)
 	{
+
+
+		//0x00831C10 const zCSparseArray<void const *,int>::`vftable'
+		//static zCSparseArray<const void *, int> s_polyVertIndex; 8D8798
+		//static	zCTree<zCVob>*& s_firstVobSaveWorld = *(zCTree<zCVob>**)(0x9A4410);
+
+
+		//zCSparseArrayBase::Clear(&unk_8D8798);
+
+
+		//OutFile("s_firstVobSaveWorld: " + ToStr (int)s_firstVobSaveWorld->GetData(), false);
+
+		//static zCSparseArray<const void *, int> s_polyVertIndex = *(zCSparseArray<const void *, int>*)(0x8D8798);
+		//static zCSparseArray<const void *, void*> s_accounts = *(zCSparseArray<const void *, void*>*)(0xAAC2F8);
+		
+		//s_polyVertIndex.Clear();
+		//s_polyVertIndex.Destroy();
+		//s_polyVertIndex.Create(12);
+		
+		//s_accounts.Clear();
+		//s_accounts.Destroy();
+
+		//s_polyVertIndex.;
 
 
 

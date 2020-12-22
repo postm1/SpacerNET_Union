@@ -8,6 +8,7 @@
 #include "MyPrint.cpp"
 #include "Spacer_Init.cpp"
 #include "CSettings.cpp"
+#include "zCSparseArray.cpp"
 #include "KeysManager.cpp"
 #include "Utils.cpp"
 #include "PFXManager.cpp"

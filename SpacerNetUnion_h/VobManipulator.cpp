@@ -562,37 +562,7 @@ namespace GOTHIC_ENGINE {
 	}
 	void VobMoving()
 	{
-		
-		/*
-		if (zinput->KeyPressed(KEY_G))
-		{
-			static int val = 0;
-
-			if (val == 0) {
-				zrenderer->SetPolyDrawMode(zRND_DRAW_MATERIAL);
-			}
-			else
-				if (val == 1) {
-					zrenderer->SetPolyDrawMode(zRND_DRAW_MATERIAL_WIRE);
-				}
-				else
-					if (val == 2) {
-						zrenderer->SetPolyDrawMode(zRND_DRAW_FLAT);
-					}
-					else
-						if (val == 3) {
-							zrenderer->SetPolyDrawMode(zRND_DRAW_WIRE);
-						}
-			val++;
-			if (val > 3)
-			{
-				val = 0;
-			}
-			MarkAlhpa();
-			
-			zinput->ClearKey(KEY_G);
-		}
-		*/
+	
 			/*
 			zinput->ClearKeyBuffer();
 			found = 0;

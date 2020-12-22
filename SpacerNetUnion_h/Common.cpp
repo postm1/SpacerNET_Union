@@ -71,6 +71,7 @@ namespace GOTHIC_ENGINE {
 	HOOK Invk_oCWorld_SaveWorld   AS(&oCWorld::SaveWorld, &oCWorld::SaveWorld_Hook);
 	int oCWorld::SaveWorld_Hook(zSTRING const & fileName, enum zCWorld::zTWorldSaveMode saveMode, int writeBinary, int _saveLevelMesh)
 	{
+
 		if (this->GetWayNet())
 		{
 			if (this->GetWayNet()) this->GetWayNet()->UpdateVobDependencies();

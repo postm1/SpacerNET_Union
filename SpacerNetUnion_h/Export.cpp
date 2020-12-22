@@ -574,7 +574,24 @@ namespace GOTHIC_ENGINE {
 
 			theApp.SetHoldTime(enabled);
 		}
+		__declspec(dllexport) void Extern_SetRenderMode(int mode) {
 
+			if (mode == 0) {
+				zrenderer->SetPolyDrawMode(zRND_DRAW_MATERIAL);
+			}
+			else
+			if (mode == 1) {
+				zrenderer->SetPolyDrawMode(zRND_DRAW_MATERIAL_WIRE);
+			}
+			else
+			if (mode == 2) {
+				zrenderer->SetPolyDrawMode(zRND_DRAW_FLAT);
+			}
+			else
+			if (mode == 3) {
+				zrenderer->SetPolyDrawMode(zRND_DRAW_WIRE);
+			}
+		}
 		
 	}
 

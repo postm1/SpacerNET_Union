@@ -61,6 +61,7 @@ namespace GOTHIC_ENGINE {
 			bool isExit;
 			bool selectedWpForCreateIsBlocked;
 			bool firstZenLoad;
+			bool firstTimeZenSaved;
 			int vobListSelectedIndex;
 
 			zCVob*		pickedWaypoint2nd;
