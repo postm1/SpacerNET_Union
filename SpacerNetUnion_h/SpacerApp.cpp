@@ -329,6 +329,25 @@ namespace GOTHIC_ENGINE {
 		mm.OnPick(ax, ay);
 	}
 
+	
+
+	zVEC3 IsSphIntersect(zVEC3 originPos, zVEC3 sp_pos, zVEC3 radNorm, float radius_sphere)
+	{
+		zVEC3 diff = originPos - sp_pos;
+		float A_Point = radNorm.Dot(radNorm);
+		float B_Point = 2 * diff.Dot(radNorm);
+		float C_Point = pow(diff.Length(), 2) - pow(radius_sphere, 2);
+
+		float D = B_Point * B_Point - 4 * A_Point * C_Point;
+
+		if (D < 0.0) return NULL;
+
+		zVEC3 t1 = originPos + radNorm*(-B_Point - sqrt(D)) / (2 * A_Point);
+		zVEC3 t2 = originPos + radNorm*(-B_Point + sqrt(D)) / (2 * A_Point);
+
+		return t1.Length() <= t2.Length() ? t1 : t2;
+	}
+
 	void SpacerApp::PickVob()
 	{
 		//zCVob* CSpacerView::PickSingle()
@@ -396,91 +415,9 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+
 		if (!foundVob && zinput->KeyPressed(KEY_LCONTROL))
 		{
-			/*
-			zVEC3 camPos = ogame->GetCameraVob()->GetPositionWorld();
-			zVEC3 camAt = ogame->GetCameraVob()->GetAtVectorWorld();
-
-			// надо было mouse3 поставить, ей удобней будет выделять
-
-			BOOL result = ogame->GetWorld()->TraceRayNearestHit(camPos, camAt * 100000, ogame->GetCameraVob(), zTRACERAY_VOB_BBOX);
-			if (result && ogame->GetWorld()->traceRayReport.foundVob)
-			{
-			ogame->GetWorld()->traceRayReport.foundVob->SetDrawBBox3D(TRUE);
-			foundVob = ogame->GetWorld()->traceRayReport.foundVob;
-			}
-
-
-			// прицел, правда кривоватый
-			zTBSphere3D s;
-			s.radius = 1.0f;
-			s.center = camPos + camAt * 200;
-			s.Draw(zCOLOR(255, 255, 0));
-
-			*/
-			/*
-
-			zCVob* camVob = ogame->GetCamera()->connectedVob;
-			zCCamera* cam = ogame->GetCamera();
-
-			cmd << Col16(CMD_YELLOW) << "Try TraceRay" << endl;
-
-
-			zVEC3 ray00, ray, p;
-			cam->camMatrixInv.GetTranslation(ray00);
-			p.n[VZ] = 1;
-			cam->BackProject(ax, ay, p);				// p im camSpace
-			p = cam->camMatrixInv * p;					// p im world(obj)Space
-			ray = (p - ray00).Normalize();
-
-
-			ogame->GetWorld()->TraceRayFirstHit(camVob->GetPositionWorld(),
-			ray * 3000, (zCVob*)camVob, zTRACERAY_VOB_BBOX);
-
-			print.PrintRed(zSTRING(ray.n[0], 6) + ", " + zSTRING(ray.n[1], 6) + ", " + zSTRING(ray.n[2], 6));
-
-			foundVob = ogame->GetWorld()->traceRayReport.foundVob;
-
-			if (foundVob)
-			{
-			//foundVob->SetDrawBBox3D(TRUE);
-			cmd << Col16(CMD_RED) << "Vob Found: " << GetVobName(foundVob) << endl;
-			}
-
-
-
-			/*
-			zCArray<zCVob*>resVobList;
-
-			zCClassDef* lightClassdef = zCVobAnimate::classDef;
-
-			ogame->GetWorld()->SearchVobListByClass(lightClassdef, resVobList, 0);
-			for (int i = 0; i < resVobList.GetNumInList(); i++)
-			{
-			zCVob* nextVob = resVobList.GetSafe(i);
-
-			if (nextVob)
-			{
-			nextVob->ignoredByTraceRay = 0;
-			}
-			}
-
-			cmd << Col16(CMD_YELLOW) << "Try trace" << endl;
-			foundVob = ogame->GetWorld()->traceRayReport.foundVob;
-
-			for (int i = 0; i < resVobList.GetNumInList(); i++)
-			{
-			zCVob* nextVob = resVobList.GetSafe(i);
-
-			if (nextVob)
-			{
-			nextVob->ignoredByTraceRay = 1;
-			}
-			}
-			*/
-
-
 			zTBBox3D box;
 
 			zCVob* camVob = ogame->GetCamera()->connectedVob;
@@ -490,11 +427,12 @@ namespace GOTHIC_ENGINE {
 			zCArray<zCVob*> resVobList;
 			zCArray<zCVob*> resultVobList;
 			int bBoxSize = 2000;
+			int radius_sp = 220;
 			zCVob* tryVob = NULL;
-			int dist = 0;
+			int dist = 10e9;
 			int stepDist = 25;
 			bool flagExit = false;
-
+			int i_num = 0;
 
 			box.maxs = camVob->GetPositionWorld() + zVEC3(bBoxSize, bBoxSize, bBoxSize);
 			box.mins = camVob->GetPositionWorld() - zVEC3(bBoxSize, bBoxSize, bBoxSize);
@@ -510,10 +448,6 @@ namespace GOTHIC_ENGINE {
 			ray = p - ray00;
 
 			ray = ray.Normalize();
-
-			//print.PrintRed(zSTRING(ray.n[0], 6) + ", " + zSTRING(ray.n[1], 6) + ", " + zSTRING(ray.n[2], 6));
-			//print.PrintRed(zSTRING(p.n[0], 6) + ", " + zSTRING(p.n[1], 6) + ", " + zSTRING(p.n[2], 6));
-
 			// Собираем список допустимых вобов
 			for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
@@ -534,71 +468,35 @@ namespace GOTHIC_ENGINE {
 					&& vob != pfxManager.testVob
 					)
 				{
-					resVobList.Insert(vob);
-				}
-			}
+					zVEC3 sphInt = IsSphIntersect(camVob->GetPositionWorld(), vob->GetPositionWorld(), ray, radius_sp);
 
-			currentPos += ray * stepDist;
-
-			while (dist <= (bBoxSize + 200) && !flagExit)
-			{
-				for (int i = 0; i<resVobList.GetNumInList(); i++) {
-
-					zCVob* vob = resVobList[i];
-					zTBBox3D bbox = vob->GetVisual()->GetBBox3D();
-					float length = 0;
-
-					length = (float)((int)(box.maxs.n[VX] - box.mins.n[VX]));
-					//case 1: result = (float)((int)(box.maxs.n[VY] - box.mins.n[VY])); break;
-					//case 2: result = (float)((int)(box.maxs.n[VZ] - box.mins.n[VZ])); break;
-					float angle = GetAngleBetweenVobs(camVob, vob, camVob->GetAtVectorWorld());
-
-
-					if (currentPos.Distance(vob->GetPositionWorld()) <= 150
-						&& angle <= 55)
+					if (sphInt != NULL)
 					{
-						//print.PrintGreen(zSTRING(angle, 6));
-						//print.PrintRed(A length);
-						//cmd << Col16(CMD_YELLOW) << "Vob picked: " << GetVobName(resVobList[i]) << endl;
-
-						resultVobList.Insert(vob);
-						flagExit = true;
-						break;
+						resVobList.Insert(vob);
 					}
-
+					
 				}
-
-				currentPos += (ray * stepDist);
-				dist += stepDist;
 			}
 
+			//std::cout << "Intersect count: " << resVobList.GetNumInList() << std::endl;
 
-			int minDist = 10000;
-
-			if (resultVobList.GetNumInList() > 0)
+			for (int i = 0; i < resVobList.GetNumInList(); i++) 
 			{
-				if (resultVobList.GetNumInList() > 1)
-				{
-					for (int i = 0; i < resultVobList.GetNumInList(); i++)
-					{
-						int dist = Dist(camVob, resultVobList[i]);
+				int cur_dist = Dist(camVob, resVobList[i]);
 
-						if (dist < minDist)
-						{
-							tryVob = resultVobList[i];
-							minDist = dist;
-						}
-					}
-					foundVob = tryVob;
-				}
-				else
+				if (cur_dist < dist)
 				{
-					foundVob = resultVobList[0];
+					dist = cur_dist;
+					i_num = i;
 				}
+
+				
 			}
 
-
-
+			if (resVobList.GetNumInList() > 0)
+			{
+				foundVob = resVobList[i_num];
+			}
 		}
 
 

@@ -67,13 +67,17 @@ namespace GOTHIC_ENGINE {
 	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
 	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
 	{
+		THISCALL(Invk_SortPolysByList)(list, listLength);
+
+		return;
+
 		if (theApp.firstTimeZenSaved)
 		{
 			OutFile("No sorting polygons anymore...", true);
 			return;
 		}
 
-		THISCALL(Invk_SortPolysByList)(list, listLength);
+		
 		theApp.firstTimeZenSaved = true;
 		return;
 

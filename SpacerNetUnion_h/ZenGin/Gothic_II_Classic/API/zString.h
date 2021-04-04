@@ -7,9 +7,8 @@
 #define UNPROTECT_ZSTRING_METHODS  False
 
 namespace Gothic_II_Classic {
-
-  inline void CreateDirectories( string path ) {
-    string sub_path = path.GetPattern( "", "\\", -1 );
+  inline void CreateDirectories( CStringA path ) {
+    CStringA sub_path = path.GetPattern( "", "\\", -1 );
     if( !sub_path.IsEmpty() )
       CreateDirectories( sub_path );
     CreateDirectoryA( path, 0 );
@@ -60,8 +59,8 @@ namespace Gothic_II_Classic {
     zSTRING( zSTRING const* val )         zInit( zSTRING_OnInit( val ) );
     virtual ~zSTRING()                    zCall( 0x00401160 );
     
-    // Special Union string constructor
-    zSTRING( string const& val ) { zSTRING_OnInit( (char const*)val ); }
+    // Special Union CStringA constructor
+    zSTRING( CStringA const& val ) { zSTRING_OnInit( (char const*)val ); }
 
     // Same as union methods
     char& operator[]( unsigned int )        zCall( 0x004453F0 );
@@ -77,14 +76,14 @@ namespace Gothic_II_Classic {
     int Copy( unsigned int, unsigned long ) zCall( 0x0046B390 );
 
     // Default type cast
-    inline operator string()             { return ToChar(); }
-    inline operator const string() const { return ToChar(); }
+    inline operator CStringA()             { return ToChar(); }
+    inline operator const CStringA() const { return ToChar(); }
     inline operator const char*() const  { return ToChar(); }
     inline int Length() const            { return length;   }
 
 #if USING_UNION_STRING_METHODS
 #if !UNPROTECT_ZSTRING_METHODS
-  public:
+  protected:
 #endif
 #endif
     // Own methods
@@ -118,7 +117,7 @@ namespace Gothic_II_Classic {
   public:
 #if USING_UNION_STRING_METHODS
 
-#pragma region Union string methods
+#pragma region Union CStringA methods
 #define INLINE inline
 #define NOINLINE __declspec( noinline )
 
@@ -128,66 +127,66 @@ namespace Gothic_II_Classic {
     }
 
     INLINE char& First() {
-      return ((string&)*this).First();
+      return ((CStringA&)*this).First();
     }
 
     INLINE const char& First() const {
-      return ((string&)*this).First();
+      return ((CStringA&)*this).First();
     }
 
     INLINE char& Last() {
-      return ((string&)*this).Last();
+      return ((CStringA&)*this).Last();
     }
 
     INLINE const char& Last() const {
-      return ((string&)*this).Last();
+      return ((CStringA&)*this).Last();
     }
 
     INLINE uint32 ToInt32( const uint32& fromRad = 10 ) const {
-      return ((string&)*this).ToInt32( fromRad );
+      return ((CStringA&)*this).ToInt32( fromRad );
     }
 
     INLINE uint64 ToInt64( const uint32& fromRad = 10 ) const {
-      return ((string&)*this).ToInt64( fromRad );
+      return ((CStringA&)*this).ToInt64( fromRad );
     }
 
     INLINE real32 ToReal32() const {
-      return ((string&)*this).ToReal32();
+      return ((CStringA&)*this).ToReal32();
     }
 
     INLINE real64 ToReal64() const {
-      return ((string&)*this).ToReal64();
+      return ((CStringA&)*this).ToReal64();
     }
 
     INLINE bool32 Compare( const zSTRING& str ) const {
-      return ((string&)*this).Compare( str.ToChar() );
+      return ((CStringA&)*this).Compare( str.ToChar() );
     }
 
     INLINE bool32 Compare( const char* vec ) const {
-      return ((string&)*this).Compare( vec );
+      return ((CStringA&)*this).Compare( vec );
     }
 
     // case Insensitive
     INLINE bool32 CompareI( const zSTRING& str ) const {
-      return ((string&)*this).CompareI( str.ToChar() );
+      return ((CStringA&)*this).CompareI( str.ToChar() );
     }
 
     // case Insensitive
     INLINE bool32 CompareI( const char* vec ) const {
-      return ((string&)*this).CompareI( vec );
+      return ((CStringA&)*this).CompareI( vec );
     }
 
     INLINE bool32 HasWord( const zSTRING& cmp ) const {
-      return ((string&)*this).HasWord( cmp );
+      return ((CStringA&)*this).HasWord( cmp );
     }
 
     // case Insensitive
     INLINE bool32 HasWordI( const zSTRING& cmp ) const {
-      return ((string&)*this).HasWordI( cmp );
+      return ((CStringA&)*this).HasWordI( cmp );
     }
 
     INLINE bool32 MatchesMask( const zSTRING& mask ) const {
-      return ((string&)*this).MatchesMask( mask );
+      return ((CStringA&)*this).MatchesMask( mask );
     }
 
     INLINE uint32 Search(
@@ -195,7 +194,7 @@ namespace Gothic_II_Classic {
       const uint32&  pos,
       const bool32&  end
       ) const {
-      return ((string&)*this).Search( cmp,
+      return ((CStringA&)*this).Search( cmp,
         pos,
         end
         );
@@ -207,7 +206,7 @@ namespace Gothic_II_Classic {
       const uint32&  pos,
       const bool32&  end
       ) const {
-      return ((string&)*this).Search( cmp,
+      return ((CStringA&)*this).Search( cmp,
         pos,
         end
         );
@@ -218,7 +217,7 @@ namespace Gothic_II_Classic {
       const uint32&  pos = 0,
       const bool32&  end = False
       ) const {
-      return ((string&)*this).SearchReverse( cmp,
+      return ((CStringA&)*this).SearchReverse( cmp,
         pos,
         end
         );
@@ -230,7 +229,7 @@ namespace Gothic_II_Classic {
       const uint32&  pos = 0,
       const bool32&  end = False
       ) const {
-      return ((string&)*this).SearchReverseI( cmp,
+      return ((CStringA&)*this).SearchReverseI( cmp,
         pos,
         end
         );
@@ -240,7 +239,7 @@ namespace Gothic_II_Classic {
       const zSTRING& mask = " \t",
       const int32&   num = 1
       ) const {
-      return (zSTRING)((string&)*this).GetWord( mask,
+      return (zSTRING)((CStringA&)*this).GetWord( mask,
         num
         );
     }
@@ -251,7 +250,7 @@ namespace Gothic_II_Classic {
       const uint32&  offset = 0,
       uint32*        idx = Null
       ) const {
-      return (zSTRING)((string&)*this).GetWordEx( mask,
+      return (zSTRING)((CStringA&)*this).GetWordEx( mask,
         num,
         offset,
         idx
@@ -263,7 +262,7 @@ namespace Gothic_II_Classic {
       const zSTRING& rmask,
       const int32&   num = 1
       ) const {
-      return (zSTRING)((string&)*this).GetPattern( lmask,
+      return (zSTRING)((CStringA&)*this).GetPattern( lmask,
         rmask,
         num
         );
@@ -276,7 +275,7 @@ namespace Gothic_II_Classic {
       const uint32&  offset = 0,
       uint32*        idx = Null
       ) const {
-      return (zSTRING)((string&)*this).GetPatternEx( lmask,
+      return (zSTRING)((CStringA&)*this).GetPatternEx( lmask,
         rmask,
         num,
         offset,
@@ -290,7 +289,7 @@ namespace Gothic_II_Classic {
       const uint32&  word_index = 1,
       uint32*        inline_index = Null
       ) const {
-      return (zSTRING)((string&)*this).GetSymbol( (const string*)separators,
+      return (zSTRING)((CStringA&)*this).GetSymbol( (const CStringA*)separators,
         sep_num,
         word_index,
         inline_index
@@ -305,9 +304,9 @@ namespace Gothic_II_Classic {
       const uint32&   word_index = 1,
       uint32*         inline_index = Null
       ) const {
-      return (zSTRING)((string&)*this).GetSymbolEx( (const string*)separators,
+      return (zSTRING)((CStringA&)*this).GetSymbolEx( (const CStringA*)separators,
         sep_num,
-        (const string**)brackets,
+        (const CStringA**)brackets,
         br_num,
         word_index,
         inline_index
@@ -317,7 +316,7 @@ namespace Gothic_II_Classic {
 
 #pragma region Set
     INLINE zSTRING& Reverse() {
-      return (zSTRING&)((string&)*this).Reverse();
+      return (zSTRING&)((CStringA&)*this).Reverse();
     }
 
     INLINE zSTRING& Cut( const uint32& len ) {

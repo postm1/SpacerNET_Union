@@ -254,5 +254,18 @@ namespace GOTHIC_ENGINE {
 		THISCALL(Ivk_VobRemovedFromWorld)(pVob);
 	}
 	*/
+
+	/*
+
+	HOOK ivk_ReadObjectAccount AS(0x0051AFF0, &zCArchiver::ReadObjectAccount_Hook1);
+	zCObject * __fastcall zCArchiver::ReadObjectAccount_Hook1(const char *file, int line, zCObject* objectUseThis) {
+		return ReadObject(objectUseThis);
+	}
+
+	HOOK ivk_ReadObjectAccount2 AS(0x0051B020, &zCArchiver::ReadObjectAccount_Hook2);
+	zCObject * __fastcall zCArchiver::ReadObjectAccount_Hook2(const char *file, int line, const char* chunkName, zCObject* objectUseThis) {
+		return ReadObject(chunkName, objectUseThis);
+	}
+	*/
 	
 }

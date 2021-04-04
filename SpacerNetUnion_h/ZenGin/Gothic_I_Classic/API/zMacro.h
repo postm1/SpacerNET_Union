@@ -10,7 +10,7 @@ namespace Gothic_I_Classic {
 #define zNEW( obj ) new obj
 #define zDELETE( obj ) delete obj
 #ifndef SAFE_DELETE
-#define SAFE_DELETE( obj ) if( obj ) { delete obj; obj = 0 }
+#define SAFE_DELETE( obj ) if( obj ) { delete obj; obj = 0; }
 #endif
 #define zCall( address ) { XCALL( address ); }
 #define zInit( call ) { if( Union.GetEngineVersion() == Engine_G1 ) call; }

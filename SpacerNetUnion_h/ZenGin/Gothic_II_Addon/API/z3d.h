@@ -237,6 +237,7 @@ namespace Gothic_II_Addon {
     // static properties
     static zCCamera*& activeCam;
     static zVEC3& activeCamPos;
+
     // user API
     #include "zCCamera.inl"
   };

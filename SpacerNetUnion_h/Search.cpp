@@ -530,8 +530,9 @@ namespace GOTHIC_ENGINE {
 			zSTRING sName = param->name.Upper();
 
 			int pos = sName.Search(".", 1);
-			if (pos > 0)
-				sName = param->name.Substr(pos + 1, 255);
+			//RX_FIX
+			//if (pos > 0)
+				//sName = param->name.Substr(pos + 1, 255);
 
 			type = param->type;
 
@@ -658,8 +659,9 @@ namespace GOTHIC_ENGINE {
 			zSTRING sName = param->name;
 
 			int pos = sName.Search(".", 1);
-			if (pos > 0)
-				sName = param->name.Substr(pos + 1, 255);
+			//RX_FIX
+			//if (pos > 0)
+				//sName = param->name.Substr(pos + 1, 255);
 
 			type = param->type;
 
