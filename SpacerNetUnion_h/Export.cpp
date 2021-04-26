@@ -334,7 +334,7 @@ namespace GOTHIC_ENGINE {
 
 			if (!IsValidZObject(ptr))
 			{
-				MessageBox(0, "Bad vob pointer in Extern_SelectVobSync!", 0, 0);
+				//MessageBox(0, "Bad vob pointer in Extern_SelectVobSync!", 0, 0);
 				OutFile("Bad vob pointer in Extern_SelectVobSync: " + AHEX32((int)ptr), false);
 				return;
 			}
