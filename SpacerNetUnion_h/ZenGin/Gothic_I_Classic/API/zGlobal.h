@@ -145,9 +145,9 @@ namespace Gothic_I_Classic {
   }
 
   template <typename T>
-  inline ModulePatchCallInvoker<T> AutoModulePatchCallInvoker_BySignature( const CStringA& sig, T ptr ) {
+  inline ModulePatchCallInvoker<T> AutoModulePatchCallInvoker_BySignature( const CStringA& sig, T ptr, bool commit = true ) {
     uint adr = FindEngineAddress( sig, typeid(ptr).name() );
-    return ModulePatchCallInvoker<T>( adr, ptr );
+    return ModulePatchCallInvoker<T>( adr, ptr, commit );
   }
 
 } // namespace Gothic_II_Addon

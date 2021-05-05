@@ -361,6 +361,10 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "selectMoveWhenVobInsert", "0");
 		list.Insert("selectMoveWhenVobInsert", set);
+
+
+		set = new CSetting(TYPE_INT, "CONTROLS", "translateParentAlone", "0");
+		list.Insert("translateParentAlone", set);
 	}
 
 	CSettings::~CSettings()

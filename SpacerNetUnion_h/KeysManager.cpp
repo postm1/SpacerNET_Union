@@ -164,6 +164,8 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("LIGHT_RAD_DEC", "0_74");
 		defaultValues.Insert("LIGHT_RAD_ZERO", "0_55");
 
+		//defaultValues.Insert("TEST_MOVE_LC", "0_6");
+
 		
 
 		auto arr = defaultValues.GetArray();

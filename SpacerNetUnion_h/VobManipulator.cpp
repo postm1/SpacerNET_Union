@@ -63,6 +63,7 @@ namespace GOTHIC_ENGINE {
 		zCVob* vob;
 		bool collDyn;
 		bool collStat;
+		zVEC3 pos;
 
 	public:
 		void RestoreColl()
@@ -85,10 +86,13 @@ namespace GOTHIC_ENGINE {
 			vobStr->vob = vob;
 			vobStr->collDyn = vob->collDetectionDynamic;
 			vobStr->collStat = vob->collDetectionStatic;
+			vobStr->pos = vob->GetPositionWorld();
+
 			vobsToMove.Insert(vobStr);
 
 			vob->SetCollDetDyn(FALSE);
 			vob->SetCollDetStat(FALSE);
+			
 		}
 
 		node = node->GetFirstChild();
@@ -182,10 +186,16 @@ namespace GOTHIC_ENGINE {
 
 	void HandleVobTranslation(zCVob* pickedVob, zVEC3 pos)
 	{
+
+		//bool parentAlone = theApp.options.GetIntVal("translateParentAlone");
+
 		if (pickedVob->globalVobTreeNode)
 		{
 			GetChildren(pickedVob->globalVobTreeNode, pickedVob);
+
+			
 		}
+
 		
 		pickedVob->SetPositionWorld(pos);
 
@@ -824,6 +834,13 @@ namespace GOTHIC_ENGINE {
 			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
 		}
 
+		/*
+		if (keys.KeyPressed("TEST_MOVE_LC", true))
+		{
+			print.PrintRed("Хаарт опускает вобы");
+
+		}
+		*/
 
 		
 		if (keys.KeyPressed("VOB_TRANSLATE", true))

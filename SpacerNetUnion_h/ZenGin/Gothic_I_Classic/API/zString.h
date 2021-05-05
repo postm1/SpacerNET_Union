@@ -74,7 +74,6 @@ namespace Gothic_I_Classic {
     zSTRING& Lower()                        zCall( 0x00465280 );
     zSTRING& Upper()                        zCall( 0x00465390 );
     zSTRING& UpperFirstLowerRest()          zCall( 0x004654A0 );
-    int Copy( unsigned int, unsigned long ) zCall( 0x00466DF0 );
 
     // Default type cast
     inline operator CStringA()             { return ToChar(); }
@@ -103,6 +102,7 @@ namespace Gothic_I_Classic {
     zSTRING Deleted( zSTRING const&, zTSTR_KIND ) const                           zCall( 0x00466D10 );
     zSTRING Copied( unsigned int, unsigned long ) const                           zCall( 0x00466FA0 );
     int Copy( zSTRING const&, zTSTR_KIND const& )                                 zCall( 0x00467100 );
+    int Copy( unsigned int, unsigned long )                                       zCall( 0x00466DF0 );
     zSTRING Copied( zSTRING const&, zTSTR_KIND const& ) const                     zCall( 0x00467380 );
     void TrimLeft( char )                                                         zCall( 0x00467460 );
     void TrimRight( char )                                                        zCall( 0x004675A0 );
@@ -159,81 +159,97 @@ namespace Gothic_I_Classic {
       return ((CStringA&)*this).ToReal64();
     }
 
-    INLINE bool32 Compare( const zSTRING& str ) const {
+    INLINE bool_t Compare( const zSTRING& str ) const {
       return ((CStringA&)*this).Compare( str.ToChar() );
     }
 
-    INLINE bool32 Compare( const char* vec ) const {
+    INLINE bool_t Compare( const char* vec ) const {
       return ((CStringA&)*this).Compare( vec );
     }
 
     // case Insensitive
-    INLINE bool32 CompareI( const zSTRING& str ) const {
+    INLINE bool_t CompareI( const zSTRING& str ) const {
       return ((CStringA&)*this).CompareI( str.ToChar() );
     }
 
     // case Insensitive
-    INLINE bool32 CompareI( const char* vec ) const {
+    INLINE bool_t CompareI( const char* vec ) const {
       return ((CStringA&)*this).CompareI( vec );
     }
 
-    INLINE bool32 HasWord( const zSTRING& cmp ) const {
+    INLINE bool_t CompareMasked( const CStringA& str ) const {
+      return ((CStringA&)*this).CompareMasked( (CStringA&)str );
+    }
+
+    INLINE bool_t CompareMaskedI( const CStringA& str ) const {
+      return ((CStringA&)*this).CompareMaskedI( (CStringA&)str );
+    }
+
+    INLINE bool_t HasWord( const zSTRING& cmp ) const {
       return ((CStringA&)*this).HasWord( cmp );
     }
 
     // case Insensitive
-    INLINE bool32 HasWordI( const zSTRING& cmp ) const {
+    INLINE bool_t HasWordI( const zSTRING& cmp ) const {
       return ((CStringA&)*this).HasWordI( cmp );
     }
 
-    INLINE bool32 MatchesMask( const zSTRING& mask ) const {
+    INLINE bool_t MatchesMask( const zSTRING& mask ) const {
       return ((CStringA&)*this).MatchesMask( mask );
+    }
+
+    INLINE bool_t StartWith( const zSTRING& cmp ) const {
+      return ((CStringA&)*this).StartWith( (CStringA&)cmp );
+    }
+
+    INLINE bool_t EndWith( const zSTRING& cmp ) const {
+      return ((CStringA&)*this).EndWith( (CStringA&)cmp );
     }
 
     INLINE uint32 Search(
       const zSTRING& cmp,
       const uint32&  pos,
-      const bool32&  end
+      const bool_t&  end
       ) const {
       return ((CStringA&)*this).Search( cmp,
-        pos,
-        end
-        );
+                                        pos,
+                                        end
+                                        );
     }
 
     // case Insensitive
     INLINE uint32 SearchI(
       const zSTRING& cmp,
       const uint32&  pos,
-      const bool32&  end
+      const bool_t&  end
       ) const {
       return ((CStringA&)*this).Search( cmp,
-        pos,
-        end
-        );
+                                        pos,
+                                        end
+                                        );
     }
 
     INLINE uint32 SearchReverse(
       const zSTRING& cmp,
       const uint32&  pos = 0,
-      const bool32&  end = False
+      const bool_t&  end = False
       ) const {
       return ((CStringA&)*this).SearchReverse( cmp,
-        pos,
-        end
-        );
+                                               pos,
+                                               end
+                                               );
     }
 
     // case Insensitive
     INLINE uint32 SearchReverseI(
       const zSTRING& cmp,
       const uint32&  pos = 0,
-      const bool32&  end = False
+      const bool_t&  end = False
       ) const {
       return ((CStringA&)*this).SearchReverseI( cmp,
-        pos,
-        end
-        );
+                                                pos,
+                                                end
+                                                );
     }
 
     INLINE zSTRING GetWord(
@@ -241,8 +257,8 @@ namespace Gothic_I_Classic {
       const int32&   num = 1
       ) const {
       return (zSTRING)((CStringA&)*this).GetWord( mask,
-        num
-        );
+                                                  num
+                                                  );
     }
 
     INLINE zSTRING GetWordEx(
@@ -252,10 +268,10 @@ namespace Gothic_I_Classic {
       uint32*        idx = Null
       ) const {
       return (zSTRING)((CStringA&)*this).GetWordEx( mask,
-        num,
-        offset,
-        idx
-        );
+                                                    num,
+                                                    offset,
+                                                    idx
+                                                    );
     }
 
     INLINE zSTRING GetPattern(
@@ -264,9 +280,9 @@ namespace Gothic_I_Classic {
       const int32&   num = 1
       ) const {
       return (zSTRING)((CStringA&)*this).GetPattern( lmask,
-        rmask,
-        num
-        );
+                                                     rmask,
+                                                     num
+                                                     );
     }
 
     INLINE zSTRING GetPatternEx(
@@ -277,24 +293,38 @@ namespace Gothic_I_Classic {
       uint32*        idx = Null
       ) const {
       return (zSTRING)((CStringA&)*this).GetPatternEx( lmask,
-        rmask,
-        num,
-        offset,
-        idx
-        );
+                                                       rmask,
+                                                       num,
+                                                       offset,
+                                                       idx
+                                                       );
+    }
+
+    INLINE zSTRING GetWordSmart( const int& word_index = 1, const bool& groupSymbols = false ) const {
+      return (zSTRING)((CStringA&)*this).GetWordSmart( word_index,
+                                                       groupSymbols
+                                                       );
+    }
+
+    INLINE zSTRING GetWordSmartEx( const int& word_index = 1, const bool& groupSymbols = false, const uint& offset = 0, uint* word_offset = Null ) const {
+      return (zSTRING)((CStringA&)*this).GetWordSmartEx( word_index,
+                                                         groupSymbols,
+                                                         offset,
+                                                         word_offset
+                                                         );
     }
 
     INLINE zSTRING GetSymbol(
       const zSTRING* separators,
       const uint32&  sep_num,
-      const uint32&  word_index = 1,
+      const uint32&  word_index   = 1,
       uint32*        inline_index = Null
       ) const {
       return (zSTRING)((CStringA&)*this).GetSymbol( (const CStringA*)separators,
-        sep_num,
-        word_index,
-        inline_index
-        );
+                                                    sep_num,
+                                                    word_index,
+                                                    inline_index
+                                                    );
     }
 
     INLINE zSTRING GetSymbolEx(
@@ -302,16 +332,22 @@ namespace Gothic_I_Classic {
       const uint32&   sep_num,
       const zSTRING** brackets,
       const uint32&   br_num,
-      const uint32&   word_index = 1,
+      const uint32&   word_index   = 1,
       uint32*         inline_index = Null
       ) const {
       return (zSTRING)((CStringA&)*this).GetSymbolEx( (const CStringA*)separators,
-        sep_num,
-        (const CStringA**)brackets,
-        br_num,
-        word_index,
-        inline_index
-        );
+                                                      sep_num,
+                                                      (const CStringA**)brackets,
+                                                      br_num,
+                                                      word_index,
+                                                      inline_index
+                                                      );
+    }
+
+    INLINE zSTRING Copy(
+      const uint& index,
+      const uint& length ) const {
+      return ((CStringA&)*this).Copy( index, length );
     }
 #pragma endregion
 
@@ -358,7 +394,7 @@ namespace Gothic_I_Classic {
       return *this;
     }
 
-    NOINLINE bool32 WriteToFile( const zSTRING& fname, const bool32& createDirs = True ) const {
+    NOINLINE bool_t WriteToFile( const zSTRING& fname, const bool_t& createDirs = True ) const {
       if( createDirs )
         CreateDirectories( fname.GetPattern( "", "\\", -1 ) );
 
@@ -367,12 +403,12 @@ namespace Gothic_I_Classic {
         return False;
       _setmode( _fileno( hFile ), 0x8000 );
 
-      bool32 bWrite = (fwrite( vector, sizeof( char ), length, hFile ) > 0);
+      bool_t bWrite = (fwrite( vector, sizeof( char ), length, hFile ) > 0);
       fclose( hFile );
       return bWrite;
     }
 
-    NOINLINE bool32 ReadFromFile( const zSTRING& fname ) {
+    NOINLINE bool_t ReadFromFile( const zSTRING& fname ) {
       if( _access( fname, None ) > NotFound )
         return False;
 
@@ -388,7 +424,7 @@ namespace Gothic_I_Classic {
       Clear();
       char*  Buffer = new char[BufferLength];
       Buffer[BufferLength] = 0;
-      bool32 IsReaded = fread( Buffer, sizeof( char ), BufferLength, File ) > 0;
+      bool_t IsReaded = fread( Buffer, sizeof( char ), BufferLength, File ) > 0;
       *this = Buffer;
 
       fclose( File );
@@ -396,7 +432,7 @@ namespace Gothic_I_Classic {
       return IsReaded;
     }
 
-    NOINLINE bool32 ReadFromVdf( const zSTRING& fname, const long32& flags ) {
+    NOINLINE bool_t ReadFromVdf( const zSTRING& fname, const long32& flags ) {
       long32 File = Vdfs32::vdf_fopen( fname.ToChar(), flags );
       if( File == Invalid )
         return False;
@@ -405,7 +441,7 @@ namespace Gothic_I_Classic {
       uint32 BufferLength = Vdfs32::vdf_ffilesize( File );
       char*  Buffer = new char[BufferLength];
       Buffer[BufferLength] = 0;
-      bool32 IsReaded = Vdfs32::vdf_fread( File, Buffer, BufferLength ) > 0;
+      bool_t IsReaded = Vdfs32::vdf_fread( File, Buffer, BufferLength ) > 0;
       *this = Buffer;
 
       Vdfs32::vdf_fclose( File );
@@ -434,22 +470,22 @@ namespace Gothic_I_Classic {
   }
 
   // case Insensitive
-  inline bool32 operator == ( const zSTRING& s1, const zSTRING& s2 ) {
+  inline bool_t operator == ( const zSTRING& s1, const zSTRING& s2 ) {
     return s1.CompareI( s2 );
   }
 
   // case Insensitive
-  inline bool32 operator == ( const zSTRING& s1, const char* s2 ) {
+  inline bool_t operator == ( const zSTRING& s1, const char* s2 ) {
     return s1.CompareI( s2 );
   }
 
   // case Insensitive
-  inline bool32 operator != ( const zSTRING& s1, const zSTRING& s2 ) {
+  inline bool_t operator != ( const zSTRING& s1, const zSTRING& s2 ) {
     return !s1.CompareI( s2 );
   }
 
   // case Insensitive
-  inline bool32 operator != ( const zSTRING& s1, const char* s2 ) {
+  inline bool_t operator != ( const zSTRING& s1, const char* s2 ) {
     return !s1.CompareI( s2 );
   }
 
