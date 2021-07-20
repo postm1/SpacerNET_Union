@@ -12,6 +12,8 @@ namespace GOTHIC_ENGINE {
 		zCMaterial*	SelectMaterial;
 		zCVertex* selectedVertext;
 
+		
+		zCMaterial* copyMat;
 
 	public:
 		void Init();
@@ -24,6 +26,12 @@ namespace GOTHIC_ENGINE {
 		void ShowInfo();
 		void CopyTextureName();
 		void DrawLine(zVEC3 wsPoint1, zVEC3 wsPoint2, zCOLOR col);
+		void CalcPolyCenter(zPOINT2& center);
+		void OnPolyApplyTexture();
+		void PolyApplyMapping();
+		void TextureScale(zVALUE x, zVALUE y);
+		void ResetUV();
+		void RestoreMat();
 	};
 
 }

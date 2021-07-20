@@ -10,3 +10,4 @@ zCVertex       *Vertex(int i) const { zERR_ASSERT(0 <= i && i < numVert && vertL
 zCPolygon      *Poly(int i) const { zERR_ASSERT(0 <= i && i < numPoly && polyList); return polyList[i]; }
 zCVertFeature  *Feature(int i) const { zERR_ASSERT(0 <= i && i < numFeat && featList); return featList[i]; }
 void SortPolysByList_Hook(zCPolygon** list, int listLength);
+void ShareFeatures_Union();

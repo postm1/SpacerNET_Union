@@ -3,7 +3,12 @@
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
+
+
 namespace GOTHIC_ENGINE {
+
+
+	
 	// Add your code here . . .
 	SpacerApp::SpacerApp()
 	{
@@ -41,6 +46,7 @@ namespace GOTHIC_ENGINE {
 		this->search.cur_vob_convert = NULL;
 		this->vobListSelectedIndex = 0;
 		this->firstTimeZenSaved = false;
+		this->pluginsChecked = false;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}
@@ -156,6 +162,108 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	inline bool CheckDx11() {
+		HMODULE module = GetModuleHandle("ddraw.dll");
+
+		return
+			module != Null &&
+			GetProcAddress(module, "GDX_AddPointLocator");
+	}
+
+	bool SpacerApp::IsDx11Active()
+	{
+		static bool isEnabled = CheckDx11();
+		return isEnabled;
+	}
+	void SpacerApp::RenderSelectedVobBbox()
+	{
+		if (!IsDx11Active())
+		{
+			return;
+		}
+
+		static zCOLOR colUp = zCOLOR(255, 255, 255);
+		static zCOLOR colAt = zCOLOR(255, 0, 0);
+		static zCOLOR colRight = zCOLOR(0, 255, 0);
+
+
+		zREAL size = 0.0f;
+
+		if (this->pickedVob)
+		{
+
+			auto vob = this->pickedVob;
+
+			auto spot = dynamic_cast<zCVobSpot*>(vob);
+
+			auto wp = dynamic_cast<zCVobWaypoint*>(vob);
+
+			auto zone = dynamic_cast<zCZone*>(vob);
+
+			if (spot)
+			{
+				size = 50;
+
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetUpVectorWorld()	* size, colUp, 1);
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetAtVectorWorld()	* size, colAt, 1);
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetRightVectorWorld()* size, colRight, 1);
+			}
+			else if (wp)
+			{
+				size = 50;
+
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetUpVectorWorld()	* size, colUp, 1);
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetAtVectorWorld()	* size, colAt, 1);
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetRightVectorWorld()* size, colRight, 1);
+			}
+			else if (zone)
+			{
+				vob->bbox3D.Draw(zCOLOR(255, 0, 0));
+			}
+			else
+			{
+				static	zREAL wave;
+
+				zTBBox3D bbox = vob->bbox3D;
+
+
+				if (vob->GetVisual())
+				{
+					bbox = vob->GetVisual()->GetBBox3D();
+				}
+
+				//if (!vob->sleepingMode)	wave = sin(ztimer->totalTimeFloat*0.005F);
+				//else						wave = 1.0F;
+
+				zREAL	size = (float)((int)(bbox.maxs.n[VX] - bbox.mins.n[VX]));
+
+				if (size >= 150)
+				{
+					size *= 0.8;
+				}
+				else  if (size >= 200)
+				{
+					size *= 0.75;
+				}
+				else  if (size >= 400)
+				{
+					size *= 0.6;
+				}
+
+				if (size < 35) size = 35;
+
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetUpVectorWorld()	* size, colUp, 1);
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetAtVectorWorld()	* size, colAt, 1);
+
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetRightVectorWorld()* size, colRight, 1); // зеленый
+
+
+				//vob->bbox3D.Draw(zCOLOR(255, 0, 0));
+			}
+
+
+		}
+	}
 	void SpacerApp::PreRender()
 	{
 		if (g_bIsPlayingGame)
@@ -165,6 +273,7 @@ namespace GOTHIC_ENGINE {
 
 		if (GameFocused())
 		{
+			
 			if (zinput->GetMouseButtonPressedLeft())
 			{
 				int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
@@ -184,6 +293,7 @@ namespace GOTHIC_ENGINE {
 				ClearLMB();
 
 			}
+			
 		}
 
 
@@ -213,7 +323,7 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-
+		RenderSelectedVobBbox();
 
 	}
 

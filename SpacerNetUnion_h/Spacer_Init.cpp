@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 	
-
+	
 	CString INTERFACE_DLL_NAME = "SpacerUnionInterface.dll";
 
 	HOOK Ivk_CGameManager_Init AS(&CGameManager::Init, &CGameManager::Init_Spacer);
@@ -12,9 +12,8 @@ namespace GOTHIC_ENGINE {
 	void CGameManager::Init_Spacer(struct HWND__ *& hwnd)
 	{
 		//Gothic_II_Addon::hWndApp
-		//cmd << "Init_Spacer" << endl;
+		cmd << "Init_Spacer" << endl;
 
-		theApp.module = CPlugin::FindModule(INTERFACE_DLL_NAME);
 
 		//cmd << "FindModule ok" << endl;
 

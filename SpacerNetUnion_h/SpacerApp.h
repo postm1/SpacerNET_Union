@@ -1,8 +1,12 @@
 // Supported with union (c) 2020 Union team
 // Union HEADER file
 
+
+
+
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
+
 	struct SpacerApp
 	{
 		// handle ÃËÀÂÍÎÉ ôîðìû c#
@@ -14,6 +18,9 @@ namespace GOTHIC_ENGINE {
 		COption spcOpt;
 		CSettings options;
 		bool visualEditorActive;
+		bool pluginsChecked;
+		zCArray<zSTRING> whiteArrayPlugins;
+		zCArray<zSTRING> blackArrayPlugins;
 
 		struct
 		{
@@ -53,6 +60,7 @@ namespace GOTHIC_ENGINE {
 			bool selectNextVob;
 			bool selectNextVobForce;
 			bool nextInsertBlocked;
+			bool pickUnshareShow;
 
 
 			bool dataFilled;
@@ -94,6 +102,7 @@ namespace GOTHIC_ENGINE {
 		bool IsClicksBlocked();
 		void PluginLoop();
 		void KeysLoop();
+		void CheckForBadPlugins();
 		void RenderStartScreen();
 		SpacerApp();
 		zCVob * GetSelectedVob();
@@ -105,6 +114,8 @@ namespace GOTHIC_ENGINE {
 		void SetCurrentKey(int key);
 		void ApplyProps(char* str, char* name);
 		void PreRender();
+		void RenderSelectedVobBbox();
+		bool IsDx11Active();
 		void RemoveTargetListTrigger();
 		void CollectTargetListTrigger();
 		void CollectSourcerTriggerList();

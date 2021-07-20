@@ -1,3 +1,4 @@
+ï»¿
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
@@ -56,7 +57,7 @@ namespace GOTHIC_ENGINE {
 		if (!Success)
 			Success = SetForegroundWindow(Wnd);
 
-		// [EDENFELD] neuen Code musste ich erst mal wieder deaktivierten, da es häufiger zu Crashes bei Focusverlust führt als der alte Code
+		// [EDENFELD] neuen Code musste ich erst mal wieder deaktivierten, da es hÐ´ufiger zu Crashes bei Focusverlust fÑŒhrt als der alte Code
 #else
 		SetForegroundWindow(Wnd);
 		return TRUE;
@@ -443,6 +444,51 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+
+	void SpacerApp::CheckForBadPlugins()
+	{
+		if (pluginsChecked || theApp.options.GetIntVal("showBadPluginsMsg") == 0) return;
+
+		pluginsChecked = true;
+
+		
+		whiteArrayPlugins.Insert("SPACERUNIONNET.DLL");
+		whiteArrayPlugins.Insert("SPACERUNIONINTERFACE.DLL");
+		whiteArrayPlugins.Insert("ZMOUSEFIX.DLL");
+		whiteArrayPlugins.Insert("ZBINKFIX.DLL");
+		whiteArrayPlugins.Insert("ZACTIVATECTRL.DLL");
+
+		const CList<CPlugin>* pluginList = CPlugin::GetPluginList().GetNext();
+		while (pluginList) {
+			const CPlugin* plug = pluginList->GetData();
+			if (plug) {
+				zSTRING name = plug->GetName();
+				if (!whiteArrayPlugins.IsInList(name)) {
+					blackArrayPlugins.Insert(name);
+				}
+			}
+
+			pluginList = pluginList->GetNext();
+		}
+
+		if (blackArrayPlugins.GetNumInList() > 0) {
+			zSTRING message = GetLang("CHECK_BADPLUGINS_MSG");
+			
+
+			zSTRING mess2 = "\n\n";
+			for (int i = 0; i < blackArrayPlugins.GetNumInList(); i++) {
+				if (i > 0) {
+					mess2 += ", ";
+				}
+				mess2 += blackArrayPlugins.GetSafe(i);
+			}
+			mess2 += ".";
+			message += mess2;
+
+			MessageBox(0, message, 0, 0);
+		}
+
+	}
 	void SpacerApp::RenderStartScreen()
 	{
 		static zCView* view;
@@ -452,6 +498,8 @@ namespace GOTHIC_ENGINE {
 			view = new zCView(0, 0, 8192, 8192);
 			view->InsertBack("BLACK.TGA");
 		}
+
+		CheckForBadPlugins();
 
 		screen->InsertItem(view);
 

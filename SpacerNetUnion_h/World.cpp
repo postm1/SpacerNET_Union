@@ -264,6 +264,7 @@ namespace GOTHIC_ENGINE {
 			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
 
 
+		
 		/*
 		zCTree<zCVob>* tree = ogame->GetWorld()->globalVobTree.GetFirstChild();
 		while (tree)
@@ -280,6 +281,7 @@ namespace GOTHIC_ENGINE {
 	{
 		ogame->CloseSavescreen();
 		ogame->GetWorld()->AddVob(ogame->GetCamera()->connectedVob);
+
 
 
 		/*
@@ -468,6 +470,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::WorldAfterLoad()
 	{
+		this->pickUnshareShow = false;
+
 		oCNpc::SetNpcAIDisabled(TRUE);
 		dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
 #if ENGINE > Engine_G1
@@ -527,6 +531,13 @@ namespace GOTHIC_ENGINE {
 		std::cout << "Union: BuildTree..." << std::endl;
 		BuildTree();
 
+
+		if (ogame->GetWorld() && ogame->GetWorld()->compiled)
+		{
+			//ogame->GetWorld()->bspTree.mesh->ArraysToLists();
+			//ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
+		}
+	
 
 
 	}

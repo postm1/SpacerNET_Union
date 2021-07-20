@@ -25,14 +25,21 @@ namespace GOTHIC_ENGINE {
 			zRELEASE(mat);
 		};
 
-		void			SetMaterial(zCMaterial* _mat);
+		void zCSelPoly::SetMaterial(zCMaterial* _mat)
+		{
+			zRELEASE(mat);
+			mat = _mat;
+			if (mat) mat->AddRef();
+		};
+
 		zCMaterial*		GetMaterial() { return mat; };
 		zCPolygon*		GetPolygon() { return poly; };
 
-	protected:
+	public:
 		zCSelPoly() {};
 		zCPolygon*  poly;
 		zCMaterial* mat;
+		zCOLOR color;
 	};
 
 	enum TLibFLags

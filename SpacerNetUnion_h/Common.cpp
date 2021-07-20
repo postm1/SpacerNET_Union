@@ -244,6 +244,10 @@ namespace GOTHIC_ENGINE {
 
 		THISCALL(ivk_AddVob)(vob);
 	}
+	
+	//ShowFreePoints
+
+
 
 	/*
 	//0x00624970 protected: virtual void __thiscall zCWorld::VobRemovedFromWorld(class zCVob *)
@@ -268,4 +272,10 @@ namespace GOTHIC_ENGINE {
 	}
 	*/
 	
+	/*
+	HOOK ivk_ShareFeatures AS(&zCMesh::ShareFeatures, &zCMesh::ShareFeatures_Union);
+	void zCMesh::ShareFeatures_Union() {
+		
+	}
+	*/
 }

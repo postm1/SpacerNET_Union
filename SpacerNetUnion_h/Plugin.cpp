@@ -15,6 +15,9 @@ namespace GOTHIC_ENGINE {
 
   void Game_Entry() {
 	 // cmd << "Game_Entry" << endl;
+	  theApp.module = CPlugin::FindModule(INTERFACE_DLL_NAME);
+	  (voidFuncPointer)GetProcAddress(theApp.module, "UI_Initialize")();
+
   }
 
   void Game_Init() {

@@ -5,3 +5,4 @@
 
 void CloseSavescreen_Hook();
 void OpenSavescreen_Hook(bool);
+void ShowFreePoints_Union();

@@ -2,6 +2,10 @@
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
+
+	extern Timer mainTimer;
+	extern void _GetCursorPos(POINT* cur);
+
 	// Add your code here . . .
 	// обновить сетку вейпоинтов при перемещении WP
 	void WayMovePoint(zCVob* wpvob)
@@ -92,7 +96,7 @@ namespace GOTHIC_ENGINE {
 
 			vob->SetCollDetDyn(FALSE);
 			vob->SetCollDetStat(FALSE);
-			
+
 		}
 
 		node = node->GetFirstChild();
@@ -570,9 +574,262 @@ namespace GOTHIC_ENGINE {
 		init = true;
 
 	}
+
+	void GrassPlacing()
+	{
+		return;
+
+		if (zinput->GetMouseButtonPressedLeft())
+		{
+			if (mainTimer[0u].Await(30))
+			{
+				/*
+				zCArray<zCVob*> vobs;
+				zCArray<zCVob*> vobsNeed;
+
+				ogame->GetWorld()->SearchVobListByClass(zCVob::classDef, vobs, 0);
+
+				ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
+
+				for (int i = 0; i < vobs.GetNum(); i++)
+				{
+					zCVob* pVob = vobs.GetSafe(i);
+
+					if (dynamic_cast<zCVobLevelCompo*>(pVob))	continue;
+					if (pVob == ogame->GetCamera()->GetVob())	continue;
+
+
+					if (pVob && pVob->GetVisual() && pVob->GetVisual()->GetVisualName() == "NW_NATURE_GRASSGROUP_01.3DS")
+					{
+						vobsNeed.Insert(pVob);
+
+					}
+
+
+				}
+				*/
+
+			
+
+				POINT  cur;
+				_GetCursorPos(&cur);
+
+				RECT rect;
+				GetWindowRect(hWndApp, &rect);
+
+				float rw = rect.right - rect.left;
+				float rh = rect.bottom - rect.top;
+				zCCamera* cam = ogame->GetCamera();
+				zCVob* camVob = ogame->GetCamera()->connectedVob;
+
+				float ax = (float)cur.x / rw * (float)zrenderer->vid_xdim;
+				float ay = (float)cur.y / rh * (float)zrenderer->vid_ydim;
+
+				zVEC3 ray00, ray, p;
+				cam->camMatrixInv.GetTranslation(ray00);
+				p.n[VZ] = 1;
+				cam->BackProject(ax, ay, p);				// p im camSpace
+				p = cam->camMatrixInv * p;					// p im world(obj)Space  
+				ray = p - ray00;
+
+				ray = ray.Normalize();
+
+				ogame->GetWorld()->PickScene(*ogame->GetCamera(), ax, ay, -1);
+
+
+
+				if (ogame->GetWorld()->TraceRayFirstHit(cam->GetVob()->GetPositionWorld(), ray * 5000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_VOB_IGNORE)) {
+					// Poly gefunden
+					if (ogame->GetWorld()->traceRayReport.foundPoly) {
+						// Schnittpunkt schnappen und Position neu setzen
+						auto poly = ogame->GetWorld()->traceRayReport.foundPoly;
+						auto posToPlace = ogame->GetWorld()->traceRayReport.foundIntersection;
+
+						if (poly)
+						{
+							int bBoxSize = 1500;
+							zCArray<zCVob*> baseVobList;
+							zCArray<zCVob*> resVobList;
+							zTBBox3D box;
+
+							box.maxs = posToPlace + zVEC3(bBoxSize, bBoxSize, bBoxSize);
+							box.mins = posToPlace - zVEC3(bBoxSize, bBoxSize, bBoxSize);
+							ogame->GetWorld()->CollectVobsInBBox3D(baseVobList, box);
+
+							for (int i = 0; i < baseVobList.GetNumInList(); i++) {
+
+
+								zCVob* vob = baseVobList[i];
+
+								if (vob
+									&& vob != camVob
+									&& !dynamic_cast<zCVobWaypoint*>(vob)
+									&& !dynamic_cast<zCVobSpot*>(vob)
+									&& !dynamic_cast<zCVobLight*>(vob)
+									&& !dynamic_cast<zCVobLevelCompo*>(vob)
+									&& !dynamic_cast<zCZone*>(vob)
+									&& vob->GetVisual()
+									&& vob->GetVisual()->GetVisualName() == "NW_NATURE_GRASSGROUP_01.3DS"
+									&& vob != theApp.currentVobRender
+									&& vob != pfxManager.testVob
+									)
+								{
+									
+									resVobList.InsertEnd(vob);
+								}
+							}
+							
+
+							for (int i = 0; i < resVobList.GetNumInList(); i++) 
+							{
+								zCVob* vob = resVobList[i];
+
+								auto dist = vob->GetPositionWorld().Distance(posToPlace);
+
+								print.PrintRed(Z dist);
+
+								if (dist <= 180)
+								{
+									print.PrintRed("No place to put grass");
+									return;
+								}
+							}
+
+
+							zCVob* newVob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance("zCVob"));
+
+							newVob->SetVobName("");
+
+
+							newVob->SetCollDetStat(FALSE);
+							newVob->SetCollDetDyn(FALSE);
+
+							newVob->SetVisual("NW_NATURE_GRASSGROUP_01.3DS");
+
+							newVob->SetPositionWorld(posToPlace + zVEC3(0, GetRandVal(3, 10), 0));
+
+							InsertIntoWorld(newVob, NULL, false);
+
+							poly->CalcNormal();
+
+							zVEC3 newDir = (poly->polyPlane.normal);
+							
+							newVob->SetHeadingAtWorld(newDir);
+							//newVob->SetHeadingYLocal(newDir);
+							newVob->RotateLocalX(90);
+
+							//newVob->ResetXZRotationsWorld();
+							newVob->RotateLocalY(GetRandVal(0, 180));
+
+
+							newVob->Release();
+						}
+					}
+				}
+
+
+
+			
+			}
+
+
+
+
+			//print.PrintRed(Z vobsNeed.GetNumInList());
+		}
+
+	}
+
+	zCTexture* GetScreenTex(zSTRING name)
+	{
+		zCTextureConvert* texCon = zrenderer->CreateTextureConvert();
+		zrenderer->Vid_GetFrontBufferCopy(*texCon);
+		zCTextureInfo texInfo = texCon->GetTextureInfo();
+
+		texInfo.texFormat = zRND_TEX_FORMAT_RGB_565;
+		texInfo.numMipMap = 1;
+		texInfo.sizeX = 256;
+		texInfo.sizeY = 256;
+		texInfo.refSizeX = 256;
+		texInfo.refSizeY = 256;
+		texCon->SetDetailTextureMode(FALSE);
+		texCon->ConvertTextureFormat(texInfo);
+
+		zCTexture* tex = zrenderer->CreateTexture();
+		zCTextureExchange::CopyContents(texCon, tex);
+
+		texCon->SaveToFileFormat(name + "-C.TEX");
+
+		return tex;
+	}
+
+	void CreateInvIcons()
+	{
+		if (zKeyToggled(KEY_F1)) {
+			zinput->ClearKeyBuffer();
+
+			zSTRING scriptClassName = "C_Item";
+
+			zCView* dtp_item = NULL;
+
+			if (!scriptClassName.IsEmpty())
+			{
+
+				int pos, typ, anz, c, classindex;
+				// zSTRING* s;
+
+				CString f1, f2, f3;
+				classindex = parser->GetIndex(scriptClassName);
+				if (classindex != -1)
+				{
+					parser->GetSymbolInfo(classindex, typ, anz);
+					pos = parser->GetInstance(classindex, 0);
+
+					int count = 0;
+
+					while (pos >= 0)
+					{
+						zSTRING s = parser->GetSymbolInfo(pos, typ, c);
+						pos = parser->GetInstance(classindex, pos + 1);
+
+						auto vob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance("oCItem"));
+						if (!vob) return;
+
+						if (dynamic_cast<oCItem*>(vob))
+							dynamic_cast<oCItem*>(vob)->InitByScript(parser->GetIndex(s), 1);
+						else zRELEASE(vob);
+						if (!dtp_item)
+							dtp_item = new zCView(0, 0, 8191, 8191, VIEW_VIEWPORT);
+						zrenderer->Vid_Clear(zCOLOR(100, 100, 100, 255), 3);
+
+
+						if (dynamic_cast<oCItem*>(vob))
+							dynamic_cast<oCItem*>(vob)->oCItem::RenderItem(ogame->GetWorld(), dtp_item, 0.0);
+
+						GetScreenTex(dynamic_cast<oCItem*>(vob)->GetInstanceName());
+
+						count += 1;
+
+						if (count >= 20)
+						{
+							//break;
+						}
+					}
+
+
+				}
+
+			};
+		};
+
+	}
+
 	void VobMoving()
 	{
-	
+		//CreateInvIcons();
+		GrassPlacing();
+		
+
 			/*
 			zinput->ClearKeyBuffer();
 			found = 0;
@@ -745,10 +1002,27 @@ namespace GOTHIC_ENGINE {
 
 		zCVob* pickedVob = theApp.GetSelectedVob();
 
+		int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
+
+		if (pickMode == 1)
+		{
+			if (!theApp.pickUnshareShow)
+			{
+				theApp.pickUnshareShow = true;
+
+				print.PrintRed("Unshare features");
+
+				ogame->GetWorld()->bspTree.mesh->ArraysToLists();
+				ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
+
+				
+			}
+		}
+
 
 		if (keys.KeyPressed("VOB_COPY", true))
 		{
-			int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
+			
 
 			if (pickMode == 0)
 			{
@@ -761,7 +1035,12 @@ namespace GOTHIC_ENGINE {
 			}
 			else
 			{
-				mm.CopyTextureName();
+				if (mm.selPolyList && mm.selPolyList->GetNumInList() > 0)
+				{
+					mm.copyMat = mm.selPolyList->Get(0)->GetPolygon()->material;
+					print.PrintRed("Материал скопирован");
+				}
+				
 			}
 			
 			
@@ -777,22 +1056,35 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("VOB_INSERT", true))
 		{
-
-			if (theApp.isVobParentChange)
+			if (pickMode == 0)
 			{
-				HandleParentChange(theApp.vobToCopy, pickedVob);
+				if (theApp.isVobParentChange)
+				{
+					HandleParentChange(theApp.vobToCopy, pickedVob);
+				}
+				else
+				{
+
+
+					if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))
+					{
+						SetSelectedTool(1);
+					}
+
+					HandleInsertVobCopy(pickedVob);
+				}
 			}
 			else
 			{
-
-
-				if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))
+				if (mm.copyMat)
 				{
-					SetSelectedTool(1);
+					mm.OnPolyApplyTexture();
+					mm.PolyApplyMapping();
+					mm.RestoreMat();
+					print.PrintRed("Применено");
 				}
-
-				HandleInsertVobCopy(pickedVob);
 			}
+			
 		}
 
 
@@ -855,6 +1147,46 @@ namespace GOTHIC_ENGINE {
 			SetSelectedTool(2);
 		}
 
+		if (!zinput->GetMouseButtonPressedRight() && pickMode == 1)
+		{
+
+			float mod = 1.0f;
+			if (keys.KeyPressed("VOB_SPEED_X10", false, true))
+			{
+				mod *= 10;
+			}
+
+
+			if (keys.KeyPressed("VOB_SPEED_MINUS_10", false, true))
+			{
+				mod /= 10;
+			}
+
+			if (keys.KeyPressed("VOB_TRANS_UP", false, true))
+			{
+
+				
+				mm.TextureScale(mod, mod);
+				
+
+			}
+
+			if (keys.KeyPressed("VOB_TRANS_DOWN", false, true))
+			{
+				
+				mm.TextureScale(-mod, -mod);
+				
+
+			}
+
+			if (keys.KeyPressed("VOB_RESET_AXIS", true, true))
+			{
+
+				mm.ResetUV();
+
+
+			}
+		}
 
 		if (!zinput->GetMouseButtonPressedRight() && pickedVob)
 		{
@@ -925,14 +1257,31 @@ namespace GOTHIC_ENGINE {
 
 				if (keys.KeyPressed("VOB_TRANS_UP", false, true))
 				{
-					pos.n[1] += speedTranslation * ztimer->frameTimeFloat;
-					HandleVobTranslation(pickedVob, pos);
+
+					if (pickMode == 0)
+					{
+						pos.n[1] += speedTranslation * ztimer->frameTimeFloat;
+						HandleVobTranslation(pickedVob, pos);
+					}
+					else
+					{
+						mm.TextureScale(10, 10);
+					}
+					
 				}
 
 				if (keys.KeyPressed("VOB_TRANS_DOWN", false, true))
 				{
-					pos.n[1] -= speedTranslation * ztimer->frameTimeFloat;
-					HandleVobTranslation(pickedVob, pos);
+					if (pickMode == 0)
+					{
+						pos.n[1] -= speedTranslation * ztimer->frameTimeFloat;
+						HandleVobTranslation(pickedVob, pos);
+					}
+					else
+					{
+						mm.TextureScale(-10, -10);
+					}
+					
 				}
 
 

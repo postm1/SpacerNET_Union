@@ -18,6 +18,7 @@ namespace GOTHIC_ENGINE {
 	#define Dist(a, b)   a->GetDistanceToVob(*b)
 	#define GetNPC(a) dynamic_cast<oCNpc*>(a)
 	#define LogicKey(a)	zinput->GetState(a)
+	#define DllExport __declspec(dllexport)
 
 		// максимальное из двух
 	#define max(a,b) (a > b ? a : b)
