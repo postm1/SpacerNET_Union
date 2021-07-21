@@ -98,6 +98,8 @@ namespace GOTHIC_ENGINE {
 				bool g_bIsPlayingGame;
 				bool g_bInsertNPCs;
 			};
+
+			SpacerPickTry pickTryEntry;
 		};
 
 		void BlockMouseClick(int time);
@@ -137,7 +139,7 @@ namespace GOTHIC_ENGINE {
 		void ToggleWindowsVisible();
 		void SetHoldTime(int enabled);
 		zCWorld * GetWorld(zBOOL getEmptyWorldToo);
-
+		bool TryPickResult();
 		bool IsAWorldLoaded();
 
 		void Reset();

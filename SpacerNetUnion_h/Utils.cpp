@@ -760,6 +760,34 @@ namespace GOTHIC_ENGINE {
 	}
 
 
+	void _GetCursorPos(POINT* cur)
+	{
+		GetCursorPos(cur);
+
+		RECT rect;
+		GetWindowRect(hWndApp, &rect);
+
+		cur->x -= rect.left;
+		cur->y -= rect.top;
+	}
+
+	zVEC3 IsSphIntersect(zVEC3 originPos, zVEC3 sp_pos, zVEC3 radNorm, float radius_sphere)
+	{
+		zVEC3 diff = originPos - sp_pos;
+		float A_Point = radNorm.Dot(radNorm);
+		float B_Point = 2 * diff.Dot(radNorm);
+		float C_Point = pow(diff.Length(), 2) - pow(radius_sphere, 2);
+
+		float D = B_Point * B_Point - 4 * A_Point * C_Point;
+
+		if (D < 0.0) return NULL;
+
+		zVEC3 t1 = originPos + radNorm*(-B_Point - sqrt(D)) / (2 * A_Point);
+		zVEC3 t2 = originPos + radNorm*(-B_Point + sqrt(D)) / (2 * A_Point);
+
+		return t1.Length() <= t2.Length() ? t1 : t2;
+	}
+
 
 	
 }

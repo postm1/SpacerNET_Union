@@ -119,6 +119,19 @@ namespace GOTHIC_ENGINE {
 		float              GizmoScale;
 	};
 
+
+	struct SpacerPickTry
+	{
+		int ax, ay;
+		bool allowed;
+
+		SpacerPickTry::SpacerPickTry()
+		{
+			allowed = true;
+			ax = 0;
+			ay = 0;
+		}
+	};
 	
 }
 

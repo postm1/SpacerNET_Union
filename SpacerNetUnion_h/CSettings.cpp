@@ -112,6 +112,8 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 		}
+
+		this->SetIntVal("bToggleWorkMode", 0);
 	}
 
 	void CSettings::Save()
@@ -322,6 +324,10 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "bToggleWorkMode", "0");
 		list.Insert("bToggleWorkMode", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "bToggleNewController", "0");
+		list.Insert("bToggleNewController", set);
+		
 
 
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");

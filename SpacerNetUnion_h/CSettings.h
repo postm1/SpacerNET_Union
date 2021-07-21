@@ -25,6 +25,7 @@ namespace GOTHIC_ENGINE {
 		CString value_string;
 
 		CSetting(CSettingType type, CString section, CString name, CString default_value);
+
 	};
 
 	class CSettings

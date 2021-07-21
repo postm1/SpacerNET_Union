@@ -171,24 +171,46 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::Loop()
 	{
 		isGrattControlActive = theApp.options.GetIntVal("bToggleNewController");
-
 		
 		if (ogame && ogame->GetWorld() && ogame->GetCamera() && !isExit && !g_bIsPlayingGame)
 		{
-			if (!isGrattControlActive)
+			if (GameFocused())
 			{
-				ControllerEvents.CameraMoving = zCM_DISABLED;
-				ControllerEvents.SelectedVobs.Clear();
-				ControllerEvents.PickedVob = NULL;
+				if (isGrattControlActive)
+				{
+					ControllerEvents.CameraMoving = zCM_ENABLED;
+					UpdateGrattController();
 
-				CameraMoving();
-				VobMoving();
-			}
-			else
-			{
-				ControllerEvents.CameraMoving = zCM_ENABLED;
+					ManagerGrattController();
+				}
+				else
+				{
+					if (zinput->GetMouseButtonPressedLeft())
+					{
+						auto pickMode = theApp.GetPickMode();
 
-				UpdateGrattController();
+						if (pickMode == SWM_VOBS)
+						{
+							theApp.PickVob();
+							zinput->ClearKey(MOUSE_LEFT);
+							ClearLMB();
+						}
+						else if (pickMode == SWM_MATERIALS)
+						{
+							theApp.PickMaterial();
+							zinput->ClearKey(MOUSE_LEFT);
+							ClearLMB();
+						}
+					}
+
+					ControllerEvents.CameraMoving = zCM_DISABLED;
+					ControllerEvents.SelectedVobs.Clear();
+					ControllerEvents.PickedVob = NULL;
+
+					CameraMoving();
+					VobMoving();
+				}
+
 			}
 
 			VobKeys();
@@ -302,22 +324,10 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::UpdateGrattController()
 	{
-		POINT  cur;
-		_GetCursorPos(&cur);
+		theApp.TryPickResult();
 
-		RECT rect;
-		GetWindowRect(hWndApp, &rect);
-
-		float rw = rect.right - rect.left;
-		float rh = rect.bottom - rect.top;
-
-		//print.PrintRed(zSTRING((float)cur.x, 6) + "/ " + zSTRING((float)cur.y, 6));
-
-		float ax = (float)cur.x / rw * (float)zrenderer->vid_xdim;
-		float ay = (float)cur.y / rh * (float)zrenderer->vid_ydim;
-
-		ax = screen->anx(ax);
-		ay = screen->any(ay);
+		float ax = screen->anx(pickTryEntry.ax);
+		float ay = screen->any(pickTryEntry.ay);
 
 		//print.PrintRed(Z ax + " " + Z ay);
 
@@ -381,7 +391,8 @@ namespace GOTHIC_ENGINE {
 					{
 						theApp.vobToCopy = theApp.pickedVob;
 						theApp.isVobParentChange = false;
-
+						
+			
 						SetSelectedVob(NULL);
 
 						isNextCopyVobInsertNear = true;
@@ -400,6 +411,9 @@ namespace GOTHIC_ENGINE {
 			if (doubleClick)
 			{
 				doubleClick = false;
+
+				if (theApp.pickedVob) theApp.pickedVob->drawBBox3D = false;
+
 				SetSelectedVob(NULL);
 				zinput->ClearKey(MOUSE_LEFT);
 				ClearLMB();
@@ -413,35 +427,6 @@ namespace GOTHIC_ENGINE {
 		if (g_bIsPlayingGame)
 		{
 			return;
-		}
-
-		if (GameFocused())
-		{
-			if (isGrattControlActive)
-			{
-				ManagerGrattController();
-			}
-			else
-			{
-				if (zinput->GetMouseButtonPressedLeft())
-				{
-					auto pickMode = theApp.GetPickMode();
-
-					if (pickMode == SWM_VOBS)
-					{
-						theApp.PickVob();
-						zinput->ClearKey(MOUSE_LEFT);
-						ClearLMB();
-					}
-					else if (pickMode == SWM_MATERIALS)
-					{
-						theApp.PickMaterial();
-						zinput->ClearKey(MOUSE_LEFT);
-						ClearLMB();
-					}
-				}
-			}
-			
 		}
 
 
@@ -512,16 +497,6 @@ namespace GOTHIC_ENGINE {
 
 
 
-	void _GetCursorPos(POINT* cur)
-	{
-		GetCursorPos(cur);
-
-		RECT rect;
-		GetWindowRect(hWndApp, &rect);
-
-		cur->x -= rect.left;
-		cur->y -= rect.top;
-	}
 
 
 	/*
@@ -562,6 +537,17 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::PickMaterial()
 	{
+		if (!theApp.TryPickResult())
+		{
+			return;
+		}
+
+		mm.OnPick(pickTryEntry.ax, pickTryEntry.ay);
+	}
+
+	// попадает ли мышь по экрану, или же задевает меню
+	bool SpacerApp::TryPickResult()
+	{
 		POINT  cur;
 		_GetCursorPos(&cur);
 
@@ -571,86 +557,40 @@ namespace GOTHIC_ENGINE {
 		float rw = rect.right - rect.left;
 		float rh = rect.bottom - rect.top;
 
-		//print.PrintRed(zSTRING((float)cur.x, 6) + "/ " + zSTRING((float)cur.y, 6));
 
 		float ax = (float)cur.x / rw * (float)zrenderer->vid_xdim;
 		float ay = (float)cur.y / rh * (float)zrenderer->vid_ydim;
 
+		pickTryEntry.allowed = true;
+		pickTryEntry.ax = ax;
+		pickTryEntry.ay = ay;
 
-		//print.PrintRed(zSTRING(ax, 6) + "// " + zSTRING(ay, 6));
+		if (pickTryEntry.ay <= 0) pickTryEntry.allowed = false;
 
-		if (ay <= 0)
-		{
-			return;
-		}
+		//print.PrintRed(Z ax + " " + Z ay + " " + Z pickTryEntry.allowed);
 
-		mm.OnPick(ax, ay);
+		return pickTryEntry.allowed;
 	}
-
 	
 
-	zVEC3 IsSphIntersect(zVEC3 originPos, zVEC3 sp_pos, zVEC3 radNorm, float radius_sphere)
-	{
-		zVEC3 diff = originPos - sp_pos;
-		float A_Point = radNorm.Dot(radNorm);
-		float B_Point = 2 * diff.Dot(radNorm);
-		float C_Point = pow(diff.Length(), 2) - pow(radius_sphere, 2);
-
-		float D = B_Point * B_Point - 4 * A_Point * C_Point;
-
-		if (D < 0.0) return NULL;
-
-		zVEC3 t1 = originPos + radNorm*(-B_Point - sqrt(D)) / (2 * A_Point);
-		zVEC3 t2 = originPos + radNorm*(-B_Point + sqrt(D)) / (2 * A_Point);
-
-		return t1.Length() <= t2.Length() ? t1 : t2;
-	}
 
 	void SpacerApp::PickVob()
 	{
-		//zCVob* CSpacerView::PickSingle()
-
-		POINT  cur;
-		_GetCursorPos(&cur);
-
-		RECT rect;
-		GetWindowRect(hWndApp, &rect);
-
-		float rw = rect.right - rect.left;
-		float rh = rect.bottom - rect.top;
-
-		//print.PrintRed(zSTRING((float)cur.x, 6) + "/ " + zSTRING((float)cur.y, 6));
-
-		float ax = (float)cur.x / rw * (float)zrenderer->vid_xdim;
-		float ay = (float)cur.y / rh * (float)zrenderer->vid_ydim;
-
-
-		//print.PrintRed(zSTRING(ax, 6) + "// " + zSTRING(ay, 6));
-
-		if (ay <= 0)
+		if (!theApp.TryPickResult())
 		{
 			return;
 		}
 
-		if (pickedVob && !isGrattControlActive)
-		{
-			return;
-		}
-
-		ogame->GetWorld()->PickScene(*ogame->GetCamera(), ax, ay, -1);
+		ogame->GetWorld()->PickScene(*ogame->GetCamera(), pickTryEntry.ax, pickTryEntry.ay, -1);
 
 		zCVob* foundVob = ogame->GetWorld()->traceRayReport.foundVob;
+
 
 
 		if ((theApp.pickedVob == foundVob && theApp.pickedVob != NULL))
 		{
 			return;
 		}
-
-
-		
-		
-		
 
 		oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(foundVob);
 		
@@ -716,7 +656,7 @@ namespace GOTHIC_ENGINE {
 			zVEC3 ray00, ray, p;
 			cam->camMatrixInv.GetTranslation(ray00);
 			p.n[VZ] = 1;
-			cam->BackProject(ax, ay, p);				// p im camSpace
+			cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace
 			p = cam->camMatrixInv * p;					// p im world(obj)Space  
 			ray = p - ray00;
 
@@ -781,6 +721,12 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
+
+			if ((theApp.pickedVob != foundVob && theApp.pickedVob != NULL))
+			{
+				theApp.pickedVob->drawBBox3D = false;
+			}
+
 			theApp.SetSelectedVob(foundVob, "PickSingle");
 			pickedWaypoint = dynamic_cast<zCVobWaypoint*>(theApp.pickedVob);
 

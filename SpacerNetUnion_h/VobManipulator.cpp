@@ -622,24 +622,23 @@ namespace GOTHIC_ENGINE {
 
 	void GrassPlacing()
 	{
+		
+
 		if (zinput->GetMouseButtonPressedLeft())
 		{
 
+			if (!theApp.TryPickResult())
+			{
+				return;
+			}
+
 			if (mainTimer[0u].Await(30))
 			{
-				POINT  cur;
-				_GetCursorPos(&cur);
-
-				RECT rect;
-				GetWindowRect(hWndApp, &rect);
-
-				float rw = rect.right - rect.left;
-				float rh = rect.bottom - rect.top;
 				zCCamera* cam = ogame->GetCamera();
 				zCVob* camVob = ogame->GetCamera()->connectedVob;
 
-				float ax = (float)cur.x / rw * (float)zrenderer->vid_xdim;
-				float ay = (float)cur.y / rh * (float)zrenderer->vid_ydim;
+				float ax = theApp.pickTryEntry.ax;
+				float ay = theApp.pickTryEntry.ay;
 
 				zVEC3 ray00, ray, p;
 				cam->camMatrixInv.GetTranslation(ray00);
@@ -664,7 +663,7 @@ namespace GOTHIC_ENGINE {
 
 						if (poly)
 						{
-							int bBoxSize = 2500;
+							int bBoxSize = 3000;
 							zCArray<zCVob*> baseVobList;
 							zCArray<zCVob*> resVobList;
 							zTBBox3D box;
@@ -677,6 +676,10 @@ namespace GOTHIC_ENGINE {
 							int minDist = theApp.options.GetIntVal("grassMinDist");
 							zSTRING modelName = theApp.options.GetVal("grassModelName");
 							int offsetVert = theApp.options.GetIntVal("grassVertOffset");
+
+							if (modelName.Length() == 0) {
+								return;
+							}
 								
 							for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
