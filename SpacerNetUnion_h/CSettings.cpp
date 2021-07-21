@@ -169,9 +169,9 @@ namespace GOTHIC_ENGINE {
 			SetRangeVobs();
 			SetRangeWorld();
 
-			int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
+			auto pickMode = theApp.GetPickMode();
 
-			if (!pickMode)
+			if (pickMode == SWM_VOBS)
 			{
 				mm.CleanSelectMaterial();
 			}
@@ -228,9 +228,6 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "CAMERA", "showInvisibleVobs", "0");
 		list.Insert("showInvisibleVobs", set);
-
-		set = new CSetting(TYPE_INT, "CAMERA", "bTogglePickMaterial", "0");
-		list.Insert("bTogglePickMaterial", set);
 
 
 		set = new CSetting(TYPE_INT, "CAMERA", "hideCamWindows", "1");
@@ -322,6 +319,11 @@ namespace GOTHIC_ENGINE {
 		list.Insert("showBadPluginsMsg", set);
 
 
+
+		set = new CSetting(TYPE_INT, "SPACER", "bToggleWorkMode", "0");
+		list.Insert("bToggleWorkMode", set);
+
+
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");
@@ -368,6 +370,20 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "translateParentAlone", "0");
 		list.Insert("translateParentAlone", set);
+
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassMinDist", "150");
+		list.Insert("grassMinDist", set);
+
+		
+		set = new CSetting(TYPE_STRING, "GRASS", "grassModelName", "NW_NATURE_GRASSGROUP_01.3DS");
+		list.Insert("grassModelName", set);
+
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassVertOffset", "0");
+		list.Insert("grassVertOffset", set);
+		
+		
 	}
 
 	CSettings::~CSettings()

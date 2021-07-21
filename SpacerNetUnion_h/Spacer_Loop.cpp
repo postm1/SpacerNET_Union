@@ -139,6 +139,7 @@ namespace GOTHIC_ENGINE {
 
 					theApp.AfterRender();
 
+					
 
 					gameSession->RenderBlit();
 
@@ -197,6 +198,8 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 		// MessageBox(0, "Game_Loop", 0, 0);
+
+		
 
 		print.Loop();
 
@@ -457,6 +460,8 @@ namespace GOTHIC_ENGINE {
 		whiteArrayPlugins.Insert("ZMOUSEFIX.DLL");
 		whiteArrayPlugins.Insert("ZBINKFIX.DLL");
 		whiteArrayPlugins.Insert("ZACTIVATECTRL.DLL");
+		whiteArrayPlugins.Insert("ZWE_CONTROLLER.DLL");
+
 
 		const CList<CPlugin>* pluginList = CPlugin::GetPluginList().GetNext();
 		while (pluginList) {

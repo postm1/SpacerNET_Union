@@ -71,6 +71,8 @@ namespace GOTHIC_ENGINE {
 			bool firstZenLoad;
 			bool firstTimeZenSaved;
 			int vobListSelectedIndex;
+			bool isGrattControlActive;
+			bool isNextCopyVobInsertNear;
 
 			zCVob*		pickedWaypoint2nd;
 			zCVob*		pickedWaypoint;
@@ -109,10 +111,13 @@ namespace GOTHIC_ENGINE {
 		void SetSelectedVob(zCVob * vob, zSTRING funcName = "");
 		void SetToKeyPos();
 		void OnKeyRemove();
+		void UpdateGrattController();
+		void ManagerGrattController();
 		void SendTrigger(int actionIndex);
 		void OnAddMoverKey(int mode);
 		void SetCurrentKey(int key);
 		void ApplyProps(char* str, char* name);
+		SpacerWorkMode GetPickMode();
 		void PreRender();
 		void RenderSelectedVobBbox();
 		bool IsDx11Active();

@@ -17,6 +17,7 @@ namespace GOTHIC_ENGINE {
 	 // cmd << "Game_Entry" << endl;
 	  theApp.module = CPlugin::FindModule(INTERFACE_DLL_NAME);
 	  (voidFuncPointer)GetProcAddress(theApp.module, "UI_Initialize")();
+	  LoadLibraryAST("ZWE_CONTROLLER.dll");
 
   }
 
@@ -43,9 +44,19 @@ namespace GOTHIC_ENGINE {
   }
 
   void LoadBegin() {
+	  if (!player)
+	  {
+		  oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
+		  player->dontWriteIntoArchive = true;
+		  player->SetSleeping(TRUE);
+		  player->SetPhysicsEnabled(FALSE);
+	  }
+	  
   }
 
   void LoadEnd() {
+
+	  
   }
 
   void Game_LoadBegin_NewGame() {

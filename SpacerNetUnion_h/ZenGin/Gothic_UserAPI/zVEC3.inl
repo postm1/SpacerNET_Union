@@ -11,3 +11,8 @@ zVEC3& Minus()
 	n[2] = -n[2];
 	return *this;
 }
+
+zSTRING ToString()
+{
+	return "(" + zSTRING(n[0], 10) + ",  " + zSTRING(n[1], 10) + ",  " + zSTRING(n[2], 10) + ")";
+}

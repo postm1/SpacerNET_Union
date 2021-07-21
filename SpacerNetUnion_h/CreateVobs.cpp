@@ -258,7 +258,9 @@ namespace GOTHIC_ENGINE {
 		}
 
 		nextInsertBlocked = flag;
-		SetSelectedTool(1);
+
+		if (!theApp.isGrattControlActive)
+			SetSelectedTool(1);
 
 	}
 

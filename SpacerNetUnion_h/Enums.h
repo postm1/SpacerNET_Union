@@ -44,6 +44,13 @@ namespace GOTHIC_ENGINE {
 		ON_CAMERA
 	};
 
+	enum SpacerWorkMode 
+	{
+		SWM_VOBS = 0,
+		SWM_MATERIALS = 1,
+		SWM_GRASS = 2
+	};
+
 
 	enum ToggleMenuType
 	{
@@ -63,6 +70,56 @@ namespace GOTHIC_ENGINE {
 		Rename
 	};
 
+	enum zEVobMotionMode {
+		zMM_NONE,
+		zMM_MOVE,
+		zMM_ROTATE,
+		zMM_SCALE
+	};
+
+	enum zEVobMotionHeading {
+		zMH_WORLD,
+		zMH_LOCALE,
+		zMH_VIEW
+	};
+
+	enum zEVobCollisionMode {
+		zVC_DEFAULT,
+		zVC_DISABLED,
+		zVC_ENABLED
+	};
+
+	enum zECamMotionMode {
+		zCM_DISABLED,
+		zCM_ENABLED
+	};
+
+	enum zEPickMode {
+		zPM_DISABLED,
+		zPM_VOBS,
+		zPM_POLYS
+	};
+
+	enum zEPickMethod {
+		zPM_CURSOR,
+		zPM_CROSSHAIR
+	};
+
+	struct zTWE_ControllerEvents {
+		Array<zCVob*>      SelectedVobs;
+		zCVob*             PickedVob;
+		zCPolygon*         PickedPolygon;
+		zEPickMode         PickMode;
+		zEPickMethod       PickMethod;
+		zEVobMotionMode    MotionMode;
+		zEVobMotionHeading MotionHeading;
+		zEVobCollisionMode CollisionMode;
+		zECamMotionMode    CameraMoving;
+		zVEC2              CursorPosition;
+		float              GizmoScale;
+	};
 
 	
 }
+
+DllExport Gothic_II_Addon::zTWE_ControllerEvents ControllerEvents;

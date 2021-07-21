@@ -253,11 +253,24 @@ namespace GOTHIC_ENGINE {
 						zVEC3 levelVec = pos + dir * 200;
 						levelVec.n[1] = theApp.vobToCopy->GetPositionWorld().n[1];
 
+						if (theApp.isNextCopyVobInsertNear)
+						{
+							levelVec = theApp.vobToCopy->GetPositionWorld();
+						}
+
 						HandleVobTranslation(newVob, levelVec);
 					}
 					else
 					{
-						HandleVobTranslation(newVob, pos + dir * 200);
+						if (theApp.isNextCopyVobInsertNear && theApp.vobToCopy)
+						{
+							HandleVobTranslation(newVob, theApp.vobToCopy->GetPositionWorld());
+						}
+						else
+						{
+							HandleVobTranslation(newVob, pos + dir * 200);
+						}
+						
 					}
 				}
 				else if (farParent)
@@ -532,6 +545,11 @@ namespace GOTHIC_ENGINE {
 	void SetSelectedTool(int tool)
 	{
 		selectedTool = tool;
+
+		if (theApp.isGrattControlActive)
+		{
+			ControllerEvents.MotionMode = (zEVobMotionMode)tool;
+		}
 	}
 
 
@@ -575,42 +593,40 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+	/*
+	zCArray<zCVob*> vobs;
+	zCArray<zCVob*> vobsNeed;
+
+	ogame->GetWorld()->SearchVobListByClass(zCVob::classDef, vobs, 0);
+
+	ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
+
+	for (int i = 0; i < vobs.GetNum(); i++)
+	{
+	zCVob* pVob = vobs.GetSafe(i);
+
+	if (dynamic_cast<zCVobLevelCompo*>(pVob))	continue;
+	if (pVob == ogame->GetCamera()->GetVob())	continue;
+
+
+	if (pVob && pVob->GetVisual() && pVob->GetVisual()->GetVisualName() == "NW_NATURE_GRASSGROUP_01.3DS")
+	{
+	vobsNeed.Insert(pVob);
+
+	}
+
+
+	}
+	*/
+
+
 	void GrassPlacing()
 	{
-		return;
-
 		if (zinput->GetMouseButtonPressedLeft())
 		{
+
 			if (mainTimer[0u].Await(30))
 			{
-				/*
-				zCArray<zCVob*> vobs;
-				zCArray<zCVob*> vobsNeed;
-
-				ogame->GetWorld()->SearchVobListByClass(zCVob::classDef, vobs, 0);
-
-				ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
-
-				for (int i = 0; i < vobs.GetNum(); i++)
-				{
-					zCVob* pVob = vobs.GetSafe(i);
-
-					if (dynamic_cast<zCVobLevelCompo*>(pVob))	continue;
-					if (pVob == ogame->GetCamera()->GetVob())	continue;
-
-
-					if (pVob && pVob->GetVisual() && pVob->GetVisual()->GetVisualName() == "NW_NATURE_GRASSGROUP_01.3DS")
-					{
-						vobsNeed.Insert(pVob);
-
-					}
-
-
-				}
-				*/
-
-			
-
 				POINT  cur;
 				_GetCursorPos(&cur);
 
@@ -644,10 +660,11 @@ namespace GOTHIC_ENGINE {
 						// Schnittpunkt schnappen und Position neu setzen
 						auto poly = ogame->GetWorld()->traceRayReport.foundPoly;
 						auto posToPlace = ogame->GetWorld()->traceRayReport.foundIntersection;
+					
 
 						if (poly)
 						{
-							int bBoxSize = 1500;
+							int bBoxSize = 2500;
 							zCArray<zCVob*> baseVobList;
 							zCArray<zCVob*> resVobList;
 							zTBBox3D box;
@@ -656,6 +673,11 @@ namespace GOTHIC_ENGINE {
 							box.mins = posToPlace - zVEC3(bBoxSize, bBoxSize, bBoxSize);
 							ogame->GetWorld()->CollectVobsInBBox3D(baseVobList, box);
 
+
+							int minDist = theApp.options.GetIntVal("grassMinDist");
+							zSTRING modelName = theApp.options.GetVal("grassModelName");
+							int offsetVert = theApp.options.GetIntVal("grassVertOffset");
+								
 							for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
 
@@ -669,7 +691,7 @@ namespace GOTHIC_ENGINE {
 									&& !dynamic_cast<zCVobLevelCompo*>(vob)
 									&& !dynamic_cast<zCZone*>(vob)
 									&& vob->GetVisual()
-									&& vob->GetVisual()->GetVisualName() == "NW_NATURE_GRASSGROUP_01.3DS"
+									&& vob->GetVisual()->GetVisualName() == modelName
 									&& vob != theApp.currentVobRender
 									&& vob != pfxManager.testVob
 									)
@@ -679,6 +701,7 @@ namespace GOTHIC_ENGINE {
 								}
 							}
 							
+							
 
 							for (int i = 0; i < resVobList.GetNumInList(); i++) 
 							{
@@ -686,9 +709,7 @@ namespace GOTHIC_ENGINE {
 
 								auto dist = vob->GetPositionWorld().Distance(posToPlace);
 
-								print.PrintRed(Z dist);
-
-								if (dist <= 180)
+								if (dist <= minDist)
 								{
 									print.PrintRed("No place to put grass");
 									return;
@@ -704,9 +725,13 @@ namespace GOTHIC_ENGINE {
 							newVob->SetCollDetStat(FALSE);
 							newVob->SetCollDetDyn(FALSE);
 
-							newVob->SetVisual("NW_NATURE_GRASSGROUP_01.3DS");
+							newVob->SetVisual(modelName);
 
-							newVob->SetPositionWorld(posToPlace + zVEC3(0, GetRandVal(3, 10), 0));
+							auto bboxCenter = newVob->bbox3D.GetCenter();
+							auto point = newVob->trafoObjToWorld.GetTranslation() - newVob->bbox3D.GetCenterFloor();
+
+	
+							newVob->SetPositionWorld(posToPlace + zVEC3(0, offsetVert, 0) + point);
 
 							InsertIntoWorld(newVob, NULL, false);
 
@@ -727,9 +752,6 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 
-
-
-			
 			}
 
 
@@ -824,10 +846,197 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+	void VobKeys()
+	{
+		auto pickMode = theApp.GetPickMode();
+
+		if (pickMode == SWM_GRASS)
+		{
+		
+			GrassPlacing();
+			return;
+		}
+	
+		
+
+		if (!selectedTool)
+		{
+			SetSelectedTool(1);
+		}
+
+		zCVob* pickedVob = theApp.GetSelectedVob();
+
+
+
+		if (keys.KeyPressed("VOB_TRANSLATE", true))
+		{
+			print.PrintRed(GetLang("TOOL_TRANS"));
+			SetSelectedTool(1);
+		}
+
+		if (keys.KeyPressed("VOB_ROTATE", true))
+		{
+			print.PrintRed(GetLang("TOOL_ROT"));
+			SetSelectedTool(2);
+		}
+
+
+		
+
+		if (pickMode == SWM_MATERIALS)
+		{
+			if (!theApp.pickUnshareShow)
+			{
+				theApp.pickUnshareShow = true;
+
+				print.PrintRed("Unshare features of polygons");
+
+				ogame->GetWorld()->bspTree.mesh->ArraysToLists();
+				ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
+
+
+			}
+		}
+
+
+		if (keys.KeyPressed("VOB_COPY", true))
+		{
+
+
+			if (pickMode == SWM_VOBS)
+			{
+				if (!dynamic_cast<zCVobLevelCompo*>(theApp.pickedVob))
+				{
+					print.PrintRed(GetLang("VOB_COPY_OK"));
+					theApp.vobToCopy = theApp.pickedVob;
+					theApp.isVobParentChange = false;
+				}
+			}
+			else if (pickMode == SWM_MATERIALS)
+			{
+				if (mm.selPolyList && mm.selPolyList->GetNumInList() > 0)
+				{
+					mm.copyMat = mm.selPolyList->Get(0)->GetPolygon()->material;
+					print.PrintRed("Материал скопирован");
+				}
+
+			}
+
+
+		}
+
+		if (keys.KeyPressed("VOB_CUT", true))
+		{
+			print.PrintRed(GetLang("VOB_CUT_OK"));
+			theApp.vobToCopy = theApp.pickedVob;
+			theApp.isVobParentChange = true;
+
+		}
+
+		if (keys.KeyPressed("VOB_INSERT", true))
+		{
+			if (pickMode == SWM_VOBS)
+			{
+				if (theApp.isVobParentChange)
+				{
+					HandleParentChange(theApp.vobToCopy, pickedVob);
+				}
+				else
+				{
+
+
+					if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))
+					{
+						if (!theApp.isGrattControlActive)
+							SetSelectedTool(1);
+					}
+
+					HandleInsertVobCopy(pickedVob);
+				}
+			}
+			else if (pickMode == SWM_MATERIALS)
+			{
+				if (mm.copyMat)
+				{
+					mm.OnPolyApplyTexture();
+					mm.PolyApplyMapping();
+					mm.RestoreMat();
+					print.PrintRed("Применено");
+				}
+			}
+
+		}
+
+
+		if (keys.KeyPressed("VOB_NEAR_CAM", true))
+		{
+			if (theApp.pickedVob)
+			{
+				if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
+				{
+					HandleVobTranslation(pickedVob, ogame->GetCamera()->connectedVob->GetPositionWorld() +
+
+						ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 200);
+
+					print.PrintRed(GetLang("VOB_NEAR_CAMERA"));
+				}
+			}
+			if (!theApp.isGrattControlActive)
+				SetSelectedTool(1);
+
+		}
+
+
+
+		if (keys.KeyPressed("VOB_DISABLE_SELECT", true))
+		{
+
+			if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
+			if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
+
+			theApp.SetSelectedVob(NULL);
+			theApp.pickedWaypoint2nd = NULL;
+
+			auto pickMode = theApp.GetPickMode();
+
+			if (pickMode == SWM_VOBS)
+			{
+				print.PrintRed(GetLang("TOOL_UNSELECT"));
+			}
+
+			mm.CleanSelectMaterial();
+			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
+		}
+
+		if (pickedVob)
+		{
+			if (keys.KeyPressed("WP_TOGGLE", true))
+			{
+				theApp.ToggleWP();
+			}
+
+			if (keys.KeyPressed("VOB_FLOOR", true))
+			{
+				print.PrintRed(GetLang("TOOL_FLOOR"));
+				SetOnFloor(pickedVob);
+			}
+
+
+
+			if (keys.KeyPressed("VOB_DELETE", true))
+			{
+				theApp.RemoveVob(pickedVob);
+			}
+
+		}
+
+	}
+
 	void VobMoving()
 	{
+
 		//CreateInvIcons();
-		GrassPlacing();
+		
 		
 
 			/*
@@ -995,136 +1204,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-		if (!selectedTool)
-		{
-			SetSelectedTool(1);
-		}
-
-		zCVob* pickedVob = theApp.GetSelectedVob();
-
-		int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
-
-		if (pickMode == 1)
-		{
-			if (!theApp.pickUnshareShow)
-			{
-				theApp.pickUnshareShow = true;
-
-				print.PrintRed("Unshare features");
-
-				ogame->GetWorld()->bspTree.mesh->ArraysToLists();
-				ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
-
-				
-			}
-		}
-
-
-		if (keys.KeyPressed("VOB_COPY", true))
-		{
-			
-
-			if (pickMode == 0)
-			{
-				if (!dynamic_cast<zCVobLevelCompo*>(theApp.pickedVob))
-				{
-					print.PrintRed(GetLang("VOB_COPY_OK"));
-					theApp.vobToCopy = theApp.pickedVob;
-					theApp.isVobParentChange = false;
-				}
-			}
-			else
-			{
-				if (mm.selPolyList && mm.selPolyList->GetNumInList() > 0)
-				{
-					mm.copyMat = mm.selPolyList->Get(0)->GetPolygon()->material;
-					print.PrintRed("Материал скопирован");
-				}
-				
-			}
-			
-			
-		}
-
-		if (keys.KeyPressed("VOB_CUT", true))
-		{
-			print.PrintRed(GetLang("VOB_CUT_OK"));
-			theApp.vobToCopy = theApp.pickedVob;
-			theApp.isVobParentChange = true;
-
-		}
-
-		if (keys.KeyPressed("VOB_INSERT", true))
-		{
-			if (pickMode == 0)
-			{
-				if (theApp.isVobParentChange)
-				{
-					HandleParentChange(theApp.vobToCopy, pickedVob);
-				}
-				else
-				{
-
-
-					if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))
-					{
-						SetSelectedTool(1);
-					}
-
-					HandleInsertVobCopy(pickedVob);
-				}
-			}
-			else
-			{
-				if (mm.copyMat)
-				{
-					mm.OnPolyApplyTexture();
-					mm.PolyApplyMapping();
-					mm.RestoreMat();
-					print.PrintRed("Применено");
-				}
-			}
-			
-		}
-
-
-		if (keys.KeyPressed("VOB_NEAR_CAM", true))
-		{
-			if (theApp.pickedVob)
-			{
-				if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
-				{
-					HandleVobTranslation(pickedVob, ogame->GetCamera()->connectedVob->GetPositionWorld() +
-
-						ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 200);
-
-					print.PrintRed(GetLang("VOB_NEAR_CAMERA"));
-				}
-			}
-			SetSelectedTool(1);
-
-		}
-
-
-
-		if (keys.KeyPressed("VOB_DISABLE_SELECT", true))
-		{
-
-			if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
-			if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
-
-			theApp.SetSelectedVob(NULL);
-			theApp.pickedWaypoint2nd = NULL;
-			int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
-
-			if (pickMode == 0)
-			{
-				print.PrintRed(GetLang("TOOL_UNSELECT"));
-			}
-			
-			mm.CleanSelectMaterial();
-			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
-		}
+		
 
 		/*
 		if (keys.KeyPressed("TEST_MOVE_LC", true))
@@ -1134,20 +1214,17 @@ namespace GOTHIC_ENGINE {
 		}
 		*/
 
-		
-		if (keys.KeyPressed("VOB_TRANSLATE", true))
+		if (!selectedTool)
 		{
-			print.PrintRed(GetLang("TOOL_TRANS"));
 			SetSelectedTool(1);
 		}
 
-		if (keys.KeyPressed("VOB_ROTATE", true))
-		{
-			print.PrintRed(GetLang("TOOL_ROT"));
-			SetSelectedTool(2);
-		}
+		zCVob* pickedVob = theApp.GetSelectedVob();
 
-		if (!zinput->GetMouseButtonPressedRight() && pickMode == 1)
+		auto pickMode = theApp.GetPickMode();
+
+
+		if (!zinput->GetMouseButtonPressedRight() && pickMode == SWM_MATERIALS)
 		{
 
 			float mod = 1.0f;
@@ -1235,10 +1312,7 @@ namespace GOTHIC_ENGINE {
 
 			
 
-			if (keys.KeyPressed("WP_TOGGLE", true))
-			{
-				theApp.ToggleWP();
-			}
+			
 
 
 			
@@ -1258,12 +1332,12 @@ namespace GOTHIC_ENGINE {
 				if (keys.KeyPressed("VOB_TRANS_UP", false, true))
 				{
 
-					if (pickMode == 0)
+					if (pickMode == SWM_VOBS)
 					{
 						pos.n[1] += speedTranslation * ztimer->frameTimeFloat;
 						HandleVobTranslation(pickedVob, pos);
 					}
-					else
+					else if (pickMode == SWM_MATERIALS)
 					{
 						mm.TextureScale(10, 10);
 					}
@@ -1272,12 +1346,12 @@ namespace GOTHIC_ENGINE {
 
 				if (keys.KeyPressed("VOB_TRANS_DOWN", false, true))
 				{
-					if (pickMode == 0)
+					if (pickMode == SWM_VOBS)
 					{
 						pos.n[1] -= speedTranslation * ztimer->frameTimeFloat;
 						HandleVobTranslation(pickedVob, pos);
 					}
-					else
+					else if (pickMode == SWM_MATERIALS)
 					{
 						mm.TextureScale(-10, -10);
 					}
@@ -1297,18 +1371,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-				if (keys.KeyPressed("VOB_FLOOR", true))
-				{
-					print.PrintRed(GetLang("TOOL_FLOOR"));
-					SetOnFloor(pickedVob);
-				}
-
-
-
-				if (keys.KeyPressed("VOB_DELETE", true))
-				{
-					theApp.RemoveVob(pickedVob);
-				}
+				
 
 				static int rotType = 4;
 

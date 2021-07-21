@@ -47,6 +47,8 @@ namespace GOTHIC_ENGINE {
 		this->vobListSelectedIndex = 0;
 		this->firstTimeZenSaved = false;
 		this->pluginsChecked = false;
+		this->isGrattControlActive = false;
+		this->isNextCopyVobInsertNear = false;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}
@@ -58,12 +60,27 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SetSelectedVob(zCVob* vob, zSTRING funcName)
 	{
-		//std::cout << "Union: select vob " << GetVobName(vob) << " in " << funcName.ToChar() << std::endl;
-
-		OutFile("SetSelectedVob: (" + A GetVobName(vob) + ") in " + A funcName, false);
-
 		pickedVob = vob;
 
+
+		if (isGrattControlActive)
+		{
+			if (vob)
+			{
+
+				ControllerEvents.SelectedVobs.InsertEnd(vob);
+				ControllerEvents.MotionMode = zMM_MOVE;
+				ControllerEvents.PickMode = zPM_VOBS;
+
+			}
+			else
+			{
+				ControllerEvents.SelectedVobs.Clear();
+				ControllerEvents.PickedVob = NULL;
+			}
+		}
+		
+	
 
 		if (!selectedWpForCreateIsBlocked)
 		{
@@ -74,7 +91,6 @@ namespace GOTHIC_ENGINE {
 		moverVob = dynamic_cast<zCMover*>(vob);
 
 		SetMover();
-
 
 	}
 
@@ -154,10 +170,29 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::Loop()
 	{
+		isGrattControlActive = theApp.options.GetIntVal("bToggleNewController");
+
+		
 		if (ogame && ogame->GetWorld() && ogame->GetCamera() && !isExit && !g_bIsPlayingGame)
 		{
-			CameraMoving();
-			VobMoving();
+			if (!isGrattControlActive)
+			{
+				ControllerEvents.CameraMoving = zCM_DISABLED;
+				ControllerEvents.SelectedVobs.Clear();
+				ControllerEvents.PickedVob = NULL;
+
+				CameraMoving();
+				VobMoving();
+			}
+			else
+			{
+				ControllerEvents.CameraMoving = zCM_ENABLED;
+
+				UpdateGrattController();
+			}
+
+			VobKeys();
+			
 
 		}
 	}
@@ -264,6 +299,115 @@ namespace GOTHIC_ENGINE {
 
 		}
 	}
+
+	void SpacerApp::UpdateGrattController()
+	{
+		POINT  cur;
+		_GetCursorPos(&cur);
+
+		RECT rect;
+		GetWindowRect(hWndApp, &rect);
+
+		float rw = rect.right - rect.left;
+		float rh = rect.bottom - rect.top;
+
+		//print.PrintRed(zSTRING((float)cur.x, 6) + "/ " + zSTRING((float)cur.y, 6));
+
+		float ax = (float)cur.x / rw * (float)zrenderer->vid_xdim;
+		float ay = (float)cur.y / rh * (float)zrenderer->vid_ydim;
+
+		ax = screen->anx(ax);
+		ay = screen->any(ay);
+
+		//print.PrintRed(Z ax + " " + Z ay);
+
+		ControllerEvents.CursorPosition = zVEC2(ax, ay);
+		ControllerEvents.PickedVob = pickedVob;
+
+
+	}
+
+	SpacerWorkMode SpacerApp::GetPickMode()
+	{
+		return (SpacerWorkMode)theApp.options.GetIntVal("bToggleWorkMode");
+	}
+
+	void SpacerApp::ManagerGrattController()
+	{
+		static uint lastClickTime = Invalid;
+		static bool leftMouse = false;
+
+		bool doubleClick = false;
+
+		if (zinput->GetMouseButtonToggledLeft()) {
+			uint clickTime = Timer::GetTime();
+
+			if (clickTime - lastClickTime < 250)
+				doubleClick = true;
+
+			lastClickTime = clickTime;
+		}
+
+		bool leftMousePressed = zinput->GetMouseButtonPressedLeft();
+
+
+		if (!pickedVob)
+		{
+			if (leftMousePressed)
+			{
+				auto pickMode = theApp.GetPickMode();
+
+				if (pickMode == SWM_VOBS)
+				{
+					theApp.PickVob();
+				}
+				else if (pickMode == SWM_MATERIALS)
+				{
+					theApp.PickMaterial();
+				}
+
+				zinput->ClearKey(MOUSE_LEFT);
+				ClearLMB();
+
+			}
+		}
+		else
+		{
+			if (leftMousePressed)
+			{
+				if (!leftMouse && zinput->KeyPressed(KEY_LSHIFT))
+				{
+					if (!dynamic_cast<zCVobLevelCompo*>(theApp.pickedVob))
+					{
+						theApp.vobToCopy = theApp.pickedVob;
+						theApp.isVobParentChange = false;
+
+						SetSelectedVob(NULL);
+
+						isNextCopyVobInsertNear = true;
+						HandleInsertVobCopy(NULL);
+						isNextCopyVobInsertNear = false;
+						leftMouse = true;
+					}
+
+				}
+			}
+			else
+			{
+				leftMouse = false;
+			}
+
+			if (doubleClick)
+			{
+				doubleClick = false;
+				SetSelectedVob(NULL);
+				zinput->ClearKey(MOUSE_LEFT);
+				ClearLMB();
+
+			}
+		}
+	}
+
 	void SpacerApp::PreRender()
 	{
 		if (g_bIsPlayingGame)
@@ -273,25 +417,29 @@ namespace GOTHIC_ENGINE {
 
 		if (GameFocused())
 		{
-			
-			if (zinput->GetMouseButtonPressedLeft())
+			if (isGrattControlActive)
 			{
-				int pickMode = theApp.options.GetIntVal("bTogglePickMaterial") ? 1 : 0;
-
-				if (pickMode == 0)
+				ManagerGrattController();
+			}
+			else
+			{
+				if (zinput->GetMouseButtonPressedLeft())
 				{
-					theApp.PickVob();
+					auto pickMode = theApp.GetPickMode();
+
+					if (pickMode == SWM_VOBS)
+					{
+						theApp.PickVob();
+						zinput->ClearKey(MOUSE_LEFT);
+						ClearLMB();
+					}
+					else if (pickMode == SWM_MATERIALS)
+					{
+						theApp.PickMaterial();
+						zinput->ClearKey(MOUSE_LEFT);
+						ClearLMB();
+					}
 				}
-				else if (pickMode == 1)
-				{
-					theApp.PickMaterial();
-				}
-				
-
-
-				zinput->ClearKey(MOUSE_LEFT);
-				ClearLMB();
-
 			}
 			
 		}
@@ -484,6 +632,11 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		if (pickedVob && !isGrattControlActive)
+		{
+			return;
+		}
+
 		ogame->GetWorld()->PickScene(*ogame->GetCamera(), ax, ay, -1);
 
 		zCVob* foundVob = ogame->GetWorld()->traceRayReport.foundVob;
@@ -493,6 +646,11 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+
+
+		
+		
+		
 
 		oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(foundVob);
 		
@@ -523,6 +681,11 @@ namespace GOTHIC_ENGINE {
 			{
 				foundVob = NULL;
 			}
+		}
+		
+		if (!foundVob && isGrattControlActive)
+		{
+			SetSelectedVob(NULL);
 		}
 
 
@@ -634,7 +797,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-
+	
 
 
 
