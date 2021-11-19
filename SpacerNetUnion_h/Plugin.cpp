@@ -44,12 +44,21 @@ namespace GOTHIC_ENGINE {
   }
 
   void LoadBegin() {
+
 	  if (!player)
 	  {
-		  oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
-		  player->dontWriteIntoArchive = true;
-		  player->SetSleeping(TRUE);
-		  player->SetPhysicsEnabled(FALSE);
+		 /*
+		 oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
+		 player->dontWriteIntoArchive = true;
+		 player->SetSleeping(TRUE);
+		 player->SetPhysicsEnabled(FALSE);
+		 player->SetMovLock(TRUE);
+		 player->ai_disabled = true;
+		 oCNpc::player->GetModel();
+
+		 player->RemoveVobFromWorld();
+		 player->Disable();
+		 */
 	  }
 	  
   }

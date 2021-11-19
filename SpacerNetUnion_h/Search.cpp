@@ -437,6 +437,31 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		if (searchType == SearchVobType::DynColl)
+		{
+			theApp.SetSelectedVob(NULL);
+			zCVob* vob = NULL;
+			zCZone* isZone = NULL;
+
+			for (int i = 0; i < resultFound.GetNum(); i++)
+			{
+				vob = resultFound[i];
+
+				isZone = dynamic_cast<zCZone*>(vob);
+
+				if (vob && !isZone && !arr.HasEqual((uint)vob) && IsValidZObject(vob))
+				{
+					
+					arr.Insert((uint)vob);
+					vob->SetCollDetDyn(TRUE);
+					resultCount += 1;
+				}
+
+				isZone = NULL;
+				vob = NULL;
+			}
+		}
+
 		//cmd << A resultCount << endl;
 		return resultCount;
 	}

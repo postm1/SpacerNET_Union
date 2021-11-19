@@ -61,6 +61,22 @@ namespace GOTHIC_ENGINE {
 		p.n[VY] = zREAL(zFloat2Int(vpData.ycenter) - yscr) * zREAL(viewDistanceYInv) * p.n[VZ];
 	};
 
+	struct zTMouseState {
+		int						xpos;				// relative, centered at 0
+		int						ypos;				// relative
+		int						zpos;				// relative (mouse wheel)
+		zBOOL					buttonPressedLeft;
+		zBOOL					buttonPressedMid;	// (mouse wheel)
+		zBOOL					buttonPressedRight;
+	};
+
+	void zCInput::ClearLeftMouse()
+	{
+		static zTMouseState& mouseState = *(zTMouseState*)0x8D165C;
+
+		mouseState.buttonPressedLeft = 0;
+		this->ClearKey(MOUSE_BUTTONLEFT);
+	}
 
 	void zCInput::ClearKey(int key)
 	{

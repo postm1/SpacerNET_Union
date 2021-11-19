@@ -206,6 +206,11 @@ namespace Gothic_II_Addon {
       return ((CStringA&)*this).EndWith( (CStringA&)cmp );
     }
 
+	INLINE bool_t Contains(const zSTRING& cmp) const {
+		return this->HasWord(cmp);
+	}
+
+
     INLINE uint32 Search(
       const zSTRING& cmp,
       const uint32&  pos,

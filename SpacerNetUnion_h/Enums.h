@@ -67,7 +67,7 @@ namespace GOTHIC_ENGINE {
 		Convert,
 		ReplaceVobTree,
 		Remove,
-		Rename
+		DynColl
 	};
 
 	enum zEVobMotionMode {

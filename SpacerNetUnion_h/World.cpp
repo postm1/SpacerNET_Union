@@ -4,6 +4,37 @@
 
 namespace GOTHIC_ENGINE {
 
+	/*
+	HOOK ivk_zERROR_Init AS(&zERROR::Init, &zERROR::Init_Union);
+	void zERROR::Init_Union(zSTRING cmd) {
+		THISCALL(ivk_zERROR_Init)(cmd);
+		int target = 0;
+		this->SetTarget(target | zERR_TARGET_SPY); //задать цель вывода zSpy, или файл в корне диска C: zERR_TARGET_FILE/zERR_TARGET_SPY
+	}
+
+	//0x0044C8D0 public: int __thiscall zERROR::Report(enum zERROR_TYPE, int, class zSTRING const &, signed char, unsigned int, int, char *, char *)
+
+	zSTRING lastMsg = "";
+
+	HOOK ivk_zERROR_Report AS(&zERROR::Report, &zERROR::Report_Union);
+	int zERROR::Report_Union(zERROR_TYPE type, int id, zSTRING const& str_text, signed char levelPrio, unsigned int flag, int line, char* file, char* function) {
+
+
+		if (str_text != lastMsg)
+		{
+			cmd << str_text << endl;
+			lastMsg = str_text;
+		}
+		
+		//OutFile("zERROR_TYPE: " + str_text, true);
+
+		return 0;
+		//return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
+	}
+	*/
+
+
+
 	#define MAXSIZE 24
 	#define d(i) (((char *)data)+(i)*size)
 	static zCSparseArray<const void *, int>& s_polyVertIndex = *(zCSparseArray<const void *, int>*)(0x8D8798);
@@ -404,6 +435,25 @@ namespace GOTHIC_ENGINE {
 		WorldAfterLoad();
 	}
 
+	
+
+	int globalWorldLoadType = zCWorld::zWLD_LOAD_EDITOR_COMPILED;
+	// 006C65A0 ; void __thiscall oCGame::LoadGame(oCGame *this, int, const struct zSTRING *)
+	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName);
+
+	HOOK Hook_oCGame_LoadGame AS(0x006C65A0, &oCGame_LoadGame);
+
+	
+
+	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName) {
+
+		switch (globalWorldLoadType)
+		{
+			case 1: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
+			case 2: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
+		}
+	}
+
 	void SpacerApp::LoadWorld(zSTRING worldName, int type)
 	{
 
@@ -422,14 +472,9 @@ namespace GOTHIC_ENGINE {
 
 		zoptions->ChangeDir(DIR_WORLD);
 
-	
+		globalWorldLoadType = type;
 
-		switch (type)
-		{
-			case 1: ogame->GetGameWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
-			case 2: ogame->GetGameWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
-			default: Message::Box("Bad load type"); break;
-		}
+		ogame->LoadGame(-2, worldName);
 		
 		zCWorld* world = ogame->GetWorld();
 

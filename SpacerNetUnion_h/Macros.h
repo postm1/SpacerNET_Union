@@ -164,6 +164,7 @@ namespace GOTHIC_ENGINE {
 		extern zVEC3 Slerp(zVEC3 start, zVEC3 end, float percent); \
 		extern void SetSelectedTool(int tool); \
 		extern bool IsVirtualFile(CString fileName); \
+		extern void HandleInsertVobCopy(zCVob* pickedVob); \
 
 	UAPI extern void   Stack_PushString(const char* v);
 	UAPI extern void   Stack_PushInt(int v);

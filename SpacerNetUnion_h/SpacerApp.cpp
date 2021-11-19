@@ -324,7 +324,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::UpdateGrattController()
 	{
-		theApp.TryPickResult();
+		theApp.TryPickMouse();
 
 		float ax = screen->anx(pickTryEntry.ax);
 		float ay = screen->any(pickTryEntry.ay);
@@ -537,7 +537,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::PickMaterial()
 	{
-		if (!theApp.TryPickResult())
+		if (!theApp.TryPickMouse())
 		{
 			return;
 		}
@@ -546,7 +546,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 	// попадает ли мышь по экрану, или же задевает меню
-	bool SpacerApp::TryPickResult()
+	bool SpacerApp::TryPickMouse()
 	{
 		POINT  cur;
 		_GetCursorPos(&cur);
@@ -572,14 +572,172 @@ namespace GOTHIC_ENGINE {
 		return pickTryEntry.allowed;
 	}
 	
+	struct PickVobStruct
+	{
+		zCVob* vob;
+		zVEC3 interPos;
+	};
+	zBOOL SpacerApp::PickSceneNew(zCCamera& cam, int xscr, int yscr, zREAL rayLength)
+	{
+		zCWorld* wld = ogame->GetWorld();
+
+		if (!wld) return FALSE;
+
+		const zVALUE RAY_DIST = 600000.0F;
+
+		cam.Activate();	
+
+		zPOINT3 ray00, ray, p;
+		// create ray00, ray by backprojection
+		// ray00, ray sind im world(obj)Space
+		// 'ray00	= cam.camMatrixInv * zPOINT3(0,0,0);'  =
+		cam.camMatrixInv.GetTranslation(ray00);
+		p.n[VZ] = RAY_DIST;
+		cam.BackProject(xscr, yscr, p);				// p im camSpace
+		p = cam.camMatrixInv * p;					// p im world(obj)Space  
+		ray = p - ray00;
+
+		// wuenscht der Benutzer eine bestimmte Ray-Laenge?
+		if (rayLength>0)
+		{
+			ray.Normalize();
+			ray *= rayLength;
+		};
+
+		wld->traceRayReport.Clear();
+		wld->traceRayIgnoreVobFlag = TRUE;
+
+		int	traceFlags = zTRACERAY_STAT_POLY |
+			zTRACERAY_POLY_TEST_WATER;
+
+		if (zCVob::GetShowHelperVisuals())
+			traceFlags |= zTRACERAY_VOB_TEST_HELPER_VISUALS;
+
+		zBOOL hit = wld->TraceRayNearestHit(ray00, ray, (zCVob*)0, traceFlags);
+		wld->traceRayIgnoreVobFlag = FALSE;
 
 
+
+
+		zCArray <PickVobStruct*> searchList;
+
+		int bBoxSize = 3000;
+		int radius_sp = 700;
+		zCArray<zCVob*> baseVobList;
+		zTBBox3D box;
+		zVEC3 posToPlace = ogame->GetCameraVob()->GetPositionWorld();
+		auto camVob = ogame->GetCamera()->GetVob();
+
+		box.maxs = posToPlace + zVEC3(bBoxSize, bBoxSize, bBoxSize);
+		box.mins = posToPlace - zVEC3(bBoxSize, bBoxSize, bBoxSize);
+		ogame->GetWorld()->CollectVobsInBBox3D(baseVobList, box);
+
+		int showHelpVobs = theApp.options.GetIntVal("showHelpVobs");
+
+
+		for (int i = 0; i < baseVobList.GetNumInList(); i++) {
+
+			zCVob* vob = baseVobList[i];
+
+			if (vob &&
+				(		vob != ogame->GetCameraVob()
+					&& !dynamic_cast<zCVobLight*>(vob)
+					&& ! dynamic_cast<zCVobLevelCompo*>(vob)
+					&& ! dynamic_cast<zCZone*>(vob)
+					&& ! (vob->GetVisual() && (vob->GetVisual()->GetVisualName().Contains(".pfx") || vob->GetVisual()->GetVisualName().Contains(".PFX")))
+					&& vob != theApp.currentVobRender
+					&& vob != pfxManager.testVob
+				)
+			)
+			{
+
+				if (!showHelpVobs && (dynamic_cast<zCVobSpot*>(vob) || dynamic_cast<zCVobWaypoint*>(vob)))
+				{
+					continue;
+				}
+
+				zVEC3 sphInt = IsSphIntersect(camVob->GetPositionWorld(), vob->GetPositionWorld(), ray, radius_sp);
+
+				//if (sphInt != NULL)
+				{
+					auto entry = new PickVobStruct();
+
+					entry->vob = vob;
+					entry->interPos = sphInt;
+
+					searchList.InsertEnd(entry);
+				}
+
+				
+			}
+		}
+
+
+
+		
+		if (hit)
+		{
+			cmd << "Inter point found" << endl;
+		}
+		else
+		{
+			cmd << "Inter point NOT FOUND" << endl;
+		}
+
+		int i_num = 0;
+		int dist = 10e9;
+
+		if (hit)
+		{
+			for (int i = 0; i < searchList.GetNumInList(); i++)
+			{
+				auto entry = searchList[i];
+				auto vob = entry->vob;
+
+				/*
+				if (vob->GetVisual())
+				{
+				cmd << vob->GetVobName() << " Visual: " << vob->GetVisual()->GetVisualName() << endl;
+				}
+				else
+				{
+				cmd << vob->GetVobName() << " No visual:" << endl;
+				}
+				*/
+
+				int cur_dist = vob->GetPositionWorld().Distance(wld->traceRayReport.foundIntersection);
+
+				if (cur_dist < dist)
+				{
+					dist = cur_dist;
+					i_num = i;
+				}
+
+
+			}
+		}
+
+		cmd << "Distance: " << dist << endl;
+
+		wld->traceRayReport.Clear();
+
+		if (searchList.GetNumInList() > 0)
+		{
+			wld->traceRayReport.foundVob = searchList[i_num]->vob;
+		}
+
+		
+		searchList.DeleteListDatas();
+
+		return true;
+	}
 	void SpacerApp::PickVob()
 	{
-		if (!theApp.TryPickResult())
+		if (!theApp.TryPickMouse())
 		{
 			return;
 		}
+
 
 		ogame->GetWorld()->PickScene(*ogame->GetCamera(), pickTryEntry.ax, pickTryEntry.ay, -1);
 
@@ -591,6 +749,7 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+
 
 		oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(foundVob);
 		
@@ -773,8 +932,14 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SelectObject(zCObject* object)
 	{
 		OutFile("SelectObject: object " + AHEX32((uint)object), true);
+		static bool selectObjBlocked = false;
+
+		if (selectObjBlocked) { cmd << "Blocked" << endl; return; };
 
 		theApp.CollectTargetListTrigger();
+		
+
+		selectObjBlocked = true;
 
 		if (object)
 		{
@@ -819,8 +984,9 @@ namespace GOTHIC_ENGINE {
 			addItem();
 		}
 
-
-
+		selectObjBlocked = false;
+		zinput->ClearLeftMouse();
+		zinput->ClearKeyBuffer();
 	}
 
 
@@ -830,6 +996,15 @@ namespace GOTHIC_ENGINE {
 		zSTRING name = zSTRING(nameCurrent);
 		zSTRING visual = zSTRING(visualStr);
 
+
+		cmd << "ApplyProps for vob " << AHEX32((uint)current_object) <<  endl;
+		cmd << "Player: " << AHEX32((uint)player) << endl;
+
+		if (player)
+		{
+			cmd << "Player: world " << AHEX32((uint)player->homeWorld) << endl;
+		}
+		//Message::Box("Apply 1");
 		//OutFile("ApplyProps: " + A name, true);
 
 		if (current_object)
@@ -851,7 +1026,9 @@ namespace GOTHIC_ENGINE {
 			arch->Close();
 			zRELEASE(arch);
 
+			cmd << "ApplyProps for vob 2 " << AHEX32((uint)current_object) << endl;
 
+			//Message::Box("Apply 2");
 			zCVob* vob = dynamic_cast<zCVob*>(current_object);
 
 			if (vob)
@@ -868,6 +1045,9 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 
+				//Message::Box("Apply 3");
+
+				cmd << "ApplyProps for vob 3 " << AHEX32((uint)current_object) << endl;
 
 				if (lastName != name)
 				{
@@ -876,12 +1056,14 @@ namespace GOTHIC_ENGINE {
 					Stack_PushString(GetVobName(vob));
 					updateName((uint)vob);
 				}
+				//Message::Box("Apply 4");
 
+				cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
 			}
 
 		}
-
-
+		//Message::Box("Apply 5");
+		cmd << "ApplyProps for vob 5 " << AHEX32((uint)current_object) << endl;
 	}
 
 

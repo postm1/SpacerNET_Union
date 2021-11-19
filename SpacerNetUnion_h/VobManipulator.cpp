@@ -250,7 +250,7 @@ namespace GOTHIC_ENGINE {
 
 					if (theApp.options.GetIntVal("vobInsertItemLevel") && theApp.vobToCopy)
 					{
-						zVEC3 levelVec = pos + dir * 200;
+						zVEC3 levelVec = pos + dir * 250;
 						levelVec.n[1] = theApp.vobToCopy->GetPositionWorld().n[1];
 
 						if (theApp.isNextCopyVobInsertNear)
@@ -268,7 +268,7 @@ namespace GOTHIC_ENGINE {
 						}
 						else
 						{
-							HandleVobTranslation(newVob, pos + dir * 200);
+							HandleVobTranslation(newVob, pos + dir * 250);
 						}
 						
 					}
@@ -401,6 +401,8 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	
+
 	void HandleInsertVobCopy(zCVob* pickedVob)
 	{
 		if (theApp.vobToCopy)
@@ -411,6 +413,7 @@ namespace GOTHIC_ENGINE {
 			bool useHierarchy = theApp.options.GetIntVal("vobInsertHierarchy");
 
 			zCVobWaypoint* pickedVobWaypont = dynamic_cast<zCVobWaypoint*>(theApp.vobToCopy);
+			zCVobSpot* pickedFreePoint = dynamic_cast<zCVobSpot*>(theApp.vobToCopy);
 			oCItem* pItem = dynamic_cast<oCItem*>(theApp.vobToCopy);
 
 			checkCopyVobSelf = false;
@@ -445,6 +448,11 @@ namespace GOTHIC_ENGINE {
 			auto onSelect = (onSelectNode)GetProcAddress(theApp.module, "SelectNode");
 			onSelect((uint32)theApp.pickedVob);
 			print.PrintGreen(GetLang("UNION_VOB_INSERTED"));
+
+			if (pickedFreePoint)
+			{
+				theApp.SetSelectedVob(NULL);
+			}
 		}
 	}
 
@@ -627,7 +635,7 @@ namespace GOTHIC_ENGINE {
 		if (zinput->GetMouseButtonPressedLeft())
 		{
 
-			if (!theApp.TryPickResult())
+			if (!theApp.TryPickMouse())
 			{
 				return;
 			}
@@ -653,7 +661,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-				if (ogame->GetWorld()->TraceRayFirstHit(cam->GetVob()->GetPositionWorld(), ray * 5000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_VOB_IGNORE)) {
+				if (ogame->GetWorld()->TraceRayFirstHit(cam->GetVob()->GetPositionWorld(), ray * 25000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_VOB_IGNORE)) {
 					// Poly gefunden
 					if (ogame->GetWorld()->traceRayReport.foundPoly) {
 						// Schnittpunkt schnappen und Position neu setzen
@@ -663,7 +671,7 @@ namespace GOTHIC_ENGINE {
 
 						if (poly)
 						{
-							int bBoxSize = 3000;
+							int bBoxSize = 5000;
 							zCArray<zCVob*> baseVobList;
 							zCArray<zCVob*> resVobList;
 							zTBBox3D box;
@@ -676,10 +684,20 @@ namespace GOTHIC_ENGINE {
 							int minDist = theApp.options.GetIntVal("grassMinDist");
 							zSTRING modelName = theApp.options.GetVal("grassModelName");
 							int offsetVert = theApp.options.GetIntVal("grassVertOffset");
+							int grassToolRemove = theApp.options.GetIntVal("grassToolRemove");
+							int isItem = theApp.options.GetIntVal("grassToolIsItem");
+
+							int grassToolClearMouse = theApp.options.GetIntVal("grassToolClearMouse");
+							int grassToolDynColl = theApp.options.GetIntVal("grassToolDynColl");
+							int grassToolRotRandAngle = theApp.options.GetIntVal("grassToolRotRandAngle");
+							int grassToolSetNormal = theApp.options.GetIntVal("grassToolSetNormal");
+							
 
 							if (modelName.Length() == 0) {
 								return;
 							}
+
+							if (grassToolClearMouse) zinput->ClearLeftMouse();
 								
 							for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
@@ -703,8 +721,56 @@ namespace GOTHIC_ENGINE {
 									resVobList.InsertEnd(vob);
 								}
 							}
+
+
+							for (int i = 0; i < baseVobList.GetNumInList(); i++) {
+
+
+								zCVob* vob = baseVobList[i];
+
+								if (vob
+									&& vob != camVob
+									&& !dynamic_cast<zCVobWaypoint*>(vob)
+									&& !dynamic_cast<zCVobSpot*>(vob)
+									&& !dynamic_cast<zCVobLight*>(vob)
+									&& !dynamic_cast<zCVobLevelCompo*>(vob)
+									&& !dynamic_cast<zCZone*>(vob)
+									&& vob->GetVisual()
+									&& vob != theApp.currentVobRender
+									&& vob != pfxManager.testVob
+									)
+								{
+									auto item = vob->CastTo<oCItem>();
+
+									if (item && item->GetInstanceName() == modelName)
+									{
+										resVobList.InsertEnd(vob);
+									}
+
+									
+								}
+							}
 							
 							
+							if (grassToolRemove)
+							{
+
+								for (int i = 0; i < resVobList.GetNumInList(); i++)
+								{
+									zCVob* vob = resVobList[i];
+
+									auto dist = vob->GetPositionWorld().Distance(posToPlace);
+
+									if (dist <= minDist)
+									{
+										theApp.RemoveVob(vob);
+									}
+								}
+
+								resVobList.DeleteList();
+
+								return;
+							}
 
 							for (int i = 0; i < resVobList.GetNumInList(); i++) 
 							{
@@ -714,43 +780,90 @@ namespace GOTHIC_ENGINE {
 
 								if (dist <= minDist)
 								{
-									print.PrintRed("No place to put grass");
+									print.PrintRed("No place to put vob");
 									return;
 								}
 							}
 
 
-							zCVob* newVob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance("zCVob"));
+							zCVob* newVob = NULL;
 
-							newVob->SetVobName("");
+							if (isItem)
+							{
+								newVob = theApp.CreateItem(modelName.Upper());
+							}
+							else
+							{
+								newVob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance("zCVob"));
+								newVob->SetVobName("");
 
 
-							newVob->SetCollDetStat(FALSE);
-							newVob->SetCollDetDyn(FALSE);
+								newVob->SetCollDetStat(FALSE);
+								newVob->SetCollDetDyn(FALSE);
+								newVob->SetVisual(modelName);
+							}
 
-							newVob->SetVisual(modelName);
+							
+							if (!newVob) return;
+
+							
 
 							auto bboxCenter = newVob->bbox3D.GetCenter();
 							auto point = newVob->trafoObjToWorld.GetTranslation() - newVob->bbox3D.GetCenterFloor();
 
-	
+							newVob->SetCollDetStat(FALSE);
+							newVob->SetCollDetDyn(FALSE);
 							newVob->SetPositionWorld(posToPlace + zVEC3(0, offsetVert, 0) + point);
 
-							InsertIntoWorld(newVob, NULL, false);
+							if (!isItem)
+							{
+								InsertIntoWorld(newVob, NULL, false);
+							}
+							
 
 							poly->CalcNormal();
 
 							zVEC3 newDir = (poly->polyPlane.normal);
 							
-							newVob->SetHeadingAtWorld(newDir);
+
+							if (grassToolSetNormal)
+							{
+								newVob->SetHeadingAtWorld(newDir);
+							}
+						
 							//newVob->SetHeadingYLocal(newDir);
+
+							
 							newVob->RotateLocalX(90);
 
 							//newVob->ResetXZRotationsWorld();
-							newVob->RotateLocalY(GetRandVal(0, 180));
+
+							if (grassToolRotRandAngle)
+							{
+								newVob->RotateLocalY(GetRandVal(0, 360));
+							}
+							else
+							{
+								newVob->SetHeadingWorld(camVob->GetPositionWorld());
+								newVob->RotateLocalY(90);
+								newVob->ResetXZRotationsWorld();
+							}
 
 
-							newVob->Release();
+							
+
+							if (!isItem)
+							{
+								newVob->Release();
+
+								if (grassToolDynColl)
+								{
+									newVob->SetCollDetDyn(TRUE);
+								}
+							}
+							
+
+							theApp.SetSelectedVob(NULL);
 						}
 					}
 				}
@@ -849,6 +962,109 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+	int childrenCount = 0;
+
+	zCArray<zCVob*> vobParentChangeList;
+
+	void CheckVobHasChildren(zCTree<zCVob>* node, zCVob* original)
+	{
+		zCVob* vob = node->GetData();
+
+		if (vob && vob != original) {
+
+
+			childrenCount += 1;
+			vobParentChangeList.InsertEnd(vob);
+			
+		}
+
+		node = node->GetFirstChild();
+
+
+		while (node != NULL)
+		{
+			CheckVobHasChildren(node, original);
+			node = node->GetNextChild();
+		}
+	}
+
+	void SearchBadHierarchy()
+	{
+		if (zKeyToggled(KEY_F1)) {
+			zinput->ClearKeyBuffer();
+
+
+			zCArray<zCVob*> vobs;
+			zCArray<zCVob*> vobsNeed;
+
+			ogame->GetWorld()->SearchVobListByClass(zCVob::classDef, vobs, 0);
+
+			ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
+
+
+
+			for (int i = 0; i < vobs.GetNum(); i++)
+			{
+				zCVob* pVob = vobs.GetSafe(i);
+
+				if (dynamic_cast<zCVobLevelCompo*>(pVob))	continue;
+				if (pVob == ogame->GetCamera()->GetVob())	continue;
+				if (dynamic_cast<zCMover*>(pVob))	continue;
+				if (dynamic_cast<zCTrigger*>(pVob))	continue;
+				if (dynamic_cast<zCMoverControler*>(pVob))	continue;
+
+				if (pVob && pVob->GetVisual())
+				{
+					if (pVob->GetVisual()->GetVisualName().Contains(".PFX") || pVob->GetVisual()->GetVisualName().Contains(".pfx"))
+					{
+						vobsNeed.Insert(pVob);
+					}
+				}
+			}
+
+			vobParentChangeList.DeleteList();
+
+			int found_count = 0;
+
+			for (int i = 0; i < vobsNeed.GetNum(); i++)
+			{
+				auto pVob = vobsNeed.GetSafe(i);
+
+				if (pVob)
+				{
+					childrenCount = 0;
+					zCTree<zCVob>* tree = pVob->globalVobTreeNode;
+					CheckVobHasChildren(tree, pVob);
+
+
+					if (childrenCount > 0)
+					{
+						found_count += 1;
+
+						if (found_count == 1)
+						{
+							print.PrintRed("Children: " + Z childrenCount);
+
+							theApp.SetSelectedVob(vobsNeed.GetSafe(i));
+							auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectVob");
+							onSelect((int)theApp.pickedVob);
+						}
+						
+					}
+				}
+			}
+
+
+			for (int i = 0; i < vobParentChangeList.GetNumInList(); i++)
+			{
+				HandleParentChange(vobParentChangeList.GetSafe(i), NULL);
+			}
+			
+			
+			print.PrintRed("Всего ошибок: " + Z found_count);
+		}
+	}
+
 	void VobKeys()
 	{
 		auto pickMode = theApp.GetPickMode();
@@ -860,6 +1076,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 	
+		//SearchBadHierarchy();
 		
 
 		if (!selectedTool)
@@ -899,6 +1116,28 @@ namespace GOTHIC_ENGINE {
 
 
 			}
+		}
+
+
+		if (theApp.isGrattControlActive && keys.KeyPressed("VOB_RESET_AXIS", true, true))
+		{
+			int motion = (int)ControllerEvents.MotionHeading + 1;
+
+			if (motion > 3)
+			{
+				motion = 0;
+			}
+
+			switch (motion)
+			{
+				case 0: print.PrintRed("zMH_WORLD"); break;
+				case 1: print.PrintRed("zMH_LOCALE"); break;
+				case 2: print.PrintRed("zMH_VIEW"); break;
+			}
+
+			ControllerEvents.MotionHeading = (zEVobMotionHeading)motion;
+
+
 		}
 
 
@@ -1013,7 +1252,7 @@ namespace GOTHIC_ENGINE {
 
 		if (pickedVob)
 		{
-			if (keys.KeyPressed("WP_TOGGLE", true))
+			if (keys.KeyPressed("WP_TOGGLE", true))	
 			{
 				theApp.ToggleWP();
 			}

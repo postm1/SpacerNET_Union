@@ -216,7 +216,7 @@ namespace GOTHIC_ENGINE {
 			zVEC3 dir = ogame->GetCamera()->connectedVob->GetAtVectorWorld().Normalize();
 
 
-			HandleVobTranslation(newvob, pos + dir * 200);
+			HandleVobTranslation(newvob, pos + dir * 250);
 
 			if (visualVob.Length() > 0)
 			{
@@ -236,9 +236,11 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
-			//newvob->ResetXZRotationsWorld();
+			newvob->ResetXZRotationsWorld();
 			newvob->SetCollDetDyn(dyn);
 			newvob->SetCollDetStat(stat);
+			
+		
 
 			theApp.selectNextVobForce = true;
 
@@ -286,7 +288,7 @@ namespace GOTHIC_ENGINE {
 		theApp.SetSelectedVob(pVob, "CreatePFX");
 	}
 
-	void SpacerApp::CreateItem(CString name)
+	oCItem* SpacerApp::CreateItem(CString name)
 	{
 		zSTRING itemName = zSTRING(name).Upper();
 
@@ -295,7 +297,7 @@ namespace GOTHIC_ENGINE {
 		oCItem* pItem = dynamic_cast<oCItem*>((zCVob*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_ITEM, instance2));
 
 		if (!pItem) {
-			return;
+			return NULL;
 		}
 
 
@@ -327,7 +329,8 @@ namespace GOTHIC_ENGINE {
 
 		pItem->ResetXZRotationsWorld();
 		pItem->Release();
-	
+		
+		return pItem;
 
 		//theApp.SetSelectedVob(pItem, "CreateItem");
 

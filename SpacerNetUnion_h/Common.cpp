@@ -15,8 +15,25 @@ namespace GOTHIC_ENGINE {
 		if (key == KEY_ESCAPE)
 			return FALSE;
 
-		return THISCALL(Ivk_CGameManager_HandleEvent)(key);
+		return FALSE;
+
+		//return THISCALL(Ivk_CGameManager_HandleEvent)(key);
+
 	}
+
+	//0x006C3140 public: void __thiscall oCGame::UpdatePlayerStatus(void)
+	HOOK Ivk_oCGame_UpdatePlayerStatus AS(&oCGame::UpdatePlayerStatus, &oCGame::UpdatePlayerStatus_Hook);
+	void oCGame::UpdatePlayerStatus_Hook()
+	{
+		return;
+	}
+
+	HOOK Ivk_oCGame_HandleEvent AS(&oCGame::HandleEvent, &oCGame::HandleEvent_Hook);
+	int oCGame::HandleEvent_Hook(int key)
+	{
+		return FALSE;
+	}
+
 
 	//CS Camera EV_PLAY crashfix
 	HOOK Ivk_CheckUnderWaterFX AS(&zCAICamera::CheckUnderWaterFX, &zCAICamera::CheckUnderWaterFX_Hook);
@@ -216,6 +233,12 @@ namespace GOTHIC_ENGINE {
 	void zCBspTree::AddVob_Hook(zCVob* vob) {
 		if (vob)
 		{
+
+			if (theApp.g_bIsPlayingGame)
+			{
+				vob->dontWriteIntoArchive = true;
+			}
+
 			if (theApp.treeIsReady && !theApp.nextInsertBlocked)
 			{
 				zCVobLight* vobLight = dynamic_cast<zCVobLight*>(vob);

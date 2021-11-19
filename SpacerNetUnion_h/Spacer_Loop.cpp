@@ -193,7 +193,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::PluginLoop()
 	{
-		if (theApp.isExit || theApp.g_bIsPlayingGame)
+		if (theApp.isExit )
 		{
 			return;
 		}
@@ -202,6 +202,14 @@ namespace GOTHIC_ENGINE {
 		
 
 		print.Loop();
+
+		//print.PrintRed(Z(int)player);
+
+		if (theApp.g_bIsPlayingGame)
+		{
+			
+			return;
+		}
 
 		if (GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin || GetForegroundWindow() == theApp.vobsWin)
 		{
@@ -291,7 +299,7 @@ namespace GOTHIC_ENGINE {
 				}
 				else
 				{
-					PrintDebug("No portal");
+					//PrintDebug("No portal");
 				}
 				
 				
@@ -450,6 +458,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::CheckForBadPlugins()
 	{
+		return;
+
 		if (pluginsChecked || theApp.options.GetIntVal("showBadPluginsMsg") == 0) return;
 
 		pluginsChecked = true;

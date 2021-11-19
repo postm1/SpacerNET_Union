@@ -8,6 +8,11 @@ namespace GOTHIC_ENGINE {
 
 	extern "C"
 	{
+
+		__declspec(dllexport) int SpacerIsActive = 1;
+
+
+
 		__declspec(dllexport) void Extern_LoadWorld() {
 
 
@@ -35,7 +40,7 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_PlayHero() {
 			print.PrintRed("Playing the game...");
-			//theApp.PlayTheGame();
+			theApp.ToggleGame();
 		}
 
 
@@ -96,12 +101,14 @@ namespace GOTHIC_ENGINE {
 
 			void* ptr = (void*)vob;
 
+			/*
 			if (!IsValidZObject(ptr))
 			{
 				MessageBox(0, "Bad vob pointer in Extern_RemoveVob!", 0, 0);
 				OutFile("Bad vob pointer in Extern_RemoveVob: " + AHEX32((int)ptr), false);
 				return;
 			}
+			*/
 
 
 			OutFile("Extern_RemoveVob: " + AHEX32(vob), false);
@@ -331,13 +338,14 @@ namespace GOTHIC_ENGINE {
 
 			zCVob* pVob = (zCVob*)ptr;
 
-
+			/*
 			if (!IsValidZObject(ptr))
 			{
 				//MessageBox(0, "Bad vob pointer in Extern_SelectVobSync!", 0, 0);
 				OutFile("Bad vob pointer in Extern_SelectVobSync: " + AHEX32((int)ptr), false);
 				return;
 			}
+			*/
 
 
 
@@ -358,13 +366,14 @@ namespace GOTHIC_ENGINE {
 
 			zCVob* pVob = (zCVob*)ptr;
 
-
+			/*
 			if (!IsValidZObject(ptr))
 			{
 				MessageBox(0, "Bad vob pointer in Extern_SelectVob!", 0, 0);
 				OutFile("Bad vob pointer in Extern_SelectVob: " + AHEX32((int)ptr), false);
 				return;
 			}
+			*/
 
 			OutFile("Extern_SelectVob: " + AHEX32((int)pVob), false);
 

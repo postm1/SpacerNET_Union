@@ -129,6 +129,7 @@ namespace GOTHIC_ENGINE {
 		void AfterRender();
 		void PickMaterial();
 		void PickVob();
+		zBOOL SpacerApp::PickSceneNew(zCCamera& cam, int xscr, int yscr, zREAL rayLength);
 		void ToggleWP();
 		void ConnectWP();
 		void DisconnectWP();
@@ -139,7 +140,7 @@ namespace GOTHIC_ENGINE {
 		void ToggleWindowsVisible();
 		void SetHoldTime(int enabled);
 		zCWorld * GetWorld(zBOOL getEmptyWorldToo);
-		bool TryPickResult();
+		bool TryPickMouse();
 		bool IsAWorldLoaded();
 
 		void Reset();
@@ -181,7 +182,7 @@ namespace GOTHIC_ENGINE {
 
 		void CreatePFX(CString name);
 
-		void CreateItem(CString name);
+		oCItem* CreateItem(CString name);
 
 
 		void CreateItemsList();
@@ -230,6 +231,8 @@ namespace GOTHIC_ENGINE {
 		void GameLoop();
 
 		void PlayTheGame();
+
+		void ToggleGame();
 
 		void StopPlay();
 

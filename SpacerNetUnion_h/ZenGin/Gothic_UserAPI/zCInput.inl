@@ -4,5 +4,6 @@
 // Add your methods here
 
 void ClearKey(int key);
+void ClearLeftMouse();
 
 

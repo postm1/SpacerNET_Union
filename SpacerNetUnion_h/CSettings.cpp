@@ -390,6 +390,26 @@ namespace GOTHIC_ENGINE {
 		list.Insert("grassVertOffset", set);
 		
 		
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolRemove", "0");
+		list.Insert("grassToolRemove", set);
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolIsItem", "0");
+		list.Insert("grassToolIsItem", set);
+
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolClearMouse", "0");
+		list.Insert("grassToolClearMouse", set);
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolDynColl", "0");
+		list.Insert("grassToolDynColl", set);
+
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolRotRandAngle", "0");
+		list.Insert("grassToolRotRandAngle", set);
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolSetNormal", "0");
+		list.Insert("grassToolSetNormal", set);
+		
 	}
 
 	CSettings::~CSettings()

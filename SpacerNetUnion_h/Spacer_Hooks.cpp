@@ -409,4 +409,7 @@ namespace GOTHIC_ENGINE {
 	//HOOK zCWorld_TraverseBspAddVobsToMesh   AS(0x00622A80, &zCWorld::TraverseBspAddVobsToMesh_New);
 
 	//0x00622A80 private: int __thiscall zCWorld::TraverseBspAddVobsToMesh(class zCCBspTree *,class zCTree<class zCVob> *)
+
+
+
 }

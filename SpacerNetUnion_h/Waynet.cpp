@@ -140,6 +140,16 @@ namespace GOTHIC_ENGINE {
 		zSTRING className = "zCVobWaypoint";
 
 
+
+		if (vobToCopy && dynamic_cast<zCVobSpot*>(vobToCopy))
+		{
+			
+			HandleInsertVobCopy(vobToCopy);
+			return;
+		}
+
+
+
 		if (!dynamic_cast<zCVobWaypoint*>(pickedVob))
 		{
 			print.PrintRed(GetLang("UNION_NO_WAYPOINT"));
