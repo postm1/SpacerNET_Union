@@ -45,9 +45,9 @@ namespace GOTHIC_ENGINE {
 
   void LoadBegin() {
 
-	  if (!player)
+	  if (!player && theApp.options.GetIntVal("bAddPlayerForPlugins"))
 	  {
-		 /*
+		 cmd << "Player pointer init" << endl;
 		 oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
 		 player->dontWriteIntoArchive = true;
 		 player->SetSleeping(TRUE);
@@ -58,7 +58,7 @@ namespace GOTHIC_ENGINE {
 
 		 player->RemoveVobFromWorld();
 		 player->Disable();
-		 */
+		 
 	  }
 	  
   }

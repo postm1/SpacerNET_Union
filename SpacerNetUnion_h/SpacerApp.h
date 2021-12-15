@@ -22,6 +22,16 @@ namespace GOTHIC_ENGINE {
 		zCArray<zSTRING> whiteArrayPlugins;
 		zCArray<zSTRING> blackArrayPlugins;
 
+		
+
+		Common::Map<CString, RespawnEntry*> respawnShowList;
+
+		void ClearRespList()
+		{
+
+			respawnShowList.Clear();
+		}
+
 		struct
 		{
 			zCMover* moverVob;
@@ -73,6 +83,7 @@ namespace GOTHIC_ENGINE {
 			int vobListSelectedIndex;
 			bool isGrattControlActive;
 			bool isNextCopyVobInsertNear;
+			bool showRespawnOnVobs;
 
 			zCVob*		pickedWaypoint2nd;
 			zCVob*		pickedWaypoint;

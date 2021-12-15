@@ -332,6 +332,80 @@ namespace GOTHIC_ENGINE {
 			//PrintDebug(ToStr zCWorld::s_bWaveAnisEnabled);
 			screen->SetFontColor(zCOLOR(255, 255, 255));
 
+
+			
+			if (theApp.showRespawnOnVobs)
+			{
+
+				zTBBox3D bbox;
+				zCArray<zCVob*> found;
+				zREAL distance = 4500;
+
+				bbox.maxs = bbox.mins = ogame->GetCamera()->GetVob()->GetPositionWorld();
+				bbox.maxs[0] += distance; bbox.maxs[1] += distance; bbox.maxs[2] += distance;
+				bbox.mins[0] -= distance; bbox.mins[1] -= distance; bbox.mins[2] -= distance;
+				ogame->GetWorld()->CollectVobsInBBox3D(found, bbox);
+
+				
+				zCVobSpot* spot = NULL;
+				zCVobWaypoint* wp = NULL;
+				zCOLOR color;
+				zPOINT3 wsPoint1, csPoint1;
+				zPOINT2 ssPoint1;
+				color = GFX_RED;
+
+				screen->SetFontColor(zCOLOR(255, 255, 255));
+
+				int distDraw = 3500;
+
+				// Nach zCVobSpots durchsuchen
+				for (int i = 0; i<found.GetNumInList(); i++)
+				{
+					auto vob = found.GetSafe(i);
+
+					if (vob)
+					{
+						auto& foundPair = theApp.respawnShowList[vob->GetVobName()];
+
+						if (!foundPair.IsNull())
+						{
+							CString info = "";
+
+							for (int j = 0; j < foundPair.GetValue()->monsters.GetNumInList(); j++)
+							{
+								info += foundPair.GetValue()->monsters.GetSafe(j) + " | ";
+							}
+
+							info = info.Cut(info.Length() - 3, 3);
+
+							if (spot = dynamic_cast<zCVobSpot*>(found[i]))
+							{
+
+								wsPoint1 = spot->GetPositionWorld() + zVEC3(0, 350, 0);
+								csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
+								if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
+								if ((csPoint1[VZ]<distDraw) && (csPoint1[VZ]>0))
+									screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
+							};
+
+							if (wp = dynamic_cast<zCVobWaypoint*>(found[i]))
+							{
+
+								wsPoint1 = wp->GetPositionWorld() + zVEC3(0, 150, 0);
+								csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
+								if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
+								if ((csPoint1[VZ]<distDraw) && (csPoint1[VZ]>0))
+									screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
+							};
+						}
+					}
+					
+					
+				}
+
+			}
+			
+			screen->SetFontColor(zCOLOR(255, 255, 255));
 			
 		}
 	}

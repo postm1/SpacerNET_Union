@@ -147,6 +147,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::PolyApplyMapping()
 	{
+
 		zCSelPoly* selPoly = NULL;
 		int count = selPolyList->GetNumInList();
 		if (count == 0) return;
@@ -169,6 +170,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::OnPolyApplyTexture()
 	{
+
 		zCMaterial* mat = this->copyMat;
 		if (!mat) return;
 
@@ -210,6 +212,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::ResetUV()
 	{
+
 		int count = selPolyList->GetNumInList();
 
 		if (count == 0) return;
@@ -232,7 +235,17 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		zCPolygon::TexApplyPlanarMapping(polyList, 1, 1, 1);
+		ogame->GetWorld()->bspTree.mesh->ArraysToLists();
+		ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
+
+		for (int polyCtr = 0; polyCtr<polyList.GetNumInList(); polyCtr++) {
+			zCPolygon *poly = polyList[polyCtr];
+
+			poly->TexApplyPlanarMapping(1, 1, 1);
+		};
+
+
+		//zCPolygon::TexApplyPlanarMapping(polyList, 1, 1, 1);
 
 		//selPoly->GetPolygon()->TexApplyPlanarMapping(1, 1, 1);
 		//selPoly->GetPolygon()->material->ApplyTexAniMapping(selPoly->GetPolygon());
@@ -240,6 +253,8 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::TextureScale(zVALUE x, zVALUE y)
 	{
+
+
 		int grid = 1;
 
 		int count = selPolyList->GetNumInList();
@@ -289,7 +304,6 @@ namespace GOTHIC_ENGINE {
 
 				return;
 			}
-			
 
 
 
@@ -304,6 +318,7 @@ namespace GOTHIC_ENGINE {
 
 				float spd = 0.0001;
 				float angle = 1.0f / 60.0f;
+
 
 				if (keys.KeyPressed("VOB_SPEED_X10", false, true))
 				{

@@ -11,3 +11,5 @@ void				CollectVobsInBBox3D(zCArray<zCVob*>& resVobList, const zTBBox3D& inbbox3
 void				SetProgressBar(zCViewProgressBar *progressBar) { this->progressBar = progressBar; };
 
 zCWorld* zCWorld_Hook();
+
+zBOOL zCWorld::SaveWorldNew(const zSTRING& fileName, const zTWorldSaveMode saveMode, const zBOOL writeBinary, const zBOOL _saveLevelMesh);

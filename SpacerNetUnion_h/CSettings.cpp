@@ -263,6 +263,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "addDatePrefix", "1");
 		list.Insert("addDatePrefix", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "autoCompileWorldLight", "0");
+		list.Insert("autoCompileWorldLight", set);
+
 		set = new CSetting(TYPE_INT, "SPACER", "maxFPS", "0");
 		list.Insert("maxFPS", set);
 
@@ -327,6 +330,9 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "bToggleNewController", "0");
 		list.Insert("bToggleNewController", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "bAddPlayerForPlugins", "0");
+		list.Insert("bAddPlayerForPlugins", set);
 		
 
 

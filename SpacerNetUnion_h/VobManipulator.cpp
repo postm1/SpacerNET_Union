@@ -1071,7 +1071,11 @@ namespace GOTHIC_ENGINE {
 
 		if (pickMode == SWM_GRASS)
 		{
-		
+			if (theApp.GetSelectedVob())
+			{
+				theApp.SetSelectedVob(NULL);
+
+			}
 			GrassPlacing();
 			return;
 		}
@@ -1111,13 +1115,43 @@ namespace GOTHIC_ENGINE {
 
 				print.PrintRed("Unshare features of polygons");
 
-				ogame->GetWorld()->bspTree.mesh->ArraysToLists();
-				ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
+				//ogame->GetWorld()->bspTree.mesh->ArraysToLists();
+				//ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
 
 
 			}
 		}
 
+		//rx_respawn
+		/*
+		if (zinput->KeyPressed(KEY_G))
+		{
+			zinput->ClearKeyBuffer();
+			
+
+			theApp.showRespawnOnVobs = !theApp.showRespawnOnVobs;
+
+			print.PrintRed("ShowRespawnPoints: " + Z theApp.showRespawnOnVobs);
+
+			if (theApp.showRespawnOnVobs)
+			{
+				theApp.ClearRespList();
+
+				CString funcName = "b_enter_WestCoast";
+
+				parser->SetScriptInt("kapitel", 2);
+				parser->SetScriptInt("b_enter_WestCoast_chapter_1_var", 0);
+				parser->SetScriptInt("b_enter_WestCoast_chapter_2_var", 0);
+				parser->SetScriptInt("b_enter_WestCoast_chapter_3_var", 0);
+				parser->SetScriptInt("b_enter_WestCoast_chapter_4_var", 0);
+
+				parser->CallFunc(parser->GetIndex(funcName));
+
+			}
+
+		}
+
+		*/
 
 		if (theApp.isGrattControlActive && keys.KeyPressed("VOB_RESET_AXIS", true, true))
 		{

@@ -199,8 +199,8 @@ namespace GOTHIC_ENGINE {
 					{
 						vob->bbox3D.Draw(GFX_GREEN);
 					}
-
 				}
+				
 				/*
 
 				if (theApp.options.GetIntVal("showWPNames"))
@@ -295,16 +295,15 @@ namespace GOTHIC_ENGINE {
 	static	zBOOL&							s_saveLevelMesh = *(int*)0x9A4360;
 	static	zBOOL&							s_saveWayNet = *(int*)0x9A436C;
 
-	/*
+	
+	//HOOK Ivk_zCWorld_SaveWorldNew AS(&zCWorld::SaveWorld, &zCWorld::SaveWorldNew);
+
 	zBOOL zCWorld::SaveWorldNew(const zSTRING& fileName, const zTWorldSaveMode saveMode, const zBOOL writeBinary, const zBOOL _saveLevelMesh)
 	{
-
 		zCPolygon::S_ResetMorphedVerts();
 
 		//
 		//zERR_MESSAGE(5, 0, "D: WORLD: Saving World: \"" + fileName + "\"");
-
-		cmd << Col16(CMD_YELLOW) << "Start saving world..." << endl;
 
 		// CamVob entfernen
 		zCVob *camVob = 0;
@@ -326,7 +325,6 @@ namespace GOTHIC_ENGINE {
 			s_worldSaveMode = saveMode;
 
 			//
-
 			s_firstVobSaveWorld = &globalVobTree;
 			s_saveLevelMesh = _saveLevelMesh;
 			s_saveWayNet = (s_worldSaveMode != zWLD_SAVE_COMPILED_ONLY);
@@ -342,17 +340,9 @@ namespace GOTHIC_ENGINE {
 				arcSaveMode = zARC_MODE_BINARY;
 		};
 
-
-		cmd << Col16(CMD_YELLOW) << "arcSaveMode set" << endl;
-
 		// Archiv schreiben
 		zoptions->ChangeDir(DIR_WORLD);
 		zCArchiver *arc = zarcFactory->CreateArchiverWrite(fileName, arcSaveMode, saveGame, 0);
-
-
-		cmd << Col16(CMD_YELLOW) << "CreateArchiverWrite..." << endl;
-
-
 		zBOOL res = (arc != 0);
 		if (arc) {
 			arc->WriteObject(this);

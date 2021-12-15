@@ -268,6 +268,56 @@ namespace GOTHIC_ENGINE {
 		THISCALL(ivk_AddVob)(vob);
 	}
 	
+	void zCParser::SetScriptInt(zSTRING name, int value, int index) {
+		zCPar_Symbol* sym = GetSymbol(name);
+
+		if (sym) {
+
+			sym->SetValue(value, index);
+		}
+	}
+
+
+	
+	int __cdecl Wld_InsertNpc_Hook();
+	//CInvoke <int(__cdecl *) (void)> Wld_InsertNpc_Hooked(0x6DF1F0, Wld_InsertNpc_Hook, IVK_AUTO);
+	int __cdecl Wld_InsertNpc_Hook() {
+		int index;
+		zSTRING posPoint;
+
+		zCParser *p = zCParser::GetParser();
+		p->GetParameter(posPoint);
+		p->GetParameter(index);
+
+		posPoint = posPoint.Upper();
+
+
+		auto& foundPair = theApp.respawnShowList[posPoint];
+
+		auto sym = parser->GetSymbol(index);
+
+		if (!sym) { cmd << "not found: " << posPoint << endl;  return 0; }
+
+		CString monsterName = sym->name;
+
+		// найдено
+		if (!foundPair.IsNull())
+		{
+			foundPair.GetValue()->monsters.Insert(monsterName);
+		}
+		else
+		{
+			auto entry = new RespawnEntry();
+			entry->monsters.Insert(monsterName);
+			theApp.respawnShowList.Insert(posPoint, entry);
+		}
+		
+
+		
+
+		return FALSE;
+
+	}
 	//ShowFreePoints
 
 

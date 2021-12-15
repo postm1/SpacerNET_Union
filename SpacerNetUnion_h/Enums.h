@@ -70,6 +70,13 @@ namespace GOTHIC_ENGINE {
 		DynColl
 	};
 
+	struct RespawnEntry
+	{
+		zCVob* vob;
+		zCArray<CString> monsters;
+	};
+
+
 	enum zEVobMotionMode {
 		zMM_NONE,
 		zMM_MOVE,

@@ -49,6 +49,7 @@ namespace GOTHIC_ENGINE {
 		this->pluginsChecked = false;
 		this->isGrattControlActive = false;
 		this->isNextCopyVobInsertNear = false;
+		this->showRespawnOnVobs = false;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}
@@ -158,7 +159,7 @@ namespace GOTHIC_ENGINE {
 		levelReady = false;
 		treeIsReady = false;
 		firstTimeZenSaved = false;
-
+		theApp.ClearRespList();
 
 		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())
 		{
@@ -932,14 +933,9 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SelectObject(zCObject* object)
 	{
 		OutFile("SelectObject: object " + AHEX32((uint)object), true);
-		static bool selectObjBlocked = false;
-
-		if (selectObjBlocked) { cmd << "Blocked" << endl; return; };
 
 		theApp.CollectTargetListTrigger();
 		
-
-		selectObjBlocked = true;
 
 		if (object)
 		{
@@ -984,7 +980,6 @@ namespace GOTHIC_ENGINE {
 			addItem();
 		}
 
-		selectObjBlocked = false;
 		zinput->ClearLeftMouse();
 		zinput->ClearKeyBuffer();
 	}
@@ -1026,7 +1021,7 @@ namespace GOTHIC_ENGINE {
 			arch->Close();
 			zRELEASE(arch);
 
-			cmd << "ApplyProps for vob 2 " << AHEX32((uint)current_object) << endl;
+			//cmd << "ApplyProps for vob 2 " << AHEX32((uint)current_object) << endl;
 
 			//Message::Box("Apply 2");
 			zCVob* vob = dynamic_cast<zCVob*>(current_object);
@@ -1047,23 +1042,35 @@ namespace GOTHIC_ENGINE {
 
 				//Message::Box("Apply 3");
 
-				cmd << "ApplyProps for vob 3 " << AHEX32((uint)current_object) << endl;
+				//cmd << "ApplyProps for vob 3 " << AHEX32((uint)current_object) << endl;
 
 				if (lastName != name)
 				{
 					RecalcWPBBox(vob);
+
+					if (auto wp = dynamic_cast<zCVobWaypoint*>(vob))
+					{
+						wp->SetVobName(name);
+						auto wpObj = ogame->GetWorld()->wayNet->GetWaypoint(lastName);
+
+						if (wpObj)
+						{
+							wpObj->SetName(name);
+						}
+					}
+
 					auto updateName = (onUpdateVobName)GetProcAddress(theApp.module, "UpdateVobName");
 					Stack_PushString(GetVobName(vob));
 					updateName((uint)vob);
 				}
 				//Message::Box("Apply 4");
 
-				cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
+				//cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
 			}
 
 		}
 		//Message::Box("Apply 5");
-		cmd << "ApplyProps for vob 5 " << AHEX32((uint)current_object) << endl;
+		//cmd << "ApplyProps for vob 5 " << AHEX32((uint)current_object) << endl;
 	}
 
 

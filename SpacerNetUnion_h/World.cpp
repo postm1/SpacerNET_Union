@@ -358,6 +358,13 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+		if (ogame->GetWorld() && ogame->GetWorld()->compiled)
+		{
+			//ogame->GetWorld()->bspTree.mesh->ArraysToLists();
+			//ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
+		}
+
+
 
 		zoptions->ChangeDir(DIR_WORLD);
 
@@ -433,6 +440,31 @@ namespace GOTHIC_ENGINE {
 		}
 
 		WorldAfterLoad();
+
+		if (theApp.options.GetIntVal("autoCompileWorldLight"))
+		{
+			int light = theApp.options.GetIntVal("lightCompileType");
+			int world = theApp.options.GetIntVal("worldCompileType");
+
+			auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
+			load(1);
+			theApp.DoCompileWorld(world);
+
+			(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
+
+			PlaySoundGame(ToStr "CS_IAI_ME_ME");
+
+
+			load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
+			load(2);
+
+			theApp.DoCompileLight(light, 0);
+
+			(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
+
+
+			PlaySoundGame(ToStr "CS_IAI_ME_ME");
+		}
 	}
 
 	
@@ -502,6 +534,7 @@ namespace GOTHIC_ENGINE {
 
 		theApp.pickedWaypoint2nd = NULL;
 		mm.CleanSelectMaterial();
+		theApp.ClearRespList();
 
 
 		Reset();
@@ -577,11 +610,6 @@ namespace GOTHIC_ENGINE {
 		BuildTree();
 
 
-		if (ogame->GetWorld() && ogame->GetWorld()->compiled)
-		{
-			//ogame->GetWorld()->bspTree.mesh->ArraysToLists();
-			//ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
-		}
 	
 
 

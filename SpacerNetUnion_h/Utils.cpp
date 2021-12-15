@@ -525,6 +525,18 @@ namespace GOTHIC_ENGINE {
 				}
 				
 			}
+			else if (type == 7 && dynamic_cast<zCTrigger*>(resVobList.GetSafe(i)))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
+			else if (type == 8 && dynamic_cast<zCVobSpot*>(resVobList.GetSafe(i)))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
+			else if (type == 9 && dynamic_cast<oCMOB*>(resVobList.GetSafe(i)))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
 		}
 
 		//ogame->GetWorld()->SearchVobListByBaseClass(lightClassdef, resVobList, 0);
@@ -534,7 +546,9 @@ namespace GOTHIC_ENGINE {
 			zCVob* nextVob = finalResultList.GetSafe(i);
 
 
-			if (nextVob && (nextVob->GetDistanceToVob(*ogame->GetCamera()->connectedVob) <= radius * 2) && nextVob != ogame->GetCamera()->connectedVob)
+			if (nextVob && (nextVob->GetDistanceToVob(*ogame->GetCamera()->connectedVob) <= radius * 2) && nextVob != ogame->GetCamera()->connectedVob
+				&& nextVob != theApp.currentVobRender && nextVob != theApp.currenItemRender
+				)
 			{
 				static addToVobList addEntry = (addToVobList)GetProcAddress(theApp.module, "AddToVobList");
 				Stack_PushString(GetVobName(nextVob));
