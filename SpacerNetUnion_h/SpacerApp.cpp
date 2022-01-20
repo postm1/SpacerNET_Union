@@ -50,6 +50,7 @@ namespace GOTHIC_ENGINE {
 		this->isGrattControlActive = false;
 		this->isNextCopyVobInsertNear = false;
 		this->showRespawnOnVobs = false;
+		this->nextInsertionIsTempPfx = false;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}
@@ -221,11 +222,22 @@ namespace GOTHIC_ENGINE {
 	}
 
 	inline bool CheckDx11() {
-		HMODULE module = GetModuleHandle("ddraw.dll");
 
-		return
-			module != Null &&
-			GetProcAddress(module, "GDX_AddPointLocator");
+		HMODULE ddraw = GetModuleHandle("ddraw.dll");
+		HMODULE g2a = GetModuleHandle("g2a.dll");
+		HMODULE g2a_avx2 = GetModuleHandle("g2a_avx2.dll");
+
+
+		bool result =
+
+			(ddraw != Null && GetProcAddress(ddraw, "GDX_AddPointLocator"))
+			|| (g2a != Null && GetProcAddress(g2a, "GDX_AddPointLocator"))
+			|| (g2a_avx2 != Null && GetProcAddress(g2a_avx2, "GDX_AddPointLocator"))
+
+			;
+
+		return result;
+
 	}
 
 	bool SpacerApp::IsDx11Active()
@@ -544,6 +556,36 @@ namespace GOTHIC_ENGINE {
 		}
 
 		mm.OnPick(pickTryEntry.ax, pickTryEntry.ay);
+	}
+
+	zVEC2 SpacerApp::GetMousePosVirt()
+	{
+		POINT  cur;
+		_GetCursorPos(&cur);
+
+		RECT rect;
+		GetWindowRect(hWndApp, &rect);
+
+		float rw = rect.right - rect.left;
+		float rh = rect.bottom - rect.top;
+
+
+		float ax = (float)cur.x / rw * (float)zrenderer->vid_xdim;
+		float ay = (float)cur.y / rh * (float)zrenderer->vid_ydim;
+
+
+		ax = screen->anx(ax);
+		ay = screen->any(ay);
+
+		zVEC2 result;
+
+
+		result.n[0] = ax;
+		result.n[1] = ay;
+
+		//print.PrintRed(Z ax + " " + Z ay);
+
+		return result;
 	}
 
 	// попадает ли мышь по экрану, или же задевает меню

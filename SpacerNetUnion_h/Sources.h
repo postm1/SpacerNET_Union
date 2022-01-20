@@ -22,6 +22,7 @@
 #include "NamesGenerator.cpp"
 #include "Camera.cpp"
 #include "Common.cpp"
+#include "MultiSelect.cpp"
 #include "VobManipulator.cpp"
 #include "CameraKey.cpp"
 #include "zCBinTree3DS.cpp"

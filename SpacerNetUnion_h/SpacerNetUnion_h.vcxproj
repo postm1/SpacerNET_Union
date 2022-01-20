@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-      <ItemGroup Label="ProjectConfigurations">
+  <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="MP Debug|Win32">
       <Configuration>MP Debug</Configuration>
       <Platform>Win32</Platform>
@@ -527,6 +527,14 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="MatManager.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="MultiSelect.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="MultiSelect.cpp">
       <SubType>
       </SubType>
     </ClInclude>

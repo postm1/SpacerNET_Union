@@ -409,6 +409,16 @@ namespace GOTHIC_ENGINE {
 		{
 			zCWorld* pWorld = ogame->GetWorld();
 
+			auto parent = theApp.GetSelectedVob();
+
+			if (parent && parent->IsPFX())
+			{
+				print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+
+				return;
+			};
+
+
 
 			bool useHierarchy = theApp.options.GetIntVal("vobInsertHierarchy");
 
@@ -439,7 +449,7 @@ namespace GOTHIC_ENGINE {
 
 			zCTree<zCVob>* tree = theApp.vobToCopy->globalVobTreeNode;
 
-
+			
 
 			GetNextChildCopy(tree, theApp.GetSelectedVob(), true, useHierarchy);
 
@@ -483,6 +493,16 @@ namespace GOTHIC_ENGINE {
 	void HandleParentChange(zCVob* vob, zCVob* newParent)
 	{
 		zCWorld* pWorld = ogame->GetWorld();
+
+
+		if (newParent && newParent->IsPFX())
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+
+			return;
+
+		};
+
 		if (dynamic_cast<zCVobWaypoint*>(vob) || dynamic_cast<zCVobLevelCompo*>(vob) || dynamic_cast<zCZone*>(vob))
 		{
 
@@ -496,6 +516,7 @@ namespace GOTHIC_ENGINE {
 			print.PrintRed(GetLang("PARENT_ERROR_OCITEM"));
 			return;
 		}
+
 
 		if (vob  && vob != newParent && pWorld)
 		{
@@ -1065,8 +1086,13 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+
+
 	void VobKeys()
 	{
+
+
+
 		auto pickMode = theApp.GetPickMode();
 
 		if (pickMode == SWM_GRASS)
@@ -1079,6 +1105,26 @@ namespace GOTHIC_ENGINE {
 			GrassPlacing();
 			return;
 		}
+
+		if (pickMode == SWM_MULTISELECT && !theApp.isGrattControlActive)
+		{
+			if (theApp.GetSelectedVob())
+			{
+				theApp.SetSelectedVob(NULL);
+			}
+
+			Selector.DoPick();
+
+			return;
+		
+		}
+
+		if (pickMode != SWM_MULTISELECT)
+		{
+			Selector.ClearSelection();
+		}
+		
+
 	
 		//SearchBadHierarchy();
 		
@@ -1091,6 +1137,7 @@ namespace GOTHIC_ENGINE {
 		zCVob* pickedVob = theApp.GetSelectedVob();
 
 
+		
 
 		if (keys.KeyPressed("VOB_TRANSLATE", true))
 		{
@@ -1137,21 +1184,17 @@ namespace GOTHIC_ENGINE {
 			{
 				theApp.ClearRespList();
 
-				CString funcName = "b_enter_WestCoast";
+				CString funcName = "startup_goldmine";
 
-				parser->SetScriptInt("kapitel", 2);
-				parser->SetScriptInt("b_enter_WestCoast_chapter_1_var", 0);
-				parser->SetScriptInt("b_enter_WestCoast_chapter_2_var", 0);
-				parser->SetScriptInt("b_enter_WestCoast_chapter_3_var", 0);
-				parser->SetScriptInt("b_enter_WestCoast_chapter_4_var", 0);
+				parser->SetScriptInt("kapitel", 6);
 
 				parser->CallFunc(parser->GetIndex(funcName));
 
 			}
 
 		}
-
 		*/
+		
 
 		if (theApp.isGrattControlActive && keys.KeyPressed("VOB_RESET_AXIS", true, true))
 		{

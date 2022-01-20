@@ -453,7 +453,7 @@ namespace GOTHIC_ENGINE {
 				{
 					
 					arr.Insert((uint)vob);
-					vob->SetCollDetDyn(TRUE);
+					vob->SetCollDetDyn(!vob->GetCollDetDyn());
 					resultCount += 1;
 				}
 

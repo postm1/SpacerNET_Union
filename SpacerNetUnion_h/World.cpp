@@ -4,7 +4,7 @@
 
 namespace GOTHIC_ENGINE {
 
-	/*
+	
 	HOOK ivk_zERROR_Init AS(&zERROR::Init, &zERROR::Init_Union);
 	void zERROR::Init_Union(zSTRING cmd) {
 		THISCALL(ivk_zERROR_Init)(cmd);
@@ -31,7 +31,7 @@ namespace GOTHIC_ENGINE {
 		return 0;
 		//return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
 	}
-	*/
+	
 
 
 
@@ -465,6 +465,47 @@ namespace GOTHIC_ENGINE {
 
 			PlaySoundGame(ToStr "CS_IAI_ME_ME");
 		}
+
+		if (theApp.options.GetIntVal("autoRemoveLevelCompo"))
+		{
+			zCVob* foundVob = NULL;
+
+			zCArray<zCVob*> resultList;
+			zCWorld* world = ogame->GetWorld();
+
+			world->SearchVobListByClass(zCVobLevelCompo::classDef, resultList, 0);
+
+			int countResult = resultList.GetNumInList();
+
+			for (int i = 0; i < countResult; i++)
+			{
+				auto vob = resultList.GetSafe(i);
+
+				if (vob && vob->visual && (vob->visual->GetVisualName().Contains(".3ds") 
+					|| vob->visual->GetVisualName().Contains(".3DS")))
+				{
+
+					if (countResult > 1)
+					{
+						foundVob = vob;
+						break;
+					}
+					else
+					{
+						vob->SetVisual(NULL);
+					}
+					
+				}
+			}
+
+
+			if (foundVob)
+			{
+
+				theApp.RemoveVob(foundVob);
+			}
+			
+		}
 	}
 
 	
@@ -512,7 +553,30 @@ namespace GOTHIC_ENGINE {
 
 		if (world && !world->IsCompiled())
 		{
-			
+			if (theApp.options.GetIntVal("autoCompileWorldLightForUnc"))
+			{
+				int light = theApp.options.GetIntVal("lightCompileType");
+				int world = theApp.options.GetIntVal("worldCompileType");
+
+				auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
+				load(1);
+				theApp.DoCompileWorld(world);
+
+				(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
+
+				PlaySoundGame(ToStr "CS_IAI_ME_ME");
+
+
+				load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
+				load(2);
+
+				theApp.DoCompileLight(light, 0);
+
+				(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
+
+
+				PlaySoundGame(ToStr "CS_IAI_ME_ME");
+			}
 		}
 		else
 		{
@@ -795,6 +859,24 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void SpacerApp::ExportWorldMesh(zSTRING worldNameFile) {
+
+
+		oCWorld* world = ogame->GetGameWorld();
+		zCBspTree& bspTree = world->bspTree;
+		zCMesh* mesh = bspTree.mesh;
+		zSTRING worldName = world->GetWorldFilename().GetWord("\\", -1);
+		worldName.Replace(".ZEN", ".MSH");
+		
+		zCFileBIN file;
+		file.BinCreate(worldNameFile);
+		bspTree.mesh->CreateListsFromArrays(); // !
+		mesh->SaveMSH(file);
+		file.BinClose();
+
+	}
+
+
 	void SpacerApp::OpenVobTree(zSTRING path, bool globalInsert)
 	{
 
@@ -826,6 +908,15 @@ namespace GOTHIC_ENGINE {
 
 
 		zCVob* parentVob = GetParentVob(baseVob);
+
+		if (parentVob && parentVob->IsPFX())
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+
+			return;
+
+		};
+
 
 		parentVob->AddRef();
 

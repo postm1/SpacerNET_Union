@@ -266,6 +266,13 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "autoCompileWorldLight", "0");
 		list.Insert("autoCompileWorldLight", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "autoCompileWorldLightForUnc", "0");
+		list.Insert("autoCompileWorldLightForUnc", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "autoRemoveLevelCompo", "0");
+		list.Insert("autoRemoveLevelCompo", set);
+
+
 		set = new CSetting(TYPE_INT, "SPACER", "maxFPS", "0");
 		list.Insert("maxFPS", set);
 

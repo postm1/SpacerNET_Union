@@ -120,6 +120,17 @@ namespace GOTHIC_ENGINE {
 		zSTRING vobName = zSTRING(nameVob);
 
 
+		auto parent = theApp.GetSelectedVob();
+
+		if (parent && parent->IsPFX())
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+
+			return;
+		};
+
+
+
 		zCVob* newvob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance(className));
 
 		if (newvob)
@@ -174,6 +185,16 @@ namespace GOTHIC_ENGINE {
 		zSTRING visualVob = zSTRING(visual);
 
 		zCClassDef* classDef = zCObject::GetClassDef(classNamePtr);
+
+		auto parent = theApp.GetSelectedVob();
+
+		if (parent && parent->IsPFX())
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+
+			return;
+		};
+
 
 
 		if (!classDef || classDef->IsAbstractClass())
@@ -270,6 +291,17 @@ namespace GOTHIC_ENGINE {
 	{
 		zSTRING pfxName = zSTRING(name).Upper() + ".PFX";
 
+
+		auto parent = theApp.GetSelectedVob();
+
+		if (parent && parent->IsPFX())
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+
+			return;
+		};
+
+
 		zCVob* pVob = new zCVob();
 		zVEC3 pos = ogame->GetCamera()->connectedVob->GetPositionWorld();
 		zVEC3 dir = ogame->GetCamera()->connectedVob->GetAtVectorWorld().Normalize();
@@ -290,6 +322,16 @@ namespace GOTHIC_ENGINE {
 
 	oCItem* SpacerApp::CreateItem(CString name)
 	{
+
+		auto parent = theApp.GetSelectedVob();
+
+		if (parent && parent->IsPFX())
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+
+			return NULL;
+		};
+
 		zSTRING itemName = zSTRING(name).Upper();
 
 		int instance2 = parser->GetIndex(itemName);
@@ -346,9 +388,22 @@ namespace GOTHIC_ENGINE {
 
 			static auto addNode = (addNewVob)GetProcAddress(theApp.module, "OnVobInsert");
 
+			nextInsertionIsTempPfx = false;
+
 			Stack_PushString(vob->_GetClassDef()->className);
 			Stack_PushString(GetVobName(vob));
 
+
+
+			if (vob->GetParent() == 0)
+			{
+				zSTRING name = GetVobName(vob);
+
+				if (name.Lower().Contains(".pfx"))
+				{
+					nextInsertionIsTempPfx = true;
+				}
+			}
 			addNode((uint)vob, vob->GetParent(), selectedWpForCreateIsBlocked, select);
 		}
 

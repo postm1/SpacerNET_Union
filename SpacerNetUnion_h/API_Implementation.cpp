@@ -102,5 +102,17 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	bool zCVob::IsPFX() 
+	{
+		bool result = false;
+
+		if (this->GetVisual() && (this->GetVisual()->GetVisualName().Contains(".pfx") || this->GetVisual()->GetVisualName().Contains(".PFX")))
+		{
+			result = true;
+		}
+
+		return result;
+	}
+
 
 }

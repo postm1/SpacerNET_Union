@@ -83,6 +83,7 @@ namespace GOTHIC_ENGINE {
 			int vobListSelectedIndex;
 			bool isGrattControlActive;
 			bool isNextCopyVobInsertNear;
+			bool nextInsertionIsTempPfx;
 			bool showRespawnOnVobs;
 
 			zCVob*		pickedWaypoint2nd;
@@ -111,6 +112,8 @@ namespace GOTHIC_ENGINE {
 			};
 
 			SpacerPickTry pickTryEntry;
+
+			Array<zCVob*> SelectedVobs;
 		};
 
 		void BlockMouseClick(int time);
@@ -153,6 +156,8 @@ namespace GOTHIC_ENGINE {
 		zCWorld * GetWorld(zBOOL getEmptyWorldToo);
 		bool TryPickMouse();
 		bool IsAWorldLoaded();
+		zVEC2 GetMousePosVirt();
+		void ExportWorldMesh(zSTRING worldName);
 
 		void Reset();
 

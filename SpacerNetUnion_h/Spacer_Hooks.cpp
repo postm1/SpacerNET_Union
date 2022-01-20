@@ -183,7 +183,6 @@ namespace GOTHIC_ENGINE {
 	CInvoke <void(__thiscall *) (zCBspTree* _this)> pzCBspTree_RenderVobList(0x0052D0A0, zCBspTree_RenderVobList, IVK_AUTO);
 	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*)
 	{
-		zCArray<zCVob*> namesToDraw;
 
 		if (theApp.options.GetIntVal("showInvisibleVobs"))
 		{

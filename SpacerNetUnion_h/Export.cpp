@@ -73,6 +73,14 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+		__declspec(dllexport) void Extern_SaveMesh() {
+			CString path = Stack_PeekString().Upper();
+
+			theApp.ExportWorldMesh(path);
+			PlaySoundGame(ToStr "CS_IAI_ME_ME");
+		}
+
+
 		__declspec(dllexport) void Extern_SaveVobTree() {
 			CString path = Stack_PeekString().Upper();
 			theApp.SaveVobTree(path);
@@ -353,6 +361,12 @@ namespace GOTHIC_ENGINE {
 
 			if (pVob)
 			{
+				if (theApp.nextInsertionIsTempPfx)
+				{
+					cmd << "Protection" << endl;
+					theApp.nextInsertionIsTempPfx = false;
+					return;
+				}
 
 				theApp.SetSelectedVob(pVob, "Extern_SelectVobSync");
 				theApp.SelectObject(theApp.pickedVob);
@@ -379,7 +393,10 @@ namespace GOTHIC_ENGINE {
 
 			if (pVob)
 			{
-
+				if (theApp.nextInsertionIsTempPfx)
+				{
+					theApp.nextInsertionIsTempPfx = false;
+				}
 
 
 				zCVob* movvob = ogame->GetCamera()->connectedVob;

@@ -256,6 +256,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\Materials\MatManager">
       <UniqueIdentifier>{f1a84bbd-b6de-4191-ada4-347fcbf3b450}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\Movement\Multiselection">
+      <UniqueIdentifier>{dc0f654e-60f9-4a76-afe5-f58421bd41eb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2938,6 +2941,12 @@
     </ClInclude>
     <ClInclude Include="MatManager.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiSelect.h">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement\Multiselection</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiSelect.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement\Multiselection</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

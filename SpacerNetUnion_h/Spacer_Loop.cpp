@@ -356,7 +356,7 @@ namespace GOTHIC_ENGINE {
 
 				screen->SetFontColor(zCOLOR(255, 255, 255));
 
-				int distDraw = 3500;
+				int distDraw = 4000;
 
 				// Nach zCVobSpots durchsuchen
 				for (int i = 0; i<found.GetNumInList(); i++)

@@ -55,3 +55,5 @@ void Archive_Hook(zCArchiver&);
 struct zTBBox3D zCVob::GetBBox3DLocal_Union(void);
 
 
+bool IsPFX();
+
