@@ -360,9 +360,232 @@ namespace GOTHIC_ENGINE {
 
 		return res;
 	}
+	
 
-	//
+#define ReadObject0()            ReadObjectAccount(__FILE__, __LINE__)
+#define ReadObject1(name)        ReadObjectAccount(__FILE__, __LINE__, (name))
+#define ReadObject2(name, obj)   ReadObjectAccount(__FILE__, __LINE__, (name), (obj))
 
+
+
+
+	//zBOOL oCWorld::LoadWorld(const zSTRING& fileName, const zTWorldLoadMode loadMode)
+
+	//HOOK Ivk_oCWorld_LoadWorld AS(&oCWorld::LoadWorld, &oCWorld::LoadWorld_UnionOCWorld);
+
+	zBOOL oCWorld::LoadWorld_UnionOCWorld(const zSTRING& fileName, const zTWorldLoadMode loadMode)
+	{
+		//zERR_MESSAGE(9, 0, "U: (oCWorld::LoadWorld) " + fileName);
+
+		zBOOL	success = FALSE;
+		zSTRING curFileName = fileName;
+		curFileName.Upper();
+
+		cmd << "LoadWorld_UnionOCWorld " << endl;
+
+		if (loadMode != zCWorld::zWLD_LOAD_GAME_SAVED_DYN) {
+			// setze worldFilename (ausser beim Laden von nur dynamischen Daten)
+			worldFilename = curFileName;
+			// setze worldName
+			zFILE_FILE path(worldFilename);
+			worldName = path.GetFilename();
+
+			cmd << "File creation " << endl;
+		}
+
+		if (curFileName.Search(".3DS", 1U)>0) {
+			zCVob* levelVob = zNEW(zCVobLevelCompo);
+			levelVob->SetVobName("Level-Vob");
+
+			cmd << "Level compo visual... " << endl;
+			levelVob->SetVisual(curFileName);
+			AddVob(levelVob);
+			zRELEASE(levelVob);
+			success = TRUE;
+			cmd << "Level compo visual FINISHED " << endl;
+		}
+		else
+		{
+			zoptions->ChangeDir(DIR_WORLD);
+			cmd << "LoadWorld zCWorld" << endl;
+			success = zCWorld::LoadWorld(curFileName, loadMode);
+		}
+		return success;
+	}
+
+	//zBOOL zCWorld::LoadWorld (const zSTRING& fileName, const zTWorldLoadMode loadMode) 
+	//HOOK Ivk_zCWorld_LoadWorld AS(&zCWorld::LoadWorld, &zCWorld::LoadWorld_Union);
+
+	zBOOL zCWorld::LoadWorld_Union(const zSTRING& fileName, const zTWorldLoadMode loadMode)
+	{
+		{
+			s_worldLoadMode = loadMode;
+
+			// dispose dynamic world
+			// Der Dynamische Anteil der Welt muss IMMER geloescht werden. Falls man ein Archive mit Vobs
+			// laedt sowieso, beim Laden eines Archives mit statischen Level Daten haetten nicht entfernte Vobs
+			// noch illegale Refs auf bereits tote BspLeafs.
+			// (Alternative Loesungen: Vobs bei einem LoadDyn in den Level mergen, Vobs bei einem LoadStat neu 
+			//  zu den BspLeafs linken).
+			// if (loadMode!=zWLD_LOAD_GAME_SAVED_STAT) 
+			{
+				DisposeVobs(0);
+				zCVob::ResetIDCtr();
+			};
+
+			// dispose static world
+			if ((loadMode == zWLD_LOAD_GAME_STARTUP) ||
+				(loadMode == zWLD_LOAD_GAME_SAVED_STAT) ||
+				(loadMode == zWLD_LOAD_EDITOR_COMPILED) ||
+				(loadMode == zWLD_LOAD_EDITOR_UNCOMPILED)
+				) {
+				DisposeStaticWorld();
+			};
+
+			/*		// Set FileIOMode
+			if ((loadMode==zWLD_LOAD_GAME_SAVED_DYN) || (loadMode==zWLD_LOAD_GAME_SAVED_STAT))
+			SetWorldFileIOMode	(zWLD_FILEIO_SAVED_STATE);
+			else	SetWorldFileIOMode	(zWLD_FILEIO_STARTUP_STATE);*/
+		};
+
+		// Hints an den VertexBufferManager
+		zvertexBufferMan->StartChangeWorld();
+
+		//
+		zoptions->ChangeDir(DIR_WORLD);
+
+		cmd << "CreateArchiverRead" << endl;
+
+		zCArchiver *arc = zarcFactory->CreateArchiverRead(fileName, 0);
+		zBOOL		res = (arc != 0);
+
+		cmd << "Start Reading" << endl;
+
+		if (arc)
+		{
+			arc->ReadObject1(this);
+			arc->Close();
+			zRELEASE(arc);
+		};
+
+		cmd << "End Reading" << endl;
+
+		// Hints an den VertexBufferManager
+		zvertexBufferMan->EndChangeWorld();
+
+
+		this->s_bFadeOutFarVerts = zoptions->ReadBool("ENGINE", "zFarClipAlphaFade", TRUE);
+		//SetFadeOutFarVertices(zoptions->ReadBool("ENGINE", "zFarClipAlphaFade", TRUE));
+
+		if (IsCompiled() && GetBspTree() && GetBspTree()->bspTreeMode == zBSP_MODE_INDOOR)
+		{
+			//SetFadeOutFarVertices(FALSE);
+		}
+
+		//
+		//zERR_MESSAGE(1, zERR_END, "");
+		if (res)
+		{
+			zFILE_FILE path(fileName);
+			m_strlevelName = path.GetFilename();
+
+			//int warnTotal2 = TRUE;
+			if (GetBspTree())
+			{
+				// den BspTree informieren, das ein neuer Level am Start ist
+				GetBspTree()->m_bRenderedFirstTime = true;
+
+
+
+				//DisposeVobsDbg();
+
+				//GetBspTree()->OptimizeLight();
+				//GetBspTree()->MarkOccluderPolys();
+				//	GenerateStaticVertexLighting ();			
+			}
+		}
+
+		cmd << "Final..." << endl;
+
+		return res;
+	}
+
+	//zCVisual* zCVisual::LoadVisual (const zSTRING& visualName)
+	//0x00606AD0 public: static class zCVisual * __cdecl zCVisual::LoadVisual(class zSTRING const &)
+	/*
+	zCVisual*  __cdecl LoadVisual_Union(zSTRING const &);
+	CInvoke <zCVisual*(__cdecl *) (zSTRING const &)> Ivk_zCVisual_LoadVisual(0x00606AD0, LoadVisual_Union, IVK_AUTO);
+	zCVisual*  __cdecl LoadVisual_Union(zSTRING const &visualName)
+
+	{
+		cmd << "LoadVisual: " << visualName << " " << zCVisual::s_visualClassList.GetNumInList() << endl;
+
+
+		const zSTRING *fileExt = 0;
+		for (int i = 0; i<zCVisual::s_visualClassList.GetNum(); i++)
+		{
+			int j = 0;
+			fileExt = zCVisual::s_visualClassList[i]->GetFileExtension(j);
+
+			cmd << "i: " << *fileExt << endl;
+
+			while (fileExt)
+			{
+				if (visualName.Search(*fileExt, 1U) != -1)
+				{
+					cmd << "Found " << *fileExt << " " << zCVisual::s_visualClassList[i]->classDef->className << endl;
+
+					// class found
+					zCVisual *newVisual = zCVisual::s_visualClassList[i]->LoadVisualVirtual(visualName);
+					return newVisual;
+				};
+				j++;
+				fileExt = zCVisual::s_visualClassList[i]->GetFileExtension(j);
+			};
+		};
+		return 0;
+
+		
+
+		//return Ivk_zCVisual_LoadVisual(visualName);
+	}
+
+
+	//zCMesh* zCMesh::Load (const zSTRING& meshFileName,const zBOOL a_bDontConvertToNPolys) 
+	//0x00567600 public: static class zCMesh * __cdecl zCMesh::Load(class zSTRING const &,int)
+	zCMesh*  __cdecl LoadMesh_Union(zSTRING const &, int);
+	CInvoke <zCMesh*(__cdecl *) (zSTRING const &, int)> Ivk_zCVisual_LoadMesh(0x00567600, LoadMesh_Union, IVK_AUTO);
+	zCMesh*  __cdecl LoadMesh_Union(zSTRING const &meshFileName, int a_bDontConvertToNPolys)
+	{
+		
+		cmd << "meshFileName: " << meshFileName << " a_bDontConvertToNPolys: " << Z a_bDontConvertToNPolys << endl;
+
+		return Ivk_zCVisual_LoadMesh(meshFileName, a_bDontConvertToNPolys);
+	}
+
+	//0x00578760 protected: virtual class zCVisual * __thiscall zCModel::LoadVisualVirtual(class zSTRING const &)const 
+	HOOK Ivk_zCModel_LoadVisualVirtual AS(&zCModel::LoadVisualVirtual, &zCModel::LoadVisualVirtual_Union);
+
+	zCVisual* zCModel::LoadVisualVirtual_Union(const zSTRING& fileName)
+	{
+		cmd << "LoadVisualVirtual_Union: " << fileName << endl;
+
+		return THISCALL(Ivk_zCModel_LoadVisualVirtual)(fileName);
+	}
+	*/
+	/*
+
+	//0x005C7180 public: static class zCVisual * __cdecl zCProgMeshProto::Load(class zSTRING const &)
+	zCVisual *  __cdecl zCProgMeshProto_Load(zSTRING const&);
+	CInvoke <zCVisual*(__cdecl *) (zSTRING const&)> Invk_zCProgMeshProto_Load(0x005C7180, zCProgMeshProto_Load, IVK_AUTO);
+	zCVisual*  __cdecl zCProgMeshProto_Load(zSTRING const &meshFileNames)
+	{
+
+		cmd << "zCProgMeshProto_Load: " << meshFileNames << endl;
+
+		return Invk_zCProgMeshProto_Load(meshFileNames);
+	}
+	*/
 
 
 	/*

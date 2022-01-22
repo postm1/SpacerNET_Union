@@ -411,12 +411,16 @@ namespace GOTHIC_ENGINE {
 
 			auto parent = theApp.GetSelectedVob();
 
+			if (theApp.globalParent) parent = theApp.globalParent;
+
 			if (parent && parent->IsPFX())
 			{
 				print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
 
 				return;
 			};
+
+			
 
 
 
@@ -451,7 +455,7 @@ namespace GOTHIC_ENGINE {
 
 			
 
-			GetNextChildCopy(tree, theApp.GetSelectedVob(), true, useHierarchy);
+			GetNextChildCopy(tree, parent, true, useHierarchy);
 
 
 			theApp.SetSelectedVob(baseSelectVob, "Control+V");

@@ -52,6 +52,7 @@ namespace GOTHIC_ENGINE {
 			bool isMerged;
 			// выбранный воб
 			zCVob* pickedVob;
+			zCVob* globalParent;
 
 			zCVob* currentVobRender;
 			zCVob* currenItemRender;
@@ -85,6 +86,7 @@ namespace GOTHIC_ENGINE {
 			bool isNextCopyVobInsertNear;
 			bool nextInsertionIsTempPfx;
 			bool showRespawnOnVobs;
+			bool bDebugSpacerLoadMesh;
 
 			zCVob*		pickedWaypoint2nd;
 			zCVob*		pickedWaypoint;
@@ -179,9 +181,9 @@ namespace GOTHIC_ENGINE {
 		void OnRemoveVob(zCVob * vob);
 
 		void RemoveVob(zCVob * vob);
-
+		void MakeGlobalParent(zCVob* pVob);
 		void ApplyPhysicsVob();
-
+		void CleanGlobalParent();
 
 
 
@@ -223,7 +225,7 @@ namespace GOTHIC_ENGINE {
 
 		zCVob* GetParentVob(zCVob * candidate);
 
-		void OpenVobTree(zSTRING path, bool globalInsert);
+		void OpenVobTree(zSTRING path, bool globalInsert, bool insertNearCamera);
 
 
 

@@ -3,3 +3,4 @@
 // User API for zCModel
 // Add your methods here
 
+zCVisual* zCModel::LoadVisualVirtual_Union(const zSTRING& fileName);

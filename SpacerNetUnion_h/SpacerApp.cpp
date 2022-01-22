@@ -51,6 +51,8 @@ namespace GOTHIC_ENGINE {
 		this->isNextCopyVobInsertNear = false;
 		this->showRespawnOnVobs = false;
 		this->nextInsertionIsTempPfx = false;
+		this->bDebugSpacerLoadMesh = false;
+		this->globalParent = NULL;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 	}
@@ -161,6 +163,7 @@ namespace GOTHIC_ENGINE {
 		treeIsReady = false;
 		firstTimeZenSaved = false;
 		theApp.ClearRespList();
+		globalParent = NULL;
 
 		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())
 		{

@@ -87,9 +87,9 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		__declspec(dllexport) void Extern_OpenVobTree(bool globalInsert) {
+		__declspec(dllexport) void Extern_OpenVobTree(bool globalInsert, bool insertNearCamera) {
 			CString path = Stack_PeekString().Upper();
-			theApp.OpenVobTree(path, globalInsert);
+			theApp.OpenVobTree(path, globalInsert, insertNearCamera);
 		}
 
 		__declspec(dllexport) void Extern_BlockMouse(bool disabled) {
@@ -122,6 +122,31 @@ namespace GOTHIC_ENGINE {
 			OutFile("Extern_RemoveVob: " + AHEX32(vob), false);
 			theApp.RemoveVob	((zCVob*)vob);
 		}
+
+
+		__declspec(dllexport) void Extern_MakeGlobalParent(uint vob) {
+
+			void* ptr = (void*)vob;
+
+
+			if (!IsValidZObject(ptr))
+			{
+				MessageBox(0, "Bad vob pointer in Extern_MakeGlobalParent!", 0, 0);
+				OutFile("Bad vob pointer in Extern_MakeGlobalParent: " + AHEX32((int)ptr), false);
+				return;
+			}
+
+
+
+			OutFile("Extern_MakeGlobalParent: " + AHEX32(vob), false);
+			theApp.MakeGlobalParent((zCVob*)vob);
+		}
+
+		__declspec(dllexport) void Extern_CleanGlobalParent() {
+			theApp.CleanGlobalParent();
+		}
+
+		
 
 
 		__declspec(dllexport) void Extern_Exit() {

@@ -13,3 +13,5 @@ void				SetProgressBar(zCViewProgressBar *progressBar) { this->progressBar = pro
 zCWorld* zCWorld_Hook();
 
 zBOOL zCWorld::SaveWorldNew(const zSTRING& fileName, const zTWorldSaveMode saveMode, const zBOOL writeBinary, const zBOOL _saveLevelMesh);
+
+BOOL zCWorld::LoadWorld_Union(const zSTRING& fileName, const zTWorldLoadMode loadMode);

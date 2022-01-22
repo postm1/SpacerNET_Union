@@ -122,6 +122,8 @@ namespace GOTHIC_ENGINE {
 
 		auto parent = theApp.GetSelectedVob();
 
+		if (theApp.globalParent) parent = theApp.globalParent;
+
 		if (parent && parent->IsPFX())
 		{
 			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
@@ -151,7 +153,7 @@ namespace GOTHIC_ENGINE {
 			newvob->SetPositionWorld(pos + dir * 200);
 
 
-			InsertIntoWorld(newvob, NULL);
+			InsertIntoWorld(newvob, parent);
 
 
 			if (theApp.turnWpMode == TurnWpMode::AGAINST_CAMERA)
@@ -187,6 +189,8 @@ namespace GOTHIC_ENGINE {
 		zCClassDef* classDef = zCObject::GetClassDef(classNamePtr);
 
 		auto parent = theApp.GetSelectedVob();
+
+		if (theApp.globalParent) parent = theApp.globalParent;
 
 		if (parent && parent->IsPFX())
 		{
@@ -265,7 +269,7 @@ namespace GOTHIC_ENGINE {
 
 			theApp.selectNextVobForce = true;
 
-			InsertIntoWorld(newvob, pickedVob);
+			InsertIntoWorld(newvob, parent);
 
 			newvob->Release();
 
@@ -294,6 +298,8 @@ namespace GOTHIC_ENGINE {
 
 		auto parent = theApp.GetSelectedVob();
 
+		if (theApp.globalParent) parent = theApp.globalParent;
+
 		if (parent && parent->IsPFX())
 		{
 			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
@@ -313,7 +319,7 @@ namespace GOTHIC_ENGINE {
 		pVob->SetPositionWorld(pos);
 		pVob->SetVisual(pfxName);
 		//pVob->SetVobName(pfxName);
-		InsertIntoWorld(pVob, pickedVob);
+		InsertIntoWorld(pVob, parent);
 
 		pVob->Release();
 		
@@ -324,6 +330,8 @@ namespace GOTHIC_ENGINE {
 	{
 
 		auto parent = theApp.GetSelectedVob();
+
+		if (theApp.globalParent) parent = theApp.globalParent;
 
 		if (parent && parent->IsPFX())
 		{
@@ -367,7 +375,7 @@ namespace GOTHIC_ENGINE {
 		OutFile("CreateItem: newVob: " + AHEX32((uint)pItem), true);
 
 
-		InsertIntoWorld(pItem, pickedVob);
+		InsertIntoWorld(pItem, parent);
 
 		pItem->ResetXZRotationsWorld();
 		pItem->Release();
@@ -419,6 +427,24 @@ namespace GOTHIC_ENGINE {
 		}
 
 	}
+
+	void SpacerApp::MakeGlobalParent(zCVob* pVob)
+	{
+		if (pVob && pVob != ogame->GetCamera()->connectedVob && !pVob->IsPFX())
+		{
+			globalParent = pVob;
+		}
+	}
+
+	void SpacerApp::CleanGlobalParent()
+	{
+		globalParent = NULL;
+	}
+
+
+
+	
+
 
 	void SpacerApp::RemoveVob(zCVob* pVob)
 	{

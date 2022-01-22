@@ -4,7 +4,7 @@
 
 namespace GOTHIC_ENGINE {
 
-	
+	/*
 	HOOK ivk_zERROR_Init AS(&zERROR::Init, &zERROR::Init_Union);
 	void zERROR::Init_Union(zSTRING cmd) {
 		THISCALL(ivk_zERROR_Init)(cmd);
@@ -31,7 +31,7 @@ namespace GOTHIC_ENGINE {
 		return 0;
 		//return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
 	}
-	
+	*/
 
 
 
@@ -400,6 +400,7 @@ namespace GOTHIC_ENGINE {
 		
 
 		isMesh = true;
+		bDebugSpacerLoadMesh = true;
 
 		zoptions->ChangeDir(DIR_MESHES);
 		ogame->GetGameWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED);
@@ -877,7 +878,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	void SpacerApp::OpenVobTree(zSTRING path, bool globalInsert)
+	void SpacerApp::OpenVobTree(zSTRING path, bool globalInsert, bool insertNearCamera)
 	{
 
 		zoptions->ChangeDir(DIR_WORLD);
@@ -922,10 +923,15 @@ namespace GOTHIC_ENGINE {
 
 		zCVob* vob = ogame->GetWorld()->MergeVobSubtree(path, parentVob, zCWorld::zWLD_LOAD_MERGE_ADD);
 
-		zVEC3	pos = ogame->GetCamera()->connectedVob->GetPositionWorld();
-		zVEC3	dir = ogame->GetCamera()->connectedVob->GetAtVectorWorld();
 
-		HandleVobTranslation(vob, pos + dir * 150);
+		if (insertNearCamera)
+		{
+			zVEC3	pos = ogame->GetCamera()->connectedVob->GetPositionWorld();
+			zVEC3	dir = ogame->GetCamera()->connectedVob->GetAtVectorWorld();
+
+			HandleVobTranslation(vob, pos + dir * 150);
+		}
+		
 
 
 		zRELEASE(parentVob);
