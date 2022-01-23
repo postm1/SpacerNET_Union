@@ -1324,7 +1324,7 @@ namespace GOTHIC_ENGINE {
 
 			if (pickMode == SWM_VOBS)
 			{
-				print.PrintRed(GetLang("TOOL_UNSELECT"));
+				//print.PrintRed(GetLang("TOOL_UNSELECT"));
 			}
 
 			mm.CleanSelectMaterial();

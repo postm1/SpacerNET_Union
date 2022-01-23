@@ -146,6 +146,46 @@ namespace GOTHIC_ENGINE {
 			theApp.CleanGlobalParent();
 		}
 
+
+		__declspec(dllexport) int Extern_CanBeGlobalParent(uint vob) {
+
+			void* ptr = (void*)vob;
+
+			if (!IsValidZObject(ptr))
+			{
+				return 0;
+			}
+
+			zCVob* pVob = (zCVob*)vob;
+
+			if (pVob)
+			{
+				if (
+					pVob->CastTo<zCVobLight>()
+
+					|| dynamic_cast<zCVobWaypoint*>(pVob)
+					|| dynamic_cast<oCWaypoint*>(pVob)
+					|| dynamic_cast<zCVobSpot*>(pVob)
+					|| dynamic_cast<zCVobStartpoint*>(pVob)
+					|| dynamic_cast<oCItem*>(pVob)
+					|| dynamic_cast<zCVobLight*>(pVob)
+					|| dynamic_cast<zCVobLevelCompo*>(pVob)
+					|| dynamic_cast<zCZone*>(pVob)
+					|| dynamic_cast<zCVobSound*>(pVob)
+					|| dynamic_cast<zCEffect*>(pVob)
+					
+					|| theApp.currentVobRender == pVob
+					|| pfxManager.testVob == pVob
+					|| pVob->IsPFX()
+
+					)
+				{
+					return 0;
+				}
+			}
+
+			return 1;
+		}
 		
 
 
