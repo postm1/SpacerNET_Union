@@ -261,6 +261,14 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
+			//rx_light
+			if (auto vobLight = newvob->CastTo<zCVobLight>())
+			{
+				newvob->SetCollDet(FALSE);
+				newvob->SetSleeping(TRUE);
+				newvob->SetPhysicsEnabled(FALSE);
+			}
+
 			newvob->ResetXZRotationsWorld();
 			newvob->SetCollDetDyn(dyn);
 			newvob->SetCollDetStat(stat);

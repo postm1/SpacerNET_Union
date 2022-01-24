@@ -48,6 +48,11 @@ namespace GOTHIC_ENGINE {
 
 		struct
 		{
+			zCMesh*	s_pLightSphereMesh;
+			zCVobLight* vobLightSelected;
+		};
+		struct
+		{
 			bool isMesh;
 			bool isMerged;
 			// выбранный воб

@@ -272,6 +272,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "autoRemoveLevelCompo", "0");
 		list.Insert("autoRemoveLevelCompo", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "showLightRadiusVob", "1");
+		list.Insert("showLightRadiusVob", set);
+
 
 		set = new CSetting(TYPE_INT, "SPACER", "maxFPS", "0");
 		list.Insert("maxFPS", set);

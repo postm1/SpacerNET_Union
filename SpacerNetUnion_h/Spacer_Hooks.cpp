@@ -167,15 +167,48 @@ namespace GOTHIC_ENGINE {
 	{
 		return NULL;
 	}
-
+	//rx_light
 	//0x006015D0 public: virtual int __fastcall zCVob::Render(struct zTRenderContext &)
 	int  __fastcall zCVob_Render(zCVob*, struct zTRenderContext &);
-	//CInvoke <int (__fastcall *) (zCVob*, struct zTRenderContext &)> pzCVob_Render(0x006015D0, zCVob_Render, IVK_AUTO);
-	int  __fastcall zCVob_Render(zCVob* _this, struct zTRenderContext & context)
+	CInvoke <int (__fastcall *) (zCVob*, struct zTRenderContext &)> pzCVob_Render(0x006015D0, zCVob_Render, IVK_AUTO);
+	int  __fastcall zCVob_Render(zCVob* _this, struct zTRenderContext & renderContext)
 	{
 
-		return 0;
-		//return pzCVob_Render(_this, context);
+		if (theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == _this && theApp.options.GetIntVal("showLightRadiusVob"))
+		{
+			// Mesh entsprechend der lightrange skalieren
+			zREAL actRadius = theApp.s_pLightSphereMesh->GetBBox3D().GetSphere3D().radius;
+			zREAL scaler = theApp.vobLightSelected->lightData.range / actRadius;
+			theApp.s_pLightSphereMesh->Scale(scaler, scaler, scaler);
+
+			zCCamera::activeCam->SetTransform(zCAM_TRAFO_WORLD, _this->trafoObjToWorld);
+			zTCam_ClipType	meshClip = zCCamera::activeCam->BBox3DInFrustum(theApp.s_pLightSphereMesh->GetBBox3D(), renderContext.clipFlags);
+			renderContext.distVobToCam = zCCamera::activeCam->camMatrix.GetTranslation().LengthApprox();
+			renderContext.hintLightingFullbright = TRUE;
+
+			if ((meshClip != zCAM_CLIP_TRIV_OUT) && (renderContext.distVobToCam<5000.0F))		// 50m
+			{
+				//zTRnd_AlphaBlendSource oldBlendSrc = zrenderer->GetAlphaBlendSource();
+				//zTRnd_AlphaBlendFunc   oldBlendFunc= zrenderer->GetAlphaBlendFunc  ();
+				zTRnd_PolyDrawMode	   oldDrawMode = zrenderer->GetPolyDrawMode();
+				//zREAL				   oldBlendFac = zrenderer->GetAlphaBlendFactor();
+
+				zrenderer->SetPolyDrawMode(zRND_DRAW_WIRE);
+				//zrenderer->SetAlphaBlendSource(zRND_ALPHA_SOURCE_CONSTANT);
+				//zrenderer->SetAlphaBlendFunc  (zRND_ALPHA_FUNC_BLEND	 );
+				//zrenderer->SetAlphaBlendFactor(0.5F						 );
+
+				theApp.s_pLightSphereMesh->Render(renderContext);
+
+				//zrenderer->SetAlphaBlendSource(oldBlendSrc);
+				//zrenderer->SetAlphaBlendFunc  (oldBlendFunc);
+				//zrenderer->SetAlphaBlendFactor(oldBlendFac);
+				zrenderer->SetPolyDrawMode(oldDrawMode);
+
+			};
+		}
+
+		return pzCVob_Render(_this, renderContext);
 	}
 
 	//0x0052D0A0 private: void __thiscall zCBspTree::RenderVobList(void)

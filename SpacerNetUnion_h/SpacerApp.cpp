@@ -54,6 +54,9 @@ namespace GOTHIC_ENGINE {
 		this->bDebugSpacerLoadMesh = false;
 		this->globalParent = NULL;
 
+		this->s_pLightSphereMesh = NULL;
+		this->vobLightSelected = NULL;
+
 		this->spcOpt.Init("spacer_net.ini", true);
 	}
 
@@ -91,6 +94,27 @@ namespace GOTHIC_ENGINE {
 			selectedWaypointForNet = dynamic_cast<zCVobWaypoint*>(vob);
 		}
 
+		auto light = dynamic_cast<zCVobLight*>(pickedVob);
+
+		if (!pickedVob || light)
+		{
+			
+				if (!s_pLightSphereMesh)
+				{
+					s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
+				}
+
+				if (theApp.options.GetIntVal("showLightRadiusVob"))
+				{
+					vobLightSelected = light;
+				}
+			
+		}
+
+		if (!light || !pickedVob)
+		{
+			vobLightSelected = NULL;
+		}
 
 		moverVob = dynamic_cast<zCMover*>(vob);
 
@@ -1014,6 +1038,14 @@ namespace GOTHIC_ENGINE {
 
 			arch->Close();
 			zRELEASE(arch);
+
+			//rx_light
+			if (auto vobLight = current_object->CastTo<zCVobLight>())
+			{
+				vob->BeginMovement();
+				vob->TouchMovement();
+				vob->EndMovement(1);
+			}
 		}
 		else
 		{

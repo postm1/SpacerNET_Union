@@ -507,7 +507,7 @@ namespace GOTHIC_ENGINE {
 
 		};
 
-		if (dynamic_cast<zCVobWaypoint*>(vob) || dynamic_cast<zCVobLevelCompo*>(vob) || dynamic_cast<zCZone*>(vob))
+		if (dynamic_cast<zCVobWaypoint*>(vob) || dynamic_cast<zCVobLevelCompo*>(vob) || dynamic_cast<zCZone*>(vob) && (!dynamic_cast<zCVobSound*>(vob)))
 		{
 
 			print.PrintRed(GetLang("CANT_APPLY_PARENT"));
@@ -987,19 +987,26 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	int childrenCount = 0;
+	struct BadVobsEntry
+	{
+		zCVob* parentVob;
+		zCArray<zCVob*> vobParentChangeList;
 
-	zCArray<zCVob*> vobParentChangeList;
+		BadVobsEntry::BadVobsEntry()
+		{
+			parentVob = NULL;
+		}
+	};
 
-	void CheckVobHasChildren(zCTree<zCVob>* node, zCVob* original)
+	
+	void CheckVobHasChildren(zCTree<zCVob>* node, zCVob* original, BadVobsEntry* entry)
 	{
 		zCVob* vob = node->GetData();
 
 		if (vob && vob != original) {
 
 
-			childrenCount += 1;
-			vobParentChangeList.InsertEnd(vob);
+			entry->vobParentChangeList.InsertEnd(vob);
 			
 		}
 
@@ -1008,17 +1015,70 @@ namespace GOTHIC_ENGINE {
 
 		while (node != NULL)
 		{
-			CheckVobHasChildren(node, original);
+			CheckVobHasChildren(node, original, entry);
 			node = node->GetNextChild();
 		}
 	}
 
+	
 	void SearchBadHierarchy()
 	{
+		static int start = 0;
+		static zCList<BadVobsEntry> pList;
+
+
+		/*
+		theApp.SetSelectedVob(vobsNeed.GetSafe(i));
+							auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectVob");
+							onSelect((int)theApp.pickedVob);
+		
+		
+		*/
+		if (zKeyToggled(KEY_F4))
+		{
+			auto badEntry = pList.Get(start);
+
+			theApp.SetSelectedVob(badEntry->parentVob);
+			auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectVob");
+			onSelect((int)theApp.pickedVob);
+
+
+			start++;
+
+			if (start > pList.GetNumInList() - 1) start = 0;
+		}
+
+		if (zKeyToggled(KEY_F2)) {
+			zinput->ClearKeyBuffer();
+
+			start = 0;
+			for (int i = 0; i < pList.GetNumInList(); i++)
+			{
+				auto badEntry = pList.Get(i);
+
+				if (badEntry)
+				{
+
+
+					for (int j = 0; j < badEntry->vobParentChangeList.GetNumInList(); j++)
+					{
+						auto pVob = badEntry->vobParentChangeList.GetSafe(i);
+						HandleParentChange(pVob, NULL);
+					}
+
+				}
+
+
+				//HandleParentChange(badChildren, NULL);
+			}
+
+		}
+
+
 		if (zKeyToggled(KEY_F1)) {
 			zinput->ClearKeyBuffer();
 
-
+			start = 0;
 			zCArray<zCVob*> vobs;
 			zCArray<zCVob*> vobsNeed;
 
@@ -1026,7 +1086,7 @@ namespace GOTHIC_ENGINE {
 
 			ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
 
-
+			pList.DeleteList();
 
 			for (int i = 0; i < vobs.GetNum(); i++)
 			{
@@ -1038,16 +1098,16 @@ namespace GOTHIC_ENGINE {
 				if (dynamic_cast<zCTrigger*>(pVob))	continue;
 				if (dynamic_cast<zCMoverControler*>(pVob))	continue;
 
-				if (pVob && pVob->GetVisual())
+				if (pVob && pVob->IsPFX())
 				{
-					if (pVob->GetVisual()->GetVisualName().Contains(".PFX") || pVob->GetVisual()->GetVisualName().Contains(".pfx"))
+					if (vobsNeed.Search(pVob) == Invalid)
 					{
 						vobsNeed.Insert(pVob);
 					}
+					
+					
 				}
 			}
-
-			vobParentChangeList.DeleteList();
 
 			int found_count = 0;
 
@@ -1057,36 +1117,57 @@ namespace GOTHIC_ENGINE {
 
 				if (pVob)
 				{
-					childrenCount = 0;
 					zCTree<zCVob>* tree = pVob->globalVobTreeNode;
-					CheckVobHasChildren(tree, pVob);
 
+					auto entry = new BadVobsEntry();
 
-					if (childrenCount > 0)
+					CheckVobHasChildren(tree, pVob, entry);
+					entry->parentVob = pVob;
+					
+					if (entry->vobParentChangeList.GetNumInList() > 0)
 					{
-						found_count += 1;
-
-						if (found_count == 1)
-						{
-							print.PrintRed("Children: " + Z childrenCount);
-
-							theApp.SetSelectedVob(vobsNeed.GetSafe(i));
-							auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectVob");
-							onSelect((int)theApp.pickedVob);
-						}
-						
+						pList.Insert(entry);
 					}
+					
 				}
 			}
+			cmd << endl;
+			cmd << ("Всего PFX: " + Z pList.GetNumInList()) << endl;
 
+			int childCount = 0;
 
-			for (int i = 0; i < vobParentChangeList.GetNumInList(); i++)
+			for (int i = 0; i < pList.GetNumInList(); i++)
 			{
-				HandleParentChange(vobParentChangeList.GetSafe(i), NULL);
+				auto badEntry = pList.Get(i);
+
+				if (badEntry)
+				{
+
+					
+
+					cmd << ("======== Entry: children: " + Z badEntry->vobParentChangeList.GetNumInList() 
+						+ " " + GetVobName(badEntry->parentVob)) + " " + Z (int)badEntry->parentVob << endl;
+
+					for (int j = 0; j < badEntry->vobParentChangeList.GetNumInList(); j++)
+					{
+						auto pVob = badEntry->vobParentChangeList.GetSafe(i);
+
+						childCount += 1;
+
+						cmd << "Child: " << GetVobName(pVob) + " " + Z(int)pVob << endl;
+					}
+
+				}
+
+
+				//HandleParentChange(badChildren, NULL);
 			}
+
+			cmd << "AllVobsToMove: " + Z childCount << endl;
 			
 			
-			print.PrintRed("Всего ошибок: " + Z found_count);
+			
+			
 		}
 	}
 

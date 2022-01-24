@@ -226,12 +226,12 @@ namespace GOTHIC_ENGINE {
 			ClearLMB();
 		}
 
-		__declspec(dllexport) bool Extern_IsWorldLoaded() {
+		__declspec(dllexport) int Extern_IsWorldLoaded() {
 
 			return theApp.IsAWorldLoaded();
 		}
 
-		__declspec(dllexport) bool Extern_IsWorldCompiled() {
+		__declspec(dllexport) int Extern_IsWorldCompiled() {
 
 			return (ogame->GetWorld() && ogame->GetWorld()->IsCompiled());
 		}
@@ -270,14 +270,14 @@ namespace GOTHIC_ENGINE {
 			theApp.ApplyProps(props, currentName, visual);
 		}
 
-		__declspec(dllexport) bool Extern_VobNameExist(bool isWaypoint) {
+		__declspec(dllexport) int Extern_VobNameExist(bool isWaypoint) {
 
 			CString name = Stack_PeekString();
 
 			return CheckVobNameExist(name, isWaypoint);
 		}
 
-		__declspec(dllexport) bool Extern_CheckUniqueNameExist() {
+		__declspec(dllexport) int Extern_CheckUniqueNameExist() {
 
 			CString name = Stack_PeekString();
 
