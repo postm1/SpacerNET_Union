@@ -188,6 +188,7 @@ namespace GOTHIC_ENGINE {
 		firstTimeZenSaved = false;
 		theApp.ClearRespList();
 		globalParent = NULL;
+		itemsLocator.Reset();
 
 		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())
 		{
@@ -279,12 +280,25 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		
+
 		static zCOLOR colUp = zCOLOR(255, 255, 255);
 		static zCOLOR colAt = zCOLOR(255, 0, 0);
 		static zCOLOR colRight = zCOLOR(0, 255, 0);
-
-
 		zREAL size = 0.0f;
+		
+		/*
+		auto vob = GetSelectedVob();
+
+
+		if (!vob) return;
+
+		vob->bbox3D.Draw(zCOLOR(255, 0, 0));
+
+		return;
+		*/
+
+		
 
 		if (this->pickedVob)
 		{

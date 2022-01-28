@@ -26,10 +26,70 @@ namespace GOTHIC_ENGINE {
 		}
 
 	}
+	
+	
 
 	void SpacerApp::ToggleGame()
 	{
 		return;
+
+		if (!g_bIsPlayingGame)
+		{
+			cmd << "Player ini ok 0 " << endl;
+
+			if (!player)
+			{
+				cmd << "Player ini ok 1 " << endl;
+
+				oCNpc::player = new oCNpc();
+				oCNpc::player->InitByScript(parser->GetIndex(zSTRING("PC_HERO")), 1);
+				if (!oCNpcFocus::focus) oCNpcFocus::InitFocusModes();
+
+				
+			}
+			cmd << "Player ini ok";
+
+			player->SetAttribute(NPC_ATR_HITPOINTSMAX, 10000);
+			player->CompleteHeal();
+
+
+			hideWindows = !hideWindows;
+
+			hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
+
+			while (ShowCursor(FALSE) >= 0);
+
+			zVEC3 safePos = ogame->GetCamera()->connectedVob->GetPositionWorld();
+
+			oCNpc::SetNpcAIDisabled(FALSE);
+
+
+			ogame->spawnman->SetSpawningEnabled(TRUE);
+
+			cmd << "Player ini ok 2";
+
+			player->SetMovLock(FALSE);
+			player->SetSleeping(FALSE);
+			player->SetPhysicsEnabled(TRUE);
+
+
+			player->dontWriteIntoArchive = true;
+			ogame->InitNpcAttitudes();
+
+			player->SetPositionWorld(safePos);
+
+			cmd << "Player ini ok 3";
+		}
+		else
+		{
+		}
+
+		g_bIsPlayingGame = !g_bIsPlayingGame;
+	}
+
+	/*
+	void SpacerApp::ToggleGame()
+	{
 
 		static zCCamera* cam = NULL;
 
@@ -38,6 +98,18 @@ namespace GOTHIC_ENGINE {
 			print.PrintRed("Start the game...");
 
 			g_bIsPlayingGame = true;
+
+			if (!player)
+			{
+				oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
+				player->dontWriteIntoArchive = true;
+				player->SetSleeping(TRUE);
+				player->SetPhysicsEnabled(FALSE);
+				player->SetMovLock(TRUE);
+				player->ai_disabled = true;
+				player->RemoveVobFromWorld();
+				player->Disable();
+			}
 
 			player->SetAttribute(NPC_ATR_HITPOINTSMAX, 10000);
 			player->CompleteHeal();
@@ -131,7 +203,7 @@ namespace GOTHIC_ENGINE {
 			player->ai_disabled = false;
 
 
-			/*
+			
 			oCNpc::SetNpcAIDisabled(TRUE);
 			ogame->spawnman->SetSpawningEnabled(FALSE);
 
@@ -157,7 +229,7 @@ namespace GOTHIC_ENGINE {
 					}
 				};
 			};
-			*/
+			
 
 			player->SetMovLock(FALSE);
 			player->SetSleeping(FALSE);
@@ -283,6 +355,7 @@ namespace GOTHIC_ENGINE {
 
 
 	}
+	*/
 
 	/*
 	void SpacerApp::PlayTheGame()

@@ -259,6 +259,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\Movement\Multiselection">
       <UniqueIdentifier>{dc0f654e-60f9-4a76-afe5-f58421bd41eb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\ItemsLocator">
+      <UniqueIdentifier>{836fa581-bf38-43e9-8151-5b87b7baff6c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2947,6 +2950,12 @@
     </ClInclude>
     <ClInclude Include="MultiSelect.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Movement\Multiselection</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemsLocator.h">
+      <Filter>Plugin\Workspace\Plugin\Main\ItemsLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemsLocator.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\ItemsLocator</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

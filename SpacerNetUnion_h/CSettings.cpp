@@ -333,7 +333,16 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "showBadPluginsMsg", "1");
 		list.Insert("showBadPluginsMsg", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "itemLocatorRadius", "3000");
+		list.Insert("itemLocatorRadius", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "itemLocatorEnabled", "0");
+		list.Insert("itemLocatorEnabled", set);
+
+
+		set = new CSetting(TYPE_INT, "SPACER", "itemLocatorOnlySusp", "0");
+		list.Insert("itemLocatorOnlySusp", set);
+		
 
 		set = new CSetting(TYPE_INT, "SPACER", "bToggleWorkMode", "0");
 		list.Insert("bToggleWorkMode", set);

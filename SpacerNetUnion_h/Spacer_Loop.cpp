@@ -227,6 +227,8 @@ namespace GOTHIC_ENGINE {
 		
 		pfxManager.Loop();
 
+		itemsLocator.Loop();
+
 		ResetPrintDebug();
 
 		if (screen && ogame->GetCamera() && ogame->GetWorld())

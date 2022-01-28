@@ -4,7 +4,9 @@
 
 namespace GOTHIC_ENGINE {
 
+	
 	/*
+	//rx_report
 	HOOK ivk_zERROR_Init AS(&zERROR::Init, &zERROR::Init_Union);
 	void zERROR::Init_Union(zSTRING cmd) {
 		THISCALL(ivk_zERROR_Init)(cmd);

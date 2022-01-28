@@ -501,8 +501,10 @@ namespace GOTHIC_ENGINE {
 		if (isItem && isItem->effectVob)
 		{
 			theApp.OnRemoveVob(isItem->effectVob);
+			
 		}
 #endif
+		itemsLocator.RemoveByItem(pVob);
 		theApp.OnRemoveVob(pVob);
 
 		zCVobWaypoint* wpvob = dynamic_cast<zCVobWaypoint*>(pVob);

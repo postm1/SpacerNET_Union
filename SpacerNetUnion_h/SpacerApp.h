@@ -21,7 +21,7 @@ namespace GOTHIC_ENGINE {
 		bool pluginsChecked;
 		zCArray<zSTRING> whiteArrayPlugins;
 		zCArray<zSTRING> blackArrayPlugins;
-
+		ItemsLocator itemsLocator;
 		
 
 		Common::Map<CString, RespawnEntry*> respawnShowList;
@@ -119,6 +119,7 @@ namespace GOTHIC_ENGINE {
 			};
 
 			SpacerPickTry pickTryEntry;
+			
 
 			Array<zCVob*> SelectedVobs;
 		};

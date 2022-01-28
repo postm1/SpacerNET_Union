@@ -506,6 +506,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ItemsLocator.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ItemsLocator.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="KeysManager.h">
       <SubType>
       </SubType>

@@ -92,7 +92,7 @@ namespace GOTHIC_ENGINE {
 
 		
 		
-		
+		itemsLocator.Init();
 		
 	}
 }

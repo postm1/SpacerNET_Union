@@ -28,6 +28,7 @@
 #include "zCBinTree3DS.cpp"
 #include "zProgMesh.cpp"
 #include "Play.cpp"
+#include "ItemsLocator.cpp"
 #include "World.cpp"
 #include "Search.cpp"
 #include "SpacerApp.cpp"
