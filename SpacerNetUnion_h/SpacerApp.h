@@ -257,6 +257,7 @@ namespace GOTHIC_ENGINE {
 		void PlayTheGame();
 
 		void ToggleGame();
+		void InitCamera(zVEC3 pos);
 
 		void StopPlay();
 

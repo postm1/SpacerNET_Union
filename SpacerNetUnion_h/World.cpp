@@ -632,6 +632,10 @@ namespace GOTHIC_ENGINE {
 		ogame->GetCamera()->connectedVob->dontWriteIntoArchive = true;
 
 
+		if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
+		{
+			parser->SetScriptInt("RX_IsSpacetNet", 1);
+		}
 		/*
 		oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
 		player->dontWriteIntoArchive = true;

@@ -6,3 +6,4 @@
 
 
 int CheckUnderWaterFX_Hook();
+void zCAICamera::CheckKeys_Union();

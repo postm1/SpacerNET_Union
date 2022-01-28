@@ -39,7 +39,7 @@ namespace GOTHIC_ENGINE {
 
 
 		__declspec(dllexport) void Extern_PlayHero() {
-			print.PrintRed("Playing the game...");
+			
 			theApp.ToggleGame();
 		}
 

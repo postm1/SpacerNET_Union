@@ -124,11 +124,6 @@ namespace GOTHIC_ENGINE {
 				GetCursorPos(&mPos);
 				zCView::GetInput();
 
-				if (theApp.g_bIsPlayingGame)
-				{
-					theApp.GameLoop();
-				}
-
 				//Base render
 				if (GetGame() && gameSession && ogame->GetWorld() && ogame->GetCamera() && theApp.IsAWorldLoaded() && ogame->GetWorld()->compiled)
 				{
@@ -200,14 +195,14 @@ namespace GOTHIC_ENGINE {
 		// MessageBox(0, "Game_Loop", 0, 0);
 
 		
-
+		ResetPrintDebug();
 		print.Loop();
 
 		//print.PrintRed(Z(int)player);
 
 		if (theApp.g_bIsPlayingGame)
 		{
-			
+			GameLoop();
 			return;
 		}
 
@@ -229,7 +224,7 @@ namespace GOTHIC_ENGINE {
 
 		itemsLocator.Loop();
 
-		ResetPrintDebug();
+		
 
 		if (screen && ogame->GetCamera() && ogame->GetWorld())
 		{

@@ -66,6 +66,7 @@ namespace GOTHIC_ENGINE {
   void LoadEnd() {
 
 	  
+	  
   }
 
   void Game_LoadBegin_NewGame() {

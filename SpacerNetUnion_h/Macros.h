@@ -1,6 +1,9 @@
 // Supported with union (c) 2020 Union team
 // Union HEADER file
 
+//#include <dinput.h>
+//#define DIRECTINPUT_VERSION 0x0700
+
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 

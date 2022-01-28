@@ -11,24 +11,315 @@ namespace GOTHIC_ENGINE {
 	oTVobListNpcs* npclist = NULL;
 	oTVobListNpcs* npcListCopy = NULL;
 
-	bool heroSpawned = false;
 	zVEC3 camPos;
-	zSTRING CamModNormal("CAMMODNORMAL");
+	zSTRING CamModNormal("CAMMODNORMAL"); 
+	zSTRING CamModRun("CAMMODRUN");
+	zSTRING CamModLook("CAMMODLOOK");
 
+	RECT rcOldClip;   // предыдуща€ область дл€ ClipCursor
+	bool winHide = false;
 
 	void SpacerApp::GameLoop()
 	{
 
-		if (KeyPress(KEY_ESCAPE))
+		if (GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin)
 		{
-			ToggleGame();
-			zinput->ClearKeyBuffer();
+			if (KeyPress(KEY_ESCAPE) || KeyPress(KEY_RETURN))
+			{
+				ToggleGame();
+				zinput->ClearKeyBuffer();
+			}
+
+			if (!g_bIsPlayingGame) return;
+
+			zCAICamera* aiCam = zCAICamera::GetCurrent();
+			if (aiCam) {
+
+				zBOOL param = false;
+
+				aiCam->DoAI(player, param);
+				aiCam->veloRot = 30;
+				aiCam->veloTrans = 120;
+				aiCam->moveTracker->inertiaTrans = 0.0;
+				aiCam->moveTracker->inertiaTargetRot = 0;
+
+
+				/*
+				//aiCam->SetMode(CamModLook, 0);
+				//aiCam->bestRotY = 30;
+				PrintDebug("maxRotY: " + Z aiCam->maxRotY);
+				PrintDebug("maxRotX: " + Z aiCam->maxRotX);
+				PrintDebug("veloTrans: " + Z aiCam->veloTrans);
+				PrintDebug("veloRot: " + Z aiCam->veloRot);
+				PrintDebug("sysChanged: " + Z aiCam->sysChanged);
+				PrintDebug("actAzi: " + Z aiCam->moveTracker->actAzi);
+				PrintDebug("actElev: " + Z aiCam->moveTracker->actElev);
+
+				PrintDebug("bestRotX: " + Z aiCam->bestRotX);
+
+				PrintDebug("inertiaTrans: " + Z aiCam->moveTracker->inertiaTrans);
+				PrintDebug("bMouseUsed: " + Z aiCam->moveTracker->bMouseUsed);
+				PrintDebug("curcammode: " + Z aiCam->curcammode);
+				*/
+				
+			}
+
+			RECT clipRect;
+			GetClientRect(mainWin, &clipRect);
+
+			
+ 			ClipCursor(&clipRect);
+			
+		}
+	}
+	void SpacerApp::ToggleGame()
+	{
+		//print.PrintRed("Playing the game...");
+		if (!g_bIsPlayingGame)
+		{
+
+			GetClipCursor(&rcOldClip);
+
+			auto call = (callIntFunc)GetProcAddress(theApp.module, "GameModeToggleInterface");
+			call(0);
+
+			g_bIsPlayingGame = true;
+
+			SetSelectedVob(NULL);
+
+			// Parser Global Vars resetten
+			parser->ResetGlobalVars();
+			parser->SetInstance("SELF", NULL);
+			parser->SetInstance("OTHER", NULL);
+			parser->SetInstance("VICTIM", NULL);
+			parser->SetInstance("ITEM", NULL);
+			// SpawnListe leeren 
+			ogame->spawnman->ClearList();
+			// InfoMan clearen
+			ogame->infoman = zNEW(oCInfoManager)(parser);
+			// Clear Logs
+			oCLogManager::GetLogManager().Clear();
+			// Clear NewsManager
+
+			ogame->newsman = zNEW(oCNewsManager());
+			// Clear Soundos
+			zsound->StopAllSounds();
+			// delete all homeworld references of all CVisualFX Objects 
+			oCVisualFX::PreSaveGameProcessing(TRUE);
+			oCVisualFX::PostSaveGameProcessing();
+			// Clear DebugList
+			oCNpc::SetNpcAIDisabled(FALSE);
+			ogame->GetSpawnManager()->SetSpawningEnabled(TRUE);
+
+			// clear Cam
+			//InitCamera(oCNpc::player->GetPositionWorld());
+
+			oCVob::ClearDebugList();
+			// Clear ProtalManager
+			if (ogame->portalman) ogame->portalman->CleanUp();
+			// Clear ObjectRoutineList
+			ogame->ClearObjectRoutineList();
+			ogame->CallScriptStartup();
+			ogame->CallScriptInit();
+
+
+			if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
+			{
+				parser->SetScriptInt("RX_IsSpacetNet", 1);
+			}
+
+			auto safePosPlayer = ogame->GetCamera()->connectedVob->GetPositionWorld();
+
+			if (!player)
+			{
+				oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
+			}
+
+			player->variousFlags = 2;
+			player->SetAttribute(NPC_ATR_HITPOINTSMAX, 100000);
+			player->CompleteHeal();
+			
+
+			ogame->EnterWorld(oCNpc::player, TRUE, "EDITOR_CAMERA_VOB");
+
+
+			player->dontWriteIntoArchive = true;
+			ogame->InitNpcAttitudes();
+			player->ai_disabled = false;
+			
+			player->human_ai->PC_Turnings(1);
+			player->SetCollDet(FALSE);
+			player->SetPositionWorld(safePosPlayer);
+			player->SetCollDet(TRUE);
+
+			if (!hideWindows)
+			{
+				hideWindows = !hideWindows;
+
+				winHide = true;
+				hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
+			}
+			else
+			{
+				winHide = false;
+			}
+			
+
+			while (ShowCursor(FALSE) >= 0);
+
+			
+			if (player->human_ai) player->human_ai->SetCamMode(CamModLook, 0);
+			//changed[dennis]
+			oCNpcFocus::SetFocusMode(FOCUS_NORMAL);
+
+
+			zCAICamera* aiCam = zCAICamera::GetCurrent();
+			if (aiCam) {
+				aiCam->ClearTargetList();
+				aiCam->SetTarget(oCNpc::player);
+				aiCam->ReceiveMsg(zPLAYER_BEAMED);
+				aiCam->SetMode(CamModLook, 0);
+
+				ogame->GetCameraVob()->callback_ai = ogame->aiCam;
+				ogame->GetCameraVob()->SetSleeping(FALSE);
+				
+			};
+			
+		}
+		else
+		{
+			zVEC3 camFuturePos = player->GetPositionWorld();
+
+			//SpacerIsActive = TRUE;
+			
+			// Parser Global Vars resetten
+			parser->ResetGlobalVars();
+			parser->SetInstance("SELF", NULL);
+			parser->SetInstance("OTHER", NULL);
+			parser->SetInstance("VICTIM", NULL);
+			parser->SetInstance("ITEM", NULL);
+			// SpawnListe leeren 
+			ogame->spawnman->ClearList();
+			// InfoMan clearen
+			delete ogame->infoman;
+			ogame->infoman = zNEW(oCInfoManager)(parser);
+			// Clear Logs
+			oCLogManager::GetLogManager().Clear();
+			// Clear NewsManager
+			delete ogame->newsman;
+			ogame->newsman = zNEW(oCNewsManager());
+			// Clear Soundos
+			zsound->StopAllSounds();
+			// delete all homeworld references of all CVisualFX Objects 
+			oCVisualFX::PreSaveGameProcessing(TRUE);
+			oCVisualFX::PostSaveGameProcessing();
+			
+			//ogame->GetCamera()->connectedVob->SetPositionWorld(oCNpc::player->GetPositionWorld());
+			// Clear Cam ?!
+			//CEditorDoc::doc->InitCamera(oCNpc::player->GetPositionWorld());
+			// Clear DebugList
+			oCVob::ClearDebugList();
+			// Clear ProtalManager
+			if (ogame->portalman) ogame->portalman->CleanUp();
+			// Clear ObjectRoutineList
+			ogame->ClearObjectRoutineList();
+
+
+
+			auto originalCam = ogame->world->SearchVobByName("EDITOR_CAMERA_VOB");
+
+			if (originalCam) theApp.RemoveVob(originalCam);
+
+			
+
+
+			ogame->CamInit();
+			//ogame->EnvironmentInit();
+			ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
+			ogame->GetCamera()->connectedVob->SetAI(0);
+			//ogame->GetCamera()->connectedVob->bbox3D.mins = zVEC3(5, 5, 5);
+			//ogame->GetCamera()->connectedVob->bbox3D.maxs = zVEC3(5, 5, 5);
+			ogame->GetGameWorld()->AddVob(ogame->GetCamera()->connectedVob);
+			ogame->GetCamera()->connectedVob->dontWriteIntoArchive = true;
+
+			originalCam = ogame->GetCamera()->connectedVob;
+
+			zCArray<zCVob*> targetList;
+
+			ogame->world->SearchVobListByName("ZCAICAMERA", targetList);
+
+			ogame->GetCamera()->SetVob(originalCam);
+
+			player->dontWriteIntoArchive = true;
+			player->showVisual = 0;
+			theApp.OnRemoveVob(player);
+
+			ogame->RemovePlayerFromWorld();
+
+			// удал€ем камеры из c# списков
+			for (int i = 0; i < targetList.GetNumInList(); i++)
+			{
+				auto pVob = targetList.GetSafe(i);
+
+
+				if (pVob)
+				{
+					pVob->dontWriteIntoArchive = true;
+					theApp.OnRemoveVob(pVob);
+				}
+
+			}
+
+
+			if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
+			{
+				parser->SetScriptInt("RX_IsSpacetNet", 1);
+			}
+
+			oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
+
+			oCNpc::player->GetModel();
+			player->dontWriteIntoArchive = true;
+
+			if (originalCam)
+			{
+				//ogame->GetCamera()->SetVob(originalCam);
+				ogame->GetCamera()->connectedVob->SetAI(0);
+
+				//ogame->GetGameWorld()->AddVob(ogame->GetCamera()->connectedVob);
+				ogame->GetCamera()->connectedVob->dontWriteIntoArchive = true;
+				ogame->GetCamera()->connectedVob->SetPositionWorld(camFuturePos);
+				ogame->GetCamera()->connectedVob->dontWriteIntoArchive = true;
+				//ogame->GetCamera()->SetVob(NULL);
+				//theApp.RemoveVob(camVob);
+			}
+			//ogame->CamInit();
+			//ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
+
+			g_bIsPlayingGame = false;
+
+			ShowCursor(TRUE);
+
+			if (winHide && hideWindows)
+			{
+				hideWindows = !hideWindows;
+
+				hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
+
+
+			}
+			
+			ClipCursor(&rcOldClip);
+
+			auto call = (callIntFunc)GetProcAddress(theApp.module, "GameModeToggleInterface");
+			call(1);
 		}
 
-	}
-	
-	
 
+		
+	}
+
+	/*
 	void SpacerApp::ToggleGame()
 	{
 		return;
@@ -86,7 +377,7 @@ namespace GOTHIC_ENGINE {
 
 		g_bIsPlayingGame = !g_bIsPlayingGame;
 	}
-
+	*/
 	/*
 	void SpacerApp::ToggleGame()
 	{

@@ -167,6 +167,12 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::Reset()
 	{
 
+		if (g_bIsPlayingGame)
+		{
+			theApp.ToggleGame();
+			
+		}
+
 		AddVobToRender("", false);
 
 		if (IsAWorldLoaded())

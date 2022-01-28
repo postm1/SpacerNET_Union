@@ -237,6 +237,8 @@ namespace GOTHIC_ENGINE {
 			if (theApp.g_bIsPlayingGame)
 			{
 				vob->dontWriteIntoArchive = true;
+				THISCALL(ivk_AddVob)(vob);
+				return;
 			}
 
 			if (theApp.treeIsReady && !theApp.nextInsertBlocked)
