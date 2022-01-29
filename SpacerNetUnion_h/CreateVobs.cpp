@@ -180,6 +180,62 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+
+	bool SpacerApp::CheckForUniqVobs(CString className)
+	{
+		bool foundUniqVob = false;
+
+
+		//cmd << className << endl;
+		if (className == "zCZoneVobFarPlaneDefault")
+		{
+			zCArray<zCVob*> resultList;
+			zCWorld* world = ogame->GetWorld();
+			world->SearchVobListByClass(zCZoneVobFarPlaneDefault::classDef, resultList, 0);
+
+			if (resultList.GetNumInList() > 0)
+				foundUniqVob = true;
+		}
+		else if (className == "zCZoneZFogDefault")
+		{
+			zCArray<zCVob*> resultList;
+			zCWorld* world = ogame->GetWorld();
+			world->SearchVobListByClass(zCZoneZFogDefault::classDef, resultList, 0);
+
+			if (resultList.GetNumInList() > 0)
+				foundUniqVob = true;
+		}
+		else if (className == "zCZoneReverbDefault")
+		{
+			zCArray<zCVob*> resultList;
+			zCWorld* world = ogame->GetWorld();
+			world->SearchVobListByClass(zCZoneReverbDefault::classDef, resultList, 0);
+
+			if (resultList.GetNumInList() > 0)
+				foundUniqVob = true;
+		}
+		else if (className == "oCZoneMusicDefault")
+		{
+			zCArray<zCVob*> resultList;
+			zCWorld* world = ogame->GetWorld();
+			world->SearchVobListByClass(oCZoneMusicDefault::classDef, resultList, 0);
+
+			if (resultList.GetNumInList() > 0)
+				foundUniqVob = true;
+		}
+		else if (className == "zCVobStartpoint")
+		{
+			zCArray<zCVob*> resultList;
+			zCWorld* world = ogame->GetWorld();
+			world->SearchVobListByClass(zCVobStartpoint::classDef, resultList, 0);
+
+			if (resultList.GetNumInList() > 0)
+				foundUniqVob = true;
+		}
+
+		return foundUniqVob;
+	}
+
 	void SpacerApp::CreateNewVob(CString classNamePtr, CString vobNamePtr, CString visual, int dyn, int stat)
 	{
 		zSTRING className = zSTRING(classNamePtr);
@@ -199,17 +255,34 @@ namespace GOTHIC_ENGINE {
 			return;
 		};
 
+		if (parent && (dynamic_cast<zCZone*>(parent)))
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+
+			return;
+		};
+
 
 
 		if (!classDef || classDef->IsAbstractClass())
 		{
-			MessageBox(0, GetLang("UNION_CANT_ABSTRACT"), 0, 0);
+
+			print.PrintRed(GetLang("UNION_CANT_ABSTRACT"));
+
 			return;
 		}
 
+		
 
-		//OutFile("CreateNewVob: " + A vobName + " " + A className, true);
+		if (CheckForUniqVobs(className))
+		{
+			print.PrintRed(GetLang("OnlyOneVobCanBe"));
+			return;
+		}
 
+		
+		
+			
 		bool flag = nextInsertBlocked;
 		nextInsertBlocked = false;
 		//std::cout << "Create a vob of the class " << className << std::endl;
@@ -229,11 +302,35 @@ namespace GOTHIC_ENGINE {
 			{
 				if (vobName.Length() == 0)
 				{
-					MessageBox(0, GetLang("ENTER_NAME"), 0, 0);
+					print.PrintRed(GetLang("ENTER_NAME"));
+
 					newvob->Release();
 					return;
 				}
 			}
+
+
+			auto vobSound = dynamic_cast<zCVobSound*>(newvob);
+
+			if (
+				dynamic_cast<zCZone*>(newvob)
+				&& !vobSound
+				)
+			{
+				stat = 0;
+				dyn = 0;
+				parent = NULL;
+			}
+
+			if (vobSound || dynamic_cast<zCVobStartpoint*>(newvob) || dynamic_cast<zCVobLight*>(newvob))
+			{
+				stat = 0;
+				dyn = 0;
+			}
+
+
+
+
 
 			newvob->SetVobName(vobName);
 

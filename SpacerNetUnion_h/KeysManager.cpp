@@ -153,6 +153,7 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("VOBLIST_COLLECT", "0_59");
 		defaultValues.Insert("WP_CREATEFAST", "0_60");
 		defaultValues.Insert("WIN_HIDEALL", "0_61");
+		defaultValues.Insert("GAME_MODE", "0_63");
 		defaultValues.Insert("OPEN_CONTAINER", "8_20");
 		defaultValues.Insert("TOGGLE_VOBS", "8_2");
 		defaultValues.Insert("TOGGLE_WAYNET", "8_3");

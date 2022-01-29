@@ -657,6 +657,8 @@ namespace GOTHIC_ENGINE {
 			ToggleMusic(false);
 		}
 
+		
+
 		// создает список итемов, pfx, 1 раз на все время работы программы
 		if (!dataFilled)
 		{
@@ -681,9 +683,12 @@ namespace GOTHIC_ENGINE {
 		BuildTree();
 
 
-	
+		if (options.GetIntVal("soundZenOff"))
+		{
+			if (zsound) zsound->StopAllSounds();
+		}
 
-
+		
 	}
 
 	// применяется на первом тике когда уровень загружен

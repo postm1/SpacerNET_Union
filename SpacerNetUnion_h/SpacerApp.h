@@ -206,6 +206,8 @@ namespace GOTHIC_ENGINE {
 
 		void CreatePFX(CString name);
 
+		bool CheckForUniqVobs(CString className);
+
 		oCItem* CreateItem(CString name);
 
 

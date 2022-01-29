@@ -294,6 +294,13 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "musicZenOff", "0");
 		list.Insert("musicZenOff", set);
 
+
+		set = new CSetting(TYPE_INT, "SPACER", "soundZenOff", "0");
+		list.Insert("soundZenOff", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "alwaysShutSounds", "0");
+		list.Insert("alwaysShutSounds", set);
+
 		set = new CSetting(TYPE_INT, "SPACER", "askExitZen", "1");
 		list.Insert("askExitZen", set);
 

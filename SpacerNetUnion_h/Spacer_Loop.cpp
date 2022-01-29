@@ -198,6 +198,15 @@ namespace GOTHIC_ENGINE {
 		ResetPrintDebug();
 		print.Loop();
 
+		if (mainTimer[1u].Await(150))
+		{
+			if (options.GetIntVal("alwaysShutSounds"))
+			{
+				if (zsound) zsound->StopAllSounds();
+			}
+		}
+		
+
 		//print.PrintRed(Z(int)player);
 
 		if (theApp.g_bIsPlayingGame)
@@ -443,6 +452,11 @@ namespace GOTHIC_ENGINE {
 		if (keys.KeyPressed("WIN_HIDEALL", true))
 		{
 			ToggleWindowsVisible();
+		}
+
+		if (keys.KeyPressed("GAME_MODE", true))
+		{
+			ToggleGame();
 		}
 
 

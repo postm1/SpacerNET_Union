@@ -3,66 +3,144 @@
 
 namespace GOTHIC_ENGINE {
 
-	typedef zCListSort<zCVob>		oTVobList;
-	typedef zCListSort<oCNpc>		oTVobListNpcs;
-	typedef zCListSort<oCItem>		oTVobListItems;
-
-	// Add your code here . . .
-	oTVobListNpcs* npclist = NULL;
-	oTVobListNpcs* npcListCopy = NULL;
-
-	zVEC3 camPos;
-	zSTRING CamModNormal("CAMMODNORMAL"); 
-	zSTRING CamModRun("CAMMODRUN");
-	zSTRING CamModLook("CAMMODLOOK");
-
-	RECT rcOldClip;   // предыдущая область для ClipCursor
+	RECT rcOldClip;
 	bool winHide = false;
+	bool fastMode = false;
+
+	int IsKeyPressed(int a, int b) {
+		if (KeyPress(a) || KeyPress(b)) {
+			return 1;
+		}
+		return 0;
+	}
 
 	void SpacerApp::GameLoop()
 	{
 
 		if (GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin)
 		{
+
+			if (keys.KeyPressed("GAME_MODE", true))
+			{
+				ToggleGame();
+			}
+
 			if (KeyPress(KEY_ESCAPE) || KeyPress(KEY_RETURN))
 			{
+				
 				ToggleGame();
 				zinput->ClearKeyBuffer();
 			}
 
-			if (!g_bIsPlayingGame) return;
 
-			zCAICamera* aiCam = zCAICamera::GetCurrent();
-			if (aiCam) {
+			if (KeyPress(KEY_F1))
+			{
+				fastMode = !fastMode;
 
-				zBOOL param = false;
+				if (fastMode)
+				{
+					ogame->aiCam->pathSearch->collisionEnabled = false;
+					player->SetCollDet(FALSE);
+					player->SetPhysicsEnabled(FALSE);
+					player->SetSleeping(TRUE);
+					player->human_ai->PC_Turnings(TRUE);
+				}
+				else
+				{
+					ogame->aiCam->pathSearch->collisionEnabled = true;
+					player->SetCollDet(TRUE);
+					player->SetPhysicsEnabled(TRUE);
+					player->SetSleeping(FALSE);
+				}
 
-				aiCam->DoAI(player, param);
-				aiCam->veloRot = 30;
-				aiCam->veloTrans = 120;
-				aiCam->moveTracker->inertiaTrans = 0.0;
-				aiCam->moveTracker->inertiaTargetRot = 0;
-
-
-				/*
-				//aiCam->SetMode(CamModLook, 0);
-				//aiCam->bestRotY = 30;
-				PrintDebug("maxRotY: " + Z aiCam->maxRotY);
-				PrintDebug("maxRotX: " + Z aiCam->maxRotX);
-				PrintDebug("veloTrans: " + Z aiCam->veloTrans);
-				PrintDebug("veloRot: " + Z aiCam->veloRot);
-				PrintDebug("sysChanged: " + Z aiCam->sysChanged);
-				PrintDebug("actAzi: " + Z aiCam->moveTracker->actAzi);
-				PrintDebug("actElev: " + Z aiCam->moveTracker->actElev);
-
-				PrintDebug("bestRotX: " + Z aiCam->bestRotX);
-
-				PrintDebug("inertiaTrans: " + Z aiCam->moveTracker->inertiaTrans);
-				PrintDebug("bMouseUsed: " + Z aiCam->moveTracker->bMouseUsed);
-				PrintDebug("curcammode: " + Z aiCam->curcammode);
-				*/
-				
+				zinput->ClearKeyBuffer();
 			}
+
+			if (fastMode)
+			{
+				static float noclipSpeed = 40;
+				static float maxNoclipSpeed = 50;
+				zCCamera*& pCamera = *(zCCamera**)0x008D7F94;
+
+
+				player->human_ai->PC_Turnings(TRUE);
+
+				if (IsKeyPressed(KEY_W, KEY_UP)) {
+					zVEC3 pos1 = player->GetPositionWorld();
+					float speed = noclipSpeed * 1.0 / 16.6;
+					speed = speed * ztimer->frameTimeFloat;
+					if (KeyPress(KEY_LSHIFT)) {
+						speed *= 5;
+						ogame->GetCameraAI()->ReceiveMsg(zPLAYER_BEAMED);
+						ogame->GetCameraAI()->moveTracker->Update();
+					}
+					zVEC3 vt = pos1 + pCamera->connectedVob->trafoObjToWorld.GetAtVector() * speed;
+					player->SetPositionWorld(vt);
+
+					if (noclipSpeed >= maxNoclipSpeed) {
+						ogame->GetCameraAI()->ReceiveMsg(zPLAYER_BEAMED);
+						ogame->GetCameraAI()->moveTracker->Update();
+					}
+				}
+
+				if (IsKeyPressed(KEY_S, KEY_DOWN)) {
+					zVEC3 pos1 = player->GetPositionWorld();
+					float speed = noclipSpeed * 1.0 / 16.6;
+					speed = speed * ztimer->frameTimeFloat;
+					if (KeyPress(KEY_LSHIFT)) {
+						speed *= 5;
+						ogame->GetCameraAI()->ReceiveMsg(zPLAYER_BEAMED);
+						ogame->GetCameraAI()->moveTracker->Update();
+					}
+					zVEC3 vt = pos1 + pCamera->connectedVob->trafoObjToWorld.GetAtVector() * -speed;
+					player->SetPositionWorld(vt);
+
+					if (noclipSpeed >= maxNoclipSpeed) {
+						ogame->GetCameraAI()->ReceiveMsg(zPLAYER_BEAMED);
+						ogame->GetCameraAI()->moveTracker->Update();
+					}
+				}
+
+				if (IsKeyPressed(KEY_A, KEY_LEFT)) {
+					zVEC3 pos1 = player->GetPositionWorld();
+					float speed = noclipSpeed * 1.0 / 16.6;
+					speed = speed * ztimer->frameTimeFloat;
+					if (KeyPress(KEY_LSHIFT)) {
+						speed *= 5;
+						ogame->GetCameraAI()->ReceiveMsg(zPLAYER_BEAMED);
+						ogame->GetCameraAI()->moveTracker->Update();
+					}
+					zVEC3 vt = pos1 + ogame->GetCamera()->connectedVob->trafoObjToWorld.GetRightVector() * -speed;
+					player->SetPositionWorld(vt);
+
+					if (noclipSpeed >= maxNoclipSpeed) {
+						ogame->GetCameraAI()->ReceiveMsg(zPLAYER_BEAMED);
+						ogame->GetCameraAI()->moveTracker->Update();
+					}
+				}
+
+				if (IsKeyPressed(KEY_D, KEY_RIGHT)) {
+					zVEC3 pos1 = player->GetPositionWorld();
+					float speed = noclipSpeed * 1.0 / 16.6;
+					if (KeyPress(KEY_LSHIFT)) {
+						speed *= 5;
+						ogame->GetCameraAI()->ReceiveMsg(zPLAYER_BEAMED);
+						ogame->GetCameraAI()->moveTracker->Update();
+					}
+					speed = speed * ztimer->frameTimeFloat;
+					zVEC3 vt = pos1 + ogame->GetCamera()->connectedVob->trafoObjToWorld.GetRightVector() * speed;
+					player->SetPositionWorld(vt);
+
+					if (noclipSpeed >= maxNoclipSpeed) {
+						ogame->GetCameraAI()->ReceiveMsg(zPLAYER_BEAMED);
+						ogame->GetCameraAI()->moveTracker->Update();
+					}
+				}
+			}
+
+			
+
+			if (!g_bIsPlayingGame) return;
 
 			RECT clipRect;
 			GetClientRect(mainWin, &clipRect);
@@ -72,6 +150,8 @@ namespace GOTHIC_ENGINE {
 			
 		}
 	}
+
+
 	void SpacerApp::ToggleGame()
 	{
 		//print.PrintRed("Playing the game...");
@@ -82,6 +162,8 @@ namespace GOTHIC_ENGINE {
 
 			auto call = (callIntFunc)GetProcAddress(theApp.module, "GameModeToggleInterface");
 			call(0);
+
+			auto safePosPlayer = ogame->GetCamera()->connectedVob->GetPositionWorld();
 
 			g_bIsPlayingGame = true;
 
@@ -103,7 +185,7 @@ namespace GOTHIC_ENGINE {
 
 			ogame->newsman = zNEW(oCNewsManager());
 			// Clear Soundos
-			zsound->StopAllSounds();
+			if (zsound) zsound->StopAllSounds();
 			// delete all homeworld references of all CVisualFX Objects 
 			oCVisualFX::PreSaveGameProcessing(TRUE);
 			oCVisualFX::PostSaveGameProcessing();
@@ -111,16 +193,13 @@ namespace GOTHIC_ENGINE {
 			oCNpc::SetNpcAIDisabled(FALSE);
 			ogame->GetSpawnManager()->SetSpawningEnabled(TRUE);
 
-			// clear Cam
-			//InitCamera(oCNpc::player->GetPositionWorld());
-
 			oCVob::ClearDebugList();
 			// Clear ProtalManager
 			if (ogame->portalman) ogame->portalman->CleanUp();
 			// Clear ObjectRoutineList
 			ogame->ClearObjectRoutineList();
-			ogame->CallScriptStartup();
-			ogame->CallScriptInit();
+			//ogame->CallScriptStartup();
+			//ogame->CallScriptInit();
 
 
 			if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
@@ -128,7 +207,7 @@ namespace GOTHIC_ENGINE {
 				parser->SetScriptInt("RX_IsSpacetNet", 1);
 			}
 
-			auto safePosPlayer = ogame->GetCamera()->connectedVob->GetPositionWorld();
+			
 
 			if (!player)
 			{
@@ -148,9 +227,13 @@ namespace GOTHIC_ENGINE {
 			player->ai_disabled = false;
 			
 			player->human_ai->PC_Turnings(1);
+			player->human_ai->StopTurnAnis();
+
 			player->SetCollDet(FALSE);
 			player->SetPositionWorld(safePosPlayer);
 			player->SetCollDet(TRUE);
+
+			player->GetModel()->SetRandAnisEnabled(FALSE);
 
 			if (!hideWindows)
 			{
@@ -164,34 +247,26 @@ namespace GOTHIC_ENGINE {
 				winHide = false;
 			}
 			
-
 			while (ShowCursor(FALSE) >= 0);
-
-			
-			if (player->human_ai) player->human_ai->SetCamMode(CamModLook, 0);
-			//changed[dennis]
-			oCNpcFocus::SetFocusMode(FOCUS_NORMAL);
-
-
-			zCAICamera* aiCam = zCAICamera::GetCurrent();
-			if (aiCam) {
-				aiCam->ClearTargetList();
-				aiCam->SetTarget(oCNpc::player);
-				aiCam->ReceiveMsg(zPLAYER_BEAMED);
-				aiCam->SetMode(CamModLook, 0);
-
-				ogame->GetCameraVob()->callback_ai = ogame->aiCam;
-				ogame->GetCameraVob()->SetSleeping(FALSE);
-				
-			};
 			
 		}
 		else
 		{
+
+			if (fastMode)
+			{
+				fastMode = false;
+
+				ogame->aiCam->pathSearch->collisionEnabled = true;
+				player->SetCollDet(TRUE);
+				player->SetPhysicsEnabled(TRUE);
+				player->SetSleeping(FALSE);
+			}
+
 			zVEC3 camFuturePos = player->GetPositionWorld();
 
 			//SpacerIsActive = TRUE;
-			
+			ogame->m_bWorldEntered = false;
 			// Parser Global Vars resetten
 			parser->ResetGlobalVars();
 			parser->SetInstance("SELF", NULL);
@@ -296,6 +371,7 @@ namespace GOTHIC_ENGINE {
 			//ogame->CamInit();
 			//ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
 
+
 			g_bIsPlayingGame = false;
 
 			ShowCursor(TRUE);
@@ -313,505 +389,12 @@ namespace GOTHIC_ENGINE {
 
 			auto call = (callIntFunc)GetProcAddress(theApp.module, "GameModeToggleInterface");
 			call(1);
-		}
+
+			
+			
+		}	
 
 
 		
 	}
-
-	/*
-	void SpacerApp::ToggleGame()
-	{
-		return;
-
-		if (!g_bIsPlayingGame)
-		{
-			cmd << "Player ini ok 0 " << endl;
-
-			if (!player)
-			{
-				cmd << "Player ini ok 1 " << endl;
-
-				oCNpc::player = new oCNpc();
-				oCNpc::player->InitByScript(parser->GetIndex(zSTRING("PC_HERO")), 1);
-				if (!oCNpcFocus::focus) oCNpcFocus::InitFocusModes();
-
-				
-			}
-			cmd << "Player ini ok";
-
-			player->SetAttribute(NPC_ATR_HITPOINTSMAX, 10000);
-			player->CompleteHeal();
-
-
-			hideWindows = !hideWindows;
-
-			hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
-
-			while (ShowCursor(FALSE) >= 0);
-
-			zVEC3 safePos = ogame->GetCamera()->connectedVob->GetPositionWorld();
-
-			oCNpc::SetNpcAIDisabled(FALSE);
-
-
-			ogame->spawnman->SetSpawningEnabled(TRUE);
-
-			cmd << "Player ini ok 2";
-
-			player->SetMovLock(FALSE);
-			player->SetSleeping(FALSE);
-			player->SetPhysicsEnabled(TRUE);
-
-
-			player->dontWriteIntoArchive = true;
-			ogame->InitNpcAttitudes();
-
-			player->SetPositionWorld(safePos);
-
-			cmd << "Player ini ok 3";
-		}
-		else
-		{
-		}
-
-		g_bIsPlayingGame = !g_bIsPlayingGame;
-	}
-	*/
-	/*
-	void SpacerApp::ToggleGame()
-	{
-
-		static zCCamera* cam = NULL;
-
-		if (!g_bIsPlayingGame)
-		{
-			print.PrintRed("Start the game...");
-
-			g_bIsPlayingGame = true;
-
-			if (!player)
-			{
-				oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
-				player->dontWriteIntoArchive = true;
-				player->SetSleeping(TRUE);
-				player->SetPhysicsEnabled(FALSE);
-				player->SetMovLock(TRUE);
-				player->ai_disabled = true;
-				player->RemoveVobFromWorld();
-				player->Disable();
-			}
-
-			player->SetAttribute(NPC_ATR_HITPOINTSMAX, 10000);
-			player->CompleteHeal();
-			
-
-			if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
-			if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
-
-			theApp.SetSelectedVob(NULL);
-
-
-			hideWindows = !hideWindows;
-
-			hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
-
-			while (ShowCursor(FALSE) >= 0);
-
-
-			cam = ogame->GetCamera();
-
-			zVEC3 safePos = cam->connectedVob->GetPositionWorld();
-
-			oCNpc::SetNpcAIDisabled(FALSE);
-			zCVob::SetShowHelperVisuals(FALSE);
-			//dynamic_cast<oCGame*>(ogame)->GetSpawnManager()->SetSpawningEnabled(TRUE);
-
-			parser->ResetGlobalVars();
-			parser->SetInstance("SELF", NULL);
-			parser->SetInstance("OTHER", NULL);
-			parser->SetInstance("VICTIM", NULL);
-			parser->SetInstance("ITEM", NULL);
-			// SpawnListe leeren 
-			ogame->spawnman->ClearList();
-			// InfoMan clearen
-			
-
-			ogame->infoman = zNEW(oCInfoManager)(parser);
-			// Clear Logs
-			oCLogManager::GetLogManager().Clear();
-			// Clear NewsManager
-
-			ogame->newsman = zNEW(oCNewsManager());
-			// Clear Soundos
-			zsound->StopAllSounds();
-			// delete all homeworld references of all CVisualFX Objects 
-			oCVisualFX::PreSaveGameProcessing(TRUE);
-			oCVisualFX::PostSaveGameProcessing();
-			// Clear DebugList
-			oCVob::ClearDebugList();
-			// Clear ProtalManager
-			if (ogame->portalman) ogame->portalman->CleanUp();
-			// Clear ObjectRoutineList
-
-
-
-			ogame->spawnman->SetSpawningEnabled(TRUE);
-
-			oCWorld* world = dynamic_cast<oCWorld*>(ogame->GetWorld());
-
-			npclist = (world ? world->GetVobListNpcs() : 0);
-			npcListCopy = zNEW(oTVobListNpcs);
-
-			if (npclist)
-			{
-				print.PrintRed(Z npclist->GetNumInList());
-
-				for (int i = 0; i<npclist->GetNumInList(); i++)
-				{
-					if (npclist->Get(i))
-					{
-						oCNpc *nextNpc = npclist->Get(i);
-						npcListCopy->Insert(nextNpc);
-						nextNpc->AddRef();
-						nextNpc->DeleteHumanAI();
-						nextNpc->InitHumanAI();
-					}
-				};
-			};
-
-
-		
-
-			world->worldName = "WESTCOAST";
-
-			ogame->EnterWorld(oCNpc::player, TRUE, "EDITOR_CAMERA_VOB");
-
-			ogame->scriptStartup = true;
-			ogame->ClearObjectRoutineList();
-			ogame->CallScriptStartup();
-			ogame->CallScriptInit();
-			player->ai_disabled = false;
-
-
-			
-			oCNpc::SetNpcAIDisabled(TRUE);
-			ogame->spawnman->SetSpawningEnabled(FALSE);
-
-			if (npclist)
-			{
-				for (int i = 0; i<npclist->GetNumInList(); i++)
-				{
-					oCNpc *nextNpc = npclist->Get(i);
-					if (nextNpc)
-					{
-						if (npcListCopy->IsInList(nextNpc))
-						{
-							// war vor "PLAY THE GAME" auch schon drin. nur die stand ai wieder einschalten, dann is gut
-							nextNpc->UseStandAI();
-							npcListCopy->Remove(nextNpc);
-							zRELEASE(nextNpc);
-						}
-						else
-						{
-							// wurde in CGameManager::Run() neu eingefьgt. Kann also komplett aus der Welt verschwinden
-							world->RemoveVob(nextNpc);
-						}
-					}
-				};
-			};
-			
-
-			player->SetMovLock(FALSE);
-			player->SetSleeping(FALSE);
-			player->SetPhysicsEnabled(TRUE);
-			
-
-			player->dontWriteIntoArchive = true;
-			ogame->InitNpcAttitudes();
-
-			player->SetPositionWorld(safePos);
-
-
-			
-
-
-		}
-		else
-		{
-
-			print.PrintRed("Stop the game...");
-
-			g_bIsPlayingGame = false;
-
-			zVEC3 safePos = player->GetPositionWorld();
-
-			parser->ResetGlobalVars();
-			parser->SetInstance("SELF", NULL);
-			parser->SetInstance("OTHER", NULL);
-			parser->SetInstance("VICTIM", NULL);
-			parser->SetInstance("ITEM", NULL);
-			// SpawnListe leeren 
-			ogame->spawnman->ClearList();
-			// InfoMan clearen
-			delete ogame->infoman;
-			ogame->infoman = zNEW(oCInfoManager)(parser);
-			// Clear Logs
-			oCLogManager::GetLogManager().Clear();
-			// Clear NewsManager
-			delete ogame->newsman;
-			ogame->newsman = zNEW(oCNewsManager());
-			// Clear Soundos
-			zsound->StopAllSounds();
-			// delete all homeworld references of all CVisualFX Objects 
-			oCVisualFX::PreSaveGameProcessing(TRUE);
-			oCVisualFX::PostSaveGameProcessing();
-			// Clear Cam ?!
-			ogame->GetCamera()->connectedVob->SetPositionWorld(safePos);
-			// Clear DebugList
-			oCVob::ClearDebugList();
-			// Clear ProtalManager
-			if (ogame->portalman) ogame->portalman->CleanUp();
-			// Clear ObjectRoutineList
-			ogame->ClearObjectRoutineList();
-			//ogame->RemovePlayerFromWorld();
-			OnRemoveVob(ogame->GetCamera()->connectedVob);
-			ogame->GetWorld()->RemoveVob(ogame->GetWorld()->SearchVobByName("EDITOR_CAMERA_VOB"));
-			
-
-			//oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
-			oCNpc::player->GetModel();
-			player->SetMovLock(TRUE);
-			player->SetSleeping(TRUE);
-			player->SetPhysicsEnabled(FALSE);
-			player->ai_disabled = true;
-
-			OnRemoveVob(player);
-			player->RemoveVobFromWorld();
-			player->Disable();
-			
-			//ogame->spawnman->DeleteNpc(player);
-
-			auto world = ogame->GetWorld();
-
-			if (zCAICamera::GetCurrent() && zCAICamera::GetCurrent()->camVob)
-			{
-				zCAICamera *aiCam = zCAICamera::GetCurrent();
-				zCVob *aiCamVob = aiCam->camVob;
-
-
-				OnRemoveVob(aiCamVob);
-				aiCamVob->RemoveVobFromWorld();
-
-			}
-
-			if (zCAICamera::GetCurrent() && zCAICamera::GetCurrent()->camVob)
-			{
-				OnRemoveVob(zCAICamera::GetCurrent()->camVob);
-				zCAICamera::GetCurrent()->camVob->RemoveVobFromWorld();
-			}
-				
-			
-			while (zCVob* nextCamera = world->SearchVobByName("ZCAICAMERA")) {
-
-				OnRemoveVob(nextCamera);
-				nextCamera->RemoveVobFromWorld();
-			}
-
-			while (zCVob* nextCamera = world->SearchVobByName("EDITOR_CAMERA_VOB")) {
-
-				OnRemoveVob(nextCamera);
-				nextCamera->RemoveVobFromWorld();
-			}
-
-			ogame->CamInit();
-
-			if (ogame->GetCamera()->connectedVob)
-			{
-				print.PrintRed("Restore cam");
-				//ogame->GetGameWorld()->AddVob(ogame->GetCamera()->connectedVob);
-				ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
-				ogame->GetCamera()->connectedVob->SetAI(0);
-				ogame->GetCamera()->connectedVob->dontWriteIntoArchive = true;
-				ogame->GetCamera()->connectedVob->SetPositionWorld(safePos);
-			}
-
-			
-
-			ShowCursor(TRUE);
-			hideWindows = !hideWindows;
-
-			hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
-		}
-
-
-	}
-	*/
-
-	/*
-	void SpacerApp::PlayTheGame()
-	{
-		oCWorld*	world = 0;
-		zCSession*	session = 0;
-
-		world = dynamic_cast<oCWorld*>(ogame->GetWorld());
-
-		session = ogame;
-
-		if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
-		if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
-
-		theApp.SetSelectedVob(NULL);
-
-
-		//if (!world || (!world->IsCompiled() && !world->IsCompiledEditorMode()) || !session) return;
-
-		// [BENDLIN] Addon Patch2 - 'Play the game'-Flag erst setzen, wenn es auch passiert
-		g_bIsPlayingGame = TRUE;
-
-		oCNpc::SetNpcAIDisabled(FALSE);
-		zCVob::SetShowHelperVisuals(FALSE);
-
-
-		ogame->GetWorld()->showWaynet = 0;
-
-		zCVobLight::renderLightVisuals = 0;	// Включает визуалы для источников света
-		zCVob::SetShowHelperVisuals(zCVobLight::renderLightVisuals);          // Включает визуалы для тригерров, источников звука и прочего
-
-		ogame->GetWorld()->bspTree.drawVobBBox3D = 0;
-
-		//CSpacerView::view->RememberCamPos();
-		dynamic_cast<oCGame*>(session)->GetSpawnManager()->SetSpawningEnabled(TRUE);
-
-
-
-		hideWindows = !hideWindows;
-
-		hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
-
-		while (ShowCursor(FALSE) >= 0);
-
-
-		npclist = (world ? world->GetVobListNpcs() : 0);
-		npcListCopy = zNEW(oTVobListNpcs);
-
-		if (npclist)
-		{
-			for (int i = 0; i<npclist->GetNumInList(); i++)
-			{
-				if (npclist->Get(i))
-				{
-					oCNpc *nextNpc = npclist->Get(i);
-					npcListCopy->Insert(nextNpc);
-					nextNpc->AddRef();
-					nextNpc->DeleteHumanAI();
-					nextNpc->InitHumanAI();
-				}
-			};
-		};
-
-		if (zinput->KeyPressed(KEY_LSHIFT))
-		{
-			g_bInsertNPCs = TRUE;
-		}
-		else
-		{
-			g_bInsertNPCs = FALSE;
-		}
-
-		ogame->LoadGame(-2, "");
-
-		camPos = ogame->GetCamera()->connectedVob->GetPositionWorld();
-
-		if (ogame->GetCameraAI())
-		{
-			print.PrintRed("Camera");
-
-			ogame->GetCameraAI()->SetMode(CamModNormal, 0);
-		}
-		else
-		{
-			print.PrintRed("Camera create");
-			zCAICamera::Create();
-		}
-
-
-	}
-
-
-	void SpacerApp::StopPlay()
-	{
-
-		oCWorld*	world = 0;
-		zCSession*	session = 0;
-
-
-		world = dynamic_cast<oCWorld*>(ogame->GetWorld());
-
-		session = ogame;
-
-		g_bInsertNPCs = FALSE;
-
-		// und wieder alles so wie es war
-		oCNpc::SetNpcAIDisabled(TRUE);
-		dynamic_cast<oCGame*>(session)->GetSpawnManager()->SetSpawningEnabled(FALSE);
-
-		if (npclist)
-		{
-			for (int i = 0; i<npclist->GetNumInList(); i++)
-			{
-				oCNpc *nextNpc = npclist->Get(i);
-				if (nextNpc)
-				{
-					if (npcListCopy->IsInList(nextNpc))
-					{
-						// war vor "PLAY THE GAME" auch schon drin. nur die stand ai wieder einschalten, dann is gut
-						nextNpc->UseStandAI();
-						npcListCopy->Remove(nextNpc);
-						zRELEASE(nextNpc);
-					}
-					else
-					{
-						// wurde in CGameManager::Run() neu eingefьgt. Kann also komplett aus der Welt verschwinden
-						world->RemoveVob(nextNpc);
-					}
-				}
-			};
-		};
-
-		zCVob::SetShowHelperVisuals(FALSE);
-
-		if (zCAICamera::GetCurrent() && zCAICamera::GetCurrent()->camVob)
-		{
-			zCAICamera *aiCam = zCAICamera::GetCurrent();
-			zCVob *aiCamVob = aiCam->camVob;
-			aiCamVob->RemoveVobFromWorld();
-		}
-
-		//CSpacerView::view->ResetCameraAfterPlay();
-		//CSpacerView::view->ResetCamPos();
-
-		// ARGHH: irgendein zCAICamera Vob is noch in der Welt. Weg damit. Leaked zwar, aber darf auch nicht
-		// drin bleiben. Der ganze Camerasetupkram ist eh fьrn Arsch
-		//while (zCVob* nextCamera = world->SearchVobByName("ZCAICAMERA")) nextCamera->RemoveVobFromWorld();
-
-		delete npcListCopy; npcListCopy = 0;
-		zinput->ClearKeyBuffer();
-
-		g_bIsPlayingGame = FALSE;
-
-		ogame->CamInit();
-		//ogame->EnvironmentInit();
-		ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
-		ogame->GetCamera()->connectedVob->SetAI(0);
-		//ogame->GetCamera()->connectedVob->bbox3D.mins = zVEC3(5, 5, 5);
-		//ogame->GetCamera()->connectedVob->bbox3D.maxs = zVEC3(5, 5, 5);
-		ogame->GetGameWorld()->AddVob(ogame->GetCamera()->connectedVob);
-
-		ShowCursor(TRUE);
-		hideWindows = !hideWindows;
-
-		hideWindows ? (voidFuncPointer)GetProcAddress(theApp.module, "HideWindows")() : (voidFuncPointer)GetProcAddress(theApp.module, "ShowWindows")();
-	}
-	*/
 }

@@ -90,8 +90,6 @@ namespace GOTHIC_ENGINE {
 		// PlaySoundGame(ToStr "SPACER_INIT");
 		//cmd << "Game_Init" << endl;
 
-		
-		
 		itemsLocator.Init();
 		
 	}
