@@ -70,6 +70,8 @@ namespace GOTHIC_ENGINE {
 		pickedVob = vob;
 
 
+		if (viewInfo) viewInfo->ClrPrintwin();
+
 		if (isGrattControlActive)
 		{
 			if (vob)
@@ -182,6 +184,10 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+		if (viewInfo)
+		{
+			viewInfo->ClrPrintwin();
+		}
 
 		if (zmusic) zmusic->Stop();
 		if (zsound) zsound->StopAllSounds();
@@ -279,6 +285,98 @@ namespace GOTHIC_ENGINE {
 		static bool isEnabled = CheckDx11();
 		return isEnabled;
 	}
+
+	void SpacerApp::RenderDx11_Bbox(zCVob* vob)
+	{
+		static zCOLOR colUp = zCOLOR(229, 223, 45);
+		static zCOLOR colUpFP = zCOLOR(0, 57, 229);
+		static zCOLOR colAt = zCOLOR(255, 0, 0);
+		static zCOLOR colRight = zCOLOR(0, 255, 0);
+		zREAL size = 0.0f;
+
+		if (!vob) return;
+
+		zCOLOR color = GFX_RED;
+
+		zPOINT3 wsPoint1, csPoint1;
+		zPOINT2 ssPoint1;
+
+		viewInfo->ClrPrintwin();
+
+		screen->RemoveItem(viewInfo);
+
+		if (dynamic_cast<zCVobWaypoint*>(vob) || dynamic_cast<zCWaypoint*>(vob))
+		{
+			/*
+
+			zTBBox3D BBox;
+			BBox.mins = zVEC3(-100, -100, -100);
+			BBox.maxs = zVEC3(+100, +100, +100);
+			BBox.Translate(vob->GetPositionWorld());
+			vob->SetBBox3DWorld(BBox);
+			*/
+			size = 50;
+			zVEC3 pos = vob->GetPositionWorld() + zVEC3(0, 0, 0);
+
+			zlineCache->Line3D(pos, pos + vob->GetUpVectorWorld()	* size, colUp, 1);
+			zlineCache->Line3D(pos, pos + vob->GetAtVectorWorld()	* size, colAt, 1);
+			zlineCache->Line3D(pos, pos + vob->GetRightVectorWorld()* size, colRight, 1);
+		}
+		else if (auto spot = dynamic_cast<zCVobSpot*>(vob))
+		{
+			/*
+			const zREAL FPBOX_DIMENSION = 50;
+			zTBBox3D fpBox;
+
+			fpBox.maxs = fpBox.mins = spot->GetPositionWorld();
+			fpBox.maxs[0] += FPBOX_DIMENSION; fpBox.maxs[1] += FPBOX_DIMENSION * 2; fpBox.maxs[2] += FPBOX_DIMENSION;
+			fpBox.mins[0] -= FPBOX_DIMENSION; fpBox.mins[1] -= FPBOX_DIMENSION * 2; fpBox.mins[2] -= FPBOX_DIMENSION;
+			fpBox.Translate(spot->GetPositionWorld());
+			spot->SetBBox3DWorld(fpBox);
+			*/
+			/*
+			zTBBox3D BBox;
+			BBox.mins = zVEC3(-100, -100, -100);
+			BBox.maxs = zVEC3(+100, +100, +100);
+			BBox.Translate(vob->GetPositionWorld());
+			vob->SetBBox3DWorld(BBox);
+			*/
+
+			size = 70;
+
+			zVEC3 pos = vob->GetPositionWorld() + vob->GetAtVectorWorld() * 10 + vob->GetUpVectorWorld() * 15;
+
+			zlineCache->Line3D(pos, pos + vob->GetUpVectorWorld()	* size, colUp, 1);
+			zlineCache->Line3D(pos, pos + vob->GetAtVectorWorld()	* size, colAt, 1);
+			zlineCache->Line3D(pos, pos + vob->GetRightVectorWorld()* size, colRight, 1);
+
+
+			zlineCache->Line3D(pos + zVEC3(1, 0, 0), pos + vob->GetUpVectorWorld()	* size, colUpFP, 1);
+			zlineCache->Line3D(pos + zVEC3(0, 1, 0), pos + vob->GetAtVectorWorld()	* size, colAt, 1);
+			zlineCache->Line3D(pos + zVEC3(0, 1, 0), pos + vob->GetRightVectorWorld()* size, colRight, 1);
+
+
+
+			zVEC3 textPos = spot->GetPositionWorld() + vob->GetAtVectorWorld() * size + zVEC3(0, 10, 0);
+			zCCamera* cam = ogame->GetCamera();
+			zVEC3 viewPos = cam->GetTransform(zTCamTrafoType::zCAM_TRAFO_VIEW) * textPos;
+			int x, y;
+			cam->Project(&viewPos, x, y);
+
+			if (viewPos[2] > cam->nearClipZ) {
+				int px = viewInfo->anx(x);
+				int py = viewInfo->any(y);
+
+				viewInfo->SetFontColor(zCOLOR(229, 135, 27));
+				viewInfo->Print(px, py, spot->GetVobName());
+				viewInfo->Blit();
+				screen->InsertItem(viewInfo);
+			}
+		}
+
+		vob->bbox3D.Draw(color);
+	}
+
 	void SpacerApp::RenderSelectedVobBbox()
 	{
 		if (!IsDx11Active())
@@ -287,25 +385,17 @@ namespace GOTHIC_ENGINE {
 		}
 
 		
-
-		static zCOLOR colUp = zCOLOR(255, 255, 255);
-		static zCOLOR colAt = zCOLOR(255, 0, 0);
-		static zCOLOR colRight = zCOLOR(0, 255, 0);
-		zREAL size = 0.0f;
-		
-		/*
 		auto vob = GetSelectedVob();
 
-
-		if (!vob) return;
-
-		vob->bbox3D.Draw(zCOLOR(255, 0, 0));
-
-		return;
-		*/
+		RenderDx11_Bbox(vob);
 
 		
 
+		return;
+		
+
+		
+		/*
 		if (this->pickedVob)
 		{
 
@@ -380,6 +470,7 @@ namespace GOTHIC_ENGINE {
 
 
 		}
+		*/
 	}
 
 	void SpacerApp::UpdateGrattController()

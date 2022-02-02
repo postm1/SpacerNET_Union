@@ -66,6 +66,9 @@ namespace GOTHIC_ENGINE {
 
 		if (Locked)
 			DrawBounds();
+
+
+		DrawDx11();
 	}
 
 	void MultiSelect::PickSingle(zCVob* vob) {
@@ -90,38 +93,93 @@ namespace GOTHIC_ENGINE {
 		oCWorld* world = ogame->GetGameWorld();
 		zCVob*   camera = ogame->GetCameraVob();
 
-		auto& activeVobList = world->bspTree.renderVobList;
-		for (int i = 0; i < activeVobList.GetNum(); i++) {
-			zCVob* vob = activeVobList[i];
-			if (vob->showVisual && vob->visual /*&& camera->GetDistanceToVob( *vob ) <= 5000.0f*/) {
+		
+
+		if (theApp.IsDx11Active())
+		{
+			zCArray<zCVob*> activeVobList;
+
+			ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, activeVobList, 0);
+
+			int count = activeVobList.GetNumInList();
 
 
-				zVEC3 cameraPosition = camera->GetPositionWorld();
-				zVEC3 vobPosition = vob->GetPositionWorld();
-				zVEC3 direction = vobPosition - cameraPosition;
+			//print.PrintRed("AllCount: " + Z activeVobList.GetNumInList());
+			
+			for (int i = 0; i < count; i++) {
+				zCVob* vob = activeVobList.GetSafe(i);
 
-				if (!ignoreCollisions) {
-					int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE | zTRACERAY_VOB_IGNORE_PROJECTILES;
-					if (world->TraceRayFirstHit(cameraPosition, direction, (zCVob*)Null, flags))
-						continue;
+				if (vob && vob->showVisual && vob->visual /*&& camera->GetDistanceToVob( *vob ) <= 5000.0f*/) {
+
+
+					zVEC3 cameraPosition = camera->GetPositionWorld();
+					zVEC3 vobPosition = vob->GetPositionWorld();
+					zVEC3 direction = vobPosition - cameraPosition;
+
+					if (!ignoreCollisions) {
+						int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE | zTRACERAY_VOB_IGNORE_PROJECTILES;
+						if (world->TraceRayFirstHit(cameraPosition, direction, (zCVob*)Null, flags))
+							continue;
+					}
+
+					zVEC3 normal = direction.Normalize();
+					float angle = Alg_AngleUnitRad(camera->GetAtVectorWorld(), direction);
+
+					if (angle < RAD90) {
+						int x, y;
+						GetProjection(x, y, vobPosition);
+
+						if (x >= Bounds[VA][VX] && x < Bounds[VB][VX] && y >= Bounds[VA][VY] && y < Bounds[VB][VY]) {
+							if (sub)
+								RemoveFromSelection(vob);
+							else
+								AddToSelection(vob);
+						}
+					}
 				}
+			}
 
-				zVEC3 normal = direction.Normalize();
-				float angle = Alg_AngleUnitRad(camera->GetAtVectorWorld(), direction);
+		}
+		else
+		{
+			auto& activeVobList = world->bspTree.renderVobList;
 
-				if (angle < RAD90) {
-					int x, y;
-					GetProjection(x, y, vobPosition);
+			for (int i = 0; i < activeVobList.GetNum(); i++) {
+				zCVob* vob = activeVobList[i];
+				if (vob->showVisual && vob->visual /*&& camera->GetDistanceToVob( *vob ) <= 5000.0f*/) {
 
-					if (x >= Bounds[VA][VX] && x < Bounds[VB][VX] && y >= Bounds[VA][VY] && y < Bounds[VB][VY]) {
-						if (sub)
-							RemoveFromSelection(vob);
-						else
-							AddToSelection(vob);
+
+					zVEC3 cameraPosition = camera->GetPositionWorld();
+					zVEC3 vobPosition = vob->GetPositionWorld();
+					zVEC3 direction = vobPosition - cameraPosition;
+
+					if (!ignoreCollisions) {
+						int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE | zTRACERAY_VOB_IGNORE_PROJECTILES;
+						if (world->TraceRayFirstHit(cameraPosition, direction, (zCVob*)Null, flags))
+							continue;
+					}
+
+					zVEC3 normal = direction.Normalize();
+					float angle = Alg_AngleUnitRad(camera->GetAtVectorWorld(), direction);
+
+					if (angle < RAD90) {
+						int x, y;
+						GetProjection(x, y, vobPosition);
+
+						if (x >= Bounds[VA][VX] && x < Bounds[VB][VX] && y >= Bounds[VA][VY] && y < Bounds[VB][VY]) {
+							if (sub)
+								RemoveFromSelection(vob);
+							else
+								AddToSelection(vob);
+						}
 					}
 				}
 			}
 		}
+
+	
+
+		
 	}
 
 	void MultiSelect::AddToSelection(zCVob* vob) {
@@ -157,5 +215,22 @@ namespace GOTHIC_ENGINE {
 			theApp.SelectedVobs[i]->SetDrawBBox3D(False);
 
 		theApp.SelectedVobs.Clear();
+	}
+
+
+	void MultiSelect::DrawDx11()
+	{
+		if (!theApp.IsDx11Active())
+		{
+			return;
+		}
+
+
+		//print.PrintRed("draw: " + Z (int)theApp.SelectedVobs.GetNum());
+
+		for (uint i = 0; i < theApp.SelectedVobs.GetNum(); i++)
+		{
+			theApp.RenderDx11_Bbox(theApp.SelectedVobs[i]);
+		}
 	}
 }

@@ -320,6 +320,13 @@ namespace GOTHIC_ENGINE {
 		return FALSE;
 
 	}
+
+
+	HOOK ivk_oCNpc_DoTakeVob AS(&oCNpc::DoTakeVob, &oCNpc::DoTakeVob_Union);
+	int oCNpc::DoTakeVob_Union(zCVob* vob) {
+		
+		return FALSE;
+	}
 	//ShowFreePoints
 
 

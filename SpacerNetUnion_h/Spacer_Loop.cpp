@@ -648,6 +648,7 @@ namespace GOTHIC_ENGINE {
 		{
 			firstZenLoad = true;
 
+			/*
 			if (options.GetIntVal("openLastZen"))
 			{
 				zSTRING path = options.GetVal("openLastZenPath");
@@ -659,6 +660,7 @@ namespace GOTHIC_ENGINE {
 					loadZen();
 				}
 			}
+			*/
 		}
 	}
 

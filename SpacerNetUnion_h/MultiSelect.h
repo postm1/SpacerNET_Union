@@ -21,6 +21,7 @@ namespace GOTHIC_ENGINE {
 		void RemoveFromSelection(zCVob* vob);
 		void ClearSelection();
 		void RemoveSelected();
+		void DrawDx11();
 	};
 
 	MultiSelect Selector;

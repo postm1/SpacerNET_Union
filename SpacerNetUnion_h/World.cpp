@@ -193,6 +193,34 @@ namespace GOTHIC_ENGINE {
 		
 	}
 
+	void SpacerApp::RemoveBadLevelCompoVisual()
+	{
+		zCVob* foundVob = NULL;
+
+		zCArray<zCVob*> resultList;
+		zCWorld* world = ogame->GetWorld();
+
+		world->SearchVobListByClass(zCVobLevelCompo::classDef, resultList, 0);
+
+		int countResult = resultList.GetNumInList();
+
+		for (int i = 0; i < countResult; i++)
+		{
+			auto vob = resultList.GetSafe(i);
+
+			if (vob && vob->visual && (vob->visual->GetVisualName().Contains(".3ds")
+				|| vob->visual->GetVisualName().Contains(".3DS")))
+			{
+
+				cmd << "zCVobLevelCompo: Set visual NULL for: " << vob->visual->GetVisualName() << endl;
+
+				vob->SetVisual(NULL);
+
+			}
+		}
+
+	}
+
 	void SpacerApp::SaveFile(zSTRING worldName, int type)
 	{
 
@@ -233,6 +261,8 @@ namespace GOTHIC_ENGINE {
 
 			break;
 		case SAVE_ZEN_UC:
+
+		
 			ogame->OpenSavescreen(FALSE);
 			ogame->SaveWorld(worldName, zCWorld::zWLD_SAVE_EDITOR_UNCOMPILED, false, false); // mesh, ascii
 
@@ -307,7 +337,14 @@ namespace GOTHIC_ENGINE {
 		}
 		*/
 
+		if (theApp.options.GetIntVal("checkBoxAutoRemoveAllVisuals"))
+		{
+			this->RemoveBadLevelCompoVisual();
+		}
+		
 		treeIsReady = false;
+
+		
 	}
 
 	void SpacerApp::HandleWorldAfterSave()
@@ -353,6 +390,7 @@ namespace GOTHIC_ENGINE {
 		if (world && !world->IsCompiled())
 		{
 			Message::Box("no compiled!");
+			return;
 		}
 		else
 		{
@@ -615,6 +653,16 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::WorldAfterLoad()
 	{
+		if (!viewInfo)
+		{
+			viewInfo = new zCView(0, 0, SCREEN_MAX, SCREEN_MAX);
+			viewInfo->SetFont("FONT_OLD_10_WHITE.TGA");
+			viewInfo->SetFontColor(zCOLOR(15, 255, 15));
+			viewInfo->SetAlphaBlendFunc(zRND_ALPHA_FUNC_BLEND);
+		}
+
+		viewInfo->ClrPrintwin();
+
 		this->pickUnshareShow = false;
 
 		oCNpc::SetNpcAIDisabled(TRUE);

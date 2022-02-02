@@ -272,6 +272,11 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "autoRemoveLevelCompo", "0");
 		list.Insert("autoRemoveLevelCompo", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "checkBoxAutoRemoveAllVisuals", "0");
+		list.Insert("checkBoxAutoRemoveAllVisuals", set);
+
+		
+
 		set = new CSetting(TYPE_INT, "SPACER", "showLightRadiusVob", "1");
 		list.Insert("showLightRadiusVob", set);
 

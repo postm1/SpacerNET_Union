@@ -14,6 +14,8 @@ namespace GOTHIC_ENGINE {
 		return 0;
 	}
 
+
+
 	void SpacerApp::GameLoop()
 	{
 
@@ -22,12 +24,26 @@ namespace GOTHIC_ENGINE {
 
 			if (keys.KeyPressed("GAME_MODE", true))
 			{
+
 				ToggleGame();
 			}
 
 			if (KeyPress(KEY_ESCAPE) || KeyPress(KEY_RETURN))
 			{
 				
+				if (fastMode)
+				{
+					fastMode = false;
+					ogame->aiCam->pathSearch->collisionEnabled = true;
+					player->SetCollDet(TRUE);
+					player->SetPhysicsEnabled(TRUE);
+					player->SetSleeping(FALSE);
+
+					zinput->ClearKeyBuffer();
+					return;
+
+				}
+
 				ToggleGame();
 				zinput->ClearKeyBuffer();
 			}
@@ -214,6 +230,7 @@ namespace GOTHIC_ENGINE {
 				oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
 			}
 
+			player->showVisual = 1;
 			player->variousFlags = 2;
 			player->SetAttribute(NPC_ATR_HITPOINTSMAX, 100000);
 			player->CompleteHeal();
@@ -355,7 +372,7 @@ namespace GOTHIC_ENGINE {
 
 			oCNpc::player->GetModel();
 			player->dontWriteIntoArchive = true;
-
+			player->showVisual = 0;
 			if (originalCam)
 			{
 				//ogame->GetCamera()->SetVob(originalCam);

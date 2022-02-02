@@ -110,6 +110,7 @@ namespace GOTHIC_ENGINE {
 			zCArray<zSTRING> modelsStrVDF;
 			zCArray<zSTRING> modelsStrWORK;
 			int mouseClicksBlockedTime;
+			zCView* viewInfo;
 			//spcCObjPropertyList	propList;
 
 			struct
@@ -145,6 +146,7 @@ namespace GOTHIC_ENGINE {
 		void PreRender();
 		void RenderSelectedVobBbox();
 		bool IsDx11Active();
+		void RenderDx11_Bbox(zCVob* vob);
 		void RemoveTargetListTrigger();
 		void CollectTargetListTrigger();
 		void CollectSourcerTriggerList();
@@ -242,6 +244,8 @@ namespace GOTHIC_ENGINE {
 		void HandleWorldBeforeSave();
 
 		void HandleWorldAfterSave();
+
+		void RemoveBadLevelCompoVisual();
 
 		void SaveWorld(zSTRING worldName, int type);
 
