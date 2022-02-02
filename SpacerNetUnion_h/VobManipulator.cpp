@@ -108,6 +108,24 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void HandleVobRotationMatrix(zCVob* pVob, zMAT4 rot)
+	{
+		if (pVob->globalVobTreeNode)
+		{
+			GetChildren(pVob->globalVobTreeNode, pVob);
+		}
+
+		pVob->SetTrafoObjToWorld(rot);
+
+
+		for (int i = 0; i < vobsToMove.GetNumInList(); i++)
+		{
+			vobsToMove.Get(i)->RestoreColl();
+		}
+
+
+		vobsToMove.DeleteListDatas();
+	}
 
 	void HandleVobRotation(zCVob* pickedVob, int type, float angle)
 	{

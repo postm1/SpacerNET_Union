@@ -14,6 +14,7 @@
 #include "PFXManager.h"
 #include "MultiSelect.h"
 #include "CameraKey.h"
+#include "ActionRestore.h"
 #include "ItemsLocator.h"
 #include "SpacerApp.h"
 #include "zCBinTree3DS.h"

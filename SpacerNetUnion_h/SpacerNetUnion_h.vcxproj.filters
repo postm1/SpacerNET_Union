@@ -262,6 +262,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\ItemsLocator">
       <UniqueIdentifier>{836fa581-bf38-43e9-8151-5b87b7baff6c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\ActionRestore">
+      <UniqueIdentifier>{c2f2ffea-332b-4c08-9934-7f890a5a95d0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2956,6 +2959,12 @@
     </ClInclude>
     <ClInclude Include="ItemsLocator.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\ItemsLocator</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionRestore.h">
+      <Filter>Plugin\Workspace\Plugin\Main\ActionRestore</Filter>
+    </ClInclude>
+    <ClInclude Include="ActionRestore.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\ActionRestore</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

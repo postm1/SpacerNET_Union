@@ -405,6 +405,22 @@ namespace GOTHIC_ENGINE {
 			theApp.Reset();
 		}
 
+		
+
+		__declspec(dllexport) void Extern_RestorePosition(void* ptr) {
+
+			zCVob* pVob = (zCVob*)ptr;
+
+
+			if (!IsValidZObject(ptr))
+			{
+				//MessageBox(0, "Bad vob pointer in Extern_SelectVobSync!", 0, 0);
+				OutFile("Bad vob pointer in Extern_RestorePosition: " + AHEX32((int)ptr), false);
+				return;
+			}
+
+			theApp.restorator.RestoreVobPos(pVob);
+		}
 
 
 		__declspec(dllexport) void Extern_SelectVobSync(void* ptr) {

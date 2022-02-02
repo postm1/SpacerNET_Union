@@ -123,6 +123,8 @@ namespace GOTHIC_ENGINE {
 			
 
 			Array<zCVob*> SelectedVobs;
+
+			ActionRestore restorator;
 		};
 
 		void BlockMouseClick(int time);

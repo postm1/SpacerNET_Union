@@ -327,7 +327,9 @@ namespace GOTHIC_ENGINE {
 			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
 
 
-		
+
+
+
 		/*
 		zCTree<zCVob>* tree = ogame->GetWorld()->globalVobTree.GetFirstChild();
 		while (tree)
@@ -366,6 +368,9 @@ namespace GOTHIC_ENGINE {
 
 		//std::cout << "Union: BuildTree..." << std::endl;
 		RebuiltWaypoints();
+
+
+		//entry
 		treeIsReady = true;
 	}
 
@@ -730,6 +735,7 @@ namespace GOTHIC_ENGINE {
 		std::cout << "Union: BuildTree..." << std::endl;
 		BuildTree();
 
+		restorator.GenerateVobsPos();
 
 		if (options.GetIntVal("soundZenOff"))
 		{

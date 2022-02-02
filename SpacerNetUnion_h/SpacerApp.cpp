@@ -1,10 +1,5 @@
 
 
-// Supported with union (c) 2020 Union team
-// Union SOURCE file
-
-
-
 namespace GOTHIC_ENGINE {
 
 
@@ -58,6 +53,8 @@ namespace GOTHIC_ENGINE {
 		this->vobLightSelected = NULL;
 
 		this->spcOpt.Init("spacer_net.ini", true);
+		
+		this->restorator.Init();
 	}
 
 	zCVob* SpacerApp::GetSelectedVob()
@@ -168,12 +165,14 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::Reset()
 	{
-
+		
 		if (g_bIsPlayingGame)
 		{
 			theApp.ToggleGame();
 			
 		}
+
+		
 
 		AddVobToRender("", false);
 
@@ -201,6 +200,7 @@ namespace GOTHIC_ENGINE {
 		theApp.ClearRespList();
 		globalParent = NULL;
 		itemsLocator.Reset();
+		restorator.Reset();
 
 		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())
 		{
@@ -1150,13 +1150,12 @@ namespace GOTHIC_ENGINE {
 			arch->Close();
 			zRELEASE(arch);
 
-			//rx_light
-			if (auto vobLight = current_object->CastTo<zCVobLight>())
-			{
-				vob->BeginMovement();
-				vob->TouchMovement();
-				vob->EndMovement(1);
-			}
+			/*
+			vob->BeginMovement();
+			vob->SetPositionWorld(vob->GetPositionWorld());
+			vob->EndMovement(1);
+			*/
+			
 		}
 		else
 		{
@@ -1181,11 +1180,11 @@ namespace GOTHIC_ENGINE {
 
 
 		cmd << "ApplyProps for vob " << AHEX32((uint)current_object) <<  endl;
-		cmd << "Player: " << AHEX32((uint)player) << endl;
+		//cmd << "Player: " << AHEX32((uint)player) << endl;
 
 		if (player)
 		{
-			cmd << "Player: world " << AHEX32((uint)player->homeWorld) << endl;
+			//cmd << "Player: world " << AHEX32((uint)player->homeWorld) << endl;
 		}
 		//Message::Box("Apply 1");
 		//OutFile("ApplyProps: " + A name, true);
@@ -1255,6 +1254,8 @@ namespace GOTHIC_ENGINE {
 
 				//cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
 			}
+
+			//vob->SetPositionWorld(vob->GetPositionWorld());
 
 		}
 		//Message::Box("Apply 5");

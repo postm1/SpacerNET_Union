@@ -462,6 +462,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
+    <ClInclude Include="ActionRestore.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ActionRestore.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="API_Implementation.cpp">
       <SubType>
       </SubType>

@@ -30,6 +30,7 @@
 #include "Play.cpp"
 #include "ItemsLocator.cpp"
 #include "World.cpp"
+#include "ActionRestore.cpp"
 #include "Search.cpp"
 #include "SpacerApp.cpp"
 #include "Spacer_Loop.cpp"

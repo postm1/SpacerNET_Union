@@ -107,6 +107,7 @@ namespace GOTHIC_ENGINE {
 		OutFile("InsertIntoWorld: NodesCount (after-insert): " + A(ogame->GetWorld()->globalVobTree.CountNodes() - 1) + "\n================", false);
 		theApp.selectNextVob = selectVob;
 
+
 		// убираем превью с экрана
 		AddVobToRender("", false);
 
@@ -517,6 +518,9 @@ namespace GOTHIC_ENGINE {
 					nextInsertionIsTempPfx = true;
 				}
 			}
+
+			theApp.restorator.AddNewVobPos(vob);
+
 			addNode((uint)vob, vob->GetParent(), selectedWpForCreateIsBlocked, select);
 		}
 
@@ -602,7 +606,9 @@ namespace GOTHIC_ENGINE {
 		}
 #endif
 		itemsLocator.RemoveByItem(pVob);
+		theApp.restorator.RemoveByVob(pVob);
 		theApp.OnRemoveVob(pVob);
+
 
 		zCVobWaypoint* wpvob = dynamic_cast<zCVobWaypoint*>(pVob);
 		// Wegpunkt
