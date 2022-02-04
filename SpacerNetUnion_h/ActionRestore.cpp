@@ -13,11 +13,13 @@ namespace GOTHIC_ENGINE {
 	{
 		auto entry = new ActionRestoreEntry();
 
-		entry->pVob = pVob;
-		entry->type = type;
+		if (entry)
+		{
+			entry->pVob = pVob;
+			entry->type = type;
 
-		pList.Insert(entry);
-
+			pList.Insert(entry);
+		}
 
 		return entry;
 	}
@@ -65,7 +67,8 @@ namespace GOTHIC_ENGINE {
 
 			entry->pos = pVob->GetPositionWorld();
 			entry->rot = pVob->trafoObjToWorld;
-
+			
+			cmd << "Restorator add " << endl;
 			return entry;
 		}
 
@@ -74,6 +77,36 @@ namespace GOTHIC_ENGINE {
 	
 	void ActionRestore::GenerateVobsPos()
 	{
+		/*
+		oCWorld* pGameWorld = dynamic_cast<oCWorld*> (ogame->GetWorld());
+
+		if (!pGameWorld) return;
+
+
+		zCListSort<zCVob>* voblist_items = pGameWorld->voblist;
+
+		int foundCount = 0;
+
+		while (voblist_items) {
+			auto pVob = voblist_items->data;
+
+			voblist_items = voblist_items->next;
+
+			if (pVob
+				) {
+
+				auto entry = this->Add(pVob, ART_VOB_POS);
+
+				if (entry)
+				{
+					entry->pos = pVob->GetPositionWorld();
+					entry->rot = pVob->trafoObjToWorld;
+				}
+			}
+		}
+		*/
+
+		
 		zCArray<zCVob*> activeVobList;
 
 		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, activeVobList, 0);
@@ -88,10 +121,16 @@ namespace GOTHIC_ENGINE {
 			{
 				auto entry = this->Add(vob, ART_VOB_POS);
 
-				entry->pos = vob->GetPositionWorld();
-				entry->rot = vob->trafoObjToWorld;
+				if (entry)
+				{
+					entry->pos = vob->GetPositionWorld();
+					entry->rot = vob->trafoObjToWorld;
+				}
+
+				
 			}
 		}
+		
 		cmd << "GenerateVobsPos: pList size: " << pList.GetNum() << endl;
 	}
 
@@ -120,8 +159,13 @@ namespace GOTHIC_ENGINE {
 
 	void ActionRestore::Reset()
 	{
-		pList.DeleteListDatas();
-
 		cmd << "All remove pList, Size: " << pList.GetNum() << endl;
+		
+		if (pList.GetNum())
+		{
+			pList.DeleteListDatas();
+		}
+		
+		cmd << "All remove pList after, Size: " << pList.GetNum() << endl;
 	}
 }

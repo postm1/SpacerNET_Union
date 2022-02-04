@@ -193,6 +193,7 @@ namespace GOTHIC_ENGINE {
 
 			theApp.isExit = true;
 			theApp.options.Save();
+			theApp.restorator.Reset();
 			gameMan->ExitGame();
 		}
 

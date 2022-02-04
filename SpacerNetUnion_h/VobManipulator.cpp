@@ -1338,8 +1338,9 @@ namespace GOTHIC_ENGINE {
 			{
 				if (mm.selPolyList && mm.selPolyList->GetNumInList() > 0)
 				{
-					mm.copyMat = mm.selPolyList->Get(0)->GetPolygon()->material;
-					print.PrintRed("Материал скопирован");
+					mm.CopyTextureName();
+					//mm.copyMat = mm.selPolyList->Get(0)->GetPolygon()->material;
+					//print.PrintRed("Материал скопирован");
 				}
 
 			}
@@ -1359,12 +1360,21 @@ namespace GOTHIC_ENGINE {
 		{
 			if (pickMode == SWM_VOBS)
 			{
+				
+
 				if (theApp.isVobParentChange)
 				{
 					HandleParentChange(theApp.vobToCopy, pickedVob);
 				}
 				else
 				{
+
+
+					if (theApp.vobToCopy == theApp.globalParent && theApp.globalParent != NULL)
+					{
+						print.PrintRed(GetLang("CANT_COPY_INITSELF"));
+						return;
+					}
 
 
 					if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))

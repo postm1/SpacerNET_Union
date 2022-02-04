@@ -275,6 +275,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "checkBoxAutoRemoveAllVisuals", "0");
 		list.Insert("checkBoxAutoRemoveAllVisuals", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "checkBoxSetNearestVobCam", "0");
+		list.Insert("checkBoxSetNearestVobCam", set);
+		
 		
 
 		set = new CSetting(TYPE_INT, "SPACER", "showLightRadiusVob", "1");

@@ -19,6 +19,13 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::GameLoop()
 	{
 
+		if (GetForegroundWindow() != hWndApp && GetForegroundWindow() != theApp.mainWin && GetForegroundWindow() != theApp.vobsWin)
+		{
+			zinput->ClearKeyBuffer();
+			zinput->ClearLeftMouse();
+		}
+
+
 		if (GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin)
 		{
 
@@ -63,6 +70,7 @@ namespace GOTHIC_ENGINE {
 				}
 				else
 				{
+					//print.PrintRed("FlyMode: F1 key pressed...");
 					ogame->aiCam->pathSearch->collisionEnabled = true;
 					player->SetCollDet(TRUE);
 					player->SetPhysicsEnabled(TRUE);

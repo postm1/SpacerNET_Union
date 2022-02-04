@@ -533,6 +533,12 @@ namespace GOTHIC_ENGINE {
 			//OutFile("OnRemoveVob: vob: " + AHEX32((uint)vob), true);
 			static auto onRemove = (onVobRemove)GetProcAddress(theApp.module, "OnVobRemove");
 			onRemove((uint)vob);
+
+			if (globalParent == vob)
+			{
+				static auto onRemoveGlobalPar = (callVoidFunc)GetProcAddress(theApp.module, "OnRemoveGlobalParent");
+				onRemoveGlobalPar();
+			}
 		}
 
 	}

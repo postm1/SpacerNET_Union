@@ -194,6 +194,9 @@ namespace GOTHIC_ENGINE {
 		}
 		// MessageBox(0, "Game_Loop", 0, 0);
 
+
+
+		
 		
 		ResetPrintDebug();
 		print.Loop();
@@ -211,6 +214,7 @@ namespace GOTHIC_ENGINE {
 
 		if (theApp.g_bIsPlayingGame)
 		{
+
 			GameLoop();
 			return;
 		}
