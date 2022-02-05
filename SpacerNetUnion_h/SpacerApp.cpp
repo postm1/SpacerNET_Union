@@ -1100,12 +1100,12 @@ namespace GOTHIC_ENGINE {
 
 		OutFile("SetProperties: " + A classNameVob, false);
 
-		auto addItem = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
+		auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
 
 		Stack_PushString(className);
 		Stack_PushString(str);
 
-		addItem();
+		AddProps();
 
 
 	}
@@ -1159,12 +1159,12 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
-			auto addItem = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
+			auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
 
 			Stack_PushString("");
 			Stack_PushString("");
 
-			addItem();
+			AddProps();
 		}
 
 		zinput->ClearLeftMouse();
@@ -1179,7 +1179,7 @@ namespace GOTHIC_ENGINE {
 		zSTRING visual = zSTRING(visualStr);
 
 
-		cmd << "ApplyProps for vob " << AHEX32((uint)current_object) <<  endl;
+		
 		//cmd << "Player: " << AHEX32((uint)player) << endl;
 
 		if (player)
@@ -1188,10 +1188,34 @@ namespace GOTHIC_ENGINE {
 		}
 		//Message::Box("Apply 1");
 		//OutFile("ApplyProps: " + A name, true);
+		
+		auto pickMode = theApp.GetPickMode();
 
-		if (current_object)
+		if (pickMode == SWM_MATERIALS && mm.IsMaterialSelected())
 		{
+			
+			auto selPoly = mm.GetCurrentSelection();
 
+			zCMaterial* currentMat = selPoly->GetMaterial();
+
+			if (selPoly && currentMat)
+			{
+				cmd << "ApplyProps for material " << AHEX32((uint)currentMat) << endl;
+
+				zCBuffer buf(propString.ToChar(), propString.Length());
+				zCArchiver* arch = zarcFactory->CreateArchiverRead(&buf, 0);
+				arch->SetStringEOL(zSTRING("\n"));
+
+
+
+				arch->ReadObject(currentMat);
+				arch->Close();
+				zRELEASE(arch);
+			}
+		}
+		else if (current_object)
+		{
+			cmd << "ApplyProps for vob " << AHEX32((uint)current_object) << endl;
 			zCVob* oldVob = dynamic_cast<zCVob*>(current_object);
 
 			zSTRING lastName = current_object->GetObjectName();

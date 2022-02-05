@@ -152,7 +152,6 @@ namespace GOTHIC_ENGINE {
 		extern void SetSelectedTool(int tool); \
 		extern int GetRandVal(int min, int max); \
 		extern void GetDesktopResolution(int& horizontal, int& vertical); \
-		extern void SaveCurrentWorldToMSH(); \
 		extern void ToggleMusic(bool mode); \
 		extern void ScaleVob(zCVob* pVob, float scale); \
 		extern zSTRING GetFileExtension(zSTRING name); \

@@ -171,12 +171,6 @@ namespace GOTHIC_ENGINE {
 			SetRangeVobs();
 			SetRangeWorld();
 
-			auto pickMode = theApp.GetPickMode();
-
-			if (pickMode == SWM_VOBS)
-			{
-				mm.CleanSelectMaterial();
-			}
 
 			theApp.SetHoldTime(theApp.options.GetIntVal("holdTime"));
 		}
@@ -367,6 +361,12 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "bAddPlayerForPlugins", "0");
 		list.Insert("bAddPlayerForPlugins", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "checkBoxBoldFontProps", "0");
+		list.Insert("checkBoxBoldFontProps", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "checkBoxFontUnderstroke", "0");
+		list.Insert("checkBoxFontUnderstroke", set);
 		
 
 

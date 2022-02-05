@@ -322,7 +322,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::HandleWorldBeforeSave()
 	{
-		mm.CleanSelectMaterial();
+		mm.CleanSelection();
 		if (ogame->GetCamera()->connectedVob && ogame->GetCamera()->connectedVob->GetHomeWorld())
 			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
 
@@ -439,7 +439,7 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::LoadMesh(zSTRING worldName)
 	{
 		
-		mm.CleanSelectMaterial();
+		mm.CleanSelection();
 
 		Reset();
 		
@@ -643,7 +643,7 @@ namespace GOTHIC_ENGINE {
 		if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
 
 		theApp.pickedWaypoint2nd = NULL;
-		mm.CleanSelectMaterial();
+		mm.CleanSelection();
 		theApp.ClearRespList();
 
 

@@ -1263,7 +1263,7 @@ namespace GOTHIC_ENGINE {
 			{
 				theApp.pickUnshareShow = true;
 
-				print.PrintRed("Unshare features of polygons");
+				//print.PrintRed("Unshare features of polygons");
 
 				//ogame->GetWorld()->bspTree.mesh->ArraysToLists();
 				//ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
@@ -1334,6 +1334,7 @@ namespace GOTHIC_ENGINE {
 					theApp.isVobParentChange = false;
 				}
 			}
+			/*
 			else if (pickMode == SWM_MATERIALS)
 			{
 				if (mm.selPolyList && mm.selPolyList->GetNumInList() > 0)
@@ -1344,7 +1345,7 @@ namespace GOTHIC_ENGINE {
 				}
 
 			}
-
+			*/
 
 		}
 
@@ -1384,16 +1385,6 @@ namespace GOTHIC_ENGINE {
 					}
 
 					HandleInsertVobCopy(pickedVob);
-				}
-			}
-			else if (pickMode == SWM_MATERIALS)
-			{
-				if (mm.copyMat)
-				{
-					mm.OnPolyApplyTexture();
-					mm.PolyApplyMapping();
-					mm.RestoreMat();
-					print.PrintRed("Применено");
 				}
 			}
 
@@ -1436,7 +1427,7 @@ namespace GOTHIC_ENGINE {
 				//print.PrintRed(GetLang("TOOL_UNSELECT"));
 			}
 
-			mm.CleanSelectMaterial();
+			mm.CleanSelection();
 			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
 		}
 
@@ -1658,6 +1649,7 @@ namespace GOTHIC_ENGINE {
 
 		if (!zinput->GetMouseButtonPressedRight() && pickMode == SWM_MATERIALS)
 		{
+			/*
 
 			float mod = 1.0f;
 			if (keys.KeyPressed("VOB_SPEED_X10", false, true))
@@ -1695,6 +1687,7 @@ namespace GOTHIC_ENGINE {
 
 
 			}
+			*/
 		}
 
 		if (!zinput->GetMouseButtonPressedRight() && pickedVob)
@@ -1769,10 +1762,12 @@ namespace GOTHIC_ENGINE {
 						pos.n[1] += speedTranslation * ztimer->frameTimeFloat;
 						HandleVobTranslation(pickedVob, pos);
 					}
+					/*
 					else if (pickMode == SWM_MATERIALS)
 					{
 						mm.TextureScale(10, 10);
 					}
+					*/
 					
 				}
 
@@ -1783,10 +1778,12 @@ namespace GOTHIC_ENGINE {
 						pos.n[1] -= speedTranslation * ztimer->frameTimeFloat;
 						HandleVobTranslation(pickedVob, pos);
 					}
+					/*
 					else if (pickMode == SWM_MATERIALS)
 					{
 						mm.TextureScale(-10, -10);
 					}
+					*/
 					
 				}
 
