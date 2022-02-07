@@ -89,7 +89,6 @@ namespace GOTHIC_ENGINE {
 			currentPoly = selection->GetPolygon();
 		}
 
-		//cmd << "MaterialManager: OnPick()" << endl;
 
 		CleanSelection();
 
@@ -100,12 +99,12 @@ namespace GOTHIC_ENGINE {
 
 			if (newSelection)
 			{
-				cmd << "MaterialManager: New selection 1" << endl;
+
 
 				pList.Insert(newSelection);
 
 
-				cmd << "MaterialManager: New selection 2" << endl;
+
 
 				zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
 
@@ -114,13 +113,11 @@ namespace GOTHIC_ENGINE {
 				zSTRING arcString;
 				arch->GetBufferString(arcString);
 
-				cmd << "MaterialManager: SetProperties start" << endl;
-
 				theApp.SetProperties(arcString, "zCMaterial");
 				arch->Close();
 				zRELEASE(arch);
 
-				cmd << "MaterialManager: SetProperties ok..." << endl;
+
 			}
 		}
 
@@ -135,7 +132,6 @@ namespace GOTHIC_ENGINE {
 		auto selection = GetCurrentSelection();
 
 
-		cmd << "MaterialManager: CleanSelection" << endl;
 
 		if (selection)
 		{
@@ -151,7 +147,6 @@ namespace GOTHIC_ENGINE {
 
 		AddProps();
 
-		cmd << "MaterialManager: CleanSelection ok" << endl;
 	}
 
 }

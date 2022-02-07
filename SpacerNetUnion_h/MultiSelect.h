@@ -22,6 +22,7 @@ namespace GOTHIC_ENGINE {
 		void ClearSelection();
 		void RemoveSelected();
 		void DrawDx11();
+		void ManageKeys();
 	};
 
 	MultiSelect Selector;

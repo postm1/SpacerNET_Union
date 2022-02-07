@@ -233,4 +233,43 @@ namespace GOTHIC_ENGINE {
 			theApp.RenderDx11_Bbox(theApp.SelectedVobs[i]);
 		}
 	}
+
+	void MultiSelect::ManageKeys()
+	{
+		DoPick();
+
+
+		
+
+		if (keys.KeyPressed("VOB_CUT", true) && theApp.globalParent)
+		{
+			print.PrintRed(GetLang("VOB_CUT_OK"));
+			theApp.vobToCopy = theApp.globalParent;
+			theApp.isVobParentChange = true;
+		}
+		
+		if (keys.KeyPressed("VOB_INSERT", true) && theApp.globalParent)
+		{
+			if (theApp.isVobParentChange)
+			{
+
+				for (uint i = 0; i < theApp.SelectedVobs.GetNum(); i++)
+				{
+					zCVob* pVobChangeParent = *theApp.SelectedVobs.GetSafe(i);
+
+					if (pVobChangeParent && pVobChangeParent != theApp.globalParent)
+					{
+						HandleParentChange(pVobChangeParent, theApp.globalParent);
+					}
+				}
+
+				theApp.isVobParentChange = false;
+			}
+		}
+
+
+		//print.PrintRed("draw: " + Z (int)theApp.SelectedVobs.GetNum());
+
+		
+	}
 }

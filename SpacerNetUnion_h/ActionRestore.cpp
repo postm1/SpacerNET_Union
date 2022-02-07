@@ -28,7 +28,7 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!pVob) return;
 
-		cmd << "RestoreVobPos: try" << endl;
+		//cmd << "RestoreVobPos: try" << endl;
 
 		auto list = pList.next;
 
@@ -56,7 +56,7 @@ namespace GOTHIC_ENGINE {
 			list = list->next;
 		}
 
-		cmd << "RestoreVobPos: pList size: " << pList.GetNum() << endl;
+		//cmd << "RestoreVobPos: pList size: " << pList.GetNum() << endl;
 	}
 
 	ActionRestoreEntry* ActionRestore::AddNewVobPos(zCVob* pVob)
@@ -68,7 +68,7 @@ namespace GOTHIC_ENGINE {
 			entry->pos = pVob->GetPositionWorld();
 			entry->rot = pVob->trafoObjToWorld;
 			
-			cmd << "Restorator add " << endl;
+			//md << "Restorator add " << endl;
 			return entry;
 		}
 
@@ -154,18 +154,18 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		cmd << "Remove item pList, Size: " << pList.GetNum() << endl;
+		//cmd << "Remove item pList, Size: " << pList.GetNum() << endl;
 	}
 
 	void ActionRestore::Reset()
 	{
-		cmd << "All remove pList, Size: " << pList.GetNum() << endl;
+		//cmd << "All remove pList, Size: " << pList.GetNum() << endl;
 		
 		if (pList.GetNum())
 		{
 			pList.DeleteListDatas();
 		}
 		
-		cmd << "All remove pList after, Size: " << pList.GetNum() << endl;
+		//cmd << "All remove pList after, Size: " << pList.GetNum() << endl;
 	}
 }

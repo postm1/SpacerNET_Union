@@ -512,6 +512,7 @@ namespace GOTHIC_ENGINE {
 			PlaySoundGame(ToStr "CS_IAI_ME_ME");
 		}
 
+		/*
 		if (theApp.options.GetIntVal("autoRemoveLevelCompo"))
 		{
 			zCVob* foundVob = NULL;
@@ -552,6 +553,7 @@ namespace GOTHIC_ENGINE {
 			}
 			
 		}
+		*/
 	}
 
 	

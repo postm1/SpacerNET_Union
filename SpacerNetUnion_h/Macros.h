@@ -167,6 +167,7 @@ namespace GOTHIC_ENGINE {
 		extern void SetSelectedTool(int tool); \
 		extern bool IsVirtualFile(CString fileName); \
 		extern void HandleInsertVobCopy(zCVob* pickedVob); \
+		extern void HandleParentChange(zCVob* vob, zCVob* newParent); \
 
 	UAPI extern void   Stack_PushString(const char* v);
 	UAPI extern void   Stack_PushInt(int v);

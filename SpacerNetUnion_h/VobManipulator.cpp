@@ -1216,7 +1216,7 @@ namespace GOTHIC_ENGINE {
 				theApp.SetSelectedVob(NULL);
 			}
 
-			Selector.DoPick();
+			Selector.ManageKeys();
 
 			return;
 		

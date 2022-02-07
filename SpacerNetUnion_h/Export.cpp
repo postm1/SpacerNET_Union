@@ -445,7 +445,7 @@ namespace GOTHIC_ENGINE {
 			{
 				if (theApp.nextInsertionIsTempPfx)
 				{
-					cmd << "Protection" << endl;
+					//cmd << "Protection" << endl;
 					theApp.nextInsertionIsTempPfx = false;
 					return;
 				}
