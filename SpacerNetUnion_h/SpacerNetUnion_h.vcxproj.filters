@@ -2933,12 +2933,6 @@
     <ClInclude Include="Common.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Hooks</Filter>
     </ClInclude>
-    <ClInclude Include="CameraKey.h">
-      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="CameraKey.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="Search.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
     </ClInclude>
@@ -2965,6 +2959,21 @@
     </ClInclude>
     <ClInclude Include="ActionRestore.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\ActionRestore</Filter>
+    </ClInclude>
+    <ClInclude Include="MatTree.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.h">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraManager.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="zCObjPresetLib.h">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="zCObjPresetLib.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

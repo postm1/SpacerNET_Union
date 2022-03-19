@@ -736,8 +736,13 @@ namespace GOTHIC_ENGINE {
 
 		std::cout << "Union: BuildTree..." << std::endl;
 		BuildTree();
+	
 
 		restorator.GenerateVobsPos();
+
+		mm.CreateMatTree();
+
+		camMan.InitAfterWorldLoad();
 
 		if (options.GetIntVal("soundZenOff"))
 		{

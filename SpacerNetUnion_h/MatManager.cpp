@@ -7,7 +7,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::Init()
 	{
-
+		matSelectedInTree = NULL;
 	}
 
 	bool MatManager::IsMaterialSelected()
@@ -68,6 +68,48 @@ namespace GOTHIC_ENGINE {
 		RenderSelection();
 	}
 
+	void MatManager::SelectMaterial(zCMaterial* mat)
+	{
+		matSelectedInTree = mat;
+
+		zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
+
+		arch->SetStringEOL(zSTRING("\n"));
+		arch->WriteObject(matSelectedInTree);
+		zSTRING arcString;
+		arch->GetBufferString(arcString);
+
+		theApp.SetProperties(arcString, "zCMaterial");
+		arch->Close();
+		zRELEASE(arch);
+
+	}
+
+	void MatManager::CreateNewSelection(zCPolygon* xPoly)
+	{
+		zCSelPoly* newSelection = new zCSelPoly(xPoly);
+
+		if (newSelection)
+		{
+
+
+			pList.Insert(newSelection);
+
+			zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
+
+			arch->SetStringEOL(zSTRING("\n"));
+			arch->WriteObject(newSelection->GetMaterial());
+			zSTRING arcString;
+			arch->GetBufferString(arcString);
+
+			theApp.SetProperties(arcString, "zCMaterial");
+			arch->Close();
+			zRELEASE(arch);
+
+
+		}
+
+	}
 
 	void MatManager::OnPick(float ax, float ay)
 	{
@@ -95,30 +137,7 @@ namespace GOTHIC_ENGINE {
 
 		if (xPoly && xPoly != currentPoly)
 		{
-			zCSelPoly* newSelection = new zCSelPoly(xPoly);
-
-			if (newSelection)
-			{
-
-
-				pList.Insert(newSelection);
-
-
-
-
-				zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
-
-				arch->SetStringEOL(zSTRING("\n"));
-				arch->WriteObject(newSelection->GetMaterial());
-				zSTRING arcString;
-				arch->GetBufferString(arcString);
-
-				theApp.SetProperties(arcString, "zCMaterial");
-				arch->Close();
-				zRELEASE(arch);
-
-
-			}
+			CreateNewSelection(xPoly);
 		}
 
 		zinput->ClearKeyBuffer();
@@ -138,6 +157,8 @@ namespace GOTHIC_ENGINE {
 			pList.Remove(selection);
 			delete selection;
 		}
+
+		matSelectedInTree = NULL;
 		
 
 		auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");

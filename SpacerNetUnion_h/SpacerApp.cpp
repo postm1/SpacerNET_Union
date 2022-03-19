@@ -172,7 +172,18 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
-		
+		pickedVob = NULL;
+		vobToCopy = NULL;
+		globalParent = NULL;
+		pickedWaypoint2nd = NULL;
+
+		pickedWaypoint = NULL;
+		selectedWaypointForNet = NULL;
+		currentVobRender = NULL;
+		currenItemRender = NULL;
+
+		current_object = NULL;
+		treeToCopy = NULL;
 
 		AddVobToRender("", false);
 

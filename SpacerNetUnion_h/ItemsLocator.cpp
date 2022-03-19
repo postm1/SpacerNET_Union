@@ -107,6 +107,10 @@ namespace GOTHIC_ENGINE {
 		zCCamera* cam = ogame->GetCamera();
 		zVEC3 viewPos = cam->GetTransform(zTCamTrafoType::zCAM_TRAFO_VIEW) * iconPosition;
 		int x, y;
+
+		bool searchByName = theApp.options.GetIntVal("itemLocatorOnlyByName");
+
+
 		cam->Project(&viewPos, x, y);
 
 		if (viewPos[2] > cam->nearClipZ) {
@@ -121,7 +125,25 @@ namespace GOTHIC_ENGINE {
 				zCWorld* wld = drawEntry->pVob->GetHomeWorld();
 				
 
-				if (!showOnlyProbablyBad || IsBadItem(drawEntry->pVob))
+				if (searchByName)
+				{
+					zSTRING searchName = theApp.options.GetVal("itemLocatorNameSearch");
+
+					if (drawEntry->pVob->GetInstanceName().Upper() == searchName.Upper())
+					{
+						drawEntry->pView->SetPos(px, py);
+						drawEntry->pView->SetSize(sx, sy);
+						pLocatorView->InsertItem(drawEntry->pView);
+						drawEntry->pView->Blit();
+						pLocatorView->RemoveItem(drawEntry->pView);
+					}
+					else
+					{
+						drawEntry->pView->ClrPrintwin();
+						drawEntry->pVob->drawBBox3D = false;
+					}
+				}
+				else if (!showOnlyProbablyBad || IsBadItem(drawEntry->pVob))
 				{
 					drawEntry->pView->SetPos(px, py);
 					drawEntry->pView->SetSize(sx, sy);
@@ -129,6 +151,8 @@ namespace GOTHIC_ENGINE {
 					drawEntry->pView->Blit();
 					pLocatorView->RemoveItem(drawEntry->pView);
 				}
+	
+				
 				/*
 				if (wld->TraceRayNearestHit(drawEntry->pVob->GetPositionWorld() + zVEC3(0, 200, 0), zVEC3(0, -3000, 0), drawEntry->pVob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN)) {
 					// Poly gefunden
@@ -183,7 +207,7 @@ namespace GOTHIC_ENGINE {
 		bool showEnabled = theApp.options.GetIntVal("itemLocatorEnabled");
 		int radius = theApp.options.GetIntVal("itemLocatorRadius");
 		showOnlyProbablyBad = theApp.options.GetIntVal("itemLocatorOnlySusp");
-		
+
 
 		if (showEnabled)
 		{

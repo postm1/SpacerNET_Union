@@ -456,7 +456,31 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+		
 
+
+		__declspec(dllexport) void Extern_SelectMat(void* ptr) {
+
+			zCMaterial* pMat = (zCMaterial*)ptr;
+
+
+			if (!IsValidZObject(ptr))
+			{
+				MessageBox(0, "Bad material pointer in Extern_SelectMat!", 0, 0);
+				OutFile("Bad material pointer in Extern_SelectMat: " + AHEX32((int)ptr), false);
+				return;
+			}
+
+
+			OutFile("Extern_SelectMat: " + AHEX32((int)pMat), false);
+
+			if (pMat)
+			{
+				theApp.SetSelectedVob(NULL);
+				mm.CleanSelection();
+				mm.SelectMaterial(pMat);
+			}
+		}
 
 		__declspec(dllexport) void Extern_SelectVob(void* ptr) {
 

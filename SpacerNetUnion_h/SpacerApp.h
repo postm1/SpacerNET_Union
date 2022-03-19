@@ -125,6 +125,9 @@ namespace GOTHIC_ENGINE {
 			Array<zCVob*> SelectedVobs;
 
 			ActionRestore restorator;
+			CameraManager camMan;
+
+			zCObjPresetLib* presetsLib;
 		};
 
 		void BlockMouseClick(int time);

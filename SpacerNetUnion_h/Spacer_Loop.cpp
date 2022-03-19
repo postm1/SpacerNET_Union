@@ -185,7 +185,49 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void GetVobInfo() {
 
+		zTBBox3D bbox;
+		zCArray<zCVob*> found;
+		zREAL distance = 2000;
+
+		bbox.maxs = bbox.mins = ogame->GetCamera()->GetVob()->GetPositionWorld();
+		bbox.maxs[0] += distance; bbox.maxs[1] += distance; bbox.maxs[2] += distance;
+		bbox.mins[0] -= distance; bbox.mins[1] -= distance; bbox.mins[2] -= distance;
+		ogame->GetWorld()->CollectVobsInBBox3D(found, bbox);
+
+
+		zCVobSpot* spot = NULL;
+		zCVobWaypoint* wp = NULL;
+		zCOLOR color;
+		zPOINT3 wsPoint1, csPoint1;
+		zPOINT2 ssPoint1;
+		color = GFX_RED;
+
+		screen->SetFontColor(zCOLOR(255, 255, 255));
+
+		int distDraw = 4000;
+
+		// Nach zCVobSpots durchsuchen
+		for (int i = 0; i<found.GetNumInList(); i++)
+		{
+			auto vob = found.GetSafe(i);
+
+			if (vob && vob->GetVobName() == "VOB_TEST_NAME" && vob->GetVisual())
+			{
+				zCProgMeshProto* progMesh = static_cast<zCProgMeshProto*>(vob->GetVisual());
+				// der einfachheit halber nehmen wir das erste material was ok ist 
+				for (int i = 0; i<progMesh->numSubMeshes; i++)
+				{
+					if (auto mat = progMesh->subMeshList[i].material)
+					{
+						//mat->noCollDet = 1;
+						PrintDebug(mat->GetName() + " " + Z mat->GetNoCollDet() + ", NoDet: " + Z mat->noCollDet);
+					}
+				}
+			}
+		}
+	}
 	void SpacerApp::PluginLoop()
 	{
 		if (theApp.isExit )
@@ -246,6 +288,8 @@ namespace GOTHIC_ENGINE {
 			screen->SetFont("FONT_OLD_10_WHITE_HI.TGA");
 			screen->SetFontColor(zCOLOR(0, 255, 0));
 
+
+			//GetVobInfo();
 			//screen->Print(0, 0, "TEST");
 			//PrintDebug(zSTRING("ForeWindow: ") + zSTRING((int)GetForegroundWindow()));
 

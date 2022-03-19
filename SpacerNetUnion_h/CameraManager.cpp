@@ -4,7 +4,14 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	void CameraKey::SetCamera(zCVob* pVob)
+	void CameraManager::InitAfterWorldLoad()
+	{
+		if (!ogame->world) return;
+	}
+	
+
+
+	void CameraManager::SetCamera(zCVob* pVob)
 	{
 		zCCSCamera*			isCamera = dynamic_cast<zCCSCamera*>(pVob);
 		zCCamTrj_KeyFrame*	keyframe = dynamic_cast<zCCamTrj_KeyFrame*>(pVob);

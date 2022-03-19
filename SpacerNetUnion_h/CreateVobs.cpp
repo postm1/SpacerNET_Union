@@ -282,7 +282,6 @@ namespace GOTHIC_ENGINE {
 		}
 
 		
-		
 			
 		bool flag = nextInsertBlocked;
 		nextInsertBlocked = false;
@@ -294,6 +293,15 @@ namespace GOTHIC_ENGINE {
 		{
 
 			OutFile("CreateNewVob: created a new vob with addr: " + AHEX32((uint)newvob), true);
+
+
+			if (visual.Length() > 0 && dynamic_cast<zCZone*>(newvob))
+			{
+				//print.PrintRed(GetLang("NoVisualForSuchVob"));
+				visual = "";
+			}
+
+
 
 			if (
 				dynamic_cast<zCMover*>(newvob) ||

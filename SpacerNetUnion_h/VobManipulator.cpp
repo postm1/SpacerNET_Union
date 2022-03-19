@@ -1190,10 +1190,251 @@ namespace GOTHIC_ENGINE {
 	}
 
 
+	struct EntryFoundItem
+	{
+		zSTRING name;
+		int countLoc;
+		int countCont;
+
+		EntryFoundItem::EntryFoundItem(zSTRING name)
+		{
+			this->name = name.Upper();
+			this->countLoc = 0;
+			this->countCont = 0;
+		}
+	};
+
+	struct FoundVobStruct {
+
+		zCArray<EntryFoundItem*> itemsLoc;
+
+		void Clear()
+		{
+			ZeroMemory(&vobFoundStruct, sizeof vobFoundStruct);
+
+			itemsLoc.DeleteListDatas();
+
+			
+			itemsLoc.Insert(new EntryFoundItem("ITPO_PERM_HEALTH"));
+			itemsLoc.Insert(new EntryFoundItem("ITPO_PERM_MANA"));
+			itemsLoc.Insert(new EntryFoundItem("ItPo_Perm_STR"));
+			itemsLoc.Insert(new EntryFoundItem("ItPo_Perm_DEX"));
+			itemsLoc.Insert(new EntryFoundItem("ItPo_Perm_Stamina"));
+
+
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Perm_Herb"));
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Strength_Herb_01"));
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Dex_Herb_01"));
+			itemsLoc.Insert(new EntryFoundItem("ITPL_SUPER_HERB"));
+			itemsLoc.Insert(new EntryFoundItem("itpl_xagitta_herb_mis"));
+
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Planeberry"));
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Forestberry"));
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Health_Herb_03"));
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Mana_Herb_03"));
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Blueplant"));
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Mushroom_01"));
+			itemsLoc.Insert(new EntryFoundItem("ItPl_Mushroom_02"));
+
+			itemsLoc.Insert(new EntryFoundItem("ITFO_BREAD"));
+			itemsLoc.Insert(new EntryFoundItem("ITFO_CHEESE"));
+			itemsLoc.Insert(new EntryFoundItem("ITFO_APPLE"));
+			itemsLoc.Insert(new EntryFoundItem("ITFO_MILK"));
+			itemsLoc.Insert(new EntryFoundItem("ItFo_Honey"));
+
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_StonePlateCommon_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("itwr_staminapointstoneplate"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_HitPointStonePlate1_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_StrStonePlate1_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_DexStonePlate1_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_OneHStonePlate1_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_TwoHStonePlate1_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_BowStonePlate1_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_CrsBowStonePlate1_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_ManaStonePlate1_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_IntStonePlate_Addon"));
+
+			itemsLoc.Insert(new EntryFoundItem("itwr_druidplate_00"));
+			itemsLoc.Insert(new EntryFoundItem("itwr_druidplate_01"));
+			itemsLoc.Insert(new EntryFoundItem("itwr_druidplate_02"));
+			
+
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_StrStonePlate2_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_StrStonePlate3_Addon"));
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_DexStonePlate2_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_DexStonePlate3_Addon"));
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_HitPointStonePlate2_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_HitPointStonePlate3_Addon"));
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_ManaStonePlate2_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_ManaStonePlate3_Addon"));
+
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_OneHStonePlate2_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_OneHStonePlate3_Addon"));
+
+
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_TwoHStonePlate2_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_TwoHStonePlate3_Addon"));
+
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_BowStonePlate2_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_BowStonePlate3_Addon"));
+
+			itemsLoc.Insert(new EntryFoundItem("ItWr_CrsBowStonePlate2_Addon"));
+			itemsLoc.Insert(new EntryFoundItem("ItWr_CrsBowStonePlate3_Addon"));
+		}
+
+		void IncreaseByName(zSTRING name, int type)
+		{
+
+			for (int i = 0; i < itemsLoc.GetNumInList(); i++)
+			{
+				auto pEntry = itemsLoc.GetSafe(i);
+
+				if (pEntry && pEntry->name == name)
+				{
+					if (type == 0)
+					{
+						pEntry->countLoc += 1;
+					}
+					else
+					{
+						pEntry->countCont += 1;
+					}
+				}
+			}
+
+		}
+
+		void Print()
+		{
+
+			cmd << ">Start<" << endl;
+
+			for (int i = 0; i < itemsLoc.GetNumInList(); i++)
+			{
+				auto pEntry = itemsLoc.GetSafe(i);
+
+				if (pEntry)
+				{
+					//cmd << pEntry->name << ", " << pEntry->countLoc << "/" << pEntry->countCont << endl;
+
+					if (pEntry->countLoc == 0 && pEntry->countCont == 0)
+					{
+						//cmd << endl;
+						continue;
+					}
+
+					cmd << pEntry->name << ", " << pEntry->countLoc << "/" << pEntry->countCont << endl;
+				}
+			}
+
+			cmd << ">End<" << endl;
+		}
+	} vobFoundStruct;
+
+	void FindStatsVobs()
+	{
+		cmd << "============================ Looking for vobs ============================" << endl;
+
+		zCArray<zCVob*> result;
+		zCArray<oCItem*> foundItems;
+		zCArray<oCMobContainer*> foundChests;
+
+		vobFoundStruct.Clear();
+
+		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, result, 0);
+
+
+		int num = result.GetNumInList();
+
+		for (int i = 0; i < num; i++)
+		{
+			auto pVob = result.GetSafe(i);
+
+			if (pVob)
+			{
+				if (auto pItem = pVob->CastTo<oCItem>())
+				{
+					foundItems.InsertEnd(pItem);
+				}
+
+				if (auto pContainer = dynamic_cast<oCMobContainer*>(pVob))
+				{
+					foundChests.InsertEnd(pContainer);
+				}
+			}
+			
+		}
+
+
+		cmd << "Found Items: " << foundItems.GetNumInList() << endl;
+		cmd << "Found Chests: " << foundChests.GetNumInList() << endl;
+		cmd << endl;
+
+		for (int i = 0; i < foundItems.GetNumInList(); i++)
+		{
+			auto pVob = foundItems.GetSafe(i);
+
+			if (pVob)
+			{
+				vobFoundStruct.IncreaseByName(pVob->GetInstanceName(), 0);
+
+			}
+		}
+
+		for (int i = 0; i < foundChests.GetNumInList(); i++)
+		{
+			auto pVob = foundChests.GetSafe(i);
+
+			if (pVob)
+			{
+				zSTRING s = pVob->contains.Upper();
+
+				zSTRING info;
+				int wordnr = 1;
+				// Get Instance Name
+				do {
+					info = s.PickWord(wordnr, ",", "\r\t ");
+					if (!info.IsEmpty()) {
+						// Create these Objects
+						zSTRING name = info.PickWord(1, ":", "\r\t ");
+						int num = info.PickWord(3, ":", "\r\t ").ToInt();
+						if (num <= 0) num = 1;
+
+						int index = parser->GetIndex(name);
+						if (index >= 0)
+						{
+							vobFoundStruct.IncreaseByName(name, 1);
+						}
+					}
+					wordnr += 2;
+				} while (!info.IsEmpty());
+
+			}
+		}
+
+
+		vobFoundStruct.Print();
+	}
 
 	void VobKeys()
 	{
-
+		
+		/*
+		if (zinput->KeyPressed(KEY_F1))
+		{
+			FindStatsVobs();
+			zinput->ClearKeyBuffer();
+		}
+		*/
+		
 
 
 		auto pickMode = theApp.GetPickMode();

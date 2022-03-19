@@ -351,6 +351,14 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "itemLocatorOnlySusp", "0");
 		list.Insert("itemLocatorOnlySusp", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "itemLocatorOnlyByName", "0");
+		list.Insert("itemLocatorOnlyByName", set);
+
+
+		set = new CSetting(TYPE_STRING, "SPACER", "itemLocatorNameSearch", "");
+		list.Insert("itemLocatorNameSearch", set);
+		
 		
 
 		set = new CSetting(TYPE_INT, "SPACER", "bToggleWorkMode", "0");

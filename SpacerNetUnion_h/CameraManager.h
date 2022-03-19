@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	class CameraKey
+	class CameraManager
 	{
 	public:
 		zCVob*		cur_vob;
@@ -22,6 +22,6 @@ namespace GOTHIC_ENGINE {
 
 	public:
 		void SetCamera(zCVob*);
-
+		void InitAfterWorldLoad();
 	};
 }

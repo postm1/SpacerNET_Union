@@ -42,7 +42,8 @@ namespace GOTHIC_ENGINE {
 					theApp.vobsWin = (HWND)vobsWinHandle();
 				}
 
-				
+
+
 			}
 		}
 		else {
@@ -57,6 +58,14 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::Init()
 	{
+
+
+		if (!zoptions->ReadBool("VIDEO", "zStartupWindowed", FALSE))
+		{
+			MessageBox(0, "Спейсер нужно запускать в оконном режиме! zStartupWindowed=1 в gothic.ini\nYou must launch SPACER_NET in a window mode! Set zStartupWindowed=1 in gothic.ini", 0, 0);
+			exit(0);
+		}
+
 		//cmd << "options" << endl;
 		theApp.options.Init();
 		theApp.options.Load();

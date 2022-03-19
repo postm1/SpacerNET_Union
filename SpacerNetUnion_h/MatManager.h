@@ -8,6 +8,7 @@ namespace GOTHIC_ENGINE {
 	{
 	public:
 		zCList<zCSelPoly> pList;
+		zCMaterial* matSelectedInTree;
 
 	public:
 		void Init();
@@ -17,6 +18,10 @@ namespace GOTHIC_ENGINE {
 		void OnPick(float x, float y);
 		zCSelPoly* GetCurrentSelection();
 		bool IsMaterialSelected();
+
+		void CreateMatTree();
+		void CreateNewSelection(zCPolygon* pl);
+		void SelectMaterial(zCMaterial* mat);
 	};
 
 }
