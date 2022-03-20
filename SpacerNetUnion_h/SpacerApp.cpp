@@ -925,7 +925,7 @@ namespace GOTHIC_ENGINE {
 	}
 	void SpacerApp::PickVob()
 	{
-		if (!theApp.TryPickMouse())
+		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs)
 		{
 			return;
 		}

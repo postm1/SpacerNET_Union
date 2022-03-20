@@ -174,6 +174,7 @@ namespace GOTHIC_ENGINE {
 		zVEC2 GetMousePosVirt();
 		void ExportWorldMesh(zSTRING worldName);
 
+		void FindVobsVisualsUnique(CString path);
 		void Reset();
 
 		void SetProperties(zSTRING & propString, zSTRING classNameVob);

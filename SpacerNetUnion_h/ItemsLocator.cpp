@@ -127,9 +127,9 @@ namespace GOTHIC_ENGINE {
 
 				if (searchByName)
 				{
-					zSTRING searchName = theApp.options.GetVal("itemLocatorNameSearch");
+					zSTRING searchName = theApp.options.GetVal("itemLocatorNameSearch").Upper();
 
-					if (drawEntry->pVob->GetInstanceName().Upper() == searchName.Upper())
+					if (drawEntry->pVob->GetInstanceName().Upper().Contains(searchName))
 					{
 						drawEntry->pView->SetPos(px, py);
 						drawEntry->pView->SetSize(sx, sy);

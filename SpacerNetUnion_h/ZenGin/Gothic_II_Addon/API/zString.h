@@ -1,4 +1,4 @@
-// Supported with union (c) 2018 Union team
+// Supported with union (c) 2018-2021 Union team
 
 #ifndef __ZSTRING_H__VER3__
 #define __ZSTRING_H__VER3__
@@ -115,6 +115,10 @@ namespace Gothic_II_Addon {
     int Search( char const*, unsigned int ) const                                 zCall( 0x0059D110 );
     void Init()                                                                   zCall( 0x006D9B80 );
 
+	INLINE bool_t Contains(const zSTRING& cmp) const {
+		return this->HasWord(cmp);
+	}
+
   public:
 #if USING_UNION_STRING_METHODS
 
@@ -205,11 +209,6 @@ namespace Gothic_II_Addon {
     INLINE bool_t EndWith( const zSTRING& cmp ) const {
       return ((CStringA&)*this).EndWith( (CStringA&)cmp );
     }
-
-	INLINE bool_t Contains(const zSTRING& cmp) const {
-		return this->HasWord(cmp);
-	}
-
 
     INLINE uint32 Search(
       const zSTRING& cmp,

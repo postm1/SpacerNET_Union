@@ -724,6 +724,15 @@ namespace GOTHIC_ENGINE {
 				zrenderer->SetPolyDrawMode(zRND_DRAW_WIRE);
 			}
 		}
+
+
+		__declspec(dllexport) void Extern_SaveVobVisualsUnique() {
+
+			CString path = Stack_PeekString();
+			
+			theApp.FindVobsVisualsUnique(path);
+		}
+
 		
 	}
 
