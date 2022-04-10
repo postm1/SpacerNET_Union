@@ -175,6 +175,7 @@ namespace GOTHIC_ENGINE {
 		void ExportWorldMesh(zSTRING worldName);
 
 		void FindVobsVisualsUnique(CString path);
+		int IsVisualInVDF(CString visualName, CString vdfName);
 		void Reset();
 
 		void SetProperties(zSTRING & propString, zSTRING classNameVob);

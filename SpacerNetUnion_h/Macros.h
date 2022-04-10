@@ -8,6 +8,7 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 
+
 	#define ToStr (zSTRING)
 
 		// напсать строчку на несколько секунд, максимум 6 шт.

@@ -38,6 +38,7 @@
 #include "Export.cpp"
 #include "MatTree.cpp"
 #include "MatManager.cpp"
+#include "GenerateVobsVisualsList.cpp"
 #include "Plugin.cpp"
 #pragma endregion
 

@@ -733,6 +733,13 @@ namespace GOTHIC_ENGINE {
 			theApp.FindVobsVisualsUnique(path);
 		}
 
+
+		__declspec(dllexport) int Extern_VisualIsInVDF() {
+
+			CString vdf = Stack_PeekString();
+			CString visualName = Stack_PeekString();
+			return theApp.IsVisualInVDF(visualName, vdf);
+		}
 		
 	}
 
