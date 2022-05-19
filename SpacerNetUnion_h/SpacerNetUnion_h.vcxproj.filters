@@ -265,6 +265,12 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\ActionRestore">
       <UniqueIdentifier>{c2f2ffea-332b-4c08-9934-7f890a5a95d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\Movement\GrassPlacer">
+      <UniqueIdentifier>{38920be9-89ae-4d8e-8266-ef9bb8db1bf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\AB_NoGrass">
+      <UniqueIdentifier>{2c865c50-45fe-4dad-8102-c7e3fd29ef6a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2977,6 +2983,12 @@
     </ClInclude>
     <ClInclude Include="GenerateVobsVisualsList.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
+    <ClInclude Include="GrassPlacer.h">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement\GrassPlacer</Filter>
+    </ClInclude>
+    <ClInclude Include="GrassPlacer.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement\GrassPlacer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

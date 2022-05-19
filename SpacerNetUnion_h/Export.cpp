@@ -142,6 +142,25 @@ namespace GOTHIC_ENGINE {
 			theApp.MakeGlobalParent((zCVob*)vob);
 		}
 
+		__declspec(dllexport) void Extern_ToggleInvisible(uint vob) {
+
+			void* ptr = (void*)vob;
+
+
+			if (!IsValidZObject(ptr))
+			{
+				MessageBox(0, "Bad vob pointer in Extern_ToggleInvisible!", 0, 0);
+				OutFile("Bad vob pointer in Extern_ToggleInvisible: " + AHEX32((int)ptr), false);
+				return;
+			}
+
+
+
+			OutFile("Extern_ToggleInvisible: " + AHEX32(vob), false);
+			theApp.ToggleInvisible((zCVob*)vob);
+		}
+
+
 		__declspec(dllexport) void Extern_CleanGlobalParent() {
 			theApp.CleanGlobalParent();
 		}

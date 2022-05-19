@@ -22,7 +22,7 @@ namespace GOTHIC_ENGINE {
 		zCArray<zSTRING> whiteArrayPlugins;
 		zCArray<zSTRING> blackArrayPlugins;
 		ItemsLocator itemsLocator;
-		
+		GrassPlacer gp;
 
 		Common::Map<CString, RespawnEntry*> respawnShowList;
 
@@ -197,6 +197,7 @@ namespace GOTHIC_ENGINE {
 
 		void RemoveVob(zCVob * vob);
 		void MakeGlobalParent(zCVob* pVob);
+		void ToggleInvisible(zCVob* pVob);
 		void ApplyPhysicsVob();
 		void CleanGlobalParent();
 

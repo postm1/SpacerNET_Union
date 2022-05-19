@@ -16,6 +16,7 @@
 #include "MultiSelect.h"
 #include "ActionRestore.h"
 #include "ItemsLocator.h"
+#include "GrassPlacer.h"
 #include "zCObjPresetLib.h"
 #include "SpacerApp.h"
 #include "zCBinTree3DS.h"

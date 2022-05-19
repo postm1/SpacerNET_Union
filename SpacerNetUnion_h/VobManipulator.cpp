@@ -671,255 +671,7 @@ namespace GOTHIC_ENGINE {
 	*/
 
 
-	void GrassPlacing()
-	{
-		
-
-		if (zinput->GetMouseButtonPressedLeft())
-		{
-
-			if (!theApp.TryPickMouse())
-			{
-				return;
-			}
-
-			if (mainTimer[0u].Await(30))
-			{
-				zCCamera* cam = ogame->GetCamera();
-				zCVob* camVob = ogame->GetCamera()->connectedVob;
-
-				float ax = theApp.pickTryEntry.ax;
-				float ay = theApp.pickTryEntry.ay;
-
-				zVEC3 ray00, ray, p;
-				cam->camMatrixInv.GetTranslation(ray00);
-				p.n[VZ] = 1;
-				cam->BackProject(ax, ay, p);				// p im camSpace
-				p = cam->camMatrixInv * p;					// p im world(obj)Space  
-				ray = p - ray00;
-
-				ray = ray.Normalize();
-
-				ogame->GetWorld()->PickScene(*ogame->GetCamera(), ax, ay, -1);
-
-
-
-				if (ogame->GetWorld()->TraceRayFirstHit(cam->GetVob()->GetPositionWorld(), ray * 25000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_VOB_IGNORE)) {
-					// Poly gefunden
-					if (ogame->GetWorld()->traceRayReport.foundPoly) {
-						// Schnittpunkt schnappen und Position neu setzen
-						auto poly = ogame->GetWorld()->traceRayReport.foundPoly;
-						auto posToPlace = ogame->GetWorld()->traceRayReport.foundIntersection;
-					
-
-						if (poly)
-						{
-							int bBoxSize = 5000;
-							zCArray<zCVob*> baseVobList;
-							zCArray<zCVob*> resVobList;
-							zTBBox3D box;
-
-							box.maxs = posToPlace + zVEC3(bBoxSize, bBoxSize, bBoxSize);
-							box.mins = posToPlace - zVEC3(bBoxSize, bBoxSize, bBoxSize);
-							ogame->GetWorld()->CollectVobsInBBox3D(baseVobList, box);
-
-
-							int minDist = theApp.options.GetIntVal("grassMinDist");
-							zSTRING modelName = theApp.options.GetVal("grassModelName");
-							int offsetVert = theApp.options.GetIntVal("grassVertOffset");
-							int grassToolRemove = theApp.options.GetIntVal("grassToolRemove");
-							int isItem = theApp.options.GetIntVal("grassToolIsItem");
-
-							int grassToolClearMouse = theApp.options.GetIntVal("grassToolClearMouse");
-							int grassToolDynColl = theApp.options.GetIntVal("grassToolDynColl");
-							int grassToolRotRandAngle = theApp.options.GetIntVal("grassToolRotRandAngle");
-							int grassToolSetNormal = theApp.options.GetIntVal("grassToolSetNormal");
-							
-
-							if (modelName.Length() == 0) {
-								return;
-							}
-
-							if (grassToolClearMouse) zinput->ClearLeftMouse();
-								
-							for (int i = 0; i < baseVobList.GetNumInList(); i++) {
-
-
-								zCVob* vob = baseVobList[i];
-
-								if (vob
-									&& vob != camVob
-									&& !dynamic_cast<zCVobWaypoint*>(vob)
-									&& !dynamic_cast<zCVobSpot*>(vob)
-									&& !dynamic_cast<zCVobLight*>(vob)
-									&& !dynamic_cast<zCVobLevelCompo*>(vob)
-									&& !dynamic_cast<zCZone*>(vob)
-									&& vob->GetVisual()
-									&& vob->GetVisual()->GetVisualName() == modelName
-									&& vob != theApp.currentVobRender
-									&& vob != pfxManager.testVob
-									)
-								{
-									
-									resVobList.InsertEnd(vob);
-								}
-							}
-
-
-							for (int i = 0; i < baseVobList.GetNumInList(); i++) {
-
-
-								zCVob* vob = baseVobList[i];
-
-								if (vob
-									&& vob != camVob
-									&& !dynamic_cast<zCVobWaypoint*>(vob)
-									&& !dynamic_cast<zCVobSpot*>(vob)
-									&& !dynamic_cast<zCVobLight*>(vob)
-									&& !dynamic_cast<zCVobLevelCompo*>(vob)
-									&& !dynamic_cast<zCZone*>(vob)
-									&& vob->GetVisual()
-									&& vob != theApp.currentVobRender
-									&& vob != pfxManager.testVob
-									)
-								{
-									auto item = vob->CastTo<oCItem>();
-
-									if (item && item->GetInstanceName() == modelName)
-									{
-										resVobList.InsertEnd(vob);
-									}
-
-									
-								}
-							}
-							
-							
-							if (grassToolRemove)
-							{
-
-								for (int i = 0; i < resVobList.GetNumInList(); i++)
-								{
-									zCVob* vob = resVobList[i];
-
-									auto dist = vob->GetPositionWorld().Distance(posToPlace);
-
-									if (dist <= minDist)
-									{
-										theApp.RemoveVob(vob);
-									}
-								}
-
-								resVobList.DeleteList();
-
-								return;
-							}
-
-							for (int i = 0; i < resVobList.GetNumInList(); i++) 
-							{
-								zCVob* vob = resVobList[i];
-
-								auto dist = vob->GetPositionWorld().Distance(posToPlace);
-
-								if (dist <= minDist)
-								{
-									print.PrintRed("No place to put vob");
-									return;
-								}
-							}
-
-
-							zCVob* newVob = NULL;
-
-							if (isItem)
-							{
-								newVob = theApp.CreateItem(modelName.Upper());
-							}
-							else
-							{
-								newVob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance("zCVob"));
-								newVob->SetVobName("");
-
-
-								newVob->SetCollDetStat(FALSE);
-								newVob->SetCollDetDyn(FALSE);
-								newVob->SetVisual(modelName);
-							}
-
-							
-							if (!newVob) return;
-
-							
-
-							auto bboxCenter = newVob->bbox3D.GetCenter();
-							auto point = newVob->trafoObjToWorld.GetTranslation() - newVob->bbox3D.GetCenterFloor();
-
-							newVob->SetCollDetStat(FALSE);
-							newVob->SetCollDetDyn(FALSE);
-							newVob->SetPositionWorld(posToPlace + zVEC3(0, offsetVert, 0) + point);
-
-							if (!isItem)
-							{
-								InsertIntoWorld(newVob, NULL, false);
-							}
-							
-
-							poly->CalcNormal();
-
-							zVEC3 newDir = (poly->polyPlane.normal);
-							
-
-							if (grassToolSetNormal)
-							{
-								newVob->SetHeadingAtWorld(newDir);
-							}
-						
-							//newVob->SetHeadingYLocal(newDir);
-
-							
-							newVob->RotateLocalX(90);
-
-							//newVob->ResetXZRotationsWorld();
-
-							if (grassToolRotRandAngle)
-							{
-								newVob->RotateLocalY(GetRandVal(0, 360));
-							}
-							else
-							{
-								newVob->SetHeadingWorld(camVob->GetPositionWorld());
-								newVob->RotateLocalY(90);
-								newVob->ResetXZRotationsWorld();
-							}
-
-
-							
-
-							if (!isItem)
-							{
-								newVob->Release();
-
-								if (grassToolDynColl)
-								{
-									newVob->SetCollDetDyn(TRUE);
-								}
-							}
-							
-
-							theApp.SetSelectedVob(NULL);
-						}
-					}
-				}
-
-			}
-
-
-
-
-			//print.PrintRed(Z vobsNeed.GetNumInList());
-		}
-
-	}
+	
 
 	zCTexture* GetScreenTex(zSTRING name)
 	{
@@ -1196,11 +948,20 @@ namespace GOTHIC_ENGINE {
 		int countLoc;
 		int countCont;
 
+		int amountAll;
+
+		int amoutLoc;
+		int amountCont;
+
 		EntryFoundItem::EntryFoundItem(zSTRING name)
 		{
 			this->name = name.Upper();
 			this->countLoc = 0;
 			this->countCont = 0;
+			this->amountAll = 0;
+
+			this->amoutLoc = 0;
+			this->amountCont = 0;
 		}
 	};
 
@@ -1215,6 +976,28 @@ namespace GOTHIC_ENGINE {
 			itemsLoc.DeleteListDatas();
 
 			
+			itemsLoc.Insert(new EntryFoundItem("ItMi_Gold"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_OldCoin"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_HolderGoldCandle"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_NecklaceGold"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_SilverRing"));
+
+			itemsLoc.Insert(new EntryFoundItem("ItMi_SilverCup"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_SilverPlate"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_PlateGold"));
+
+			itemsLoc.Insert(new EntryFoundItem("ItMi_CupGold"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_RingGold"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_SilverChalice"));
+
+
+			itemsLoc.Insert(new EntryFoundItem("ItMi_ChaliceGold"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_ChestGold"));
+			itemsLoc.Insert(new EntryFoundItem("ItMi_JeweleryChest"));
+
+
+
+			/*
 			itemsLoc.Insert(new EntryFoundItem("ITPO_PERM_HEALTH"));
 			itemsLoc.Insert(new EntryFoundItem("ITPO_PERM_MANA"));
 			itemsLoc.Insert(new EntryFoundItem("ItPo_Perm_STR"));
@@ -1288,9 +1071,25 @@ namespace GOTHIC_ENGINE {
 
 			itemsLoc.Insert(new EntryFoundItem("ItWr_CrsBowStonePlate2_Addon"));
 			itemsLoc.Insert(new EntryFoundItem("ItWr_CrsBowStonePlate3_Addon"));
+			*/
 		}
 
-		void IncreaseByName(zSTRING name, int type)
+		void IncreaseByName(int num, zSTRING name, int type)
+		{
+			for (int i = 0; i < itemsLoc.GetNumInList(); i++)
+			{
+				auto pEntry = itemsLoc.GetSafe(i);
+
+				if (pEntry && pEntry->name == name)
+				{
+					pEntry->countCont += 1;
+					pEntry->amountAll += num;
+					pEntry->amountCont += num;
+				}
+			}
+		}
+
+		void IncreaseByName(oCItem* pVob, zSTRING name, int type)
 		{
 
 			for (int i = 0; i < itemsLoc.GetNumInList(); i++)
@@ -1299,14 +1098,10 @@ namespace GOTHIC_ENGINE {
 
 				if (pEntry && pEntry->name == name)
 				{
-					if (type == 0)
-					{
-						pEntry->countLoc += 1;
-					}
-					else
-					{
-						pEntry->countCont += 1;
-					}
+					pEntry->countLoc += 1;
+					pEntry->amountAll += pVob->amount;
+					pEntry->amoutLoc += pVob->amount;
+
 				}
 			}
 
@@ -1331,7 +1126,11 @@ namespace GOTHIC_ENGINE {
 						continue;
 					}
 
-					cmd << pEntry->name << ", " << pEntry->countLoc << "/" << pEntry->countCont << endl;
+					cmd << pEntry->name << ", [" << pEntry->countLoc << "/" << pEntry->countCont 
+						<< "]. Всего: " << pEntry->amoutLoc << "/"
+						<< pEntry->amountCont
+						<< " (" << pEntry->amountAll << ")"
+						<< endl;
 				}
 			}
 
@@ -1384,7 +1183,7 @@ namespace GOTHIC_ENGINE {
 
 			if (pVob)
 			{
-				vobFoundStruct.IncreaseByName(pVob->GetInstanceName(), 0);
+				vobFoundStruct.IncreaseByName(pVob, pVob->GetInstanceName(), 0);
 
 			}
 		}
@@ -1411,7 +1210,7 @@ namespace GOTHIC_ENGINE {
 						int index = parser->GetIndex(name);
 						if (index >= 0)
 						{
-							vobFoundStruct.IncreaseByName(name, 1);
+							vobFoundStruct.IncreaseByName(num, name, 1);
 						}
 					}
 					wordnr += 2;
@@ -1423,6 +1222,7 @@ namespace GOTHIC_ENGINE {
 
 		vobFoundStruct.Print();
 	}
+	extern void GrassPlacing();
 
 	void VobKeys()
 	{
@@ -1446,7 +1246,9 @@ namespace GOTHIC_ENGINE {
 				theApp.SetSelectedVob(NULL);
 
 			}
-			GrassPlacing();
+
+			theApp.gp.DoPlace();
+
 			return;
 		}
 

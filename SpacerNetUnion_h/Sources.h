@@ -35,6 +35,7 @@
 #include "SpacerApp.cpp"
 #include "Spacer_Loop.cpp"
 #include "zCObjPresetLib.cpp"
+#include "GrassPlacer.cpp"
 #include "Export.cpp"
 #include "MatTree.cpp"
 #include "MatManager.cpp"

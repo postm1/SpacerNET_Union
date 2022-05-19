@@ -904,6 +904,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="GrassPlacer.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="GrassPlacer.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Interchange.cpp">
       <SubType>
       </SubType>

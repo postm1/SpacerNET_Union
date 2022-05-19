@@ -572,6 +572,12 @@ namespace GOTHIC_ENGINE {
 	}
 
 
+	int GetRandValNegative(int min, int max)
+	{
+		return min + rand() % (max - min + 1);
+	}
+
+
 	void GetDesktopResolution(int& horizontal, int& vertical)
 	{
 		RECT desktop;

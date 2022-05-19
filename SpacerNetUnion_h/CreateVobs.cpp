@@ -559,6 +559,38 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void GetVisibleVobsChildren(zCTree<zCVob>* node, zCVob* pVob)
+	{
+		zCVob* vob = node->GetData();
+
+		if (vob)
+		{
+			vob->showVisual = !vob->showVisual;
+		}
+
+		node = node->GetFirstChild();
+
+		while (node != NULL)
+		{
+			GetVisibleVobsChildren(node, pVob);
+			node = node->GetNextChild();
+		}
+	}
+
+	void SpacerApp::ToggleInvisible(zCVob* pVob)
+	{
+		if (pVob && pVob != ogame->GetCamera()->connectedVob && !pVob->IsPFX())
+		{
+			if (pVob->globalVobTreeNode)
+			{
+				GetVisibleVobsChildren(pVob->globalVobTreeNode, pVob);
+
+			}
+		}
+	}
+
+	
+
 	void SpacerApp::CleanGlobalParent()
 	{
 		globalParent = NULL;
