@@ -12,6 +12,7 @@
 #include "CSettings.h"
 #include "KeysManager.h"
 #include "PFXManager.h"
+#include "AB_NoGrass.h"
 #include "CameraManager.h"
 #include "MultiSelect.h"
 #include "ActionRestore.h"

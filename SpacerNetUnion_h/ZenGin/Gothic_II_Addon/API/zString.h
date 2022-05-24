@@ -189,6 +189,10 @@ namespace Gothic_II_Addon {
       return ((CStringA&)*this).CompareMaskedI( (CStringA&)str );
     }
 
+	INLINE bool_t contains(const zSTRING& cmp) const {
+		return this->HasWord(cmp);
+	}
+
     INLINE bool_t HasWord( const zSTRING& cmp ) const {
       return ((CStringA&)*this).HasWord( cmp );
     }

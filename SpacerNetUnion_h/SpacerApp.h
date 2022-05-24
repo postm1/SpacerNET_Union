@@ -22,6 +22,7 @@ namespace GOTHIC_ENGINE {
 		zCArray<zSTRING> whiteArrayPlugins;
 		zCArray<zSTRING> blackArrayPlugins;
 		ItemsLocator itemsLocator;
+		AB_NoGrass nograss;
 		GrassPlacer gp;
 
 		Common::Map<CString, RespawnEntry*> respawnShowList;
@@ -197,7 +198,7 @@ namespace GOTHIC_ENGINE {
 
 		void RemoveVob(zCVob * vob);
 		void MakeGlobalParent(zCVob* pVob);
-		void ToggleInvisible(zCVob* pVob);
+		void Extern_RemoveAsParent(zCVob* pVob);
 		void ApplyPhysicsVob();
 		void CleanGlobalParent();
 
@@ -290,7 +291,7 @@ namespace GOTHIC_ENGINE {
 
 		bool SearchHandleConvert(zCVob *& vob);
 
-		int SearchFillVobClass(bool derived, int type, int selectedCount);
+		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount);
 
 		void GetAllPfx();
 

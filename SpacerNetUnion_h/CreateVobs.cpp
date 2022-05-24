@@ -559,13 +559,15 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	zCArray<zCVob*> changeParentList;
+
 	void GetVisibleVobsChildren(zCTree<zCVob>* node, zCVob* pVob)
 	{
 		zCVob* vob = node->GetData();
 
 		if (vob)
 		{
-			vob->showVisual = !vob->showVisual;
+			changeParentList.Insert(vob);
 		}
 
 		node = node->GetFirstChild();
@@ -577,15 +579,30 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void SpacerApp::ToggleInvisible(zCVob* pVob)
+	void SpacerApp::Extern_RemoveAsParent(zCVob* pVob)
 	{
-		if (pVob && pVob != ogame->GetCamera()->connectedVob && !pVob->IsPFX())
+		if (pVob && pVob != ogame->GetCamera()->connectedVob)
 		{
+			changeParentList.DeleteList();
+
 			if (pVob->globalVobTreeNode)
 			{
 				GetVisibleVobsChildren(pVob->globalVobTreeNode, pVob);
 
 			}
+
+			cmd << "changeParentList: " << changeParentList.GetNum() << endl;
+
+			for (int i = 0; i < changeParentList.GetNum(); i++)
+			{
+				auto curVob = changeParentList.GetSafe(i);
+
+				if (curVob && curVob != pVob)
+				{
+					HandleParentChange(curVob, NULL);
+				}
+			}
+
 		}
 	}
 

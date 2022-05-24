@@ -40,6 +40,7 @@
 #include "MatTree.cpp"
 #include "MatManager.cpp"
 #include "GenerateVobsVisualsList.cpp"
+#include "AB_NoGrass.cpp"
 #include "Plugin.cpp"
 #pragma endregion
 

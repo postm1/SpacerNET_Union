@@ -212,7 +212,7 @@ namespace GOTHIC_ENGINE {
 		globalParent = NULL;
 		itemsLocator.Reset();
 		restorator.Reset();
-
+		nograss.Clear();
 		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())
 		{
 			//ogame->GetWorld()->GetBspTree()->m_bRenderedFirstTime = TRUE;

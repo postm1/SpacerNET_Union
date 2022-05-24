@@ -852,6 +852,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
+    <ClInclude Include="AB_NoGrass.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="AB_NoGrass.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="ActionRestore.h">
       <SubType>
       </SubType>

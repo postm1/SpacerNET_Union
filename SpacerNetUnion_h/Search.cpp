@@ -254,7 +254,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	int SpacerApp::SearchFillVobClass(bool derived, int type, int selectedCount)
+	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount)
 	{
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
 		int resultCount = 0;
@@ -289,11 +289,33 @@ namespace GOTHIC_ENGINE {
 
 			if (selectedCount > 0)
 			{
-				SearchHandleVob(result[i]);
+				if (hasChildren)
+				{
+					if (result[i]->HasChildren())
+					{
+						SearchHandleVob(result[i]);
+					}
+				}
+				else
+				{
+					SearchHandleVob(result[i]);
+				}
+				
 			}
 			else
 			{
-				resultFound.Insert(result[i]);
+				if (hasChildren)
+				{
+					if (result[i]->HasChildren())
+					{
+						resultFound.Insert(result[i]);
+					}
+				}
+				else
+				{
+					resultFound.Insert(result[i]);
+				}
+				
 			}
 
 		}

@@ -468,6 +468,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 			searchName = searchName.Replace(".3DS", ".MRM");
 		}
 
+
 		char* volumeNamePtr;
 		long length = vdf_getvolumename(searchName.ToChar(), volumeNamePtr);
 		string volumeNameVdf = volumeNamePtr;

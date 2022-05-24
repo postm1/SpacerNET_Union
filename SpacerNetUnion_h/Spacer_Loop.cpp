@@ -267,9 +267,12 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+
 		RenderVobsLoop();
 
 		theApp.OnLevelReady();
+
+		nograss.Loop();
 
 		mm.Loop();
 		theApp.KeysLoop();
@@ -278,6 +281,8 @@ namespace GOTHIC_ENGINE {
 		pfxManager.Loop();
 
 		itemsLocator.Loop();
+		
+
 
 		
 

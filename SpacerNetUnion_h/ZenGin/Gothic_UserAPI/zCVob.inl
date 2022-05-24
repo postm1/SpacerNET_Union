@@ -57,3 +57,10 @@ struct zTBBox3D zCVob::GetBBox3DLocal_Union(void);
 
 bool IsPFX();
 
+bool HasChildren()
+{
+	auto node = this->globalVobTreeNode;
+
+	return node->GetFirstChild();
+}
+

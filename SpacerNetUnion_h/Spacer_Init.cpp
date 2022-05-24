@@ -100,6 +100,6 @@ namespace GOTHIC_ENGINE {
 		//cmd << "Game_Init" << endl;
 
 		itemsLocator.Init();
-		
+		nograss.Init();
 	}
 }

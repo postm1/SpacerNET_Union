@@ -142,22 +142,22 @@ namespace GOTHIC_ENGINE {
 			theApp.MakeGlobalParent((zCVob*)vob);
 		}
 
-		__declspec(dllexport) void Extern_ToggleInvisible(uint vob) {
+		__declspec(dllexport) void Extern_RemoveAsParent(uint vob) {
 
 			void* ptr = (void*)vob;
 
 
 			if (!IsValidZObject(ptr))
 			{
-				MessageBox(0, "Bad vob pointer in Extern_ToggleInvisible!", 0, 0);
-				OutFile("Bad vob pointer in Extern_ToggleInvisible: " + AHEX32((int)ptr), false);
+				MessageBox(0, "Bad vob pointer in Extern_RemoveAsParent!", 0, 0);
+				OutFile("Bad vob pointer in Extern_RemoveAsParent: " + AHEX32((int)ptr), false);
 				return;
 			}
 
 
 
-			OutFile("Extern_ToggleInvisible: " + AHEX32(vob), false);
-			theApp.ToggleInvisible((zCVob*)vob);
+			OutFile("Extern_RemoveAsParent: " + AHEX32(vob), false);
+			theApp.Extern_RemoveAsParent((zCVob*)vob);
 		}
 
 
@@ -679,11 +679,11 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		__declspec(dllexport) int Extern_SearchVobs(bool derived, int type) {
+		__declspec(dllexport) int Extern_SearchVobs(bool derived, bool hasChildren, int type) {
 
 			int selectedCount = Stack_PeekInt();
 
-			return theApp.SearchFillVobClass(derived, type, selectedCount);
+			return theApp.SearchFillVobClass(derived, hasChildren, type, selectedCount);
 
 		}
 
