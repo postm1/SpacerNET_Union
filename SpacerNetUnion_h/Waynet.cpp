@@ -46,6 +46,8 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
+	
+	
 
 	void SpacerApp::DisconnectWP()
 	{

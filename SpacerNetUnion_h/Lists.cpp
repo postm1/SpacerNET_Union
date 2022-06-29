@@ -138,6 +138,49 @@ namespace GOTHIC_ENGINE {
 
 
 		(voidFuncPointer)GetProcAddress(theApp.module, "SortSounds")();
+
+		//				static int chekcflag = false;
+
+		auto addMusic = (callVoidFunc)GetProcAddress(theApp.module, "AddMusicToList");
+
+		auto base = parserMusic->GetBase(parserMusic->GetIndex("C_MUSICTHEME"));
+
+
+		for (int i = 0; i < parserMusic->symtab.table.GetNum(); i++)
+		{
+			auto pSym = parserMusic->symtab.table.GetSafe(i);
+						
+			if (pSym && pSym->type == zPAR_TYPE_INSTANCE)
+			{
+				auto parentProto = pSym->GetParent();
+
+				if (parentProto)
+				{
+					auto classParent = parentProto->GetParent();
+
+					if (classParent && (classParent->name == "C_MUSICJINGLE" || classParent->name == "C_MUSICTHEME"))
+					{
+						Stack_PushString(pSym->name);
+						addMusic();
+
+
+						/*
+						cmd << (pSym->name + " " + Z(int)pSym->parent) << endl;
+
+						if (pSym->GetParent())
+						{
+							cmd << "Parent: " << pSym->GetParent()->name << endl;
+						}
+						*/
+					}
+				}
+				
+			}
+						
+		}
+
+		(voidFuncPointer)GetProcAddress(theApp.module, "SortMusic")();
+				
 	}
 
 	void SpacerApp::BuildTree()

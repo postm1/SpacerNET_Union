@@ -228,6 +228,99 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
+
+
+
+	void SpacerApp::RenderPortals()
+	{
+		static zCOLOR PORTALINFO_PC_COLOR = zCOLOR(128, 128, 128);	// Color for player portal info (RGB), default: gray color
+		static zCOLOR PORTALINFO_CAM_COLOR = zCOLOR(0, 255, 0);
+		static int PORTALINFO_TEXT_POS[2] = { 10, 10 };
+
+
+
+		if (ogame->GetGameWorld() && ogame->GetGameWorld()->GetBspTree() && ogame->GetCamera() && ogame->GetCamera()->connectedVob)
+		{
+			zSTRING* name = (zSTRING*)ogame->GetGameWorld()->GetBspTree()->GetSectorNameVobIsIn(ogame->GetCamera()->connectedVob);
+
+
+			if (name)
+			{
+				PrintDebug("Portal: " + *name);
+			}
+			else
+			{
+				//PrintDebug("No portal");
+			}
+
+		}
+
+
+		zSTRING* camPortalName = NULL;
+		zSTRING* playerPortalName = NULL;
+
+		if (ogame->camVob)
+			// getting portal name for camera object
+			camPortalName = (zSTRING*)ogame->camVob->GetSectorNameVobIsIn();
+
+		if (player)
+			// getting portal name for player object
+			playerPortalName = (zSTRING*)player->GetSectorNameVobIsIn();
+
+		zCOLOR fontColor_old = screen->fontColor;
+
+		/*
+		// output info-text about camera vob
+		screen->fontColor = PORTALINFO_CAM_COLOR;
+		screen->Print(zPixelX(PORTALINFO_TEXT_POS[0]), zPixelY(PORTALINFO_TEXT_POS[1]), Z "Cam portal: " + (camPortalName ? *camPortalName : ""));
+
+		// output info-text about player vob
+		screen->fontColor = PORTALINFO_PC_COLOR;
+		screen->Print(zPixelX(PORTALINFO_TEXT_POS[0]), zPixelY(PORTALINFO_TEXT_POS[1]) + screen->FontY(), Z "PC  portal: " + (playerPortalName ? *playerPortalName : ""));
+		
+		// restore screen font color
+		screen->fontColor = fontColor_old;
+		*/
+		//----------------------------------------------------------------
+
+
+		// ptr on the sector
+		zCBspSector* sector = NULL;
+
+		// protect ptr's
+		if (playerPortalName)
+		{
+			// getting sector ptr for player object
+			sector = player->groundPoly->material->bspSectorFront;
+
+			// run through for all polygons of the portal
+			for (int i = 0; i < sector->sectorPortals.GetNum(); i++)
+			{
+				// drawing polygon wire
+				zCPolygon* poly = sector->sectorPortals[i];
+
+				DrawPolygon(poly, PORTALINFO_PC_COLOR);
+			}
+		}
+
+
+		// protect ptr's
+		if (camPortalName)
+		{
+			// getting sector ptr for camera object
+			sector = ogame->camVob->groundPoly->material->bspSectorFront;
+
+			// run through for all polygons of the portal
+			for (int i = 0; i < sector->sectorPortals.GetNum(); i++)
+			{
+				// drawing polygon wire
+				zCPolygon* poly = sector->sectorPortals[i];
+				DrawPolygon(poly, PORTALINFO_CAM_COLOR);
+
+			}
+		}
+	}
+
 	void SpacerApp::PluginLoop()
 	{
 		if (theApp.isExit )
@@ -347,22 +440,31 @@ namespace GOTHIC_ENGINE {
 
 			}
 
-			if (ogame->GetGameWorld() && ogame->GetGameWorld()->GetBspTree() && ogame->GetCamera() && ogame->GetCamera()->connectedVob)
+			if (theApp.options.GetIntVal("showPortalsInfo"))
 			{
-				zSTRING* name = (zSTRING*)ogame->GetGameWorld()->GetBspTree()->GetSectorNameVobIsIn(ogame->GetCamera()->connectedVob);
+				RenderPortals();
+			}
+			
 
 
-				if (name)
+
+			/*
+			if (zmusic)
+			{
+				auto theme = zmusic->GetActiveTheme();
+
+				if (theme)
 				{
-					PrintDebug("Portal: " + *name);
+					PrintDebug("Theme: " + theme->fileName + " " + theme->name);
+
 				}
-				else
-				{
-					//PrintDebug("No portal");
-				}
+
+
 				
 				
 			}
+			*/
+			
 			
 			/*
 			int day, hour, min, nFont;
@@ -458,6 +560,22 @@ namespace GOTHIC_ENGINE {
 			}
 			
 			screen->SetFontColor(zCOLOR(255, 255, 255));
+			
+			/*
+
+			if (leakPolyList)
+			{
+				for (int i = 0; i < leakPolyList->GetNumInList(); i++)
+				{
+					auto poly = leakPolyList->GetSafe(i);
+
+					if (poly)
+					{
+						poly->DrawWire(zCOLOR(255, 0, 0));
+					}
+				}
+			}
+			*/
 			
 		}
 	}

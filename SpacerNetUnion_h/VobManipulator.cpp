@@ -1222,7 +1222,6 @@ namespace GOTHIC_ENGINE {
 
 		vobFoundStruct.Print();
 	}
-	extern void GrassPlacing();
 
 	void VobKeys()
 	{
@@ -1230,10 +1229,11 @@ namespace GOTHIC_ENGINE {
 		/*
 		if (zinput->KeyPressed(KEY_F1))
 		{
-			FindStatsVobs();
+			theApp.CollectLeakPolys();
 			zinput->ClearKeyBuffer();
 		}
 		*/
+		
 		
 
 
@@ -1330,16 +1330,22 @@ namespace GOTHIC_ENGINE {
 			{
 				theApp.ClearRespList();
 
-				CString funcName = "startup_goldmine";
 
-				parser->SetScriptInt("kapitel", 6);
-
-				parser->CallFunc(parser->GetIndex(funcName));
-
+				parser->SetScriptInt("kapitel", 1);
+				parser->SetScriptInt("RX_NewMonsterSpawn", 1);
+				parser->SetScriptInt("RX_IsInterUpdate", 1);
+				
+				parser->CallFunc(parser->GetIndex("startup_newworld"));
+				parser->CallFunc(parser->GetIndex("init_newworld"));
+				parser->CallFunc(parser->GetIndex("b_enter_newworld"));
+				parser->CallFunc(parser->GetIndex("RX_NewLegSpawn"));
+				parser->CallFunc(parser->GetIndex("xardas_firstlock"));
+				
 			}
 
 		}
 		*/
+		
 		
 
 		if (theApp.isGrattControlActive && keys.KeyPressed("VOB_RESET_AXIS", true, true))

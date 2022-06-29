@@ -233,6 +233,12 @@ namespace GOTHIC_ENGINE {
 			PlaySoundGame(ToStr name);
 		}
 
+		__declspec(dllexport) void Extern_PlayMusic() {
+
+			CString name = Stack_PeekString().Upper();
+			theApp.PlayMusic(ToStr name);
+		}
+
 		__declspec(dllexport) void Extern_StopAllSounds() {
 
 			if (zsound) zsound->StopAllSounds();

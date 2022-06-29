@@ -61,6 +61,11 @@ bool HasChildren()
 {
 	auto node = this->globalVobTreeNode;
 
-	return node->GetFirstChild();
+	if (node)
+	{
+		return node->GetFirstChild();
+	}
+
+	return NULL;
 }
 

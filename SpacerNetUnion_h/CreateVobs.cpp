@@ -104,6 +104,16 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		if (auto vobLight = newVob->CastTo<zCVobLight>())
+		{
+			vobLight->SetCollDet(FALSE);
+			vobLight->SetSleeping(TRUE);
+			vobLight->SetPhysicsEnabled(FALSE);
+
+			vobLight->lightData.m_bCanMove = true;
+			vobLight->SetPositionWorld(vobLight->GetPositionWorld());
+		}
+
 		OutFile("InsertIntoWorld: NodesCount (after-insert): " + A(ogame->GetWorld()->globalVobTree.CountNodes() - 1) + "\n================", false);
 		theApp.selectNextVob = selectVob;
 
@@ -373,6 +383,9 @@ namespace GOTHIC_ENGINE {
 				newvob->SetCollDet(FALSE);
 				newvob->SetSleeping(TRUE);
 				newvob->SetPhysicsEnabled(FALSE);
+
+				vobLight->lightData.m_bCanMove = true;
+				vobLight->SetPositionWorld(vobLight->GetPositionWorld());
 			}
 
 			newvob->ResetXZRotationsWorld();

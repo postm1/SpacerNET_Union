@@ -3,3 +3,4 @@
 // User API for zCCSManager
 // Add your methods here
 
+zBOOL zCCSManager::Localize(zSTRING & Token, zSTRING & Text);

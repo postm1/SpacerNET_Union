@@ -271,6 +271,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\AB_NoGrass">
       <UniqueIdentifier>{2c865c50-45fe-4dad-8102-c7e3fd29ef6a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\DialogSplitter">
+      <UniqueIdentifier>{ff4b9651-963c-49d0-a296-aaea25ece878}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -2995,6 +2998,9 @@
     </ClInclude>
     <ClInclude Include="AB_NoGrass.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\AB_NoGrass</Filter>
+    </ClInclude>
+    <ClInclude Include="DialogSplit.h">
+      <Filter>Plugin\Workspace\Plugin\Main\DialogSplitter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -189,10 +189,34 @@ namespace GOTHIC_ENGINE {
 	zCArray<zCVob*> resultFound;
 	zCVob* currentConvertVob = NULL;
 
-	bool SpacerApp::SearchHandleVob(zCVob*& vob)
+	bool SpacerApp::SearchHandleVob(zCVob*& vob, int selectedCount)
 	{
+
+		static auto compare = (compareVobs)GetProcAddress(theApp.module, "CompareVobs");
+		static auto compareByNameOrVisual = (compareVobs)GetProcAddress(theApp.module, "CompareByNameOrVisual");
+
 		if (!vob) return false;
 
+		//если выбрано 1 поле, то делаем быстрый поиск сначала
+		if (selectedCount == 1)
+		{
+			zSTRING vobName = vob->GetVobName();
+			zSTRING visualName = vob->GetVisual() ? vob->GetVisual()->GetVisualName() : "";
+
+			if (vobName.Length() > 0 || visualName.Length() > 0)
+			{
+				Stack_PushString(vobName);
+				Stack_PushString(visualName);
+
+				if (compareByNameOrVisual())
+				{
+					resultFound.Insert(vob);
+					return true;
+				}
+				return false;
+			}
+			
+		}
 
 		zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, 0, 0);
 		arch->SetStringEOL(zSTRING("\n"));
@@ -205,7 +229,7 @@ namespace GOTHIC_ENGINE {
 		arch->Close();
 		zRELEASE(arch);
 
-		static auto compare = (compareVobs)GetProcAddress(theApp.module, "CompareVobs");
+		
 
 		if (compare())
 		{
@@ -278,14 +302,20 @@ namespace GOTHIC_ENGINE {
 			ogame->GetWorld()->SearchVobListByBaseClass(curTempVob->GetClassDef(), result, 0);
 		}
 
-
+		result.RemoveDoubles();
 		int num = result.GetNumInList();
+
+		
 
 		for (int i = 0; i < num; i++)
 		{
-			if (dynamic_cast<zCVobLevelCompo*>(result[i]))	continue;
-			if (result[i] == ogame->GetCamera()->GetVob())	continue;
-			if (!result[i])	continue;
+			auto pVobCur = result[i];
+
+			if (!pVobCur)continue;
+
+			if (dynamic_cast<zCVobLevelCompo*>(pVobCur))	continue;
+			if (pVobCur == ogame->GetCamera()->GetVob())	continue;
+		
 
 			if (selectedCount > 0)
 			{
@@ -293,12 +323,13 @@ namespace GOTHIC_ENGINE {
 				{
 					if (result[i]->HasChildren())
 					{
-						SearchHandleVob(result[i]);
+						SearchHandleVob(result[i], selectedCount);
+						
 					}
 				}
 				else
 				{
-					SearchHandleVob(result[i]);
+					SearchHandleVob(result[i], selectedCount);
 				}
 				
 			}

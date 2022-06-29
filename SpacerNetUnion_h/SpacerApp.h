@@ -25,6 +25,8 @@ namespace GOTHIC_ENGINE {
 		AB_NoGrass nograss;
 		GrassPlacer gp;
 
+		zCArray<zCPolygon*>* leakPolyList;
+
 		Common::Map<CString, RespawnEntry*> respawnShowList;
 
 		void ClearRespList()
@@ -135,6 +137,7 @@ namespace GOTHIC_ENGINE {
 		bool IsClicksBlocked();
 		void PluginLoop();
 		void KeysLoop();
+		void RenderPortals();
 		void CheckForBadPlugins();
 		void RenderStartScreen();
 		SpacerApp();
@@ -163,6 +166,7 @@ namespace GOTHIC_ENGINE {
 		void ToggleWP();
 		void ConnectWP();
 		void DisconnectWP();
+		void SpacerApp::PlayMusic(CString name);
 		zSTRING GenerateWPName(zSTRING baseName);
 		void Loop();
 		void SetMover();
@@ -239,6 +243,8 @@ namespace GOTHIC_ENGINE {
 		void DoCompileLight(int type, int radius);
 
 		void DoCompileWorld(int type);
+		void ClearLeakPolys();
+		void CollectLeakPolys();
 
 		void SaveVobTree(zSTRING path);
 
@@ -285,7 +291,7 @@ namespace GOTHIC_ENGINE {
 		void SearchGetSubClasses(CString className);
 
 
-		bool SearchHandleVob(zCVob *& vob);
+		bool SearchHandleVob(zCVob *& vob, int selectedCount);
 
 		void SearchDoConvert(CString prop);
 

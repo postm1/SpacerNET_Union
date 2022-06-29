@@ -900,6 +900,10 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="DialogSplit.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="Enums.h">
       <SubType>
       </SubType>

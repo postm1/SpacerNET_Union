@@ -12,6 +12,7 @@ namespace GOTHIC_ENGINE {
 		THISCALL(ivk_zERROR_Init)(cmd);
 		int target = 0;
 		this->SetTarget(target | zERR_TARGET_SPY); //задать цель вывода zSpy, или файл в корне диска C: zERR_TARGET_FILE/zERR_TARGET_SPY
+		
 	}
 
 	//0x0044C8D0 public: int __thiscall zERROR::Report(enum zERROR_TYPE, int, class zSTRING const &, signed char, unsigned int, int, char *, char *)
@@ -33,8 +34,8 @@ namespace GOTHIC_ENGINE {
 		return 0;
 		//return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
 	}
+	
 	*/
-
 
 
 	#define MAXSIZE 24
@@ -869,6 +870,26 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+
+	void SpacerApp::ClearLeakPolys()
+	{
+		if (leakPolyList) { delete leakPolyList; leakPolyList = NULL; }
+	}
+
+	void SpacerApp::CollectLeakPolys()
+	{
+		//ClearLeakPolys();
+		leakPolyList = new zCArray<zCPolygon*>;
+
+
+
+		ogame->GetWorld()->bspTree.FindLeaks(*leakPolyList);
+
+		cmd << "Leaks found: " << leakPolyList->GetNumInList() << endl;
+
+
+	}
+
 	void SpacerApp::DoCompileWorld(int type)
 	{
 		if (!ogame->GetWorld())// || ogame->GetWorld()->IsCompiled())
@@ -879,6 +900,12 @@ namespace GOTHIC_ENGINE {
 		theApp.SetSelectedVob(NULL, "DoCompileWorld");
 
 		float value = 1.0f;
+
+		/*
+		ClearLeakPolys();
+
+		leakPolyList = new zCArray<zCPolygon*>;
+		*/
 
 		//if (mode.quick)			value = 0.2F; else value = 1.0F;
 		//if (mode.editormode)	value = 0.1F; // Editormode don't need optimization
@@ -894,6 +921,10 @@ namespace GOTHIC_ENGINE {
 		{
 			world->CompileWorld(zBSP_MODE_OUTDOOR, value, FALSE, 0, NULL);
 		}
+
+		//cmd << "Leak Polys: " << leakPolyList->GetNumInList() << endl;
+
+
 
 		WorldAfterLoad();
 

@@ -187,6 +187,9 @@ namespace GOTHIC_ENGINE {
 
 		AddVobToRender("", false);
 
+
+		//ClearLeakPolys();
+
 		if (IsAWorldLoaded())
 		{
 			pfxManager.RemovePFX();
@@ -227,6 +230,8 @@ namespace GOTHIC_ENGINE {
 		
 		if (ogame && ogame->GetWorld() && ogame->GetCamera() && !isExit && !g_bIsPlayingGame)
 		{
+			//zerr->SetFilterLevel(10);
+
 			if (GameFocused())
 			{
 				if (isGrattControlActive)
@@ -1308,5 +1313,10 @@ namespace GOTHIC_ENGINE {
 		return mouseClicksBlockedTime > 0;
 	}
 
+	void SpacerApp::PlayMusic(CString name)
+	{
+		zmusic->Stop();
+		zmusic->PlayThemeByScript(name, 0, NULL);
+	}
 
 }

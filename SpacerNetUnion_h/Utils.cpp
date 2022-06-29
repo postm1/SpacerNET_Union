@@ -809,6 +809,27 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	
+	void DrawPolygon(zCPolygon* poly, zCOLOR& color)
+	{
+		// protect ptr
+		if (!poly)
+			return;
+
+		// run through all points of the polygon
+		for (int i = 0; i < poly->polyNumVert; i++)
+		{
+			// get vertex coordinates
+			zVEC3 vtx1 = poly->vertex[i]->position;
+
+			// choice of next vertex index, taking into account the last
+			int next = (i + 1 >= poly->polyNumVert) ? 0 : i + 1;
+
+			// get next vertex coordinates
+			zVEC3 vtx2 = poly->vertex[next]->position;
+
+			// draw a line with two points
+			zlineCache->Line3D(vtx1, vtx2, color, 0);
+		}
+	};
 }
 
