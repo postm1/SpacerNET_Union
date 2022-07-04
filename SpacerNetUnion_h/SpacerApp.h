@@ -291,13 +291,13 @@ namespace GOTHIC_ENGINE {
 		void SearchGetSubClasses(CString className);
 
 
-		bool SearchHandleVob(zCVob *& vob, int selectedCount);
+		bool SearchHandleVob(zCVob *& vob, int selectedCount, int onlyVisualOrName);
 
 		void SearchDoConvert(CString prop);
 
 		bool SearchHandleConvert(zCVob *& vob);
 
-		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount);
+		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName);
 
 		void GetAllPfx();
 

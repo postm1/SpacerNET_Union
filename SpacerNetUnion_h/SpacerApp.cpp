@@ -86,7 +86,16 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 		
-	
+		
+		if (!dynamic_cast<zCVobWaypoint*>(pickedVob))
+		{
+			if (theApp.pickedWaypoint) theApp.pickedWaypoint->SetDrawBBox3D(FALSE);
+			if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
+
+
+			pickedWaypoint = NULL;
+			pickedWaypoint2nd = NULL;
+		}
 
 		if (!selectedWpForCreateIsBlocked)
 		{
@@ -337,6 +346,22 @@ namespace GOTHIC_ENGINE {
 			zlineCache->Line3D(pos, pos + vob->GetUpVectorWorld()	* size, colUp, 1);
 			zlineCache->Line3D(pos, pos + vob->GetAtVectorWorld()	* size, colAt, 1);
 			zlineCache->Line3D(pos, pos + vob->GetRightVectorWorld()* size, colRight, 1);
+
+			zVEC3 textPos = vob->GetPositionWorld() + vob->GetAtVectorWorld() * size + zVEC3(0, 10, 0);
+			zCCamera* cam = ogame->GetCamera();
+			zVEC3 viewPos = cam->GetTransform(zTCamTrafoType::zCAM_TRAFO_VIEW) * textPos;
+			int x, y;
+			cam->Project(&viewPos, x, y);
+
+			if (viewPos[2] > cam->nearClipZ) {
+				int px = viewInfo->anx(x);
+				int py = viewInfo->any(y);
+
+				viewInfo->SetFontColor(zCOLOR(229, 135, 27));
+				viewInfo->Print(px, py, vob->GetVobName());
+				viewInfo->Blit();
+				screen->InsertItem(viewInfo);
+			}
 		}
 		else if (auto spot = dynamic_cast<zCVobSpot*>(vob))
 		{

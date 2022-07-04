@@ -189,7 +189,7 @@ namespace GOTHIC_ENGINE {
 	zCArray<zCVob*> resultFound;
 	zCVob* currentConvertVob = NULL;
 
-	bool SpacerApp::SearchHandleVob(zCVob*& vob, int selectedCount)
+	bool SpacerApp::SearchHandleVob(zCVob*& vob, int selectedCount, int onlyVisualOrName)
 	{
 
 		static auto compare = (compareVobs)GetProcAddress(theApp.module, "CompareVobs");
@@ -198,24 +198,26 @@ namespace GOTHIC_ENGINE {
 		if (!vob) return false;
 
 		//если выбрано 1 поле, то делаем быстрый поиск сначала
-		if (selectedCount == 1)
+		if (onlyVisualOrName > 0)
 		{
 			zSTRING vobName = vob->GetVobName();
 			zSTRING visualName = vob->GetVisual() ? vob->GetVisual()->GetVisualName() : "";
 
-			if (vobName.Length() > 0 || visualName.Length() > 0)
-			{
-				Stack_PushString(vobName);
-				Stack_PushString(visualName);
 
-				if (compareByNameOrVisual())
-				{
-					resultFound.Insert(vob);
-					return true;
-				}
-				return false;
-			}
+			//cmd << vobName << "|" << visualName << endl;
 			
+			Stack_PushString(vobName);
+			Stack_PushString(visualName);
+
+			if (compareByNameOrVisual())
+			{
+				resultFound.Insert(vob);
+				return true;
+			}
+				
+			
+
+			return false;
 		}
 
 		zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, 0, 0);
@@ -278,7 +280,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount)
+	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName)
 	{
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
 		int resultCount = 0;
@@ -323,13 +325,13 @@ namespace GOTHIC_ENGINE {
 				{
 					if (result[i]->HasChildren())
 					{
-						SearchHandleVob(result[i], selectedCount);
+						SearchHandleVob(result[i], selectedCount, onlyVisualOrName);
 						
 					}
 				}
 				else
 				{
-					SearchHandleVob(result[i], selectedCount);
+					SearchHandleVob(result[i], selectedCount, onlyVisualOrName);
 				}
 				
 			}

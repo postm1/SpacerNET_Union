@@ -447,7 +447,6 @@ namespace GOTHIC_ENGINE {
 			
 
 
-
 			/*
 			if (zmusic)
 			{
