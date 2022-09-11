@@ -194,6 +194,8 @@ namespace GOTHIC_ENGINE {
 		current_object = NULL;
 		treeToCopy = NULL;
 
+		useSortPolys = true;
+
 		AddVobToRender("", false);
 
 

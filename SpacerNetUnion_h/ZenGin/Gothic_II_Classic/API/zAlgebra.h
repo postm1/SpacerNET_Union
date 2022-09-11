@@ -279,7 +279,7 @@ namespace Gothic_II_Classic {
     {
       return ( a0 - *this ).Length();
     }
-
+  public:
     float Dot( const zVEC3& a0 ) const
     {
       return n[VX] * a0.n[VX] + n[VY] * a0.n[VY] + n[VZ] * a0.n[VZ];

@@ -3002,6 +3002,12 @@
     <ClInclude Include="DialogSplit.h">
       <Filter>Plugin\Workspace\Plugin\Main\DialogSplitter</Filter>
     </ClInclude>
+    <ClInclude Include="RenderTest.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
+    </ClInclude>
+    <ClInclude Include="AB_NoGrass_Init.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\AB_NoGrass</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

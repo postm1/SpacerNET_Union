@@ -6,7 +6,9 @@ namespace GOTHIC_ENGINE {
 
 	struct GridEntry
 	{
-		zCArray<zCVob*> pList;
+		zCArray<zCVob*> pListGrass;
+		zCArray<zCVob*> pListBush;
+
 		zVEC3 p1;
 		zVEC3 p2;
 		zVEC3 p3;
@@ -29,9 +31,9 @@ namespace GOTHIC_ENGINE {
 	class AB_NoGrass
 	{
 		zVEC3 bariCenter;
-		zCArray<zCVob*> vobListManage;
+		zCArray<zCVob*> filteredList;
 		zCArray<zCVob*> vobListGrass;
-		zCList<zCVob> ignoreList;
+		zCArray<zCVob*> hiddenList;
 
 
 		zCArray<GridEntry*> entries;
@@ -42,17 +44,22 @@ namespace GOTHIC_ENGINE {
 		bool hideBush;
 		bool hideGrass;
 		int hiddenAmount;
-		int percent;
+		int percentGrass;
+		int percentBush;
+		
 
 	public:
+		bool hideActive;
 		void Init();
+		void SetPercentFromSettings(bool forceUpdate = false);
 		void Loop();
 		void CollectVobsFromLocation();
 
-		void ManageObjects();
+		void UpdateSettings();
+		void PrepareObjectsSaveGame();
 		void HideObjects();
-		void ShowObjects();
+		void RestoreObjects();
+		void RestoreObjectsSaveGame();
 		void Clear();
 	};
-
 }

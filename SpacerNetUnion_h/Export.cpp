@@ -67,8 +67,11 @@ namespace GOTHIC_ENGINE {
 
 
 		__declspec(dllexport) void Extern_SaveWorld(int type) {
+
+			int polysSort = Stack_PeekInt();
+
 			CString path = Stack_PeekString().Upper();
-			theApp.SaveWorld(path, type);
+			theApp.SaveWorld(path, type, polysSort);
 			PlaySoundGame(ToStr "CS_IAI_ME_ME");
 		}
 
@@ -477,6 +480,7 @@ namespace GOTHIC_ENGINE {
 
 				theApp.SetSelectedVob(pVob, "Extern_SelectVobSync");
 				theApp.SelectObject(theApp.pickedVob);
+
 			}
 
 		}
@@ -765,6 +769,26 @@ namespace GOTHIC_ENGINE {
 			CString visualName = Stack_PeekString();
 			return theApp.IsVisualInVDF(visualName, vdf);
 		}
+		
+
+		__declspec(dllexport) int Extern_GetPolysCount() {
+
+			int result = 0;
+
+			if (ogame && ogame->GetWorld() && ogame->GetWorld()->IsCompiled())
+			{
+				result = ogame->GetWorld()->bspTree.numPolys;
+			}
+
+			return result;
+		}
+
+		__declspec(dllexport) void Extern_ToggleNoGrass() {
+
+			theApp.ToggleNoGrass();
+		}
+
+
 		
 	}
 

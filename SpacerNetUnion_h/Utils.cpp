@@ -831,5 +831,34 @@ namespace GOTHIC_ENGINE {
 			zlineCache->Line3D(vtx1, vtx2, color, 0);
 		}
 	};
+
+
+	inline float CalcAlphaFromDistToPlane(const zTPlane &camPlane, const zVEC3& pos)
+	{
+		// optimierung: ist die farclipping distanz diesselbe wie die im letzten call, so sparen wir uns eine division
+
+		static float lastZ = -1;
+		static float DETAIL_MAX_DIST = -1;
+		static float ONE_OVER_DETAIL_MAX_DIST = -1;
+
+		if (zCCamera::activeCam->farClipZ - 1000 != DETAIL_MAX_DIST)
+		{
+			DETAIL_MAX_DIST = zCCamera::activeCam->farClipZ - 1000;
+			if (DETAIL_MAX_DIST<1000) DETAIL_MAX_DIST = 1000;
+			ONE_OVER_DETAIL_MAX_DIST = 1.0f / DETAIL_MAX_DIST;
+		};
+
+		zREAL dist = camPlane.GetDistanceToPlane(pos);
+		if (dist<DETAIL_MAX_DIST)
+		{
+			dist = dist * 2 - DETAIL_MAX_DIST;
+			float alpha = (dist <= 0) ? 1 : zREAL(1.0F) - (dist * ONE_OVER_DETAIL_MAX_DIST);
+			return alpha;
+		}
+		else
+		{
+			return 0;
+		};
+	};
 }
 

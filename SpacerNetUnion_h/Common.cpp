@@ -4,6 +4,9 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+
+
+
 	// ESC key crashfix
 	HOOK Ivk_CGameManager_HandleEvent AS(&CGameManager::HandleEvent, &CGameManager::HandleEvent_Hook);
 	int CGameManager::HandleEvent_Hook(int key)

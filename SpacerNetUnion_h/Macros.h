@@ -62,6 +62,15 @@ namespace GOTHIC_ENGINE {
 	#define NOINLINE __declspec(noinline)
 	#define UAPI EXTERN_C NOINLINE DLLEXPORT
 
+	#define M_PI			3.14159265358979323846
+	#define Alg_Rad2Deg(rad) (zREAL(zREAL(rad)*zREAL(180.0f)/zREAL(M_PI)))
+#define MulColor( /*zCOLOR*/ vertColor, /*int[3]*/ matColor ) \
+  (((vertColor.GetRedByte	()*matColor[0])>>8)<<16)	\
+ |(((vertColor.GetGreenByte ()*matColor[1])>>8)<<8)		\
+ |(((vertColor.GetBlueByte	()*matColor[2])>>8))
+
+	inline float zFloor(const float a) { return float(floor(a)); }
+	inline float zCeil(const float a) { return float(ceil(a)); }
 
 	#pragma warning( disable : 4190)
 	#pragma warning( disable : 4244)

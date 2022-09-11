@@ -3,156 +3,77 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
-	void AB_NoGrass::Init()
-	{
-
-		// список вобов, которые будем скрывать
-		grassList.Insert("NW_NATURE_GRASSGROUP_01.3DS");
-		grassList.Insert("NW_NATURE_GRASSGROUP_02.3DS");
-
-		grassList.Insert("NW_NATURE_WATERGRASS_56P.3DS");
-		grassList.Insert("NW_GRASSGROUP_01.3DS");
-		grassList.Insert("NW_NATURE_GREAT_WEED_XGROUP.3DS");
-		grassList.Insert("NW_GRASSGROUP_01.3DS");
-		grassList.Insert("NW_NATURE_WATERGRASS_56W.3DS");
-
-
-		grassList.Insert("AV_NATURE_BUSH_01.3DS");
-		grassList.Insert("AV_NATURE_BUSH_02.3DS");
-		grassList.Insert("ADDON_PLANTS_BUSH_01_36P.3DS");
-		grassList.Insert("AV_NATURE_BUSH_02.3DS");
-
-
-		grassList.Insert("NW_NATURE_FARNTEPPICH_306P.3DS");
-		grassList.Insert("NW_NATURE_FARN_102P.3DS");
-		grassList.Insert("NW_NATURE_FARNTEPPICH_612P.3DS");
-		grassList.Insert("OW_NATURE_BUSH_BIG_01.3DS");
-		grassList.Insert("OW_NATURE_BUSH_02.3DS"); // да, это тоже трава, название такое
-		grassList.Insert("OW_NATURE_BUSH_03.3DS"); // да, это тоже трава, название такое
-		
-		grassList.Insert("NW_CAVE_PLANTS_01.3DS");
-		grassList.Insert("NW_CAVE_PLANTS_02.3DS");
-		grassList.Insert("NW_CAVE_PLANTS_03.3DS");
-		grassList.Insert("NW_CAVE_PLANTS_04.3DS");
-		grassList.Insert("NW_CAVE_PLANTS_05.3DS");
-
-		grassList.Insert("XW_NATURE_BUSH_BIG_01.3DS");
-		grassList.Insert("OW_NATURE_BUSH_BIG_02.3DS");
-		
-
-		grassList.Insert("GRASS_WUESTE1.3DS");
-		grassList.Insert("GRASS_WUESTE2.3DS");
-	
-		grassList.Insert("NW_FERN_FOREST_CAVE_02_HL.3DS");
-		grassList.Insert("KB_UNTERHOLZ_01.3DS");
-		grassList.Insert("KB_UNTERHOLZ_02.3DS");
-		grassList.Insert("KB_UNTERHOLZ_03.3DS");
-		grassList.Insert("KB_UNTERHOLZ_04.3DS");
-	
-		//=============================================================
-
-		bushList.Insert("NW_NATURE_LONG_BUSH_360P.3DS");
-		bushList.Insert("NW_NATURE_LONG_BUSH_370P.3DS");
-		bushList.Insert("GRASS_01.3DS");
-		bushList.Insert("NW_NATURE_WATERGRASS_56P_NEW.3DS");
-		bushList.Insert("NW_NATURE_PLANT_02.3DS");
-		bushList.Insert("OW_LOB_BUSH_REED_V1.3DS");
-		bushList.Insert("NW_NATURE_WATERGRASS_02_100P.3DS");
-		bushList.Insert("NW_NATURE_WATERGRASS_02_900P.3DS");
-		bushList.Insert("NW_NATURE_GRASSGROUP_01LPS_NEW.3DS");
-		bushList.Insert("OW_LOB_BUSH_V7.3DS");
-		bushList.Insert("NW_GROUNDCLOVER03.3DS");
-		bushList.Insert("OW_BUSHES_01.3DS");
-
-		bushList.Insert("OW_LOB_BUSH_V4.3DS");
-		bushList.Insert("OW_LOB_BUSH_V5.3DS");
-		bushList.Insert("OW_BUSHES_01.3DS");
-		
-		bushList.Insert("ADDON_CANYONPLANT_BUSHES_02_240P.3DS");
-		bushList.Insert("ADDON_CANYONPLANT_BUSHES_01_120P.3DS");
-		bushList.Insert("ADDON_CANYONPLANT_BUSHES_05_168P.3DS");
-		
-		
-		/*
-		zCArray<zSTRING> secondLevelList;
-		secondLevelList.Insert("AV_NATURE_BUSH_01.3DS");
-		secondLevelList.Insert("AV_NATURE_BUSH_02.3DS");
-		secondLevelList.Insert("ADDON_PLANTS_BUSH_01_36P.3DS");
-		secondLevelList.Insert("NW_NATURE_TANNE_100P.3DS");
-		secondLevelList.Insert("NW_NATURE_TANNE_33P.3DS");
-		*/
-
-
-		hiddenAmount = 0;
-		bariCenter = zVEC3(0, 0, 0);
-		percent = 100;
-		hideBush = true;
-		hideGrass = true;
-	}
-
-
-	void AB_NoGrass::ManageObjects()
-	{
-
-	}
 
 	void AB_NoGrass::HideObjects()
 	{
-		int count = vobListManage.GetNumInList();
+		//RX_Begin(0);
+
+		int count = filteredList.GetNumInList();
 
 		if (count == 0)
 		{
-			printWin("No vobs found");
 			return;
 		}
 
-		if (percent == 0)
+		//если ничего не скрываем, то ничего и не делаем
+		if (percentGrass == 0 && percentBush == 0)
 		{
-			printWin("percent is 0");
 			return;
 		}
 
 		hiddenAmount = 0;
 		int maxDist = 0;
-
-		//RX_Begin(50);
+		int time = 7000;
+		//
 
 		for (int i = 0; i < count; i++)
 		{
-			zCVob* pVob = vobListManage.GetSafe(i);
+			zCVob* pVob = filteredList.GetSafe(i);
 
-			if (pVob)
+			if (pVob && pVob->GetVisual())
 			{
 				zSTRING name = pVob->GetVisual()->GetVisualName().Upper();
+
+				if (!pVob->showVisual)
+				{
+					//Col16 color_red(CMD_RED);
+
+					//cmd << "ShowVisual false for " << name << color_red << endl;
+				}
 
 				if (hideGrass && grassList.IsInList(name))
 				{
 					bariCenter += pVob->GetPositionWorld();
-					//pVob->showVisual = 0;
 					hiddenAmount += 1;
 					vobListGrass.Insert(pVob);
 				}
 				else if (hideBush && (name.contains("NW_NATURE_BUSH") || name.contains("NW_NATURE_FARN") || bushList.IsInList(name)))
 				{
 					bariCenter += pVob->GetPositionWorld();
-					//pVob->showVisual = 0;
 					hiddenAmount += 1;
 					vobListGrass.Insert(pVob);
 				}
 			}
 		}
 
-		if (vobListGrass.GetNumInList() == 0)
+
+		//cmd << "vobListPlantsList: " << vobListGrass.GetNumInList() << endl;
+
+
+		if (hiddenAmount == 0)
 		{
-			printWin("No grass found");
+			//printWin("No grass found");
 			return;
 		}
 
-		if (hiddenAmount > 0)
-		{
-			// считаем геометрический центр всех вобов
-			bariCenter /= hiddenAmount;
-		}
+		//cmd << "GrassOrBust list: " << vobListGrass.GetNumInList() << endl;
+
+
+		// считаем геометрический центр всех вобов
+		bariCenter /= hiddenAmount;
+
+		//cmd << "bariCenter: " << bariCenter.ToString() << endl;
+
 
 
 		// ищем самый удаленый воб, чтоб сделать квадрат нужного размера
@@ -163,6 +84,8 @@ namespace GOTHIC_ENGINE {
 			if (pVob)
 			{
 				int dist = pVob->GetPositionWorld().Distance(bariCenter);
+
+				//cmd << pVob->GetObjectName() << " Dist: " << dist << endl;
 
 				if (dist > maxDist)
 				{
@@ -177,7 +100,13 @@ namespace GOTHIC_ENGINE {
 		// еще небольшой запас
 		maxDist *= 1.10f;
 
-		//RX_End(50);
+
+
+
+
+
+		//cmd << "maxDist: " << maxDist << endl;
+
 
 		//4 точки квадрата, который покрывает всю карту
 		zVEC3 first = bariCenter + zVEC3(maxDist * cos(PI / 4), 0, maxDist * sin(PI / 4));
@@ -185,8 +114,6 @@ namespace GOTHIC_ENGINE {
 		zVEC3 third = bariCenter + zVEC3(maxDist * cos(5 * PI / 4), 0, maxDist * sin(5 * PI / 4));
 		zVEC3 forth = bariCenter + zVEC3(maxDist * cos(-PI / 4), 0, maxDist * sin(-PI / 4));
 
-
-		int time = 7000;
 
 		/*
 		debug.AddLine(first, second, GFX_WHITE, time);
@@ -199,21 +126,14 @@ namespace GOTHIC_ENGINE {
 		zVEC3 norm12 = (second - first).Normalize();
 		zVEC3 norm14 = (forth - first).Normalize();
 
-
 		int cellSize = 2000;
 		int width = first.Distance(second);
 		int countCells = width / cellSize + 2;
 
 
-		if (entries.GetNumInList() > 0)
-		{
-			entries.DeleteListDatas();
-		}
-
-
 		int num = 0;
 
-		//RX_Begin(51);
+		//
 		for (int i = 0; i < countCells; i++)
 		{
 			for (int j = 0; j < countCells; j++)
@@ -238,6 +158,7 @@ namespace GOTHIC_ENGINE {
 				zVEC3 third_dot = bariCenter + zVEC3(maxDist * cos(5 * PI / 4), 1000, maxDist * sin(5 * PI / 4));
 				zVEC3 forth_dot = bariCenter + zVEC3(maxDist * cos(-PI / 4), 1000, maxDist * sin(-PI / 4));
 				*/
+				/*
 				zCOLOR col;
 
 				switch (i)
@@ -248,7 +169,7 @@ namespace GOTHIC_ENGINE {
 				case 3: { col = GFX_WHITE; break; };
 				default: { col = GFX_BLUE; break; };
 				}
-
+				*/
 				/*
 				debug.AddLine(entry->p1, entry->p2, col, time);
 				debug.AddLine(entry->p2, entry->p3, col, time);
@@ -262,7 +183,7 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		//RX_End(51);
+
 		//XYZ
 
 		/*
@@ -274,7 +195,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-		//RX_Begin(52);
+		//
 		for (int i = 0; i < vobListGrass.GetNumInList(); i++)
 		{
 			zCVob* pVob = vobListGrass.GetSafe(i);
@@ -291,7 +212,17 @@ namespace GOTHIC_ENGINE {
 
 					if (entry && entry->IsPosInGrid(pVob->GetPositionWorld()))
 					{
-						entry->pList.InsertEnd(pVob);
+						zSTRING name = pVob->GetVisual()->GetVisualName().Upper();
+
+						if (name.contains("NW_NATURE_BUSH") || name.contains("NW_NATURE_FARN") || bushList.IsInList(name))
+						{
+							entry->pListBush.InsertEnd(pVob);
+						}
+						else
+						{
+							entry->pListGrass.InsertEnd(pVob);
+						}
+
 
 						//debug.AddLine(pVob->GetPositionWorld(), pVob->GetPositionWorld() + zVEC3(0, 3000, 0), GFX_RED, time, 0, "", Z k);
 						flag = true;
@@ -301,71 +232,185 @@ namespace GOTHIC_ENGINE {
 
 				if (!flag)
 				{
-					printWin("No cell found for... ");
+					//printWin("No cell found for... ");
 					//debug.AddLine(pVob->GetPositionWorld(), pVob->GetPositionWorld() + zVEC3(0, 3000, 0), GFX_RED, time);
 				}
 			}
 		}
-		//RX_End(52);
-		//cmd << "Entries" << endl;
+
+		//  cmd << "Entries..." << endl;
 
 
-		//RX_Begin(53);
+		//
 		for (int k = 0; k < entries.GetNumInList(); k++)
 		{
 			auto entry = entries.GetSafe(k);
 
-			if (entry && entry->pList.GetNumInList() > 0)
+			if (entry && entry->pListGrass.GetNumInList() > 0)
 			{
 				//cmd << entry->pList.GetNumInList() << endl;
-				int numberToSelect = (entry->pList.GetNumInList() * percent) / 100;
+				int numberToSelect = (entry->pListGrass.GetNumInList() * percentGrass) / 100;
 
-				if (percent == 100)
+				if (percentGrass == 100)
 				{
-					for (int z = 0; z < entry->pList.GetNumInList(); z++)
+					for (int z = 0; z < entry->pListGrass.GetNumInList(); z++)
 					{
-						entry->pList.GetSafe(z)->showVisual = 0;
-					}
-					continue;
-				}
-
-				//cmd << "entry: " << k << "; Number " << numberToSelect << endl;
-
-				while (numberToSelect > 0)
-				{
-					int x = rand() % entry->pList.GetNumInList();
-
-					if (entry->pList.GetSafe(x) && entry->pList.GetSafe(x)->showVisual)
-					{
-						entry->pList.GetSafe(x)->showVisual = 0;
-						numberToSelect -= 1;
+						entry->pListGrass.GetSafe(z)->showVisual = 0;
+						hiddenList.Insert(entry->pListGrass.GetSafe(z));
 					}
 				}
+				else
+				{
+					//cmd << "entry: " << k << "; Number " << numberToSelect << endl;
+
+					int counterAdd = 0;
+					for (int x = 0; x < entry->pListGrass.GetNumInList(); x++)
+					{
+						auto pCurVob = entry->pListGrass.GetSafe(x);
+
+						if (pCurVob)
+						{
+							pCurVob->showVisual = 0;
+							hiddenList.Insert(pCurVob);
+							counterAdd += 1;
+						}
+
+						if (counterAdd >= numberToSelect) {
+							break;
+						}
+					}
+
+					/*
+					while (numberToSelect > 0)
+					{
+					int x = rand() % entry->pListGrass.GetNumInList();
+
+					if (entry->pListGrass.GetSafe(x))
+					{
+					entry->pListGrass.GetSafe(x)->showVisual = 0;
+					hiddenList.Insert(entry->pListGrass.GetSafe(x));
+					numberToSelect -= 1;
+					}
+					}
+					*/
+				}
+
+			}
+
+			if (entry && entry->pListBush.GetNumInList() > 0)
+			{
+				int numberToSelect = (entry->pListBush.GetNumInList() * percentBush) / 100;
+
+				if (percentBush == 100)
+				{
+					for (int z = 0; z < entry->pListBush.GetNumInList(); z++)
+					{
+						entry->pListBush.GetSafe(z)->showVisual = 0;
+						hiddenList.Insert(entry->pListBush.GetSafe(z));
+					}
+				}
+				else
+				{
+					int counterAdd = 0;
+					for (int x = 0; x < entry->pListBush.GetNumInList(); x++)
+					{
+						auto pCurVob = entry->pListBush.GetSafe(x);
+
+						if (pCurVob)
+						{
+							pCurVob->showVisual = 0;
+							hiddenList.Insert(pCurVob);
+							counterAdd += 1;
+						}
+
+						if (counterAdd >= numberToSelect) {
+							break;
+						}
+					}
+
+					/*
+					while (numberToSelect > 0)
+					{
+					int x = rand() % entry->pListBush.GetNumInList();
+
+					if (entry->pListBush.GetSafe(x))
+					{
+					entry->pListBush.GetSafe(x)->showVisual = 0;
+					hiddenList.Insert(entry->pListBush.GetSafe(x));
+					numberToSelect -= 1;
+					}
+					}
+					*/
+				}
+
 			}
 		}
 
+		//RX_End(0);
+
+		//cmd << "HiddenList: " << hiddenList.GetNumInList() << endl;
+		//cmd << "Time: " << RX_PerfString(0) << endl;
+
 		/*
-		RX_End(53);
 		cmd << "Perf50: " << RX_PerfString(50) << endl;
 		cmd << "Perf51: " << RX_PerfString(51) << endl;
 		cmd << "Perf52: " << RX_PerfString(52) << endl;
 		cmd << "Perf53: " << RX_PerfString(53) << endl;
-
 		*/
 
 		//printWin("Max dist: " + Z maxDist);
-		printWin("width: " + Z width);
-		printWin("countCells: " + Z countCells);
+		//printWin("width: " + Z width);
+		//printWin("countCells: " + Z countCells);
 	}
 
-
-	void AB_NoGrass::ShowObjects()
+	void AB_NoGrass::PrepareObjectsSaveGame()
 	{
-		int count = vobListManage.GetNumInList();
+		//cmd << "PrepareObjectsSaveGame Start: " << hiddenList.GetNumInList() << endl;
+
+		int count = hiddenList.GetNumInList();
 
 		for (int i = 0; i < count; i++)
 		{
-			zCVob* pVob = vobListGrass.GetSafe(i);
+			zCVob* pVob = hiddenList.GetSafe(i);
+
+			if (pVob)
+			{
+				pVob->showVisual = 1;
+			}
+		}
+		//cmd << "PrepareObjectsSaveGame count: " << restoreSaveList.GetNum() << endl;
+
+		//cmd << "PrepareObjectsSaveGame End" << endl;
+	}
+
+	void AB_NoGrass::RestoreObjectsSaveGame()
+	{
+		//cmd << "RestoreObjectsSaveGame Start: " << restoreSaveList.GetNumInList() << endl;
+
+		int count = hiddenList.GetNumInList();
+
+		for (int i = 0; i < count; i++)
+		{
+			zCVob* pVob = hiddenList.GetSafe(i);
+
+			if (pVob)
+			{
+				pVob->showVisual = 0;
+			}
+		}
+
+		//cmd << "RestoreObjectsSaveGame End" << endl;
+	}
+
+	void AB_NoGrass::RestoreObjects()
+	{
+		//cmd << "RestoreObjects Start: " << hiddenList.GetNumInList() << endl;
+
+		int count = hiddenList.GetNumInList();
+
+		for (int i = 0; i < count; i++)
+		{
+			zCVob* pVob = hiddenList.GetSafe(i);
 
 			if (pVob)
 			{
@@ -373,46 +418,53 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		Clear();
+		//cmd << "RestoreObjects End" << endl;
 	}
 
 	void AB_NoGrass::Clear()
 	{
-		if (vobListManage.GetNumInList() > 0)
+		//cmd << "AB_NoGrass::Clear" << endl;
+
+		if (filteredList.GetNumInList() > 0)
 		{
-			vobListManage.DeleteList();
+			//cmd << "Try delete vobListManage" << endl;
+			filteredList.DeleteList();
 		}
 
 		if (vobListGrass.GetNumInList() > 0)
 		{
+			//cmd << "Try delete vobListGrass" << endl;
 			vobListGrass.DeleteList();
-		}
-
-		if (ignoreList.GetNumInList() > 0)
-		{
-			ignoreList.DeleteList();
 		}
 
 		if (entries.GetNumInList() > 0)
 		{
+			//cmd << "Try delete entries" << endl;
 			entries.DeleteListDatas();
 		}
 
+		hiddenList.DeleteList();
+
 		hiddenAmount = 0;
 		bariCenter = zVEC3(0, 0, 0);
+
+
+		//cmd << "Clear End" << endl;
 	}
 
 
 
 	void AB_NoGrass::CollectVobsFromLocation()
 	{
-		printWin("CollectVobsFromLocation");
 
-		Clear();
+		if (!hideActive)
+		{
 
+			return;
+		}
 		zCArray<zCVob*> vobList;
 
-		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobList, 0);
+		ogame->GetWorld()->SearchVobListByClass(zCVob::classDef, vobList, 0);
 
 		/*
 		int radius = 500;
@@ -426,6 +478,9 @@ namespace GOTHIC_ENGINE {
 		*/
 
 
+		//cmd << "zCVob Found in location: " << vobList.GetNumInList() << endl;
+
+
 		int count = 0;
 
 		for (int i = 0; i < vobList.GetNumInList(); i++) {
@@ -433,62 +488,32 @@ namespace GOTHIC_ENGINE {
 			zCVob* pVob = vobList.GetSafe(i);
 
 			if (pVob) {
-				// невидимые мобинтеры в игнор и прочие вобы у кого !showVisual
-				if (!pVob->showVisual && pVob->CastTo<oCVob>() && !pVob->CastTo<oCItem>() && !pVob->CastTo<oCNpc>())
+
+				if (!pVob->collDetectionDynamic
+					&& pVob->GetVisual()
+					&& pVob->homeWorld
+					)
 				{
-					ignoreList.Insert(pVob);
+					filteredList.Insert(pVob);
 				}
-				else
-				{
-					if (!pVob->collDetectionDynamic && pVob->GetVisual()/* || pVob->type == zTVobType::zVOB_TYPE_ITEM*/)
-					{
-						vobListManage.Insert(pVob);
-					}
-				}
+
 			}
 		}
+
+		//cmd << "Filtered: " << filteredList.GetNumInList() << endl;
 
 		HideObjects();
 	}
 
-	void AB_NoGrass::Loop()
+	void AB_NoGrass::UpdateSettings()
 	{
-		return;
+		//cmd << "================Update Settings grass================" << endl;
 
-		if (zKeyPressed(KEY_F1)) {
-			zinput->ClearKeyBuffer();
 
-			ShowObjects();
-			CollectVobsFromLocation();
-
-		}
-
-		if (zKeyPressed(KEY_F2)) {
-			zinput->ClearKeyBuffer();
-
-			ShowObjects();
-
-		}
-
-		if (zKeyPressed(KEY_NUMPADPLUS)) {
-			zinput->ClearKeyBuffer();
-			percent += 10;
-			zClamp(percent, 0, 100);
-		}
-
-		if (zKeyPressed(KEY_NUMPADMINUS)) {
-			zinput->ClearKeyBuffer();
-			percent -= 10;
-			zClamp(percent, 0, 100);
-		}
-
-		if (!ogame->singleStep)
-		{
-			PrintDebug("Ignore list: " + Z ignoreList.GetNum());
-			PrintDebug("Candidates list: " + Z vobListManage.GetNum());
-			PrintDebug("Hidden amount: " + Z hiddenAmount);
-			PrintDebug("percent: " + Z percent);
-		}
-
+		RestoreObjects();
+		Clear();
+		CollectVobsFromLocation();
 	}
+
+
 }

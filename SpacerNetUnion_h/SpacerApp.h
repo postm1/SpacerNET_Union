@@ -35,6 +35,7 @@ namespace GOTHIC_ENGINE {
 			respawnShowList.Clear();
 		}
 
+
 		struct
 		{
 			zCMover* moverVob;
@@ -81,7 +82,7 @@ namespace GOTHIC_ENGINE {
 			bool nextInsertBlocked;
 			bool pickUnshareShow;
 
-
+			bool useSortPolys;
 			bool dataFilled;
 			bool hideWindows;
 			bool hideWindowsForce;
@@ -150,6 +151,7 @@ namespace GOTHIC_ENGINE {
 		void SendTrigger(int actionIndex);
 		void OnAddMoverKey(int mode);
 		void SetCurrentKey(int key);
+		void ToggleNoGrass();
 		void ApplyProps(char* str, char* name);
 		SpacerWorkMode GetPickMode();
 		void PreRender();
@@ -262,7 +264,7 @@ namespace GOTHIC_ENGINE {
 
 		void RemoveBadLevelCompoVisual();
 
-		void SaveWorld(zSTRING worldName, int type);
+		void SaveWorld(zSTRING worldName, int type, int polysSort);
 
 		void MergeMesh(CString worldName);
 

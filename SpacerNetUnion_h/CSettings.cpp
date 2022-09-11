@@ -276,10 +276,11 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "checkBoxSetNearestVobCam", "0");
 		list.Insert("checkBoxSetNearestVobCam", set);
 		
-		
+		set = new CSetting(TYPE_INT, "SPACER", "checkBoxSetNearestVobCam", "0");
+		list.Insert("checkBoxSetNearestVobCam", set);
 
-		set = new CSetting(TYPE_INT, "SPACER", "showLightRadiusVob", "1");
-		list.Insert("showLightRadiusVob", set);
+		set = new CSetting(TYPE_INT, "SPACER", "checkBoxShowPolysSort", "0");
+		list.Insert("checkBoxShowPolysSort", set);
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "maxFPS", "0");

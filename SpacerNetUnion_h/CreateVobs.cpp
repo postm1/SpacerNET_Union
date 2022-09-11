@@ -596,6 +596,9 @@ namespace GOTHIC_ENGINE {
 	{
 		if (pVob && pVob != ogame->GetCamera()->connectedVob)
 		{
+
+			zCVob* parentSafe = pVob;
+
 			changeParentList.DeleteList();
 
 			if (pVob->globalVobTreeNode)
@@ -604,7 +607,7 @@ namespace GOTHIC_ENGINE {
 
 			}
 
-			cmd << "changeParentList: " << changeParentList.GetNum() << endl;
+			//cmd << "changeParentList: " << changeParentList.GetNum() << endl;
 
 			for (int i = 0; i < changeParentList.GetNum(); i++)
 			{
@@ -616,6 +619,16 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
+			if (parentSafe)
+			{
+
+				SetSelectedVob(parentSafe, "Extern_RemoveAsParent");
+				auto onSelect = (onSelectNode)GetProcAddress(module, "SelectNode");
+				onSelect((uint32)pickedVob);
+
+			}
+
+			
 		}
 	}
 

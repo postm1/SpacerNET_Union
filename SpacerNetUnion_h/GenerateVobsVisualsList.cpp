@@ -480,4 +480,10 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 
 		return (volumeNameVdf.Upper() == vdfName);
 	}
+
+	void SpacerApp::ToggleNoGrass()
+	{
+		nograss.hideActive = !nograss.hideActive;
+		nograss.SetPercentFromSettings(true);
+	}
 }

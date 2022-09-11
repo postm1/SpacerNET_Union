@@ -274,6 +274,16 @@ namespace Gothic_II_Addon {
       float len = Length();
       return len != 0.0f ? *this /= len : *this = 0.0f;
     }
+	inline zVEC3& zVEC3::NormalizeApprox() // it is up to caller to avoid divide-by-zero
+										   //{ *this /= Length(); return *this; }
+	{
+		//	zREAL d_inv = zREAL(1.0) / LengthApprox();
+		//zREAL d_inv = sqr(n[VX] * n[VX] + n[VY] * n[VY] + n[VZ] * n[VZ]);
+		zREAL d_inv = zREAL(1.0) / LengthApprox();
+
+		n[VX] *= d_inv; n[VY] *= d_inv; n[VZ] *= d_inv;
+		return *this;
+	};
 
     float Distance( const zVEC3& a0 ) const
     {

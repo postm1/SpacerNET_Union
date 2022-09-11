@@ -101,7 +101,17 @@ namespace GOTHIC_ENGINE {
 	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
 	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
 	{
-		THISCALL(Invk_SortPolysByList)(list, listLength);
+
+		if (!theApp.useSortPolys)
+		{
+			cmd << "Saving no sort polys" << endl;
+			return;
+		}
+		else
+		{
+			THISCALL(Invk_SortPolysByList)(list, listLength);
+		}
+		
 
 		return;
 
@@ -224,7 +234,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SaveFile(zSTRING worldName, int type)
 	{
-
+		nograss.PrepareObjectsSaveGame();
 
 		//0x00831C10 const zCSparseArray<void const *,int>::`vftable'
 		//static zCSparseArray<const void *, int> s_polyVertIndex; 8D8798
@@ -273,6 +283,8 @@ namespace GOTHIC_ENGINE {
 			ogame->SaveWorld(worldName, zCWorld::zWLD_SAVE_EDITOR_COMPILED, false, true); // noMesh, Binary
 			break;
 		}
+
+		nograss.RestoreObjectsSaveGame();
 	}
 
 	// фикс визуалов определенных вобов при сохранении зена
@@ -375,7 +387,7 @@ namespace GOTHIC_ENGINE {
 		treeIsReady = true;
 	}
 
-	void SpacerApp::SaveWorld(zSTRING worldName, int type)
+	void SpacerApp::SaveWorld(zSTRING worldName, int type, int polysSort)
 	{
 		if (!ogame->GetWorld() || !ogame->world->globalVobTree.GetFirstChild())
 		{
@@ -385,6 +397,9 @@ namespace GOTHIC_ENGINE {
 		auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 		load(3);
 
+
+		useSortPolys = polysSort;
+		//cmd << "Polys: " << useSortPolys << endl;
 
 		//std::cout << "S1: " << zSTRING(ogame->GetWorld()->globalVobTree.CountNodes() - 1) << std::endl;
 
@@ -771,6 +786,9 @@ namespace GOTHIC_ENGINE {
 				ogame->GetCameraVob()->SetPositionWorld(resultList.GetSafe(0)->GetPositionWorld() + zVEC3(0, 75, 0));
 			}
 		}
+
+
+		nograss.SetPercentFromSettings(true);
 	}
 
 	// применяется на первом тике когда уровень загружен
