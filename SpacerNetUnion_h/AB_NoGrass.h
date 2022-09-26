@@ -4,6 +4,8 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+
+
 	struct GridEntry
 	{
 		zCArray<zCVob*> pListGrass;
@@ -51,6 +53,7 @@ namespace GOTHIC_ENGINE {
 	public:
 		bool hideActive;
 		void Init();
+		void AppendFromFile();
 		void SetPercentFromSettings(bool forceUpdate = false);
 		void Loop();
 		void CollectVobsFromLocation();

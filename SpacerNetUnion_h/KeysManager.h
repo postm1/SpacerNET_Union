@@ -9,7 +9,9 @@ namespace GOTHIC_ENGINE {
 		LControl = 2 << 0,
 		Alt = 2 << 1,
 		LShift = 2 << 2,
-		RShift = 2 << 3
+		RShift = 2 << 3,
+		RAlt = 2 << 4,
+		RCtrl = 2 << 5
 	};
 
 	class KeyEntry

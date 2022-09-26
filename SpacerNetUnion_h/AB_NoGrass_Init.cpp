@@ -3,6 +3,47 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
+
+
+	void AB_NoGrass::AppendFromFile()
+	{
+		static std::ifstream file;
+
+		file.open("./system/SpacerNet_HideList.txt");
+
+		std::string s;
+		int count = 0;
+
+		if (file.is_open())
+		{
+
+			while (std::getline(file, s))
+			{
+				zSTRING str = zSTRING(s.c_str()).Upper();
+
+				
+
+				
+				str.TrimRight(' ');
+
+				if (str.Length() == 0 || str == " ")
+				{
+					continue;
+				}
+				count++;
+				//cmd << "\"" << str << "\"" << endl;
+
+				grassList.Insert(str);
+			}
+
+			cmd << "Loaded " << count << " custom model names for NoGrass hiding" << endl;
+
+			file.close();
+
+
+		}
+	}
+
 	void AB_NoGrass::Init()
 	{
 
@@ -96,6 +137,9 @@ namespace GOTHIC_ENGINE {
 		hideBush = true;
 		hideGrass = true;
 		hideActive = false;
+
+
+		AppendFromFile();
 	}
 
 

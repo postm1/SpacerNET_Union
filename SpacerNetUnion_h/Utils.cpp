@@ -1,7 +1,11 @@
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
+#include <string>
+
 namespace GOTHIC_ENGINE {
+
+
 	// Add your code here . . .
 	//RX_FIX
 	int& playerLightInt = *(int*)0x0089EBB4;
@@ -87,6 +91,7 @@ namespace GOTHIC_ENGINE {
 		std::cout << "Union: " << str.ToChar() << std::endl;
 
 	}
+
 
 	
 

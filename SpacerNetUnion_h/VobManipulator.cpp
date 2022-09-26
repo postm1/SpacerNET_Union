@@ -1223,18 +1223,12 @@ namespace GOTHIC_ENGINE {
 		vobFoundStruct.Print();
 	}
 
-	extern void LoopRenderTest();
 	void VobKeys()
 	{
 		
-		//LoopRenderTest();
 		/*
 		if (zinput->KeyPressed(KEY_F1))
 		{
-			theApp.renderStruct.tcGen += 1;
-
-			zClamp(theApp.renderStruct.tcGen, 0, 3);
-			print.PrintRed("tcGen: " + Z theApp.renderStruct.tcGen);
 			zinput->ClearKeyBuffer();
 		}
 		*/

@@ -489,8 +489,8 @@ namespace GOTHIC_ENGINE {
 
 			if (pVob) {
 
-				if (!pVob->collDetectionDynamic
-					&& pVob->GetVisual()
+				if (//!pVob->collDetectionDynamic
+						 pVob->GetVisual()
 					&& pVob->homeWorld
 					)
 				{

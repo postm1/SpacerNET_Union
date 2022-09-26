@@ -197,4 +197,7 @@ namespace GOTHIC_ENGINE {
 	UAPI extern double Stack_PeekDouble();
 	UAPI extern void   Stack_Pop();
 	UAPI extern int	   GetStackSize();
+
+
+
 }

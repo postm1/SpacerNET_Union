@@ -13,18 +13,40 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	AddGlobalEntryPointer addEntry = NULL;
+
 
 	void CreateBaseVobTree(zCTree<zCVob>* node)
 	{
 		zCVob* vob = node->GetData();
 
-		if (!addEntry)
+		
+		static auto addEntry = (AddGlobalEntryPointer)GetProcAddress(theApp.module, "AddGlobalEntry");
+		
+
+		if (!vob)
 		{
-			addEntry = (AddGlobalEntryPointer)GetProcAddress(theApp.module, "AddGlobalEntry");
+			return;
 		}
 
-		Stack_PushString(vob->_GetClassDef()->className.ToChar());
+		if (auto pItem = vob->CastTo<oCItem>())
+		{
+			//итемы что нет в скриптах помечаем отдельно
+			if (pItem && (pItem->GetInstanceName() == "" || pItem->GetInstance() == -1))
+			{
+				Stack_PushString("oCItem (Broken)");
+			}
+			else
+			{
+				Stack_PushString(vob->_GetClassDef()->className.ToChar());
+			}
+			
+		}
+		else
+		{
+			Stack_PushString(vob->_GetClassDef()->className.ToChar());
+		}
+
+		
 		Stack_PushString(GetVobName(vob));
 
 		addEntry((uint)vob, vob->GetParent());

@@ -94,11 +94,20 @@ namespace GOTHIC_ENGINE {
 			if (((mod & KeyMod::LControl) != 0) && !zinput->KeyPressed(KEY_LCONTROL)) modCondition = false;
 			if (((mod & KeyMod::Alt) != 0) && !zinput->KeyPressed(KEY_LALT)) modCondition = false;
 
+
+			if (((mod & KeyMod::RShift) != 0) && !zinput->KeyPressed(KEY_RSHIFT)) modCondition = false;
+			if (((mod & KeyMod::RCtrl) != 0) && !zinput->KeyPressed(KEY_RCONTROL)) modCondition = false;
+			if (((mod & KeyMod::RAlt) != 0) && !zinput->KeyPressed(KEY_RALT)) modCondition = false;
+
 			if (!ignoreMod)
 			{
 				if (mod == 0 && zinput->KeyPressed(KEY_LSHIFT))  modCondition = false;
 				if (mod == 0 && zinput->KeyPressed(KEY_LCONTROL))  modCondition = false;
 				if (mod == 0 && zinput->KeyPressed(KEY_LALT))  modCondition = false;
+
+				if (mod == 0 && zinput->KeyPressed(KEY_RSHIFT))  modCondition = false;
+				if (mod == 0 && zinput->KeyPressed(KEY_RCONTROL))  modCondition = false;
+				if (mod == 0 && zinput->KeyPressed(KEY_RALT))  modCondition = false;
 			}
 		}
 
