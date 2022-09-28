@@ -604,7 +604,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 		__declspec(dllexport) int Extern_GetCurrentKey() {
-			return theApp.m_kf_pos;
+			return theApp.moverVob->GetActKeyframe();
 		}
 
 		__declspec(dllexport) int Extern_GetMaxKey() {

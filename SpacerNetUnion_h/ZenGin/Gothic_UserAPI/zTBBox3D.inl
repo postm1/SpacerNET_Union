@@ -4,3 +4,5 @@
 // Add your methods here
 
 void Translate(const zVEC3& trans) { mins += trans; maxs += trans; };
+
+float GetMaxExtent();

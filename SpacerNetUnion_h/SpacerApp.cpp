@@ -49,6 +49,7 @@ namespace GOTHIC_ENGINE {
 		this->bDebugSpacerLoadMesh = false;
 		this->globalParent = NULL;
 
+		this->floorVob = NULL;
 		this->s_pLightSphereMesh = NULL;
 		this->vobLightSelected = NULL;
 
@@ -193,6 +194,16 @@ namespace GOTHIC_ENGINE {
 
 		current_object = NULL;
 		treeToCopy = NULL;
+
+		
+		if (theApp.floorVob)
+		{
+			ogame->GetWorld()->RemoveVob(theApp.floorVob);
+			zRELEASE(theApp.floorVob);
+			theApp.floorVob = NULL;
+		}
+		
+		
 
 		useSortPolys = true;
 
@@ -970,6 +981,11 @@ namespace GOTHIC_ENGINE {
 
 
 		if ((theApp.pickedVob == foundVob && theApp.pickedVob != NULL))
+		{
+			return;
+		}
+
+		if (foundVob == theApp.floorVob && theApp.pickedVob != NULL)
 		{
 			return;
 		}

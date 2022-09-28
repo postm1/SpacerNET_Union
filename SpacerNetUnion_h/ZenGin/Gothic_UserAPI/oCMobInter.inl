@@ -3,3 +3,4 @@
 // User API for oCMobInter
 // Add your methods here
 
+int oCMobInter::CanInteractWith_Union(oCNpc* npc);

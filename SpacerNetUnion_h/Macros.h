@@ -82,7 +82,7 @@ namespace GOTHIC_ENGINE {
 	typedef int(*intFuncPointer)(void);
 	typedef int(*appActivePointer)(int);
 	typedef void(*addToVobList)(uint);
-
+	typedef void(*callIntInt)(int, int);
 	typedef void(*updateParentVobRemoveNode)(uint);
 	typedef void(*updateParentAddNode)(uint, uint);
 

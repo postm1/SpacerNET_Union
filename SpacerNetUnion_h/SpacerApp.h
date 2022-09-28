@@ -40,6 +40,7 @@ namespace GOTHIC_ENGINE {
 		{
 			zCMover* moverVob;
 			int m_kf_pos;
+			int maxKey;
 			zCVob* event_sourcevob;
 		};
 		struct 
@@ -97,6 +98,7 @@ namespace GOTHIC_ENGINE {
 			bool showRespawnOnVobs;
 			bool bDebugSpacerLoadMesh;
 
+			zCVob* floorVob;
 			zCVob*		pickedWaypoint2nd;
 			zCVob*		pickedWaypoint;
 			zCVob*		selectedWaypointForNet;
@@ -145,6 +147,7 @@ namespace GOTHIC_ENGINE {
 		zCVob * GetSelectedVob();
 		void SetSelectedVob(zCVob * vob, zSTRING funcName = "");
 		void SetToKeyPos();
+		void TriggerLoop();
 		void OnKeyRemove();
 		void UpdateGrattController();
 		void ManagerGrattController();

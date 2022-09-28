@@ -21,10 +21,12 @@ namespace GOTHIC_ENGINE {
 			{
 				zSTRING str = zSTRING(s.c_str()).Upper();
 
+
 				
 
 				
 				str.TrimRight(' ');
+				str.TrimLeft(' ');
 
 				if (str.Length() == 0 || str == " ")
 				{

@@ -761,14 +761,14 @@ namespace GOTHIC_ENGINE {
 
 		for (uint i = 0; i < names.GetNum(); i++) {
 
-			cmd << names[i] << endl;
+			//cmd << names[i] << endl;
 
 			bool_t isVirtual = vdf_fexists(names[i].ToChar(), VDF_VIRTUAL);
 			bool_t isPhysical = vdf_fexists(names[i].ToChar(), VDF_PHYSICAL);
 
 			
-			cmd << isVirtual << endl;
-			cmd << isPhysical << endl;
+			//cmd << isVirtual << endl;
+			//cmd << isPhysical << endl;
 			
 
 			if (isVirtual && names[i] == path)
@@ -864,6 +864,31 @@ namespace GOTHIC_ENGINE {
 		{
 			return 0;
 		};
+	};
+
+
+	inline float zMin(const float a, const float b) {
+		if (a<b) return a;
+		else	 return b;
+	}
+
+	inline float zMax(const float a, const float b) {
+		if (a>b) return a;
+		else	 return b;
+	}
+
+	inline int zMin(const int a, const int b) {
+		if (a<b) return a;
+		else	 return b;
+	}
+
+	inline int zMax(const int a, const int b) {
+		if (a>b) return a;
+		else	 return b;
+	}
+
+	float zTBBox3D::GetMaxExtent()  { 
+		return zREAL(0.5F) * zMax(zMax(maxs[0] - mins[0], maxs[1] - mins[1]), maxs[2] - mins[2]); 
 	};
 }
 

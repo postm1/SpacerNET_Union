@@ -5,7 +5,16 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 
+	HOOK ivk_oCMobInter_CanInteractWith AS(&oCMobInter::CanInteractWith, &oCMobInter::CanInteractWith_Union);
+	int oCMobInter::CanInteractWith_Union(oCNpc* npc) {
 
+		if (theApp.options.GetIntVal("bBlockPlayeUseMobInter"))
+		{
+			return FALSE;
+		}
+
+		return THISCALL(ivk_oCMobInter_CanInteractWith)(npc);
+	}
 
 	// ESC key crashfix
 	HOOK Ivk_CGameManager_HandleEvent AS(&CGameManager::HandleEvent, &CGameManager::HandleEvent_Hook);

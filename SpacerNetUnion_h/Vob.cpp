@@ -134,6 +134,9 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+
+	extern bool GetFloorPositionForVobHelper(zCVob* vob, zVEC3& centerPos, zCPolygon*& polyIntersect, bool& foundVob);
+
 	void RenderVobsLoop()
 	{
 
@@ -143,6 +146,143 @@ namespace GOTHIC_ENGINE {
 		}
 
 		zCVob* camVob = ogame->GetCamera()->connectedVob;
+
+		zCVob* floorVob = theApp.floorVob;
+
+		if (theApp.treeIsReady)
+		{
+			if (theApp.options.GetIntVal("checkBoxShowVobTraceFloor"))
+			{
+				if (!floorVob)
+				{
+					floorVob = new zCVob();
+					floorVob->SetVobName("SPACER_VOB_HELPER_FLOOR");
+
+					floorVob->SetCollDet(FALSE);
+					floorVob->dontWriteIntoArchive = TRUE;
+					floorVob->ignoredByTraceRay = TRUE;
+					floorVob->SetPhysicsEnabled(FALSE);
+					floorVob->SetVisual("SPACER_CIRCLE_ITEM.TGA");
+
+
+
+
+
+					zCDecal* dec = ((zCDecal*)floorVob->GetVisual());
+
+					if (dec)
+					{
+						dec->decal2Sided = true;
+						dec->SetDecalDim(100, 100);
+						dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
+					}
+
+					floorVob->RotateLocalX(90);
+					floorVob->showVisual = 0;
+
+					theApp.nextInsertBlocked = true;
+					ogame->GetWorld()->AddVob(floorVob);
+
+					theApp.floorVob = floorVob;
+
+				}
+
+				// если воб выделен
+				if (auto pVob = theApp.GetSelectedVob())
+				{
+
+					if (!theApp.floorVob->GetVisual() || !theApp.floorVob->GetVisual()->objectName.contains(".TGA"))
+					{
+						floorVob->SetVisual("SPACER_CIRCLE_ITEM.TGA");
+
+						zCDecal* dec = ((zCDecal*)floorVob->GetVisual());
+
+						if (dec)
+						{
+							dec->decal2Sided = true;
+							dec->SetDecalDim(100, 100);
+							dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
+						}
+
+						floorVob->RotateLocalX(90);
+
+					}
+					zVEC3 floorPos = pVob->GetPositionWorld();
+					zCPolygon* polyIntersect = NULL;
+					bool foundVob = false;
+
+					if (GetFloorPositionForVobHelper(pVob, floorPos, polyIntersect, foundVob))
+					{
+
+						if (!foundVob)
+						{
+							floorVob->SetPositionWorld(floorPos + zVEC3(0, 5, 0));
+						}
+						else
+						{
+							floorVob->SetPositionWorld(floorPos);
+						}
+
+
+						floorVob->showVisual = 1;
+
+
+
+
+						zCDecal* dec = ((zCDecal*)floorVob->GetVisual());
+
+						if (dec)
+						{
+
+							zREAL diff = pVob->bbox3D.GetMaxExtent() / 1.75f;
+
+
+							if (diff == 0)
+							{
+								diff = 35;
+							}
+							//cmd << "diff: " << diff << endl;
+							dec->SetDecalDim(diff, diff);
+
+							if (polyIntersect)
+							{
+								//cmd << "poly: " << diff << endl;
+								floorVob->SetHeadingAtWorld(polyIntersect->GetNormal());
+							}
+							else
+							{
+								floorVob->SetHeadingAtWorld(zVEC3(0, 1, 0));
+							}
+
+						}
+
+						//floorVob->RotateWorldY(ztimer->frameTimeFloat / 8);
+					}
+					else
+					{
+						floorVob->showVisual = 0;
+						floorVob->SetVisual(0);
+					}
+				}
+				else
+				{
+					floorVob->showVisual = 0;
+					floorVob->SetVisual(0);
+				}
+			}
+			else
+			{
+				if (floorVob)
+				{
+					floorVob->showVisual = 0;
+					floorVob->SetVisual(0);
+				}
+			}
+
+			
+		}
+
+		
 
 
 

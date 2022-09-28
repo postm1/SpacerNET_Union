@@ -20,6 +20,39 @@ namespace GOTHIC_ENGINE {
 	}
 
 
+	bool GetFloorPositionForVobHelper(zCVob* vob, zVEC3& centerPos, zCPolygon*& polyIntersect, bool& foundVob)
+	{
+		if (!vob->GetHomeWorld()) return FALSE;
+
+		// Auf passende Höhe setzen
+		zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
+		zCWorld* wld = vob->GetHomeWorld();
+
+		vob->ignoredByTraceRay = true;
+
+		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -10000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_TEST_WATER)) {
+			// Poly gefunden
+			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
+				// Schnittpunkt schnappen und Position neu setzen
+				zVEC3 newpos = wld->traceRayReport.foundIntersection;
+
+				if (wld->traceRayReport.foundPoly)
+				{
+					polyIntersect = wld->traceRayReport.foundPoly;
+				}
+
+				foundVob = wld->traceRayReport.foundVob ? foundVob = true : foundVob = false;
+
+				// 4 cm bis zum Bodem, um Kollision zu vermeiden.
+				centerPos = newpos;
+				vob->ignoredByTraceRay = false;
+				return TRUE;
+			}
+		}
+		vob->ignoredByTraceRay = false;
+		return FALSE;
+	}
+
 	bool GetFloorPosition(zCVob* vob, zVEC3& centerPos)
 	{
 		if (!vob->GetHomeWorld()) return FALSE;
@@ -1230,6 +1263,17 @@ namespace GOTHIC_ENGINE {
 		if (zinput->KeyPressed(KEY_F1))
 		{
 			zinput->ClearKeyBuffer();
+
+			
+			if (auto pVob = theApp.GetSelectedVob())
+			{
+				auto savePos = pVob->GetPositionWorld();
+
+				pVob->SetCollDet(FALSE);
+				pVob->trafoObjToWorld.PreScale(zVEC3(2, 2, 2));
+				pVob->trafoObjToWorld.PostScale(zVEC3(2, 2, 2));
+			
+			}
 		}
 		*/
 

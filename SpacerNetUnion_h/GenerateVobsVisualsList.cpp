@@ -444,6 +444,8 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 		visualName = visualName.Upper();
 		vdfName = vdfName.Upper();
 
+		if (vdfName == "") return 0;
+
 		CString searchName = visualName;
 
 		if (visualName.EndWith(".TGA"))

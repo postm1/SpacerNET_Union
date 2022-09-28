@@ -42,6 +42,16 @@ namespace GOTHIC_ENGINE {
 		};
 	};
 
+	void SpacerApp::TriggerLoop()
+	{
+		if (!moverVob) return;
+
+
+		m_kf_pos = moverVob->GetActKeyframe();
+		
+		auto callFunc = (callIntInt)GetProcAddress(theApp.module, "Trigger_UpdateKeys");
+		callFunc(m_kf_pos, moverVob->keyframeList.GetNumInList());
+	}
 
 	void SpacerApp::SetToKeyPos()
 	{

@@ -369,6 +369,7 @@ namespace GOTHIC_ENGINE {
 
 		mm.Loop();
 		theApp.KeysLoop();
+		theApp.TriggerLoop();
 
 		
 		pfxManager.Loop();

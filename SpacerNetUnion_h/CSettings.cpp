@@ -381,7 +381,8 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "checkBoxFontUnderstroke", "0");
 		list.Insert("checkBoxFontUnderstroke", set);
 		
-
+		set = new CSetting(TYPE_INT, "SPACER", "bBlockPlayeUseMobInter", "1");
+		list.Insert("bBlockPlayeUseMobInter", set);
 
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
@@ -419,6 +420,7 @@ namespace GOTHIC_ENGINE {
 		list.Insert("vobInsertHierarchy", set);
 
 
+
 		set = new CSetting(TYPE_INT, "CONTROLS", "wpTurnOn", "0");
 		list.Insert("wpTurnOn", set);
 
@@ -430,7 +432,10 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "CONTROLS", "translateParentAlone", "0");
 		list.Insert("translateParentAlone", set);
 
+		set = new CSetting(TYPE_INT, "CONTROLS", "checkBoxShowVobTraceFloor", "0");
+		list.Insert("checkBoxShowVobTraceFloor", set);
 
+		//========================================================================
 		set = new CSetting(TYPE_INT, "GRASS", "grassMinDist", "150");
 		list.Insert("grassMinDist", set);
 
