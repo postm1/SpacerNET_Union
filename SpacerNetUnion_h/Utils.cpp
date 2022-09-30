@@ -890,5 +890,8 @@ namespace GOTHIC_ENGINE {
 	float zTBBox3D::GetMaxExtent()  { 
 		return zREAL(0.5F) * zMax(zMax(maxs[0] - mins[0], maxs[1] - mins[1]), maxs[2] - mins[2]); 
 	};
+
+
+
 }
 

@@ -141,6 +141,26 @@ namespace GOTHIC_ENGINE {
 		}
 	};
 	
+
+	enum MacrosType
+	{
+		MT_NONE = 0,
+		MT_COMMENT,
+		MT_RESET,
+		MT_LOAD_WORLD,
+		MT_LOAD_MESH,
+		MT_SAVE_COMPILED,
+		MT_SAVE_ASCII,
+		MT_SAVE_MESH,
+		MT_COMPILE_WORLD_OUTDOOR,
+		MT_COMPILE_WORLD_INDOOR,
+		MT_COMPILE_LIGHT_VERTEX,
+		MT_COMPILE_LIGHT_LOW,
+		MT_COMPILE_LIGHT_MID,
+		MT_COMPILE_LIGHT_HIGH
+
+	};
+
 }
 
 DllExport Gothic_II_Addon::zTWE_ControllerEvents ControllerEvents;

@@ -789,7 +789,33 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+
+
+		__declspec(dllexport) void Extern_ClearMacrosCmd() {
+
+			theApp.Macros_Clean();
+		}
 		
+
+		__declspec(dllexport) void Extern_RunMacrosCmd() {
+
+			theApp.Macros_Run();
+		}
+
+
+		__declspec(dllexport) void Extern_AddMacrosCmd() {
+
+			MacrosType type = (MacrosType)Stack_PeekInt();
+
+
+			CString raw = Stack_PeekString();
+
+			CString str = Stack_PeekString();
+
+
+
+			theApp.Macros_Add(str, raw, type);
+		}
 	}
 
 }

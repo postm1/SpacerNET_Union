@@ -273,9 +273,9 @@ namespace GOTHIC_ENGINE {
 
 		void LoadMesh(zSTRING worldName);
 
-		void MergeZen(zSTRING worldName);
+		void MergeZen(zSTRING worldName, bool isMacro=false);
 
-		void LoadWorld(zSTRING worldName, int type);
+		void LoadWorld(zSTRING worldName, int type, bool useMacros=false);
 
 
 		void GameLoop();
@@ -311,6 +311,13 @@ namespace GOTHIC_ENGINE {
 		void GetPFXInstanceProps(CString pfxName);
 
 		void UpdatePFXField();
+
+
+		// macros
+
+		void Macros_Clean();
+		void Macros_Run();
+		void Macros_Add(CString command, CString raw, MacrosType type);
 	};
 
 }

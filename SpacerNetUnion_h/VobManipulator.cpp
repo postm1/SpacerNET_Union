@@ -1259,6 +1259,7 @@ namespace GOTHIC_ENGINE {
 	void VobKeys()
 	{
 		
+
 		/*
 		if (zinput->KeyPressed(KEY_F1))
 		{

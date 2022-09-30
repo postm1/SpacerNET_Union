@@ -477,13 +477,15 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	void SpacerApp::MergeZen(zSTRING worldName)
+	void SpacerApp::MergeZen(zSTRING worldName, bool isMacro)
 	{
 		isMesh = false;
 		isMerged = true;
 		treeIsReady = false;
 
 		zoptions->ChangeDir(DIR_WORLD);
+
+		cmd << "MergeZen: " << worldName << endl;
 		ogame->GetGameWorld()->MergeVobSubtree(worldName, 0, zCWorld::zWLD_LOAD_MERGE_ADD);
 
 
@@ -503,7 +505,7 @@ namespace GOTHIC_ENGINE {
 
 		WorldAfterLoad();
 
-		if (theApp.options.GetIntVal("autoCompileWorldLight"))
+		if (theApp.options.GetIntVal("autoCompileWorldLight") && !isMacro)
 		{
 			int light = theApp.options.GetIntVal("lightCompileType");
 			int world = theApp.options.GetIntVal("worldCompileType");
@@ -591,7 +593,7 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void SpacerApp::LoadWorld(zSTRING worldName, int type)
+	void SpacerApp::LoadWorld(zSTRING worldName, int type, bool useMacros)
 	{
 
 		auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
@@ -617,7 +619,7 @@ namespace GOTHIC_ENGINE {
 
 		if (world && !world->IsCompiled())
 		{
-			if (theApp.options.GetIntVal("autoCompileWorldLightForUnc"))
+			if (theApp.options.GetIntVal("autoCompileWorldLightForUnc") && !useMacros)
 			{
 				int light = theApp.options.GetIntVal("lightCompileType");
 				int world = theApp.options.GetIntVal("worldCompileType");
@@ -831,6 +833,12 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::DoCompileLight(int type, int radius)
 	{
 		zTBBox3D* bbox = 0;
+
+		if (!ogame->world || !ogame->world->IsCompiled())
+		{
+			cmd << "World is not compiled!" << endl;
+			return;
+		}
 
 		if (dynLightCompile)
 		{

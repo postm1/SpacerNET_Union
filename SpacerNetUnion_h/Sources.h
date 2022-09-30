@@ -42,6 +42,7 @@
 #include "MatManager.cpp"
 #include "AB_NoGrass_Init.cpp"
 #include "GenerateVobsVisualsList.cpp"
+#include "Macros.cpp"
 #include "AB_NoGrass.cpp"
 #include "Plugin.cpp"
 #pragma endregion

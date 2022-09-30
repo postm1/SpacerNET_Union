@@ -4,3 +4,4 @@
 // Add your methods here
 
 int XD3D_InitPerDX_Hook(long, int, int, int, int);
+void zCRnd_D3D::Vid_SetScreenMode_Union(zTRnd_ScreenMode mode);

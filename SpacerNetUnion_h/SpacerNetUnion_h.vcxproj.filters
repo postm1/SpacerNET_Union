@@ -3008,6 +3008,9 @@
     <ClInclude Include="AB_NoGrass_Init.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\AB_NoGrass</Filter>
     </ClInclude>
+    <ClInclude Include="Macros.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

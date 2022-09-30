@@ -66,6 +66,11 @@ namespace GOTHIC_ENGINE {
 			exit(0);
 		}
 
+		if (!IsDx11Active())
+		{
+			//if (zrenderer) zrenderer->Vid_SetScreenMode(zRND_SCRMODE_HIDE);
+		}
+
 		//cmd << "options" << endl;
 		theApp.options.Init();
 		theApp.options.Load();
@@ -101,5 +106,9 @@ namespace GOTHIC_ENGINE {
 
 		itemsLocator.Init();
 		nograss.Init();
+
+
+		
+		
 	}
 }
