@@ -92,7 +92,7 @@ namespace GOTHIC_ENGINE {
 	typedef void(*onSelectNode)(uint);
 	typedef void(*addStrToList)(char*);
 	typedef void(*strFuncPoiterTree)(char*, uint, uint, char*);
-	typedef void(*addNewVob)(uint, uint, int, bool);
+	typedef void(*addNewVob)(uint, uint, int, int);
 	typedef void(*onVobRemove)(uint);
 	typedef void(*onShowInputBox)();
 	typedef char*(*getInputBox)();

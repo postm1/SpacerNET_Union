@@ -58,6 +58,8 @@ namespace GOTHIC_ENGINE {
 		};
 		struct
 		{
+			bool insertBlockedTemp;
+
 			bool isMesh;
 			bool isMerged;
 			// выбранный воб
@@ -311,7 +313,7 @@ namespace GOTHIC_ENGINE {
 		void GetPFXInstanceProps(CString pfxName);
 
 		void UpdatePFXField();
-
+		void ToggleInsertBlocked(bool toggle);
 
 		// macros
 

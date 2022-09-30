@@ -61,6 +61,7 @@ namespace GOTHIC_ENGINE {
 
 		theApp.SetSelectedVob(newcam, "InsertCam");
 		cur_cam = newcam;
+
 	}
 	void CameraManager::SetCamera(zCVob* pVob)
 	{

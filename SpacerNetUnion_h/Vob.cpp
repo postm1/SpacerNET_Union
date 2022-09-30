@@ -90,6 +90,8 @@ namespace GOTHIC_ENGINE {
 		else
 		{
 			print.PrintRed("Add to Render fail: " + A visual);
+
+			theApp.nextInsertBlocked = false;
 			return;
 		}
 
@@ -184,7 +186,7 @@ namespace GOTHIC_ENGINE {
 					ogame->GetWorld()->AddVob(floorVob);
 
 					theApp.floorVob = floorVob;
-
+					theApp.nextInsertBlocked = false;
 				}
 
 				// если воб выделен

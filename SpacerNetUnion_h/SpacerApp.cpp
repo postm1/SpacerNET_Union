@@ -32,7 +32,7 @@ namespace GOTHIC_ENGINE {
 		this->g_bInsertNPCs = false;
 		this->nextInsertBlocked = false;
 		this->currentVobRender = NULL;
-		this->selectNextVob = false;
+		this->selectNextVob = true;
 		this->turnWpMode = TurnWpMode::NONE;
 		this->isVobParentChange = false;
 		this->firstZenLoad = false;
@@ -61,6 +61,13 @@ namespace GOTHIC_ENGINE {
 	zCVob* SpacerApp::GetSelectedVob()
 	{
 		return this->pickedVob;
+	}
+
+
+	void SpacerApp::ToggleInsertBlocked(bool toggle)
+	{
+		
+		
 	}
 
 	void SpacerApp::SetSelectedVob(zCVob* vob, zSTRING funcName)

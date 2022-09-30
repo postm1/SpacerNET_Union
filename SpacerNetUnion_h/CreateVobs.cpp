@@ -519,7 +519,7 @@ namespace GOTHIC_ENGINE {
 	{
 		if (vob)
 		{
-			OutFile("OnCreateVob: vob: " + AHEX32((uint)vob), true);
+			//OutFile("OnCreateVob: vob: " + Z AHEX32((uint)vob) + Z " select: " + Z select, true);
 
 			static auto addNode = (addNewVob)GetProcAddress(theApp.module, "OnVobInsert");
 
@@ -542,7 +542,7 @@ namespace GOTHIC_ENGINE {
 
 			theApp.restorator.AddNewVobPos(vob);
 
-			addNode((uint)vob, vob->GetParent(), selectedWpForCreateIsBlocked, select);
+			addNode((uint)vob, vob->GetParent(), selectedWpForCreateIsBlocked, (int)select);
 		}
 
 	}
