@@ -317,6 +317,8 @@ namespace GOTHIC_ENGINE {
 
 			if (theApp.treeIsReady && !theApp.nextInsertBlocked)
 			{
+				cmd << "AddVob_Hook: " << (int)vob << endl;
+
 				zCVobLight* vobLight = dynamic_cast<zCVobLight*>(vob);
 
 				//oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(vob);

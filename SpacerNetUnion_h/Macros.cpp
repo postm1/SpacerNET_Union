@@ -72,7 +72,31 @@ namespace GOTHIC_ENGINE {
 						}
 						break;
 					}
-				
+					case MacrosType::MT_SAVE_MESH:
+					{
+						//cmd << "Export mesh: " << entry->arg << endl;
+						//cmd << "Export raw: " << entry->raw << endl;
+						this->ExportWorldMesh(entry->arg);
+						break;
+					}
+
+					case MacrosType::MT_SAVE_WORLD_BIN:
+					{
+						this->SaveWorld(entry->arg, SAVE_ZEN_BIN, 1);
+						break;
+					}
+
+					case MacrosType::MT_SAVE_WORLD_UNCOMPILED_VOBS:
+					{
+						this->SaveWorld(entry->arg, SAVE_ZEN_UC, 1);
+						break;
+					}
+
+					case MacrosType::MT_SAVE_WORLD_COMPILED_ASCII:
+					{
+						this->SaveWorld(entry->arg, SAVE_ZEN, 1);
+						break;
+					}
 
 					case MacrosType::MT_LOAD_WORLD: 
 					{

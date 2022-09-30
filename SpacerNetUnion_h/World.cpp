@@ -394,6 +394,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+
 		auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 		load(3);
 
@@ -1012,12 +1013,17 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::ExportWorldMesh(zSTRING worldNameFile) {
 
 
+		zoptions->ChangeDir(DIR_MESHES);
+		//cmd << "Try save mesh: " << worldNameFile << endl;
+
 		oCWorld* world = ogame->GetGameWorld();
 		zCBspTree& bspTree = world->bspTree;
 		zCMesh* mesh = bspTree.mesh;
 		zSTRING worldName = world->GetWorldFilename().GetWord("\\", -1);
 		worldName.Replace(".ZEN", ".MSH");
 		
+		//cmd << "Try save mesh (2): " << worldNameFile << endl;
+
 		zCFileBIN file;
 		file.BinCreate(worldNameFile);
 		bspTree.mesh->CreateListsFromArrays(); // !

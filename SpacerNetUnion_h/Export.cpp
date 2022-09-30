@@ -816,6 +816,15 @@ namespace GOTHIC_ENGINE {
 
 			theApp.Macros_Add(str, raw, type);
 		}
+
+
+		__declspec(dllexport) void Extern_InsertNewCamera() {
+
+			CString name = Stack_PeekString();
+
+			theApp.camMan.InsertCam(name);
+		}
+		
 	}
 
 }

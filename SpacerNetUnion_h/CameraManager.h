@@ -23,5 +23,6 @@ namespace GOTHIC_ENGINE {
 	public:
 		void SetCamera(zCVob*);
 		void InitAfterWorldLoad();
+		void InsertCam(CString name);
 	};
 }
