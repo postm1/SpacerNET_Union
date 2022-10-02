@@ -135,6 +135,12 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SetSelectedVob(zCVob* vob, zSTRING funcName)
 	{
+
+		if (GetSelectedTool() == 3)
+		{
+			return;
+		}
+
 		pickedVob = vob;
 
 
@@ -313,6 +319,11 @@ namespace GOTHIC_ENGINE {
 
 		current_object = NULL;
 		treeToCopy = NULL;
+
+		if (GetSelectedTool() == 3)
+		{
+			SetSelectedTool(1);
+		}
 
 		
 		if (theApp.floorVob)
@@ -1107,7 +1118,7 @@ namespace GOTHIC_ENGINE {
 	}
 	void SpacerApp::PickVob()
 	{
-		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun)
+		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun || GetSelectedTool() == 3)
 		{
 			return;
 		}

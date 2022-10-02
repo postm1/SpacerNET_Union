@@ -7,8 +7,18 @@ namespace GOTHIC_ENGINE {
 	{
 		zCVob* pickedVob = theApp.GetSelectedVob();
 
-		
+		if (!pickedVob)
+		{
+			return;
+		}
 
+		auto pOcVob = pickedVob->CastTo<oCVob>();
+
+		if ((pOcVob || pickedVob->IsPFX()) && GetSelectedTool() == 3)
+		{
+
+			return;
+		}
 
 
 		if (keys.KeyPressed("TOOL_BBOX_CHANGE", true) && pickedVob)
@@ -16,7 +26,16 @@ namespace GOTHIC_ENGINE {
 
 			if (GetSelectedTool() != 3)
 			{
-				print.PrintRed(GetLang("TOOL_BBOX_CHANGE"));
+
+				auto pOcVob = pickedVob->CastTo<oCVob>();
+
+				if (pOcVob || pickedVob->IsPFX())
+				{
+					print.PrintRed(GetLang("TOOL_BBOX_CANT_WORK"));
+					return;
+				}
+
+				
 				SetSelectedTool(3);
 				theApp.isBboxChangeMod = 1;
 

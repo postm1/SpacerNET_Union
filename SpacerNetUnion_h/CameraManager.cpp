@@ -23,10 +23,7 @@ namespace GOTHIC_ENGINE {
 		textView->SetFontColor(zCOLOR(255, 255, 255, 255));
 		screen->InsertItem(textView);
 	}
-	void CameraManager::InitAfterWorldLoad()
-	{
-		if (!ogame->world) return;
-	}
+
 
 	void CameraManager::Reset()
 	{
@@ -43,7 +40,7 @@ namespace GOTHIC_ENGINE {
 
 	void CameraManager::OnChangeKey(int key)
 	{
-		cmd << "CameraManager::OnChangeKey: " << key << endl;
+		//cmd << "CameraManager::OnChangeKey: " << key << endl;
 
 		if (key > 0)
 		{
@@ -151,7 +148,7 @@ namespace GOTHIC_ENGINE {
 		zCCSCamera_EventMsg* msg = new zCCSCamera_EventMsg(zCCSCamera_EventMsg::EV_PLAY);
 		lastPresetTime = cur_cam->totalTime;
 
-		cmd << "Run: time " << timeDurationOnSpacer << " Hide: " << hideVisualWhileActive << endl;
+		//cmd << "Run: time " << timeDurationOnSpacer << " Hide: " << hideVisualWhileActive << endl;
 		msg->time = timeDurationOnSpacer;
 
 		cur_cam->OnMessage(msg, NULL);
@@ -374,7 +371,7 @@ namespace GOTHIC_ENGINE {
 
 	void CameraManager::OnRenameSplineKey(int index, CString name)
 	{
-		cmd << "OnRenameSplineKey: " << name << " " << index << endl;
+		//cmd << "OnRenameSplineKey: " << name << " " << index << endl;
 
 		Stack_PushString(name);
 		Stack_PushInt(index);
@@ -384,7 +381,7 @@ namespace GOTHIC_ENGINE {
 
 	void CameraManager::OnRenameTargetKey(int index, CString name)
 	{
-		cmd << "OnRenameTargetKey: " << name << " " << index << endl;
+		//cmd << "OnRenameTargetKey: " << name << " " << index << endl;
 
 		Stack_PushString(name);
 		Stack_PushInt(index);
@@ -504,15 +501,16 @@ namespace GOTHIC_ENGINE {
 
 	void CameraManager::InsertNewTargetKey()
 	{
-		cmd << "InsertNewTargetKey" << endl;
+		//cmd << "InsertNewTargetKey" << endl;
 		int foundPos = -1;
 
 
 		blockUpdateCamWindow = true;
 		if (cur_cam)
 		{
+			zCVob* v = NULL;// ogame->GetWorld()->SearchVobByName(cur_cam->autoCamFocusVobName);
 
-			if (cur_cam->targetKeysFOR == zCCSCamera::zTCamTrj_FOR::zCAMTRJ_KEY_FOR_OBJECT && !cur_vob)
+			if (cur_cam->targetKeysFOR == zCCSCamera::zTCamTrj_FOR::zCAMTRJ_KEY_FOR_OBJECT && !v)
 			{
 
 				print.PrintRed(GetLang("CANT_APPLY_CAMERA_NEWKEY"));
@@ -552,7 +550,7 @@ namespace GOTHIC_ENGINE {
 
 			newkey->SetVobName("KEY_TARGET_" + Z(cur_cam->GetNumTargetKeys() + 1));
 
-			cmd << "Set new target key: " << newkey->GetVobName() << endl;
+			//cmd << "Set new target key: " << newkey->GetVobName() << endl;
 			cur_cam->Refresh();
 			InsertIntoWorld(newkey, cur_cam);
 			cur_cam->Refresh();
@@ -561,11 +559,11 @@ namespace GOTHIC_ENGINE {
 			{
 				cmd << "NO CAM!!!!!!!!!! " << endl;
 			}
-			cmd << "InsertIntoWorld target ok " << endl;
+			//cmd << "InsertIntoWorld target ok " << endl;
 
 			if (cur_cam->GetNumTargetKeys() == 0)
 			{
-				cmd << "InsertTargetKey " << endl;
+				//cmd << "InsertTargetKey " << endl;
 				cur_cam->InsertTargetKey(newkey);
 			}
 			else
@@ -575,7 +573,7 @@ namespace GOTHIC_ENGINE {
 				}
 				else
 				{
-					cmd << "InsertTargetKeyAtPos " << cur_cam->GetNumTargetKeys() << endl;
+					//cmd << "InsertTargetKeyAtPos " << cur_cam->GetNumTargetKeys() << endl;
 					cur_cam->InsertTargetKeyAtPos(newkey, cur_cam->GetNumTargetKeys()); // Mitten drin einfuegen
 				}
 			}
@@ -584,7 +582,7 @@ namespace GOTHIC_ENGINE {
 			newkey->Release();
 
 			cur_cam->Refresh();
-			cmd << "Insert target ok.. .try to add into c# list" << endl;
+			//cmd << "Insert target ok.. .try to add into c# list" << endl;
 
 			Stack_PushString(newkey->GetVobName());
 			(callVoidFunc)GetProcAddress(theApp.module, "OnInsertTargetKey_Interface")();
@@ -594,7 +592,7 @@ namespace GOTHIC_ENGINE {
 	}
 	void CameraManager::InsertNewSplineKey()
 	{
-		cmd << "InsertNewSplineKey" << endl;
+		//cmd << "InsertNewSplineKey" << endl;
 		int foundPos = -1;
 		
 
@@ -602,12 +600,15 @@ namespace GOTHIC_ENGINE {
 		if (cur_cam)
 		{
 
-			if (cur_cam->camKeysFOR == zCCSCamera::zTCamTrj_FOR::zCAMTRJ_KEY_FOR_OBJECT && !cur_vob)
+			zCVob* v = NULL; // ogame->GetWorld()->SearchVobByName(cur_cam->autoCamFocusVobName);
+
+			if (cur_cam->camKeysFOR == zCCSCamera::zTCamTrj_FOR::zCAMTRJ_KEY_FOR_OBJECT && !v)
 			{
 
 				print.PrintRed(GetLang("CANT_APPLY_CAMERA_NEWKEY"));
 				return;
 			}
+			
 
 			zCCamTrj_KeyFrame*	parentKeyframe = dynamic_cast<zCCamTrj_KeyFrame*>(cur_cam);
 
@@ -643,16 +644,16 @@ namespace GOTHIC_ENGINE {
 
 			newkey->SetVobName("KEY_POS_" + Z (cur_cam->GetNumCamKeys() + 1));
 
-			cmd << "Set new key: " << newkey->GetVobName() << endl;
+			//cmd << "Set new key: " << newkey->GetVobName() << endl;
 			cur_cam->Refresh();
 			InsertIntoWorld(newkey, cur_cam);
 			cur_cam->Refresh();
 
-			cmd << "InsertIntoWorld ok " << endl;
+			//cmd << "InsertIntoWorld ok " << endl;
 			//newkey->type = KF_CAM;
 			if (cur_cam->GetNumCamKeys() == 0)
 			{
-				cmd << "InsertCamKey " << endl;
+				//cmd << "InsertCamKey " << endl;
 				cur_cam->InsertCamKey(newkey);
 			}
 			else
@@ -662,18 +663,18 @@ namespace GOTHIC_ENGINE {
 				}
 				else 
 				{
-					cmd << "InsertCamKeyAtPos " << cur_cam->GetNumCamKeys()  << endl;
+					//cmd << "InsertCamKeyAtPos " << cur_cam->GetNumCamKeys()  << endl;
 					cur_cam->InsertCamKeyAtPos(newkey, cur_cam->GetNumCamKeys()); // Mitten drin einfuegen
 				}
 			}
 
-			cmd << "keys insert ok.. " << endl;
+			//cmd << "keys insert ok.. " << endl;
 
 			newkey->SetShowVisual(TRUE);
 			newkey->Release();
 
 			cur_cam->Refresh();
-			cmd << "Insert ok.. .try to add into c# list" << endl;
+			//cmd << "Insert ok.. .try to add into c# list" << endl;
 
 			Stack_PushString(newkey->GetVobName());
 			(callVoidFunc)GetProcAddress(theApp.module, "OnInsertSplineKey_Interface")();
@@ -688,7 +689,7 @@ namespace GOTHIC_ENGINE {
 
 		auto pKey = cur_cam->posKeys[index];
 
-		cmd << "InsertPosKeyAtIndex: " << index << endl;
+		//cmd << "InsertPosKeyAtIndex: " << index << endl;
 		if (pKey)
 		{
 			int foundPos = -1;
@@ -753,16 +754,16 @@ namespace GOTHIC_ENGINE {
 					newkey->SetVobName(name);
 				}
 
-				cmd << "Set new key: " << newkey->GetVobName() << endl;
+				//cmd << "Set new key: " << newkey->GetVobName() << endl;
 				cur_cam->Refresh();
 				InsertIntoWorld(newkey, cur_cam);
 				cur_cam->Refresh();
 
-				cmd << "InsertIntoWorld ok " << endl;
+				//cmd << "InsertIntoWorld ok " << endl;
 				//newkey->type = KF_CAM;
 				if (cur_cam->GetNumCamKeys() == 0)
 				{
-					cmd << "InsertCamKey " << endl;
+					//cmd << "InsertCamKey " << endl;
 					cur_cam->InsertCamKey(newkey);
 				}
 				else
@@ -772,18 +773,18 @@ namespace GOTHIC_ENGINE {
 					}
 					else
 					{
-						cmd << "InsertCamKeyAtPos " << cur_cam->GetNumCamKeys() << endl;
+						//cmd << "InsertCamKeyAtPos " << cur_cam->GetNumCamKeys() << endl;
 						cur_cam->InsertCamKeyAtPos(newkey, index+1); // Mitten drin einfuegen
 					}
 				}
 
-				cmd << "keys insert ok.. " << endl;
+				//cmd << "keys insert ok.. " << endl;
 
 				newkey->SetShowVisual(TRUE);
 				newkey->Release();
 
 				cur_cam->Refresh();
-				cmd << "Insert ok.. .try to add into c# list" << endl;
+				//cmd << "Insert ok.. .try to add into c# list" << endl;
 
 				blockUpdateCamWindow = false;
 				auto tempVob = cur_cam;
@@ -813,7 +814,7 @@ namespace GOTHIC_ENGINE {
 
 		auto pKey = cur_cam->targetKeys[index];
 
-		cmd << "InsertTargetKeyAtIndex: " << index << endl;
+		//cmd << "InsertTargetKeyAtIndex: " << index << endl;
 
 		if (pKey)
 		{
@@ -880,16 +881,16 @@ namespace GOTHIC_ENGINE {
 					newkey->SetVobName(name);
 				}
 
-				cmd << "Set new key: " << newkey->GetVobName() << endl;
+				//cmd << "Set new key: " << newkey->GetVobName() << endl;
 				cur_cam->Refresh();
 				InsertIntoWorld(newkey, cur_cam);
 				cur_cam->Refresh();
 
-				cmd << "InsertIntoWorld ok " << endl;
+				//cmd << "InsertIntoWorld ok " << endl;
 				//newkey->type = KF_CAM;
 				if (cur_cam->GetNumTargetKeys() == 0)
 				{
-					cmd << "InsertTargetKey " << endl;
+					//cmd << "InsertTargetKey " << endl;
 					cur_cam->InsertTargetKey(newkey);
 				}
 				else
@@ -899,18 +900,18 @@ namespace GOTHIC_ENGINE {
 					}
 					else
 					{
-						cmd << "InsertCamKeyAtPos " << cur_cam->GetNumTargetKeys() << endl;
+						//cmd << "InsertCamKeyAtPos " << cur_cam->GetNumTargetKeys() << endl;
 						cur_cam->InsertTargetKeyAtPos(newkey, index + 1); // Mitten drin einfuegen
 					}
 				}
 
-				cmd << "keys insert ok.. " << endl;
+				//cmd << "keys insert ok.. " << endl;
 
 				newkey->SetShowVisual(TRUE);
 				newkey->Release();
 
 				cur_cam->Refresh();
-				cmd << "Insert ok.. .try to add into c# list" << endl;
+				//cmd << "Insert ok.. .try to add into c# list" << endl;
 
 				blockUpdateCamWindow = false;
 				auto tempVob = cur_cam;
@@ -982,7 +983,7 @@ namespace GOTHIC_ENGINE {
 
 			cur_cam->RemoveCamKey(pKey);
 
-			cmd << "try to remove cam key by index: " << index << endl;
+			//cmd << "try to remove cam key by index: " << index << endl;
 			theApp.RemoveVob(pKey);
 
 
@@ -1010,7 +1011,7 @@ namespace GOTHIC_ENGINE {
 
 			cur_cam->RemoveTargetKey(pKey);
 
-			cmd << "try to remove target key by index: " << index << endl;
+			//cmd << "try to remove target key by index: " << index << endl;
 			theApp.RemoveVob(pKey);
 
 
@@ -1028,12 +1029,12 @@ namespace GOTHIC_ENGINE {
 
 	void CameraManager::RemoveSplineKey()
 	{
-		cmd << "RemoveSplineKey" << endl;
+		//cmd << "RemoveSplineKey" << endl;
 	}
 	
 	void CameraManager::InsertCam(CString name)
 	{
-		cmd << "try to create a new camera: " << name << endl;
+		//cmd << "try to create a new camera: " << name << endl;
 
 
 		auto parent = theApp.GetSelectedVob();

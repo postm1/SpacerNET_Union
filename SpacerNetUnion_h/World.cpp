@@ -761,7 +761,6 @@ namespace GOTHIC_ENGINE {
 
 		mm.CreateMatTree();
 
-		camMan.InitAfterWorldLoad();
 
 		if (options.GetIntVal("soundZenOff"))
 		{
