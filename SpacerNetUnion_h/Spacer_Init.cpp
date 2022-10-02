@@ -106,6 +106,7 @@ namespace GOTHIC_ENGINE {
 
 		itemsLocator.Init();
 		nograss.Init();
+		camMan.Init();
 
 
 		

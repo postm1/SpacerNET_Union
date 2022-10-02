@@ -283,6 +283,11 @@ namespace GOTHIC_ENGINE {
 		list.Insert("checkBoxShowPolysSort", set);
 
 
+		set = new CSetting(TYPE_INT, "SPACER", "checkBoxOnlyLatinInInput", "1");
+		list.Insert("checkBoxOnlyLatinInInput", set);
+		
+		//=======================================================
+
 		set = new CSetting(TYPE_INT, "SPACER", "maxFPS", "0");
 		list.Insert("maxFPS", set);
 

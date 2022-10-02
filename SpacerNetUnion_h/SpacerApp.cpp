@@ -48,10 +48,14 @@ namespace GOTHIC_ENGINE {
 		this->nextInsertionIsTempPfx = false;
 		this->bDebugSpacerLoadMesh = false;
 		this->globalParent = NULL;
+		this->isBboxChangeMod = false;
 
 		this->floorVob = NULL;
 		this->s_pLightSphereMesh = NULL;
 		this->vobLightSelected = NULL;
+
+		this->bboxMinsVob = NULL;
+		this->bboxMaxsVob = NULL;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 		
@@ -68,6 +72,65 @@ namespace GOTHIC_ENGINE {
 	{
 		
 		
+	}
+
+
+	void SpacerApp::PrepareBboxVobs(zCVob* vob)
+	{
+		if (vob)
+		{
+			auto box = vob->GetBBox3DWorld();
+
+			if (!bboxMinsVob)
+			{
+				bboxMinsVob = new zCVob();
+				bboxMinsVob->SetVobName("SPACER_VOB_BBOX_MINS");
+				bboxMinsVob->dontWriteIntoArchive = true;
+				bboxMinsVob->SetCollDet(FALSE);
+				//bboxMinsVob->SetVisual("ITMI_STONEFIRE_ENCH.3DS");
+
+
+				theApp.nextInsertBlocked = true;
+				ogame->GetWorld()->AddVob(bboxMinsVob);
+				theApp.nextInsertBlocked = false;
+			}
+
+			if (!bboxMaxsVob)
+			{
+				bboxMaxsVob = new zCVob();
+				bboxMaxsVob->SetVobName("SPACER_VOB_BBOX_MAXS");
+				bboxMaxsVob->dontWriteIntoArchive = true;
+				bboxMaxsVob->SetCollDet(FALSE);
+				//bboxMaxsVob->SetVisual("ITMI_STONEFIRE_ENCH.3DS");
+
+
+				theApp.nextInsertBlocked = true;
+				ogame->GetWorld()->AddVob(bboxMaxsVob);
+				theApp.nextInsertBlocked = false;
+			}
+			
+			bboxMinsVob->SetShowVisual(FALSE);
+			bboxMinsVob->SetPositionWorld(box.mins);
+			bboxMinsVob->ignoredByTraceRay = true;
+
+			bboxMaxsVob->SetShowVisual(FALSE);
+			bboxMaxsVob->SetPositionWorld(box.maxs);
+			bboxMaxsVob->ignoredByTraceRay = true;
+		}
+		else
+		{
+			if (bboxMinsVob)
+			{
+				bboxMinsVob->SetShowVisual(FALSE);
+				bboxMinsVob->ignoredByTraceRay = true;
+			}
+
+			if (bboxMaxsVob)
+			{
+				bboxMaxsVob->SetShowVisual(FALSE);
+				bboxMaxsVob->ignoredByTraceRay = true;
+			}
+		}
 	}
 
 	void SpacerApp::SetSelectedVob(zCVob* vob, zSTRING funcName)
@@ -132,6 +195,55 @@ namespace GOTHIC_ENGINE {
 			vobLightSelected = NULL;
 		}
 
+		if (auto pCam = dynamic_cast<zCCSCamera*>(pickedVob))
+		{
+			camMan.cur_cam = pCam;
+			GetProcAddress(theApp.module, "SelectCameraTab")();
+
+			camMan.OnSelectCameraVob();
+
+			Stack_PushInt(1);
+			GetProcAddress(theApp.module, "OnToggleCamera_Interface")();
+		}
+		else if (auto pKey = dynamic_cast<zCCamTrj_KeyFrame*>(pickedVob))
+		{
+			if (pKey->cscam)
+			{
+				camMan.cur_cam = pKey->cscam;
+				GetProcAddress(theApp.module, "SelectCameraTab")();
+
+				camMan.OnSelectCameraVob();
+
+				Stack_PushInt(1);
+				GetProcAddress(theApp.module, "OnToggleCamera_Interface")();
+			}
+			
+		}
+		else if (pickedVob == NULL)
+		{
+			camMan.cur_cam->SetDrawEnabled(FALSE);
+			camMan.cur_cam = NULL;
+			cmd << "no pick camera, clear" << endl;
+
+			if (!camMan.blockUpdateCamWindow)
+			{
+				GetProcAddress(theApp.module, "OnCameraClear_Interface")();
+			}
+			
+		}
+		else
+		{
+			camMan.cur_cam->SetDrawEnabled(FALSE);
+			camMan.cur_cam = NULL;
+			GetProcAddress(theApp.module, "OnCameraClear_Interface")();
+
+			Stack_PushInt(0);
+			GetProcAddress(theApp.module, "OnToggleCamera_Interface")();
+			
+		}
+
+
+		PrepareBboxVobs(vob);
 		moverVob = dynamic_cast<zCMover*>(vob);
 
 		SetMover();
@@ -209,8 +321,20 @@ namespace GOTHIC_ENGINE {
 			zRELEASE(theApp.floorVob);
 			theApp.floorVob = NULL;
 		}
+
+		if (bboxMaxsVob)
+		{
+			ogame->GetWorld()->RemoveVob(bboxMaxsVob);
+			zRELEASE(bboxMaxsVob);
+			bboxMaxsVob = NULL;
+		}
 		
-		
+		if (bboxMinsVob)
+		{
+			ogame->GetWorld()->RemoveVob(bboxMinsVob);
+			zRELEASE(bboxMinsVob);
+			bboxMinsVob = NULL;
+		}
 
 		useSortPolys = true;
 
@@ -242,6 +366,7 @@ namespace GOTHIC_ENGINE {
 		firstTimeZenSaved = false;
 		theApp.ClearRespList();
 		globalParent = NULL;
+		camMan.Reset();
 		itemsLocator.Reset();
 		restorator.Reset();
 		nograss.Clear();
@@ -295,7 +420,14 @@ namespace GOTHIC_ENGINE {
 					ControllerEvents.PickedVob = NULL;
 
 					CameraMoving();
+
+				
+					
+					BoxMoving();
+	
+					
 					VobMoving();
+					
 				}
 
 			}
@@ -975,7 +1107,7 @@ namespace GOTHIC_ENGINE {
 	}
 	void SpacerApp::PickVob()
 	{
-		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs)
+		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun)
 		{
 			return;
 		}
@@ -995,6 +1127,14 @@ namespace GOTHIC_ENGINE {
 		if (foundVob == theApp.floorVob && theApp.pickedVob != NULL)
 		{
 			return;
+		}
+
+		if (pickedVob != NULL)
+		{
+			if (pickedVob == bboxMaxsVob || pickedVob == bboxMinsVob)
+			{
+				return;
+			}
 		}
 
 
@@ -1321,6 +1461,7 @@ namespace GOTHIC_ENGINE {
 
 				//cmd << "ApplyProps for vob 3 " << AHEX32((uint)current_object) << endl;
 
+				//rx_name rx_rename
 				if (lastName != name)
 				{
 					RecalcWPBBox(vob);
@@ -1333,6 +1474,37 @@ namespace GOTHIC_ENGINE {
 						if (wpObj)
 						{
 							wpObj->SetName(name);
+						}
+					}
+
+					if (auto pKey = dynamic_cast<zCCamTrj_KeyFrame*>(vob))
+					{
+						if (pKey->cscam)
+						{
+							int index = - 1;
+
+							if (pKey->type == KF_CAM)
+							{
+								index = pKey->cscam->SearchCamKey(pKey);
+
+								//cmd << "Rename: " << index << " all: " << pKey->cscam->GetNumCamKeys() << endl;
+								if (index != -1)
+								{
+									camMan.OnRenameSplineKey(index, name);
+								}
+									
+							}
+							else
+							{
+								index = pKey->cscam->SearchTargetKey(pKey);
+
+								if (index != -1)
+								{
+									camMan.OnRenameTargetKey(index, name);
+								}
+							}
+								
+							
 						}
 					}
 

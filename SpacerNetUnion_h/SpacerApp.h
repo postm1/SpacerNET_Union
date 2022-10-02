@@ -25,6 +25,8 @@ namespace GOTHIC_ENGINE {
 		AB_NoGrass nograss;
 		GrassPlacer gp;
 
+		int isBboxChangeMod;
+
 		zCArray<zCPolygon*>* leakPolyList;
 
 		Common::Map<CString, RespawnEntry*> respawnShowList;
@@ -68,6 +70,10 @@ namespace GOTHIC_ENGINE {
 
 			zCVob* currentVobRender;
 			zCVob* currenItemRender;
+
+
+			zCVob* bboxMinsVob;
+			zCVob* bboxMaxsVob;
 
 			TurnWpMode turnWpMode;
 
@@ -148,6 +154,7 @@ namespace GOTHIC_ENGINE {
 		SpacerApp();
 		zCVob * GetSelectedVob();
 		void SetSelectedVob(zCVob * vob, zSTRING funcName = "");
+		void PrepareBboxVobs(zCVob * vob);
 		void SetToKeyPos();
 		void TriggerLoop();
 		void OnKeyRemove();

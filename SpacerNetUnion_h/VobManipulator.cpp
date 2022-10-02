@@ -260,6 +260,14 @@ namespace GOTHIC_ENGINE {
 			WayMovePoint(pickedVob);
 		}
 
+		if (zCCamTrj_KeyFrame* pKey = dynamic_cast<zCCamTrj_KeyFrame*>(pickedVob))
+		{
+			if (pKey->cscam)
+			{
+				pKey->cscam->Refresh();
+			}
+		}
+
 
 		for (int i = 0; i < vobsToMove.GetNumInList(); i++)
 		{
@@ -636,6 +644,10 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	int GetSelectedTool()
+	{
+		return selectedTool;
+	}
 
 	void CopyClipBoard(zSTRING str)
 	{
@@ -1259,30 +1271,12 @@ namespace GOTHIC_ENGINE {
 	void VobKeys()
 	{
 		
+		if (theApp.camMan.cameraRun || GetSelectedTool() == 3) return;
 
-		/*
-		if (zinput->KeyPressed(KEY_F1))
-		{
-			zinput->ClearKeyBuffer();
-
-			
-			if (auto pVob = theApp.GetSelectedVob())
-			{
-				auto savePos = pVob->GetPositionWorld();
-
-				pVob->SetCollDet(FALSE);
-				pVob->trafoObjToWorld.PreScale(zVEC3(2, 2, 2));
-				pVob->trafoObjToWorld.PostScale(zVEC3(2, 2, 2));
-			
-			}
-		}
-		*/
-
-
-		
 
 
 		auto pickMode = theApp.GetPickMode();
+
 
 		if (pickMode == SWM_GRASS)
 		{
@@ -1326,7 +1320,6 @@ namespace GOTHIC_ENGINE {
 		}
 
 		zCVob* pickedVob = theApp.GetSelectedVob();
-
 
 		
 
@@ -1423,9 +1416,18 @@ namespace GOTHIC_ENGINE {
 			{
 				if (!dynamic_cast<zCVobLevelCompo*>(theApp.pickedVob))
 				{
-					print.PrintRed(GetLang("VOB_COPY_OK"));
-					theApp.vobToCopy = theApp.pickedVob;
-					theApp.isVobParentChange = false;
+					if (dynamic_cast<zCCSCamera*>(theApp.pickedVob) || dynamic_cast<zCCamTrj_KeyFrame*>(theApp.pickedVob))
+					{
+						print.PrintRed(GetLang("MSG_VOB_CANT_BE_COPIED"));
+						return;
+					}
+					else
+					{
+						print.PrintRed(GetLang("VOB_COPY_OK"));
+						theApp.vobToCopy = theApp.pickedVob;
+						theApp.isVobParentChange = false;
+					}
+					
 				}
 			}
 			/*
@@ -1549,8 +1551,16 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+
+	
 	void VobMoving()
 	{
+		if (GetSelectedTool() == 3)
+		{
+			return;
+		}
+
+
 
 		//CreateInvIcons();
 		

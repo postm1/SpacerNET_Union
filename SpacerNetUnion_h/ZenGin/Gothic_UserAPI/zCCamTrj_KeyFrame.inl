@@ -3,3 +3,11 @@
 // User API for zCCamTrj_KeyFrame
 // Add your methods here
 
+
+/*
+virtual void EndMovement()
+{
+	zCVob::EndMovement();
+	if (cscam) cscam->Refresh();
+}
+*/

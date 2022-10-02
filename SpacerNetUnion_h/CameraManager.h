@@ -7,22 +7,53 @@ namespace GOTHIC_ENGINE {
 	class CameraManager
 	{
 	public:
-		zCVob*		cur_vob;
 		zCCSCamera* cur_cam;
-		float		lastPresetTime;
+		zCCSCamera* tempCam;
+		bool blockUpdateCamWindow;
+		bool blockRename;
+		zCView* textView;
+		bool cameraRun;
+		bool hideVisualWhileActive;
+		bool hideHelpVisualsTemp;
+		float timeDurationOnSpacer;
+		float		lastPresetTime; // временная, для сохранения
+		zCVob*		cur_vob;
+		
+		
 		zBOOL		lastPresetAutoAddKF;
-		zCCSCamera* editPreset;
-		CString	m_vobname;
-		int		m_kf_pos;
-		int		m_splineselect;
-		CString	m_ref_cam;
-		CString	m_ref_target;
-		float	m_cam_play_duration;
-		BOOL	m_insert_at_current_pos;
+
+
 
 	public:
+		void Init();
+		void Reset();
+		void OnSelectCameraVob();
+		void Loop();
 		void SetCamera(zCVob*);
 		void InitAfterWorldLoad();
 		void InsertCam(CString name);
+
+		void InsertNewSplineKey();
+		void InsertNewTargetKey();
+
+		void RemoveSplineKey();
+		void OnRenameSplineKey(int index, CString name);
+		void OnRenameTargetKey(int index, CString name);
+
+		void OnRun();
+		void OnStop();
+
+		void OnChangeKey(int key);
+
+		void RemoveTargetKeyByIndex(int index);
+		void RemoveSplineKeyByIndex(int index);
+
+		void SelectTargetKeyByIndex(int index);
+		void SelectSplineKeyByIndex(int index);
+		
+		void InsertPosKeyAtIndex(int index);
+		void InsertTargetKeyAtIndex(int index);
+
+		
 	};
 }

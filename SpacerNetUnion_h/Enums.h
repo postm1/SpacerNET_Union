@@ -49,7 +49,7 @@ namespace GOTHIC_ENGINE {
 		SWM_VOBS = 0,
 		SWM_MATERIALS = 1,
 		SWM_GRASS = 2,
-		SWM_MULTISELECT = 3
+		SWM_MULTISELECT = 3,
 	};
 
 

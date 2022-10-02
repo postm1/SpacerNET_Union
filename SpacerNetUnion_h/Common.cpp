@@ -219,7 +219,7 @@ namespace GOTHIC_ENGINE {
 	// Хук на камеру, чтобы она летала по кадрам в инструменте работы с камерой
 	//0x004BFBC0 public: virtual void __thiscall zCCSCamera::Unarchive(class zCArchiver &)
 	HOOK ivk_zCCSCamera_Unarchive AS(&zCCSCamera::Unarchive, &zCCSCamera::Unarchive_Hook);
-	//void Unarchive_Hook(zCArchiver &);
+	void Unarchive_Hook(zCArchiver &);
 	void zCCSCamera::Unarchive_Hook(zCArchiver & arc)
 	{
 		THISCALL(ivk_zCCSCamera_Unarchive)(arc);

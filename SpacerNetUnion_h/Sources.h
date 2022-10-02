@@ -25,6 +25,7 @@
 #include "Common.cpp"
 #include "MultiSelect.cpp"
 #include "VobManipulator.cpp"
+#include "BboxMovement.cpp"
 #include "zCBinTree3DS.cpp"
 #include "zProgMesh.cpp"
 #include "Play.cpp"

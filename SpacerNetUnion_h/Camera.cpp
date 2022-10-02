@@ -75,7 +75,7 @@ namespace GOTHIC_ENGINE {
 
 	void CameraMoving()
 	{
-		if (!ogame->GetCamera())
+		if (!ogame->GetCamera() || theApp.camMan.cameraRun)
 		{
 			return;
 		}

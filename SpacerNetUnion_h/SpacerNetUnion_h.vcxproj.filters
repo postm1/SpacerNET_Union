@@ -3011,6 +3011,9 @@
     <ClInclude Include="Macros.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp</Filter>
     </ClInclude>
+    <ClInclude Include="BboxMovement.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

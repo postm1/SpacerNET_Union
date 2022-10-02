@@ -41,7 +41,11 @@ namespace GOTHIC_ENGINE {
 			}
 			
 		}
-		else if (vob == ogame->GetCameraVob() || vob->GetVobName() == "SPACER_VOB_HELPER_FLOOR")
+		else if (vob == ogame->GetCameraVob() 
+			|| vob->GetVobName() == "SPACER_VOB_HELPER_FLOOR"
+			|| vob->GetVobName() == "SPACER_VOB_BBOX_MINS"
+			|| vob->GetVobName() == "SPACER_VOB_BBOX_MAXS"
+			)
 		{
 			Stack_PushString("Spacer vobs");
 		}

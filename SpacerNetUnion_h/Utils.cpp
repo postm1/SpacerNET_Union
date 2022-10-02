@@ -638,6 +638,7 @@ namespace GOTHIC_ENGINE {
 
 	bool IsValidZObject(void* ptr)
 	{
+		return true; //no check, extended classes does not work
 		if (shi_msize(ptr) != -1)
 		{
 			uint vt_address = *(uint*)ptr;

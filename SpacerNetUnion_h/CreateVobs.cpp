@@ -547,6 +547,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+	//rx_remove rx_onremove
 	void SpacerApp::OnRemoveVob(zCVob* vob)
 	{
 		if (vob)
@@ -554,6 +555,47 @@ namespace GOTHIC_ENGINE {
 			//OutFile("OnRemoveVob: vob: " + AHEX32((uint)vob), true);
 			static auto onRemove = (onVobRemove)GetProcAddress(theApp.module, "OnVobRemove");
 			onRemove((uint)vob);
+
+			if (auto pCam = dynamic_cast<zCCSCamera*>(vob))
+			{
+				//cmd << "onRemove zCCSCamera clear" << endl;
+				(callVoidFunc)GetProcAddress(theApp.module, "OnCameraClear_Interface")();
+			}
+			else if (auto pKey = dynamic_cast<zCCamTrj_KeyFrame*>(vob))
+			{
+				if (pKey->cscam)
+				{
+					int index = -1;
+					
+					if (pKey->type == KF_CAM)
+					{
+						index = pKey->cscam->SearchCamKey(pKey);
+
+						camMan.blockUpdateCamWindow = true;
+						Stack_PushInt(index);
+						(callVoidFunc)GetProcAddress(theApp.module, "OnRemoveSplineKey_Interface")();
+
+						camMan.blockUpdateCamWindow = false;
+					}
+					else
+					{
+						index = pKey->cscam->SearchTargetKey(pKey);
+						//cmd << "OnRemove key index: " << index << endl;
+						camMan.blockUpdateCamWindow = true;
+						Stack_PushInt(index);
+						(callVoidFunc)GetProcAddress(theApp.module, "OnRemoveTargetKey_Interface")();
+
+						camMan.blockUpdateCamWindow = false;
+					}
+					
+
+					pKey->cscam->Refresh();
+
+
+					
+				}
+				
+			}
 
 			if (globalParent == vob)
 			{

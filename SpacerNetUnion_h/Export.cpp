@@ -825,6 +825,84 @@ namespace GOTHIC_ENGINE {
 			theApp.camMan.InsertCam(name);
 		}
 		
+
+		__declspec(dllexport) void Extern_InsertNewSplineKey() {
+
+			theApp.camMan.InsertNewSplineKey();
+		}
+
+		__declspec(dllexport) void Extern_InsertNewTargetKey() {
+
+			theApp.camMan.InsertNewTargetKey();
+		}
+
+		__declspec(dllexport) void Extern_CameraRun() {
+
+			theApp.camMan.OnRun();
+		}
+		
+		__declspec(dllexport) void Extern_CameraStop() {
+
+			theApp.camMan.OnStop();
+		}
+
+		__declspec(dllexport) void Extern_CameraUpdateSpacerTime(int time, int hide) {
+
+			theApp.camMan.timeDurationOnSpacer = time;
+			theApp.camMan.hideVisualWhileActive = hide;
+		}
+
+
+		__declspec(dllexport) void Extern_CameraGotoKey(int key) {
+
+			theApp.camMan.OnChangeKey(key);
+		}
+
+		
+
+		__declspec(dllexport) int Extern_CameraGetMaxKey() {
+
+			if (theApp.camMan.cur_cam)
+			{
+				return theApp.camMan.cur_cam->GetNumCamKeys();
+			}
+			else if (theApp.camMan.tempCam)
+			{
+				return theApp.camMan.tempCam->GetNumCamKeys();
+			}
+			else
+			{
+				return 0;
+			}
+		}
+
+
+		__declspec(dllexport) void Extern_RemoveTargetKeyByIndex(int index) {
+			theApp.camMan.RemoveTargetKeyByIndex(index);
+		}
+
+		__declspec(dllexport) void Extern_RemoveSplineKeyByIndex(int index) {
+			theApp.camMan.RemoveSplineKeyByIndex(index);
+		}
+
+		__declspec(dllexport) void Extern_SelectTargetKeyByIndex(int index) {
+			theApp.camMan.SelectTargetKeyByIndex(index);
+		}
+
+		__declspec(dllexport) void Extern_SelectSplineKeyByIndex(int index) {
+			theApp.camMan.SelectSplineKeyByIndex(index);
+		}
+
+		__declspec(dllexport) void Extern_InsertPosKeyAtIndex(int index) {
+			theApp.camMan.InsertPosKeyAtIndex(index);
+		}
+
+		__declspec(dllexport) void Extern_InsertTargetKeyAtIndex(int index) {
+			theApp.camMan.InsertTargetKeyAtIndex(index);
+		}
+
+		
+		
 	}
 
 }
