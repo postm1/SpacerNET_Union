@@ -4,11 +4,13 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+
 	class MatManager
 	{
 	public:
 		zCList<zCSelPoly> pList;
 		zCMaterial* matSelectedInTree;
+		Common::Map<CString, zCMaterial*> pMaterialsMap;
 
 	public:
 		void Init();

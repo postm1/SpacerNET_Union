@@ -28,6 +28,7 @@ namespace GOTHIC_ENGINE {
 
 
 		Stack_PushString("\n[Macros START]\n");
+		Stack_PushString("#FF00000");
 		pointer();
 
 		for (int i = 0; i < pList.GetNumInList(); i++)
@@ -39,6 +40,7 @@ namespace GOTHIC_ENGINE {
 
 
 				Stack_PushString(Z(i + 1) + ") " + Z entry->raw + "\n");
+				Stack_PushString("");
 				pointer();
 
 				cmd << "Execute " << entry->type << " " << entry->raw  << " arg " << entry->arg << endl;
@@ -134,6 +136,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 		Stack_PushString("[Macros FINISHED]\n");
+		Stack_PushString("#FF00000");
 		pointer();
 
 		PlaySoundGame(ToStr "CS_IAI_ME_ME");

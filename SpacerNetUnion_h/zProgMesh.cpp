@@ -111,15 +111,18 @@ namespace GOTHIC_ENGINE {
 
 
 
-	void LoadMatlib(CString fname)
+	bool LoadPML_File(CString fname)
 	{
 		zoptions->ChangeDir(DIR_TOOLS_DATA);
 		zSTRING matfilename = fname.ToChar();
 		matfilename = matfilename + ".pml";
+
+		//cmd << "Read file: " << matfilename << endl;
+
 		zFILE* file = zfactory->CreateZFile(matfilename);
 		if (!file->Exists()) {
 			delete file; //zerr->Warning("B: SPC: File of Material-Lib not found: " + matfilename); 
-			return;
+			return false;
 		}
 
 
@@ -170,6 +173,7 @@ namespace GOTHIC_ENGINE {
 
 		file->Close(); delete file;
 
+		return true;
 		//zERR_MESSAGE(4, zERR_END, "");
 	}
 
@@ -181,6 +185,8 @@ namespace GOTHIC_ENGINE {
 		zoptions->ChangeDir(DIR_TOOLS_DATA);
 
 		cmd << "Loading materials lib..." << endl;
+
+		int counterLoaded = 0;
 
 		zFILE* f = zfactory->CreateZFile(MATLIB_FILENAME);
 		if (f->Exists())
@@ -227,7 +233,10 @@ namespace GOTHIC_ENGINE {
 						item->Init(matName.ToChar(), idStr.ToInt32());
 						matFilterList.Insert(item);
 						//cmd << "LoadMatlib: " << matName.ToChar() << endl;
-						LoadMatlib(matName.ToChar());
+						if (LoadPML_File(matName.ToChar()))
+						{
+							counterLoaded++;
+						}
 					}
 				} while (!f->Eof());
 				f->Close();
@@ -244,6 +253,9 @@ namespace GOTHIC_ENGINE {
 			cmd << "B: SPC: Configuration: Loading file " << MATLIB_FILENAME << " failed. Not found!" << endl;
 			//zERR_WARNING("B: SPC: Configuration: Loading file " + MATLIB_FILENAME + " failed. Not found!");
 		};
+
+		cmd << "Loaded .PML files: " << counterLoaded << endl;
+		counterLoaded = 0;
 
 		zoptions->ChangeDir(DIR_TOOLS_DATA);
 		f = zfactory->CreateZFile(MATLIB_FILENAME);
@@ -274,7 +286,10 @@ namespace GOTHIC_ENGINE {
 						};
 						line.Delete("#", zSTR_TO);
 						//cmd << "LoadMatlib: " << matName.ToChar()  << endl;
-						LoadMatlib(matName.ToChar());
+						if (LoadPML_File(matName.ToChar()))
+						{
+							counterLoaded++;
+						}
 					}
 				} while (!f->Eof());
 				f->Close();

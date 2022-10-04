@@ -168,6 +168,15 @@ namespace GOTHIC_ENGINE {
 
 	};
 
+
+	// перечисление событий (индексы для распознавания)
+	enum SPC_EVENTLIST
+	{
+		SPC_EVT_OnCreateVob,        // событие после создания объекта
+		SPC_EVT_OnDeleteVob,        // событие перед удалением объекта
+		SPC_EVT_OnApplyDataToVob    // событие после применения свойств объекта
+	};
+
 }
 
 DllExport Gothic_II_Addon::zTWE_ControllerEvents ControllerEvents;

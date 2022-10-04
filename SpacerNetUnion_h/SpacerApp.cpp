@@ -75,63 +75,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	void SpacerApp::PrepareBboxVobs(zCVob* vob)
-	{
-		if (vob)
-		{
-			auto box = vob->GetBBox3DWorld();
-
-			if (!bboxMinsVob)
-			{
-				bboxMinsVob = new zCVob();
-				bboxMinsVob->SetVobName("SPACER_VOB_BBOX_MINS");
-				bboxMinsVob->dontWriteIntoArchive = true;
-				bboxMinsVob->SetCollDet(FALSE);
-				//bboxMinsVob->SetVisual("ITMI_STONEFIRE_ENCH.3DS");
-
-
-				theApp.nextInsertBlocked = true;
-				ogame->GetWorld()->AddVob(bboxMinsVob);
-				theApp.nextInsertBlocked = false;
-			}
-
-			if (!bboxMaxsVob)
-			{
-				bboxMaxsVob = new zCVob();
-				bboxMaxsVob->SetVobName("SPACER_VOB_BBOX_MAXS");
-				bboxMaxsVob->dontWriteIntoArchive = true;
-				bboxMaxsVob->SetCollDet(FALSE);
-				//bboxMaxsVob->SetVisual("ITMI_STONEFIRE_ENCH.3DS");
-
-
-				theApp.nextInsertBlocked = true;
-				ogame->GetWorld()->AddVob(bboxMaxsVob);
-				theApp.nextInsertBlocked = false;
-			}
-			
-			bboxMinsVob->SetShowVisual(FALSE);
-			bboxMinsVob->SetPositionWorld(box.mins);
-			bboxMinsVob->ignoredByTraceRay = true;
-
-			bboxMaxsVob->SetShowVisual(FALSE);
-			bboxMaxsVob->SetPositionWorld(box.maxs);
-			bboxMaxsVob->ignoredByTraceRay = true;
-		}
-		else
-		{
-			if (bboxMinsVob)
-			{
-				bboxMinsVob->SetShowVisual(FALSE);
-				bboxMinsVob->ignoredByTraceRay = true;
-			}
-
-			if (bboxMaxsVob)
-			{
-				bboxMaxsVob->SetShowVisual(FALSE);
-				bboxMaxsVob->ignoredByTraceRay = true;
-			}
-		}
-	}
+	
 
 	void SpacerApp::SetSelectedVob(zCVob* vob, zSTRING funcName)
 	{
@@ -229,7 +173,7 @@ namespace GOTHIC_ENGINE {
 		{
 			camMan.cur_cam->SetDrawEnabled(FALSE);
 			camMan.cur_cam = NULL;
-			cmd << "no pick camera, clear" << endl;
+			//cmd << "no pick camera, clear" << endl;
 
 			if (!camMan.blockUpdateCamWindow)
 			{
@@ -249,7 +193,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		PrepareBboxVobs(vob);
+
 		moverVob = dynamic_cast<zCMover*>(vob);
 
 		SetMover();
@@ -369,6 +313,8 @@ namespace GOTHIC_ENGINE {
 		if (zmusic) zmusic->Stop();
 		if (zsound) zsound->StopAllSounds();
 		zinput->ClearKeyBuffer();
+		mm.CleanSelection();
+		mm.pMaterialsMap.Clear();
 
 		isMerged = false;
 		isMesh = false;
@@ -381,6 +327,9 @@ namespace GOTHIC_ENGINE {
 		itemsLocator.Reset();
 		restorator.Reset();
 		nograss.Clear();
+
+		(callVoidFunc)GetProcAddress(theApp.module, "ClearAllEntries")();
+
 		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())
 		{
 			//ogame->GetWorld()->GetBspTree()->m_bRenderedFirstTime = TRUE;
@@ -1120,6 +1069,7 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun || GetSelectedTool() == 3)
 		{
+			//print.PrintRed("Error: 1");
 			return;
 		}
 
@@ -1135,19 +1085,22 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		if (foundVob == theApp.floorVob && theApp.pickedVob != NULL)
+		if (theApp.floorVob && foundVob == theApp.floorVob && theApp.pickedVob != NULL)
 		{
+			//print.PrintRed("Error: 2");
 			return;
 		}
 
-		if (pickedVob != NULL)
+		if (foundVob != NULL)
 		{
-			if (pickedVob == bboxMaxsVob || pickedVob == bboxMinsVob)
+			if (foundVob == bboxMaxsVob || foundVob == bboxMinsVob)
 			{
+				//print.PrintRed("Error: 3");
 				return;
 			}
 		}
 
+		
 
 		oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(foundVob);
 		
@@ -1315,6 +1268,7 @@ namespace GOTHIC_ENGINE {
 		char* className = classNameVob.ToChar();
 
 
+
 		OutFile("SetProperties: " + A classNameVob, false);
 
 		auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
@@ -1359,7 +1313,6 @@ namespace GOTHIC_ENGINE {
 			zSTRING className = vob->_GetClassDef()->className;
 
 			//std::cout << "Get Props: " << arcString << std::endl;
-
 			SetProperties(arcString, className);
 
 
@@ -1456,6 +1409,9 @@ namespace GOTHIC_ENGINE {
 
 			if (vob)
 			{
+
+				CALL_OnApplyDataToVob(vob);
+
 				if (vob->GetVisual())
 				{
 

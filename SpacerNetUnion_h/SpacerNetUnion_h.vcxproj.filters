@@ -3002,9 +3002,6 @@
     <ClInclude Include="DialogSplit.h">
       <Filter>Plugin\Workspace\Plugin\Main\DialogSplitter</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTest.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
-    </ClInclude>
     <ClInclude Include="AB_NoGrass_Init.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\AB_NoGrass</Filter>
     </ClInclude>
@@ -3013,6 +3010,9 @@
     </ClInclude>
     <ClInclude Include="BboxMovement.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="Export_Union_DLL.cpp">
+      <Filter>Plugin\Workspace\Plugin\Interchange</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

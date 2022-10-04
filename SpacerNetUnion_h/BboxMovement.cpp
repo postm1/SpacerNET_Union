@@ -3,6 +3,65 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
+
+	void SpacerApp::PrepareBboxVobs(zCVob* vob)
+	{
+		if (vob)
+		{
+			auto box = vob->GetBBox3DWorld();
+
+			if (!bboxMinsVob)
+			{
+				bboxMinsVob = new zCVob();
+				bboxMinsVob->SetVobName("SPACER_VOB_BBOX_MINS");
+				bboxMinsVob->dontWriteIntoArchive = true;
+				bboxMinsVob->SetCollDet(FALSE);
+				//bboxMinsVob->SetVisual("ITMI_STONEFIRE_ENCH.3DS");
+				bboxMinsVob->ignoredByTraceRay = true;
+				bboxMinsVob->SetShowVisual(FALSE);
+
+				theApp.nextInsertBlocked = true;
+				ogame->GetWorld()->AddVob(bboxMinsVob);
+				theApp.nextInsertBlocked = false;
+			}
+
+			if (!bboxMaxsVob)
+			{
+				bboxMaxsVob = new zCVob();
+				bboxMaxsVob->SetVobName("SPACER_VOB_BBOX_MAXS");
+				bboxMaxsVob->dontWriteIntoArchive = true;
+				bboxMaxsVob->SetCollDet(FALSE);
+				//bboxMaxsVob->SetVisual("ITMI_STONEFIRE_ENCH.3DS");
+				
+				bboxMaxsVob->ignoredByTraceRay = true;
+
+				bboxMaxsVob->SetShowVisual(FALSE);
+
+				theApp.nextInsertBlocked = true;
+				ogame->GetWorld()->AddVob(bboxMaxsVob);
+				theApp.nextInsertBlocked = false;
+			}
+
+			
+			bboxMinsVob->SetPositionWorld(box.mins);
+			bboxMaxsVob->SetPositionWorld(box.maxs);
+			
+		}
+		else
+		{
+			if (bboxMinsVob)
+			{
+				bboxMinsVob->SetPositionWorld(zVEC3(0, 0, 0));
+			}
+
+			if (bboxMaxsVob)
+			{
+				bboxMaxsVob->SetPositionWorld(zVEC3(0, 0, 0));
+			}
+			
+		}
+	}
+
 	void BoxMoving()
 	{
 		zCVob* pickedVob = theApp.GetSelectedVob();
@@ -13,49 +72,36 @@ namespace GOTHIC_ENGINE {
 		}
 
 		auto pOcVob = pickedVob->CastTo<oCVob>();
+		auto pWp = pickedVob->CastTo<zCVobWaypoint>();
+		auto pSpot = pickedVob->CastTo<zCVobSpot>();
 
-		if ((pOcVob || pickedVob->IsPFX()) && GetSelectedTool() == 3)
-		{
-
-			return;
-		}
 
 
 		if (keys.KeyPressed("TOOL_BBOX_CHANGE", true) && pickedVob)
 		{
 
+			if ((pickedVob->GetVisual() || pOcVob || pSpot || pWp))
+			{
+				print.PrintRed(GetLang("TOOL_BBOX_CANT_WORK"));
+				SetSelectedTool(1);
+				theApp.isBboxChangeMod = 0;
+				return;
+			}
+
 			if (GetSelectedTool() != 3)
 			{
-
-				auto pOcVob = pickedVob->CastTo<oCVob>();
-
-				if (pOcVob || pickedVob->IsPFX())
-				{
-					print.PrintRed(GetLang("TOOL_BBOX_CANT_WORK"));
-					return;
-				}
-
 				
 				SetSelectedTool(3);
 				theApp.isBboxChangeMod = 1;
 
-				if (theApp.bboxMaxsVob)
-				{
-					theApp.bboxMaxsVob->SetPositionWorld(pickedVob->GetBBox3DWorld().maxs);
-
-				}
-
-				if (theApp.bboxMinsVob)
-				{
-					theApp.bboxMinsVob->SetPositionWorld(pickedVob->GetBBox3DWorld().mins);
-
-				}
+				theApp.PrepareBboxVobs(pickedVob);
 			}
 			else
 			{
 				print.PrintRed(GetLang("TOOL_BBOX_CHANGE_LEAVE"));
 				SetSelectedTool(1);
 				theApp.isBboxChangeMod = 0;
+				theApp.PrepareBboxVobs(NULL);
 			}
 			
 			
@@ -84,9 +130,35 @@ namespace GOTHIC_ENGINE {
 			theApp.isBboxChangeMod = 2;
 		}
 
+		if (pickedVob && theApp.isBboxChangeMod != 0)
+		{
+			zCVob* bboxCurrentVob = NULL;
+
+			if (theApp.isBboxChangeMod == 1)
+			{
+				bboxCurrentVob = theApp.bboxMaxsVob;
+
+			}
+			else
+			{
+				bboxCurrentVob = theApp.bboxMinsVob;
+			}
+
+			if (bboxCurrentVob)
+			{
+				zVEC3 startPos = bboxCurrentVob->GetPositionWorld();
+
+
+
+				zlineCache->Line3D(startPos, startPos + zVEC3(100, 0, 0), GFX_GREEN, TRUE);
+				zlineCache->Line3D(startPos, startPos + zVEC3(0, 100, 0), GFX_YELLOW, TRUE);
+				zlineCache->Line3D(startPos, startPos + zVEC3(0, 0, 100), GFX_BLUE, TRUE);
+			}
+		}
 
 		if (pickedVob && !zinput->GetMouseButtonPressedRight() && theApp.isBboxChangeMod != 0)
 		{
+
 			auto box = pickedVob->GetBBox3DWorld();
 			zCVob* bboxCurrentVob = NULL;
 
@@ -102,13 +174,7 @@ namespace GOTHIC_ENGINE {
 
 			if (!bboxCurrentVob) return;
 
-			zVEC3 startPos = bboxCurrentVob->GetPositionWorld();
 
-			
-
-			zlineCache->Line3D(startPos, startPos + zVEC3(100, 0, 0), GFX_GREEN, TRUE);
-			zlineCache->Line3D(startPos, startPos + zVEC3(0, 100, 0), GFX_YELLOW, TRUE);
-			zlineCache->Line3D(startPos, startPos + zVEC3(0, 0, 100), GFX_BLUE, TRUE);
 
 
 			float speedTranslation = ((float)(theApp.options.GetIntVal("vobTransSpeed")) / 100000);
