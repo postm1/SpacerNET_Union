@@ -12,7 +12,7 @@ namespace GOTHIC_ENGINE {
 	Array<ptr_EVENTFUNC> arr_OnCreateVob_RegFuncs;
 	Array<ptr_EVENTFUNC> arr_OnDeleteVob_RegFuncs;
 	Array<ptr_EVENTFUNC> arr_OnApplyDataToVob_RegFuncs;
-
+	Array<ptr_EVENTFUNC> arr_OnSelectVob_RegFuncs;
 
 
 	void CALL_OnCreateVob(zCVob* pVob)
@@ -45,6 +45,15 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void CALL_OnSelectVob(zCVob* pVob)
+	{
+		// пробегаемся по всем указателям на функции
+		for (uint i = 0; i < arr_OnSelectVob_RegFuncs.GetNum(); i++)
+		{
+			// вызываем функцию
+			arr_OnSelectVob_RegFuncs[i](pVob);
+		}
+	}
 
 	// экспорт функции для других DLL
 	extern "C"
@@ -92,6 +101,9 @@ namespace GOTHIC_ENGINE {
 				break;
 			case Gothic_II_Addon::SPC_EVT_OnApplyDataToVob:
 				arr_OnApplyDataToVob_RegFuncs.Insert(func);
+				break;
+			case Gothic_II_Addon::SPC_EVT_OnSelectVob:
+				arr_OnSelectVob_RegFuncs.Insert(func);
 				break;
 			default:
 				break;

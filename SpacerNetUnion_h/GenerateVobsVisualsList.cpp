@@ -17,6 +17,8 @@ namespace GOTHIC_ENGINE {
 		CString vdfOrWork;
 		CString vdfName;
 		CString fileType;
+		zCArray<CString> texturesNames;
+		zCVob* pVob;
 
 		VisualReportEntry::VisualReportEntry()
 		{
@@ -25,13 +27,21 @@ namespace GOTHIC_ENGINE {
 			work = false;
 			workOnly = false;
 			notFound = false;
+			pVob = false;
 		}
 	};
+
+	struct VisualReportEntryBadTexture
+	{
+		CString name;
+		int type;
+		zCArray<CString> textures;
+	};
+
 	void CreateHtmlReport(CString path);
 
 	Common::Map<CString, VisualReportEntry*> searchVisualUniqList;
-
-
+	Common::Map<CString, VisualReportEntryBadTexture*> badTextures;
 
 	void SpacerApp::FindVobsVisualsUnique(CString path)
 	{
@@ -54,6 +64,7 @@ namespace GOTHIC_ENGINE {
 
 				CString key = pVob->visual->GetVisualName();
 
+				
 
 				auto& foundPair = searchVisualUniqList[key];
 
@@ -65,7 +76,8 @@ namespace GOTHIC_ENGINE {
 				{
 					auto entry = new VisualReportEntry();
 					entry->amount = 1;
-
+					
+					entry->pVob = pVob;
 					searchVisualUniqList.Insert(key, entry);
 				}
 			}
@@ -221,7 +233,7 @@ namespace GOTHIC_ENGINE {
 
 		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title><style type=\"text/css\" media=\"screen\">html,body{font-family:serif;,sans-serif;\
 color:#222222;}p{font-size:20px}table{border-collapse:collapse;border:1px solid grey;font-size:14px;}th{font-size:bold;background-color:#E1E15D;}td,th{border:1px solid grey;padding:5px}\
-tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head><body><p><b>There is a list of all vobs' visuals in the location.</b></p>";
+tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_orange{color:#FF9900;} .texture_word_red{color:#FF001E;}</style></head><body><p><b>There is a list of all vobs' visuals in the location.</b></p>";
 
 		const CString endFile = "</body></html>";
 
@@ -232,6 +244,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 
 		outfile << header;
 
+		badTextures.Clear();
 
 		auto arr = searchVisualUniqList.GetArray();
 
@@ -277,6 +290,32 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 					searchName = searchName.Replace(".3DS", ".MRM");
 				}
 
+				// добавляем инфу о текстурах из сабмешей
+				if (pair->GetValue()->fileType == "3DS" && pair->GetValue()->pVob != NULL)
+				{
+					auto curVob = pair->GetValue()->pVob;
+
+					if (auto visual = curVob->GetVisual())
+					{
+						if (auto mesh = visual->CastTo<zCProgMeshProto>())
+						{
+							//cmd << "mesh! " << curVob->GetVobName() << " visual: " << visual->GetVisualName() << endl;
+
+							for (int i = 0; i < mesh->numSubMeshes; i++)
+							{
+								auto mat = mesh->subMeshList[i].material;
+
+								if (mat && mat->texture)
+								{
+									//cmd << mat->texture->GetObjectName() << endl;
+									pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+								}
+							}
+
+							//cmd << "===========" << endl;
+						}
+					}
+				}
 
 				// VDF NAME
 				char* volumeNamePtr;
@@ -350,7 +389,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 					{
 						foundAnyBadEntry = true;
 
-						outfile << "<p>Warning visuals table</p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
+						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
 					}
 
 					outfile << "<tr class=\"error\">";
@@ -361,7 +400,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 					{
 						foundAnyBadEntry = true;
 
-						outfile << "<p>Warning visuals table</p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
+						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
 					}
 
 					outfile << "<tr class=\"warning\">";
@@ -381,6 +420,8 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 				outfile << "<td>" << pair->GetValue()->vdfName << "</td>";
 				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
 				
+
+				
 				
 				outfile << "</tr>";
 			}
@@ -391,12 +432,95 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 		{
 			outfile << "</table><br>";
 		}
+
+		outfile << "<p><b>Not found or _WORK textures</b></p><table id=\"table_bad_tex\"><tr><th>Visual name</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
+
+		//auto arrBad = badTextures.GetArray();
+
+		for (uint i = 0; i < arr.GetNum(); i++)
+		{
+			auto pair = arr.GetSafe(i);
+			bool foundOk = false;
+
+			if (!pair->IsNull() && pair->GetValue()->pVob)
+			{
+				
+				for (int k = 0; k < pair->GetValue()->texturesNames.GetNumInList(); k++)
+				{
+					auto nameTexture = pair->GetValue()->texturesNames.GetSafe(k);
+					auto originalName = nameTexture;
+
+					nameTexture = nameTexture.Replace(".TGA", "");
+					nameTexture += "-C";
+					nameTexture += ".TEX";
+
+					int fileTypeExist = Union_FileExists(nameTexture);
+
+					//cmd << nameTexture << " Type: " << fileTypeExist << endl;
+
+					if (fileTypeExist == 2)
+					{
+						//outfile << originalName << "<br>";
+					}
+					else if (fileTypeExist == 1)
+					{
+						if (!foundOk)
+						{
+							outfile << "<tr>";
+							outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
+						}
+
+						
+
+
+						outfile << "<td>";
+						outfile << "<span class=\"texture_word_orange\">" << nameTexture << "</span>";
+						outfile << "</td>";
+						outfile << "<td>";
+						outfile << "<span class=\"texture_word_orange\">" << originalName << "</span>";
+						outfile << "</td>";
+						outfile << "</tr>";
+							
+					}
+					else
+					{
+						if (!foundOk)
+						{
+							outfile << "<tr>";
+							outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
+						}
+
+
+						outfile << "<td>";
+						outfile << "<span class=\"texture_word_red\">" << nameTexture << "</span>";
+						outfile << "</td>";
+						outfile << "<td>";
+						outfile << "<span class=\"texture_word_red\">" << originalName << "</span>";
+						outfile << "</td>";
+						outfile << "</tr>";
+					}
+
+
+
+				}
+
+				if (foundOk)
+				{
+					//outfile << "</td>";
+					//outfile << "</tr>";
+				}
+				
+			}
+
+		}
+
+		outfile << "</table><br>";
 		
 
 
 
 		//=====================================================================
-		outfile << "<p>Normal visuals table</p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
+		outfile << "<p><b>Normal visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
 
 		for (uint i = 0; i < arr.GetNum(); i++)
 		{
@@ -425,12 +549,16 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}</style></head
 				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
 
 
+				
+
 				outfile << "</tr>";
 			}
 
 		}
 
 		outfile << "</table><br>";
+
+
 		outfile << endFile;
 
 		searchVisualUniqList.Clear();

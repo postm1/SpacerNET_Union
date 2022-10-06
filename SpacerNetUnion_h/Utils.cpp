@@ -893,6 +893,33 @@ namespace GOTHIC_ENGINE {
 	};
 
 
+	int Union_FileExists(CString searchName)
+	{
+		bool foundVirtual = false;
 
+		auto result = vdf_fexists(searchName.ToChar(), VDF_DEFAULT);
+
+		if ((result & VDF_VIRTUAL) == VDF_VIRTUAL)
+		{
+			foundVirtual = true;
+			return 2;
+		}
+
+
+		result = vdf_fexists(searchName.ToChar(), VDF_PHYSICAL);
+
+		if ((result & VDF_PHYSICAL) == VDF_PHYSICAL)
+		{
+			return 1;
+		}
+
+		if (result == 0 && !foundVirtual)
+		{
+			return 0;
+
+		}
+
+		return 0;
+	}
 }
 

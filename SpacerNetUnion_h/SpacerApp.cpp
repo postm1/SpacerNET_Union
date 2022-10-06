@@ -57,6 +57,7 @@ namespace GOTHIC_ENGINE {
 		this->bboxMinsVob = NULL;
 		this->bboxMaxsVob = NULL;
 
+
 		this->spcOpt.Init("spacer_net.ini", true);
 		
 		this->restorator.Init();
@@ -171,8 +172,16 @@ namespace GOTHIC_ENGINE {
 		}
 		else if (pickedVob == NULL)
 		{
-			camMan.cur_cam->SetDrawEnabled(FALSE);
-			camMan.cur_cam = NULL;
+			if (camMan.cur_cam)
+			{
+				camMan.cur_cam->SetDrawEnabled(FALSE);
+				camMan.cur_cam = NULL;
+			}
+			else
+			{
+				//cmd << "================ NO CAM 1" << endl;
+			}
+			
 			//cmd << "no pick camera, clear" << endl;
 
 			if (!camMan.blockUpdateCamWindow)
@@ -183,8 +192,16 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
-			camMan.cur_cam->SetDrawEnabled(FALSE);
-			camMan.cur_cam = NULL;
+			if (camMan.cur_cam)
+			{
+				camMan.cur_cam->SetDrawEnabled(FALSE);
+				camMan.cur_cam = NULL;
+			}
+			else
+			{
+				//cmd << "================ NO CAM  2" << endl;
+			}
+			
 			GetProcAddress(theApp.module, "OnCameraClear_Interface")();
 
 			Stack_PushInt(0);
@@ -197,6 +214,8 @@ namespace GOTHIC_ENGINE {
 		moverVob = dynamic_cast<zCMover*>(vob);
 
 		SetMover();
+
+		CALL_OnSelectVob(vob);
 
 	}
 
@@ -901,6 +920,16 @@ namespace GOTHIC_ENGINE {
 
 		if (pickTryEntry.ay <= 0) pickTryEntry.allowed = false;
 
+		static auto checkInterfaceBlock = (intFuncPointer)GetProcAddress(theApp.module, "IsClickBlocked");
+
+
+		if (checkInterfaceBlock())
+		{
+			pickTryEntry.allowed = false;
+		}
+
+		//cmd << "Allowed: " << pickTryEntry.allowed  << endl;
+
 		//print.PrintRed(Z ax + " " + Z ay + " " + Z pickTryEntry.allowed);
 
 		return pickTryEntry.allowed;
@@ -1410,7 +1439,7 @@ namespace GOTHIC_ENGINE {
 			if (vob)
 			{
 
-				CALL_OnApplyDataToVob(vob);
+				
 
 				if (vob->GetVisual())
 				{
@@ -1482,6 +1511,9 @@ namespace GOTHIC_ENGINE {
 				//Message::Box("Apply 4");
 
 				//cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
+
+
+				CALL_OnApplyDataToVob(vob);
 			}
 
 			//vob->SetPositionWorld(vob->GetPositionWorld());

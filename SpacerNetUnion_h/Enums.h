@@ -174,7 +174,8 @@ namespace GOTHIC_ENGINE {
 	{
 		SPC_EVT_OnCreateVob,        // событие после создания объекта
 		SPC_EVT_OnDeleteVob,        // событие перед удалением объекта
-		SPC_EVT_OnApplyDataToVob    // событие после применения свойств объекта
+		SPC_EVT_OnApplyDataToVob,    // событие после применения свойств объекта
+		SPC_EVT_OnSelectVob          // событие при выборе воба
 	};
 
 }
