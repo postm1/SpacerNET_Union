@@ -285,6 +285,10 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "checkBoxOnlyLatinInInput", "1");
 		list.Insert("checkBoxOnlyLatinInInput", set);
+
+
+		set = new CSetting(TYPE_INT, "SPACER", "showLightRadiusVob", "1");
+		list.Insert("showLightRadiusVob", set);
 		
 		//=======================================================
 

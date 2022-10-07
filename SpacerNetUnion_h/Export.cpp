@@ -604,7 +604,15 @@ namespace GOTHIC_ENGINE {
 		}
 
 		__declspec(dllexport) int Extern_GetCurrentKey() {
-			return theApp.moverVob->GetActKeyframe();
+
+			if (theApp.moverVob)
+			{
+				return theApp.moverVob->GetActKeyframe();
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 		__declspec(dllexport) int Extern_GetMaxKey() {
@@ -902,9 +910,32 @@ namespace GOTHIC_ENGINE {
 		}
 
 		
-	
+		__declspec(dllexport) int Extern_CanEditBboxCurrentVob() {
+
+			int result = 1;
 
 
+			if (auto pVob = theApp.GetSelectedVob())
+			{
+				auto pOcVob = pVob->CastTo<oCVob>();
+				auto pWp = pVob->CastTo<zCVobWaypoint>();
+				auto pSpot = pVob->CastTo<zCVobSpot>();
+
+				
+				if ((pVob->GetVisual() || pOcVob || pSpot || pWp))
+				{
+					result = 0;
+				}
+			}
+			else
+			{
+				result = 0;
+			}
+
+			return result;
+		}
+
+		
 		
 	}
 

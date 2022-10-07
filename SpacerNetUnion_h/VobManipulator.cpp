@@ -160,6 +160,35 @@ namespace GOTHIC_ENGINE {
 		vobsToMove.DeleteListDatas();
 	}
 
+
+	bool IsVobMover(zCVob* pVob)
+	{
+		bool result = false;
+
+		if (auto pMover = pVob->CastTo<zCMover>())
+		{
+			result = true;
+		}
+		else if (auto pParent = pVob->GetParentVob())
+		{
+			if (auto pMoverParent = pParent->CastTo<zCMover>())
+			{
+				result = true;
+			}
+			else if (auto pParent2 = pParent->GetParentVob())
+			{
+				if (auto pMover2 = pParent2->CastTo<zCMover>())
+				{
+					result = true;
+				}
+			}
+
+		}
+
+
+		return result;
+	}
+
 	void HandleVobRotation(zCVob* pickedVob, int type, float angle)
 	{
 
@@ -243,6 +272,14 @@ namespace GOTHIC_ENGINE {
 	{
 
 		//bool parentAlone = theApp.options.GetIntVal("translateParentAlone");
+
+
+		//проверка коллизии для мувера
+		if (IsVobMover(pickedVob))
+		{
+			pickedVob->SetPositionWorld(pos);
+			return;
+		}
 
 		if (pickedVob->globalVobTreeNode)
 		{
