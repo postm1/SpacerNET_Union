@@ -83,15 +83,15 @@ namespace GOTHIC_ENGINE {
 			if ((pickedVob->GetVisual() || pOcVob || pSpot || pWp))
 			{
 				print.PrintRed(GetLang("TOOL_BBOX_CANT_WORK"));
-				SetSelectedTool(1);
+				SetSelectedTool(TM_TRANSLATE);
 				theApp.isBboxChangeMod = 0;
 				return;
 			}
 
-			if (GetSelectedTool() != 3)
+			if (GetSelectedTool() != TM_BBOXEDIT)
 			{
 				
-				SetSelectedTool(3);
+				SetSelectedTool(TM_BBOXEDIT);
 				theApp.isBboxChangeMod = 1;
 
 				theApp.PrepareBboxVobs(pickedVob);
@@ -99,7 +99,7 @@ namespace GOTHIC_ENGINE {
 			else
 			{
 				print.PrintRed(GetLang("TOOL_BBOX_CHANGE_LEAVE"));
-				SetSelectedTool(1);
+				SetSelectedTool(TM_TRANSLATE);
 				theApp.isBboxChangeMod = 0;
 				theApp.PrepareBboxVobs(NULL);
 			}
@@ -107,7 +107,7 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
-		if (GetSelectedTool() != 3)
+		if (GetSelectedTool() != TM_BBOXEDIT)
 		{
 			return;
 		}

@@ -52,6 +52,14 @@ namespace GOTHIC_ENGINE {
 		SWM_MULTISELECT = 3,
 	};
 
+	enum SpacerToolMode
+	{
+		TM_NONE = 0,
+		TM_TRANSLATE,
+		TM_ROTATE,
+		TM_BBOXEDIT
+	};
+
 
 	enum ToggleMenuType
 	{

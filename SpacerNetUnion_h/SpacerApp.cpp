@@ -81,7 +81,7 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SetSelectedVob(zCVob* vob, zSTRING funcName)
 	{
 
-		if (GetSelectedTool() == 3)
+		if (GetSelectedTool() == TM_BBOXEDIT)
 		{
 			return;
 		}
@@ -283,9 +283,9 @@ namespace GOTHIC_ENGINE {
 		current_object = NULL;
 		treeToCopy = NULL;
 
-		if (GetSelectedTool() == 3)
+		if (GetSelectedTool() == TM_BBOXEDIT)
 		{
-			SetSelectedTool(1);
+			SetSelectedTool(TM_TRANSLATE);
 		}
 
 		
@@ -1096,7 +1096,7 @@ namespace GOTHIC_ENGINE {
 	}
 	void SpacerApp::PickVob()
 	{
-		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun || GetSelectedTool() == 3)
+		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT)
 		{
 			//print.PrintRed("Error: 1");
 			return;

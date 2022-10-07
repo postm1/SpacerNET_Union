@@ -189,8 +189,65 @@ namespace GOTHIC_ENGINE {
 		return result;
 	}
 
+
+	void HandleVobRotationMover(zCVob* pickedVob, int type, float angle)
+	{
+		zVEC3 pos = pickedVob->GetPositionWorld();
+		zVEC3 vobUnit = pickedVob->GetAtVectorWorld().Normalize();
+
+		zVEC3 camUnit = ogame->GetCamera()->connectedVob->GetAtVectorWorld().Normalize();
+
+		if (type == 1)
+		{
+			pickedVob->RotateWorld(camUnit.Cross(zVEC3(0, 1, 0)).Normalize(), angle);
+		}
+
+		if (type == 2)
+		{
+			zVEC3 newVec = camUnit;
+			newVec[1] = 0;
+
+			pickedVob->RotateWorld(newVec, -angle);
+		}
+
+		if (type == 3)
+		{
+			pickedVob->RotateWorldY(angle);
+		}
+
+		if (type == 4)
+		{
+			print.PrintRed(GetLang("UNION_VOB_AXIS_RESET"));
+			pickedVob->SetHeadingAtWorld(zVEC3(0, 1, 0));
+		}
+
+		if (type == 5)
+		{
+			print.PrintRed(GetLang("UNION_VOB_AXIS_RESET"));
+			pickedVob->SetHeadingAtWorld(zVEC3(1, 0, 0));
+		}
+
+		if (type == 6)
+		{
+			print.PrintRed(GetLang("UNION_VOB_AXIS_RESET"));
+			pickedVob->SetHeadingAtWorld(zVEC3(0, 0, 1));
+		}
+
+
+		if (dynamic_cast<zCVobWaypoint*>(pickedVob))
+		{
+			WayMovePoint(pickedVob);
+		}
+	}
+
 	void HandleVobRotation(zCVob* pickedVob, int type, float angle)
 	{
+
+		if (IsVobMover(pickedVob))
+		{
+			HandleVobRotationMover(pickedVob, type, angle);
+			return;
+		}
 
 		//bool collDyn = pickedVob->collDetectionDynamic;
 		//bool collStat = pickedVob->collDetectionStatic;
@@ -669,9 +726,9 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	int selectedTool = 0;
+	SpacerToolMode selectedTool = TM_NONE;
 
-	void SetSelectedTool(int tool)
+	void SetSelectedTool(SpacerToolMode tool)
 	{
 		selectedTool = tool;
 
@@ -681,7 +738,7 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	int GetSelectedTool()
+	SpacerToolMode GetSelectedTool()
 	{
 		return selectedTool;
 	}
@@ -1308,7 +1365,7 @@ namespace GOTHIC_ENGINE {
 	void VobKeys()
 	{
 		
-		if (theApp.camMan.cameraRun || GetSelectedTool() == 3) return;
+		if (theApp.camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT) return;
 
 
 
@@ -1351,9 +1408,9 @@ namespace GOTHIC_ENGINE {
 		//SearchBadHierarchy();
 		
 
-		if (!selectedTool)
+		if (GetSelectedTool() == TM_NONE)
 		{
-			SetSelectedTool(1);
+			SetSelectedTool(TM_TRANSLATE);
 		}
 
 		zCVob* pickedVob = theApp.GetSelectedVob();
@@ -1363,13 +1420,13 @@ namespace GOTHIC_ENGINE {
 		if (keys.KeyPressed("VOB_TRANSLATE", true))
 		{
 			print.PrintRed(GetLang("TOOL_TRANS"));
-			SetSelectedTool(1);
+			SetSelectedTool(TM_TRANSLATE);
 		}
 
 		if (keys.KeyPressed("VOB_ROTATE", true))
 		{
 			print.PrintRed(GetLang("TOOL_ROT"));
-			SetSelectedTool(2);
+			SetSelectedTool(TM_ROTATE);
 		}
 
 
@@ -1514,7 +1571,7 @@ namespace GOTHIC_ENGINE {
 					if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))
 					{
 						if (!theApp.isGrattControlActive)
-							SetSelectedTool(1);
+							SetSelectedTool(TM_TRANSLATE);
 					}
 
 					HandleInsertVobCopy(pickedVob);
@@ -1538,7 +1595,7 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 			if (!theApp.isGrattControlActive)
-				SetSelectedTool(1);
+				SetSelectedTool(TM_TRANSLATE);
 
 		}
 
@@ -1592,7 +1649,7 @@ namespace GOTHIC_ENGINE {
 	
 	void VobMoving()
 	{
-		if (GetSelectedTool() == 3)
+		if (GetSelectedTool() == TM_BBOXEDIT)
 		{
 			return;
 		}
@@ -1778,9 +1835,9 @@ namespace GOTHIC_ENGINE {
 		}
 		*/
 
-		if (!selectedTool)
+		if (GetSelectedTool() == TM_NONE)
 		{
-			SetSelectedTool(1);
+			SetSelectedTool(TM_TRANSLATE);
 		}
 
 		zCVob* pickedVob = theApp.GetSelectedVob();
@@ -1960,7 +2017,7 @@ namespace GOTHIC_ENGINE {
 
 
 				// перемещение
-				if (selectedTool == 1)
+				if (selectedTool == TM_TRANSLATE)
 				{
 
 					y = pos.n[1];
@@ -2002,7 +2059,7 @@ namespace GOTHIC_ENGINE {
 
 				}
 				// вращение
-				if (selectedTool == 2)
+				if (selectedTool == TM_ROTATE)
 				{
 
 

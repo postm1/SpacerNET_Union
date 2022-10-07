@@ -414,7 +414,7 @@ namespace GOTHIC_ENGINE {
 		nextInsertBlocked = flag;
 
 		if (!theApp.isGrattControlActive)
-			SetSelectedTool(1);
+			SetSelectedTool(TM_TRANSLATE);
 
 	}
 

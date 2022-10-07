@@ -113,6 +113,7 @@ namespace GOTHIC_ENGINE {
 	class KeysManager;
 	class MyPrint;
 	class MatManager;
+	enum SpacerToolMode;
 
 #define extFuncs 
 	extern int GetFPS(void); \
@@ -159,7 +160,6 @@ namespace GOTHIC_ENGINE {
 		extern zSTRING OnWorldAnalysewaynet(); \
 		extern void RenderVobsLoop(); \
 		extern void AddVobToRender(zSTRING visual, bool isItem); \
-		extern void SetSelectedTool(int tool); \
 		extern int GetRandVal(int min, int max); \
 		extern void GetDesktopResolution(int& horizontal, int& vertical); \
 		extern void ToggleMusic(bool mode); \
@@ -174,7 +174,7 @@ namespace GOTHIC_ENGINE {
 		extern int GetZenLevelCompoCount(); \
 		extern float Lerp(float a, float b, float t); \
 		extern zVEC3 Slerp(zVEC3 start, zVEC3 end, float percent); \
-		extern void SetSelectedTool(int tool); \
+		extern void SetSelectedTool(SpacerToolMode tool); \
 		extern bool IsVirtualFile(CString fileName); \
 		extern void HandleInsertVobCopy(zCVob* pickedVob); \
 		extern void HandleParentChange(zCVob* vob, zCVob* newParent); \
