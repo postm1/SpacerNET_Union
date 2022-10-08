@@ -24,6 +24,7 @@ namespace GOTHIC_ENGINE {
 		void CreateMatTree();
 		void CreateNewSelection(zCPolygon* pl);
 		void SelectMaterial(zCMaterial* mat);
+		void OnSelectMaterial(zCMaterial* mat);
 	};
 
 }

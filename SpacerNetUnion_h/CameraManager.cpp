@@ -106,12 +106,18 @@ namespace GOTHIC_ENGINE {
 
 		zCVob* v = 0;
 
+
 		if (cur_cam->autoCamFocusVobName.Length() > 0)
 		{
-			//v = ogame->GetWorld()->SearchVobByName(cur_cam->autoCamFocusVobName);
-			//cmd << "vob found!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
-		}
 
+			v = ogame->GetWorld()->SearchVobByName(cur_cam->autoCamFocusVobName);	
+			//cmd << "vob found!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+			//print.PrintRed("Vob found: " + v->GetVobName());
+		}
+		else
+		{
+			//print.PrintRed("NO VOB!");
+		}
 
 
 		cur_cam->GetEM()->Clear();
@@ -140,9 +146,8 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		
 		cur_cam->Refresh();
-		
+
 		// hole EVManager
 		// sende EV_Play
 		zCCSCamera_EventMsg* msg = new zCCSCamera_EventMsg(zCCSCamera_EventMsg::EV_PLAY);
@@ -151,8 +156,62 @@ namespace GOTHIC_ENGINE {
 		//cmd << "Run: time " << timeDurationOnSpacer << " Hide: " << hideVisualWhileActive << endl;
 		msg->time = timeDurationOnSpacer;
 
+
+		/*
+		cmd << "ignoreFORVobRotTarget: " << cur_cam->ignoreFORVobRotTarget << endl;
+		cmd << "ignoreFORVobRotCam: " << cur_cam->ignoreFORVobRotCam << endl;
+		cmd << "queuedVob: " << (int)cur_cam->queuedVob << endl;
+		cmd << "actTargetFocus: " << cur_cam->actTargetFocus.ToString() << endl;
+		cmd << "triggerQueued: " << cur_cam->triggerQueued << endl;
+		cmd << "targetKeysRefVob: " << (int)cur_cam->targetKeysRefVob << endl;
+		cmd << "camKeysRefVob: " << (int)cur_cam->camKeysRefVob << endl;
+		*/
+
+		if (cur_cam->targetKeys.GetNumInList() > 0)
+		{
+			//print.PrintGreen("Target: " + Z cur_cam->targetKeys.GetNumInList());
+
+		}
+		if (v)
+		{
+			cur_cam->triggerQueued = true;
+			cur_cam->queuedVob = v;
+		}
+		else
+		{
+			
+			/*
+			cur_cam->triggerQueued = false;
+			cur_cam->queuedVob = NULL;
+			cur_cam->targetKeysRefVob = NULL;
+			cur_cam->camKeysRefVob = NULL;
+			cur_cam->actTargetFocus = zVEC3(0, 0, 0);
+			cur_cam->hasBeenTriggered = FALSE;
+			cur_cam->hasBeenUntriggered = FALSE;
+			cur_cam->actTimeCam = 0;
+			cur_cam->initialPoseCamRefVob = Alg_Identity3D();
+			cur_cam->initialPoseTargetRefVob = Alg_Identity3D();
+
+			cur_cam->csTime = 0;
+			cur_cam->started = FALSE;
+			cur_cam->paused = FALSE;
+
+			print.PrintRed("reset");
+
+			cur_cam->camRefVobPose.SetInertiaPos(0.2F);
+			cur_cam->targetRefVobPose.SetInertiaPos(0.2F);
+
+			cur_cam->Reset();
+			*/
+		}
+
+
+		
+		
 		cur_cam->OnMessage(msg, NULL);
 		
+
+	
 
 		if (hideVisualWhileActive)
 		{
@@ -214,6 +273,8 @@ namespace GOTHIC_ENGINE {
 
 	void CameraManager::Loop()
 	{
+
+
 		if (!cur_cam && textView)
 		{
 			textView->ClrPrintwin();

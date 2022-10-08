@@ -30,11 +30,23 @@ namespace GOTHIC_ENGINE {
 				pMaterialsMap.Insert(mat->GetName(), mat);
 			}
 
-			if (mat && mat->matUsage == zCMaterial::zMAT_USAGE_LEVEL)
+			if (mat)
 			{
-				//cmd << mat->GetName() << endl;
 
 				zSTRING name = mat->GetName();
+
+				if (mat->matUsage == zCMaterial::zMAT_USAGE_LEVEL)
+				{
+
+				}
+				else
+				{
+					//name += "_NOUSAGE";
+					continue;
+				}
+				//cmd << mat->GetName() << endl;
+
+				
 
 				if (name.Length() == 0 && mat->texture)
 				{

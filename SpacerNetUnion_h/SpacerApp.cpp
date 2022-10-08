@@ -61,6 +61,8 @@ namespace GOTHIC_ENGINE {
 		this->spcOpt.Init("spacer_net.ini", true);
 		
 		this->restorator.Init();
+
+		
 	}
 
 	zCVob* SpacerApp::GetSelectedVob()
@@ -363,7 +365,7 @@ namespace GOTHIC_ENGINE {
 		
 		if (ogame && ogame->GetWorld() && ogame->GetCamera() && !isExit && !g_bIsPlayingGame)
 		{
-			//zerr->SetFilterLevel(10);
+			
 
 			if (GameFocused())
 			{

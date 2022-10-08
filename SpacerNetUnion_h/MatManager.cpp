@@ -68,6 +68,15 @@ namespace GOTHIC_ENGINE {
 		RenderSelection();
 	}
 
+	void MatManager::OnSelectMaterial(zCMaterial* mat)
+	{
+		if (mat)
+		{
+			//cmd << "OnSelectMaterial" << endl;
+			static auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectMaterial");
+			onSelect((int)mat);
+		}
+	}
 	void MatManager::SelectMaterial(zCMaterial* mat)
 	{
 		matSelectedInTree = mat;
@@ -83,6 +92,8 @@ namespace GOTHIC_ENGINE {
 		arch->Close();
 		zRELEASE(arch);
 
+
+		//OnSelectMaterial(mat);
 	}
 
 	void MatManager::CreateNewSelection(zCPolygon* xPoly)
@@ -106,7 +117,7 @@ namespace GOTHIC_ENGINE {
 			arch->Close();
 			zRELEASE(arch);
 
-
+			OnSelectMaterial(newSelection->GetMaterial());
 		}
 
 	}
