@@ -123,7 +123,12 @@ namespace GOTHIC_ENGINE {
 
 
 			OutFile("Extern_RemoveVob: " + AHEX32(vob), false);
+
+			theApp.exports.toggleGlobalTree(0);
+			//theApp.RemoveAllChilds((zCVob*)vob);
 			theApp.RemoveVob	((zCVob*)vob);
+
+			theApp.exports.toggleGlobalTree(1);
 		}
 
 
@@ -479,7 +484,7 @@ namespace GOTHIC_ENGINE {
 				}
 
 				theApp.SetSelectedVob(pVob, "Extern_SelectVobSync");
-				theApp.SelectObject(theApp.pickedVob);
+				theApp.SelectObject(pVob);
 
 			}
 

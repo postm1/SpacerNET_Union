@@ -109,7 +109,7 @@ namespace GOTHIC_ENGINE {
 		camMan.Init();
 
 
-		
+		SetExportsFuncs();
 		
 	}
 }

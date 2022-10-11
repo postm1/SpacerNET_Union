@@ -677,6 +677,7 @@ namespace GOTHIC_ENGINE {
 
 		if (vob  && vob != newParent && pWorld)
 		{
+			theApp.exports.toggleGlobalTree(0);
 			// если есть новый родитель
 			if (newParent)
 			{
@@ -707,7 +708,7 @@ namespace GOTHIC_ENGINE {
 
 
 			}
-
+			theApp.exports.toggleGlobalTree(1);
 			updateParentVobRemoveNode removeNode = (updateParentVobRemoveNode)GetProcAddress(theApp.module, "UpdateParentRemoveNode");
 			removeNode((uint)vob);
 			GetChildrenUpdateParent(vob->globalVobTreeNode);
@@ -1552,7 +1553,7 @@ namespace GOTHIC_ENGINE {
 			if (pickMode == SWM_VOBS)
 			{
 				
-
+				theApp.exports.toggleGlobalTree(0);
 				if (theApp.isVobParentChange)
 				{
 					HandleParentChange(theApp.vobToCopy, pickedVob);
@@ -1576,6 +1577,8 @@ namespace GOTHIC_ENGINE {
 
 					HandleInsertVobCopy(pickedVob);
 				}
+
+				theApp.exports.toggleGlobalTree(1);
 			}
 
 		}
@@ -1638,7 +1641,9 @@ namespace GOTHIC_ENGINE {
 
 			if (keys.KeyPressed("VOB_DELETE", true))
 			{
+				theApp.exports.toggleGlobalTree(0);
 				theApp.RemoveVob(pickedVob);
+				theApp.exports.toggleGlobalTree(1);
 			}
 
 		}

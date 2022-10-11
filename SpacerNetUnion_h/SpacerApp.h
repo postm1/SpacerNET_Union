@@ -144,6 +144,14 @@ namespace GOTHIC_ENGINE {
 			zCObjPresetLib* presetsLib;
 		};
 
+		struct
+		{
+			callIntFunc toggleGlobalTree;
+
+			
+
+		} exports;
+
 		void BlockMouseClick(int time);
 		bool IsClicksBlocked();
 		void PluginLoop();
@@ -152,6 +160,7 @@ namespace GOTHIC_ENGINE {
 		void CheckForBadPlugins();
 		void RenderStartScreen();
 		SpacerApp();
+		void SetExportsFuncs();
 		zCVob * GetSelectedVob();
 		void SetSelectedVob(zCVob * vob, zSTRING funcName = "");
 		void PrepareBboxVobs(zCVob * vob);
@@ -214,7 +223,8 @@ namespace GOTHIC_ENGINE {
 
 		void OnRemoveVob(zCVob * vob);
 
-		void RemoveVob(zCVob * vob);
+		void RemoveVob(zCVob* pVob, bool useSelect=true);
+		void RemoveAllChilds(zCVob* pVob);
 		void MakeGlobalParent(zCVob* pVob);
 		void Extern_RemoveAsParent(zCVob* pVob);
 		void ApplyPhysicsVob();

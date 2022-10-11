@@ -553,8 +553,13 @@ namespace GOTHIC_ENGINE {
 	//rx_remove rx_onremove
 	void SpacerApp::OnRemoveVob(zCVob* vob)
 	{
+
+		
+
 		if (vob)
 		{
+			
+
 			CALL_OnDeleteVob(vob);
 			//OutFile("OnRemoveVob: vob: " + AHEX32((uint)vob), true);
 			static auto onRemove = (onVobRemove)GetProcAddress(theApp.module, "OnVobRemove");
@@ -606,6 +611,8 @@ namespace GOTHIC_ENGINE {
 				static auto onRemoveGlobalPar = (callVoidFunc)GetProcAddress(theApp.module, "OnRemoveGlobalParent");
 				onRemoveGlobalPar();
 			}
+
+			
 		}
 
 	}
@@ -686,11 +693,24 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-
 	
+	void SpacerApp::RemoveAllChilds(zCVob* root)
+	{
+		//GetChildrenFromParent_RemoveChildren(pVob->globalVobTreeNode, pVob);
 
+		zCVob* pVob = NULL;
+		zCTree<zCVob>* pTree = root->globalVobTreeNode->GetFirstChild();
+		while (pTree)
+		{
+			pVob = pTree->GetData();
+			pTree = pTree->GetNextChild();
 
-	void SpacerApp::RemoveVob(zCVob* pVob)
+			if (pVob)
+				RemoveVob(pVob, false); // удаляем воб
+		}
+	}
+
+	void SpacerApp::RemoveVob(zCVob* pVob, bool useSelect)
 	{
 
 		if (zCVobLevelCompo* level = dynamic_cast<zCVobLevelCompo*>(pVob))
@@ -714,7 +734,11 @@ namespace GOTHIC_ENGINE {
 			theApp.treeToCopy = NULL;
 		}
 
-		theApp.SetSelectedVob(NULL, "DELETE VOB");
+		if (useSelect)
+		{
+			theApp.SetSelectedVob(NULL, "DELETE VOB");
+		}
+		
 
 
 		if (pVob)

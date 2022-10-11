@@ -62,7 +62,17 @@ namespace GOTHIC_ENGINE {
 		
 		this->restorator.Init();
 
+
+
 		
+
+		
+	}
+
+
+	void SpacerApp::SetExportsFuncs()
+	{
+		this->exports.toggleGlobalTree = (callIntFunc)GetProcAddress(module, "SetObjGlobalTree_VisibleToggle");
 	}
 
 	zCVob* SpacerApp::GetSelectedVob()

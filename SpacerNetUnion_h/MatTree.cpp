@@ -7,7 +7,7 @@ namespace GOTHIC_ENGINE {
 	void MatManager::CreateMatTree()
 	{
 		static auto addEntryMat = (callIntFunc)GetProcAddress(theApp.module, "AddGlobalEntryMat");
-		static auto toggle = (callIntFunc)GetProcAddress(theApp.module, "SetObjTree_VisibleToggle");
+		static auto toggle = (callIntFunc)GetProcAddress(theApp.module, "SetObjTreeMat_VisibleToggle");
 
 		mm.CleanSelection();
 		pMaterialsMap.Clear();
@@ -65,7 +65,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 		toggle(1);
-		cmd << "MatList count added: " << countAdded << endl;
-		cmd << "pMaterialsMap count added: " << pMaterialsMap.GetNum() << endl;
+		cmd << "MatList zMAT_USAGE_LEVEL count added: " << countAdded << endl;
+		cmd << "MatList all materials count added: " << pMaterialsMap.GetNum() << endl;
 	}
 }

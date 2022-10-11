@@ -386,6 +386,14 @@ namespace GOTHIC_ENGINE {
 
 
 
+		if (auto pVob = GetSelectedVob())
+		{
+			SelectObject(pVob);
+			
+			auto onSelect = (onSelectNode)GetProcAddress(theApp.module, "SelectNode");
+			onSelect((uint32)pVob);
+			
+		}
 		/*
 		zCListSort<zCVob>* mobNode = ogame->GetGameWorld()->GetVobList()->GetNextInList();
 		oCMobFire* mob = NULL;
@@ -1094,6 +1102,8 @@ namespace GOTHIC_ENGINE {
 
 		parentVob->AddRef();
 
+
+		theApp.exports.toggleGlobalTree(0);
 		zCVob* vob = ogame->GetWorld()->MergeVobSubtree(path, parentVob, zCWorld::zWLD_LOAD_MERGE_ADD);
 
 
@@ -1111,7 +1121,7 @@ namespace GOTHIC_ENGINE {
 
 		AddChildsToList(vob->globalVobTreeNode);
 
-
+		theApp.exports.toggleGlobalTree(1);
 
 		theApp.SetSelectedVob(vob, "OpenVobTree");
 

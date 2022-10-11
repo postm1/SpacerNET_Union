@@ -109,5 +109,26 @@ namespace GOTHIC_ENGINE {
 				break;
 			}
 		}
+
+
+		__declspec(dllexport) void SPC_RemoveVob(zCVob* pVob)
+		{
+			theApp.RemoveVob(pVob);
+		}
+
+
+		__declspec(dllexport) void SPC_RemoveAllChilds(zCVob* pVob)
+		{
+			theApp.exports.toggleGlobalTree(0);
+			theApp.RemoveAllChilds(pVob);
+			theApp.exports.toggleGlobalTree(1);
+		}
+
+
+		__declspec(dllexport) void SPC_SetGlobalTreeUpdate(int toggle)
+		{
+			theApp.exports.toggleGlobalTree(toggle);
+		}
+
 	}
 }

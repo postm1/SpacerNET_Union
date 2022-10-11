@@ -470,6 +470,9 @@ namespace GOTHIC_ENGINE {
 			zCVob* vob = NULL;
 			zCZone* isZone = NULL;
 
+
+			theApp.exports.toggleGlobalTree(0);
+
 			for (int i = 0; i < resultFound.GetNum(); i++)
 			{
 				vob = resultFound[i];
@@ -490,6 +493,9 @@ namespace GOTHIC_ENGINE {
 				isZone = NULL;
 				vob = NULL;
 			}
+
+
+			theApp.exports.toggleGlobalTree(1);
 		}
 
 		if (searchType == SearchVobType::DynColl)
