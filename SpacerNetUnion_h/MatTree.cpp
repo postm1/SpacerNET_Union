@@ -7,7 +7,6 @@ namespace GOTHIC_ENGINE {
 	void MatManager::CreateMatTree()
 	{
 		static auto addEntryMat = (callIntFunc)GetProcAddress(theApp.module, "AddGlobalEntryMat");
-		static auto toggle = (callIntFunc)GetProcAddress(theApp.module, "SetObjTreeMat_VisibleToggle");
 
 		mm.CleanSelection();
 		pMaterialsMap.Clear();
@@ -19,7 +18,8 @@ namespace GOTHIC_ENGINE {
 		int countAdded = 0;
 
 		
-		toggle(0);
+
+		theApp.exports.toggleUIElement(UIElementType::UI_MAT_LIST, FALSE);
 
 		for (int i = 0; i < matDef->objectList.GetNum(); i++)
 		{
@@ -64,7 +64,8 @@ namespace GOTHIC_ENGINE {
 				
 		}
 
-		toggle(1);
+		theApp.exports.toggleUIElement(UIElementType::UI_MAT_LIST, TRUE);
+
 		cmd << "MatList zMAT_USAGE_LEVEL count added: " << countAdded << endl;
 		cmd << "MatList all materials count added: " << pMaterialsMap.GetNum() << endl;
 	}

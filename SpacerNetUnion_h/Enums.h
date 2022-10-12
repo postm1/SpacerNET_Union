@@ -177,6 +177,18 @@ namespace GOTHIC_ENGINE {
 	};
 
 
+	enum UIElementType
+	{
+		UI_SOUND_LIST = 0,
+		UI_MUSIC_LIST,
+		UI_MAIN_CLASSES,
+		UI_LIST_PFX,
+		UI_LIST_ITEMS,
+		UI_ALL_VOBS_TREE_LIST,
+		UI_MAT_LIST,
+		UI_LIST_SEARCH_RESULT
+	};
+
 	// перечисление событий (индексы для распознавания)
 	enum SPC_EVENTLIST
 	{

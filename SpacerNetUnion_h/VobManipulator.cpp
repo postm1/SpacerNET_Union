@@ -612,6 +612,7 @@ namespace GOTHIC_ENGINE {
 
 
 			theApp.SetSelectedVob(baseSelectVob, "Control+V");
+			//theApp.SelectObject(baseSelectVob);
 			auto onSelect = (onSelectNode)GetProcAddress(theApp.module, "SelectNode");
 			onSelect((uint32)theApp.pickedVob);
 			print.PrintGreen(GetLang("UNION_VOB_INSERTED"));
@@ -677,7 +678,7 @@ namespace GOTHIC_ENGINE {
 
 		if (vob  && vob != newParent && pWorld)
 		{
-			theApp.exports.toggleGlobalTree(0);
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 			// если есть новый родитель
 			if (newParent)
 			{
@@ -708,7 +709,6 @@ namespace GOTHIC_ENGINE {
 
 
 			}
-			theApp.exports.toggleGlobalTree(1);
 			updateParentVobRemoveNode removeNode = (updateParentVobRemoveNode)GetProcAddress(theApp.module, "UpdateParentRemoveNode");
 			removeNode((uint)vob);
 			GetChildrenUpdateParent(vob->globalVobTreeNode);
@@ -723,7 +723,7 @@ namespace GOTHIC_ENGINE {
 			print.PrintRed(GetLang("PARENT_CHANGE_OK"));
 
 
-
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 		}
 	}
 
@@ -1553,7 +1553,7 @@ namespace GOTHIC_ENGINE {
 			if (pickMode == SWM_VOBS)
 			{
 				
-				theApp.exports.toggleGlobalTree(0);
+				theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 				if (theApp.isVobParentChange)
 				{
 					HandleParentChange(theApp.vobToCopy, pickedVob);
@@ -1578,7 +1578,15 @@ namespace GOTHIC_ENGINE {
 					HandleInsertVobCopy(pickedVob);
 				}
 
-				theApp.exports.toggleGlobalTree(1);
+				theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+
+				if (auto selVob = theApp.GetSelectedVob())
+				{
+
+					auto onSelect = (onSelectNode)GetProcAddress(theApp.module, "Export_SelectNodeByPtr");
+					onSelect((uint32)selVob);
+					
+				}
 			}
 
 		}
@@ -1641,9 +1649,9 @@ namespace GOTHIC_ENGINE {
 
 			if (keys.KeyPressed("VOB_DELETE", true))
 			{
-				theApp.exports.toggleGlobalTree(0);
+				theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 				theApp.RemoveVob(pickedVob);
-				theApp.exports.toggleGlobalTree(1);
+				theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 			}
 
 		}

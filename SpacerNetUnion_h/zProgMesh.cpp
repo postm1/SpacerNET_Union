@@ -148,7 +148,11 @@ namespace GOTHIC_ENGINE {
 			file->Seek(pos);
 			mat = zCMaterial::SearchName(matName);
 
-			if (!mat) mat = dynamic_cast<zCMaterial*>(arch->ReadObject(0));
+			if (!mat)
+			{
+				mat = dynamic_cast<zCMaterial*>(arch->ReadObject(0));
+				//cmd << "No mat: " << mat->GetName() << endl;
+			}
 			else
 			{
 				dynamic_cast<zCMaterial*>(arch->ReadObject(0));

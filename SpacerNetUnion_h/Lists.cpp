@@ -13,6 +13,10 @@ namespace GOTHIC_ENGINE {
 		int pos, typ, anz, c, classindex;
 
 		classindex = parser->GetIndex(scriptClassName);
+
+
+		exports.toggleUIElement(UIElementType::UI_LIST_ITEMS, FALSE);
+
 		if (classindex != -1)
 		{
 			parser->GetSymbolInfo(classindex, typ, anz);
@@ -31,6 +35,8 @@ namespace GOTHIC_ENGINE {
 
 		auto sort = (voidFuncPointer)GetProcAddress(theApp.module, "SortItems");
 		sort();
+
+		exports.toggleUIElement(UIElementType::UI_LIST_ITEMS, TRUE);
 	}
 
 
@@ -95,6 +101,9 @@ namespace GOTHIC_ENGINE {
 	{
 		auto addPFX = (callVoidFunc)GetProcAddress(theApp.module, "AddPacticleToList");
 
+		exports.toggleUIElement(UIElementType::UI_LIST_PFX, FALSE);
+
+
 		for (int i = 0; i<zCParticleFX::s_emitterPresetList.GetNumInList(); i++)
 		{
 			Stack_PushString(zCParticleFX::s_emitterPresetList.GetSafe(i)->particleFXName.Upper());
@@ -102,6 +111,8 @@ namespace GOTHIC_ENGINE {
 		}
 		auto sort = (callVoidFunc)GetProcAddress(theApp.module, "SortPFX");
 		sort();
+
+		exports.toggleUIElement(UIElementType::UI_LIST_PFX, TRUE);
 	}
 
 	// список Sounds в окно
@@ -120,6 +131,10 @@ namespace GOTHIC_ENGINE {
 		zSTRING s;
 
 		classindex = soundParser->GetIndex(classname);
+
+
+		exports.toggleUIElement(UIElementType::UI_SOUND_LIST, FALSE);
+
 		if (classindex != -1)
 		{
 			// Get instances
@@ -135,9 +150,13 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+		
 
 
 		(voidFuncPointer)GetProcAddress(theApp.module, "SortSounds")();
+
+
+		exports.toggleUIElement(UIElementType::UI_SOUND_LIST, TRUE);
 
 		//				static int chekcflag = false;
 
@@ -145,6 +164,9 @@ namespace GOTHIC_ENGINE {
 
 		auto base = parserMusic->GetBase(parserMusic->GetIndex("C_MUSICTHEME"));
 
+
+
+		exports.toggleUIElement(UIElementType::UI_MUSIC_LIST, FALSE);
 
 		for (int i = 0; i < parserMusic->symtab.table.GetNum(); i++)
 		{
@@ -180,12 +202,17 @@ namespace GOTHIC_ENGINE {
 		}
 
 		(voidFuncPointer)GetProcAddress(theApp.module, "SortMusic")();
+
+		exports.toggleUIElement(UIElementType::UI_MUSIC_LIST, TRUE);
+
 				
 	}
 
 	void SpacerApp::BuildTree()
 	{
 		zCWorld* world = ogame->GetWorld();
+
+		exports.toggleUIElement(UIElementType::UI_ALL_VOBS_TREE_LIST, FALSE);
 
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearAllEntries")();
 
@@ -200,7 +227,7 @@ namespace GOTHIC_ENGINE {
 		std::cout << "Union: Creating TreeView in C#..." << std::endl;
 		CreateTree();
 
-
+		exports.toggleUIElement(UIElementType::UI_ALL_VOBS_TREE_LIST, TRUE);
 
 
 

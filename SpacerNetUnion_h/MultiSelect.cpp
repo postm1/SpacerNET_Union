@@ -201,13 +201,13 @@ namespace GOTHIC_ENGINE {
 	void MultiSelect::RemoveSelected()
 	{
 
-		theApp.exports.toggleGlobalTree(0);
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 		for (uint i = 0; i < theApp.SelectedVobs.GetNum(); i++)
 		{
 			theApp.SelectedVobs[i]->SetDrawBBox3D(False);
 			theApp.RemoveVob(theApp.SelectedVobs[i]);
 		}
-		theApp.exports.toggleGlobalTree(1);
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 		theApp.SelectedVobs.Clear();
 	}
 

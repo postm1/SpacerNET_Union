@@ -1103,7 +1103,7 @@ namespace GOTHIC_ENGINE {
 		parentVob->AddRef();
 
 
-		theApp.exports.toggleGlobalTree(0);
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 		zCVob* vob = ogame->GetWorld()->MergeVobSubtree(path, parentVob, zCWorld::zWLD_LOAD_MERGE_ADD);
 
 
@@ -1121,7 +1121,7 @@ namespace GOTHIC_ENGINE {
 
 		AddChildsToList(vob->globalVobTreeNode);
 
-		theApp.exports.toggleGlobalTree(1);
+		
 
 		theApp.SetSelectedVob(vob, "OpenVobTree");
 
@@ -1148,6 +1148,17 @@ namespace GOTHIC_ENGINE {
 
 		zinput->ClearKey(MOUSE_LEFT);
 		ClearLMB();
+
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+
+
+		if (auto selVob = theApp.GetSelectedVob())
+		{
+
+			auto onSelect = (onSelectNode)GetProcAddress(theApp.module, "Export_SelectNodeByPtr");
+			onSelect((uint32)selVob);
+
+		}
 	}
 
 }

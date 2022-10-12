@@ -297,6 +297,9 @@ namespace GOTHIC_ENGINE {
 		curTempVob = search.cur_vob;
 
 
+		exports.toggleUIElement(UIElementType::UI_LIST_SEARCH_RESULT, FALSE);
+
+
 		ogame->GetWorld()->SearchVobListByClass(curTempVob->GetClassDef(), result, 0);
 
 		if (derived)
@@ -471,7 +474,7 @@ namespace GOTHIC_ENGINE {
 			zCZone* isZone = NULL;
 
 
-			theApp.exports.toggleGlobalTree(0);
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 
 			for (int i = 0; i < resultFound.GetNum(); i++)
 			{
@@ -495,7 +498,7 @@ namespace GOTHIC_ENGINE {
 			}
 
 
-			theApp.exports.toggleGlobalTree(1);
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 		}
 
 		if (searchType == SearchVobType::DynColl)
@@ -522,6 +525,9 @@ namespace GOTHIC_ENGINE {
 				vob = NULL;
 			}
 		}
+
+
+		exports.toggleUIElement(UIElementType::UI_LIST_SEARCH_RESULT, TRUE);
 
 		//cmd << A resultCount << endl;
 		return resultCount;

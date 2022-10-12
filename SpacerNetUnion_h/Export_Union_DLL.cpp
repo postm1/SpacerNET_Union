@@ -119,15 +119,15 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void SPC_RemoveAllChilds(zCVob* pVob)
 		{
-			theApp.exports.toggleGlobalTree(0);
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 			theApp.RemoveAllChilds(pVob);
-			theApp.exports.toggleGlobalTree(1);
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 		}
 
 
 		__declspec(dllexport) void SPC_SetGlobalTreeUpdate(int toggle)
 		{
-			theApp.exports.toggleGlobalTree(toggle);
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, toggle);
 		}
 
 	}

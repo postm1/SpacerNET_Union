@@ -2,9 +2,26 @@
 // Union SOURCE file
 
 #include <string>
+#include <chrono>
 
 namespace GOTHIC_ENGINE {
 
+
+	std::chrono::steady_clock::time_point begin_time[70];
+	double perf[50];
+
+	void RX_Begin(int index) {
+		begin_time[index] = std::chrono::steady_clock::now();
+	}
+
+	void RX_End(int index) {
+		perf[index] = (std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::steady_clock::now() - begin_time[index]).count());
+	}
+
+
+	zSTRING RX_PerfString(int index) {
+		return  zSTRING(perf[index] / 1000, 10) + zSTRING(" ms");
+	}
 
 	// Add your code here . . .
 	//RX_FIX

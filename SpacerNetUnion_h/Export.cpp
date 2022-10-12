@@ -124,11 +124,9 @@ namespace GOTHIC_ENGINE {
 
 			OutFile("Extern_RemoveVob: " + AHEX32(vob), false);
 
-			theApp.exports.toggleGlobalTree(0);
-			//theApp.RemoveAllChilds((zCVob*)vob);
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 			theApp.RemoveVob	((zCVob*)vob);
-
-			theApp.exports.toggleGlobalTree(1);
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 		}
 
 

@@ -146,9 +146,7 @@ namespace GOTHIC_ENGINE {
 
 		struct
 		{
-			callIntFunc toggleGlobalTree;
-
-			
+			callInt2Func toggleUIElement;
 
 		} exports;
 
@@ -161,7 +159,7 @@ namespace GOTHIC_ENGINE {
 		void RenderStartScreen();
 		SpacerApp();
 		void SetExportsFuncs();
-		zCVob * GetSelectedVob();
+		zCVob* GetSelectedVob();
 		void SetSelectedVob(zCVob * vob, zSTRING funcName = "");
 		void PrepareBboxVobs(zCVob * vob);
 		void SetToKeyPos();

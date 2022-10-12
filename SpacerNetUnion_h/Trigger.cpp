@@ -277,7 +277,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 		zCWorld* world = ogame->GetWorld();
-		zCVob* vob;
+		zCVob* vob = NULL;
 
 		if (pickedVob->GetTriggerTarget(0))
 		{

@@ -72,7 +72,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SetExportsFuncs()
 	{
-		this->exports.toggleGlobalTree = (callIntFunc)GetProcAddress(module, "SetObjGlobalTree_VisibleToggle");
+		this->exports.toggleUIElement = (callInt2Func)GetProcAddress(module, "Export_ToggleUIElement");
 	}
 
 	zCVob* SpacerApp::GetSelectedVob()

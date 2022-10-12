@@ -86,6 +86,10 @@ namespace GOTHIC_ENGINE {
 
 		static auto addNode = (callVoidFunc)GetProcAddress(theApp.module, "AddClassNode");
 
+
+		
+
+
 		for (int i = 0; i<zCClassDef::GetNum(); i++)
 		{
 			zCClassDef* classDef = zCClassDef::GetClassDefByIndex(i);
@@ -144,6 +148,8 @@ namespace GOTHIC_ENGINE {
 
 			}
 		}
+
+
 	}
 
 	zCClassDef* GetBaseEngineClassDef(CString classTypeName)
@@ -242,6 +248,8 @@ namespace GOTHIC_ENGINE {
 
 		static auto addNode = (callVoidFunc)GetProcAddress(theApp.module, "AddClassNode");
 
+		theApp.exports.toggleUIElement(UIElementType::UI_MAIN_CLASSES, FALSE);
+
 		Stack_PushString("");
 		Stack_PushString("zCVob");
 		Stack_PushString("");
@@ -252,7 +260,7 @@ namespace GOTHIC_ENGINE {
 
 		(callVoidFunc)GetProcAddress(theApp.module, "FillClassNodes")();
 		
-
+		theApp.exports.toggleUIElement(UIElementType::UI_MAIN_CLASSES, TRUE);
 		/*
 
 		zSTRING base_class_name3 = "zCVob";
