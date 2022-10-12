@@ -37,22 +37,24 @@ namespace GOTHIC_ENGINE {
 	
 	*/
 
-	/*
+	
 	HOOK ivk_zERROR_Report AS(&zERROR::Report, &zERROR::Report_Union);
 	int zERROR::Report_Union(zERROR_TYPE type, int id, zSTRING const& str_text, signed char levelPrio, unsigned int flag, int line, char* file, char* function) {
 
 		
-		if (theApp.IsAWorldLoaded())
+		if (theApp.zSpyActive && theApp.spacerWasInit)
 		{
-			cmd << str_text << endl;
-		}
-		
+			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddText");
 
-		return 0;
+
+			Stack_PushString(str_text + "\n");
+			Stack_PushString("#000000");
+			pointer();
+		}
 
 		return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
 	}
-	*/
+	
 
 
 	#define MAXSIZE 24

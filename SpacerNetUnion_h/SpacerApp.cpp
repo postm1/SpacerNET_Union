@@ -57,6 +57,9 @@ namespace GOTHIC_ENGINE {
 		this->bboxMinsVob = NULL;
 		this->bboxMaxsVob = NULL;
 
+		this->zSpyActive = false;
+		this->zSpyLevel = 5;
+		this->spacerWasInit = false;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 		

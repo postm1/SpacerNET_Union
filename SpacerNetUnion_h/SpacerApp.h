@@ -60,6 +60,8 @@ namespace GOTHIC_ENGINE {
 		};
 		struct
 		{
+			int zSpyLevel;
+			bool zSpyActive;
 			bool insertBlockedTemp;
 
 			bool isMesh;
@@ -90,6 +92,8 @@ namespace GOTHIC_ENGINE {
 			bool selectNextVobForce;
 			bool nextInsertBlocked;
 			bool pickUnshareShow;
+
+			bool spacerWasInit;
 
 			bool useSortPolys;
 			bool dataFilled;

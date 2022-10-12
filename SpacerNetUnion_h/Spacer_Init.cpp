@@ -110,6 +110,8 @@ namespace GOTHIC_ENGINE {
 
 
 		SetExportsFuncs();
+
+		spacerWasInit = true;
 		
 	}
 }

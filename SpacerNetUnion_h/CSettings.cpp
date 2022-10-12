@@ -173,6 +173,16 @@ namespace GOTHIC_ENGINE {
 
 
 			theApp.SetHoldTime(theApp.options.GetIntVal("holdTime"));
+
+			theApp.zSpyLevel = GetIntVal("infoWinzSpyLevel");
+			theApp.zSpyActive = GetIntVal("infoWinzSpyEnabled");
+
+
+			if (theApp.zSpyActive)
+			{
+				zerr->SetFilterLevel(theApp.zSpyLevel);
+			}
+
 		}
 
 		this->Save();
@@ -392,6 +402,14 @@ namespace GOTHIC_ENGINE {
 		
 		set = new CSetting(TYPE_INT, "SPACER", "bBlockPlayeUseMobInter", "1");
 		list.Insert("bBlockPlayeUseMobInter", set);
+
+
+		set = new CSetting(TYPE_INT, "SPACER", "infoWinzSpyEnabled", "0");
+		list.Insert("infoWinzSpyEnabled", set);
+
+
+		set = new CSetting(TYPE_INT, "SPACER", "infoWinzSpyLevel", "5");
+		list.Insert("infoWinzSpyLevel", set);
 
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);

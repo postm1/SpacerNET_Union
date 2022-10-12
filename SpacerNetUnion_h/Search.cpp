@@ -383,7 +383,7 @@ namespace GOTHIC_ENGINE {
 		if (searchType == SearchVobType::Convert)
 		{
 
-
+		
 			for (int i = 0; i < resultFound.GetNum(); i++)
 			{
 				zCVob* vob = resultFound[i];
@@ -402,6 +402,8 @@ namespace GOTHIC_ENGINE {
 
 			}
 
+	
+
 			//cmd << "Replace vobs: " << A resultCount << endl;
 		}
 
@@ -411,7 +413,7 @@ namespace GOTHIC_ENGINE {
 			theApp.SetSelectedVob(NULL);
 
 			zSTRING path = Stack_PeekString();
-
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 
 			for (int i = 0; i < resultFound.GetNum(); i++)
 			{
@@ -458,6 +460,7 @@ namespace GOTHIC_ENGINE {
 
 			}
 
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 			//MessageBox(0, "Замен: " + A resultFound.GetNum(), 0, 0);
 		}
 
