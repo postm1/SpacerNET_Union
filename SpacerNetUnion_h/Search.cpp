@@ -286,6 +286,10 @@ namespace GOTHIC_ENGINE {
 		int resultCount = 0;
 		Array<uint> arr;
 
+
+		//cmd << "SearchFillVobClass: derived " << derived << " hasChildren " << hasChildren << " type: " << type 
+		//	<< " sel: " << selectedCount << " onlyVisOrName: " << onlyVisualOrName << endl;
+
 		SearchVobType searchType = (SearchVobType)type;
 
 		zCArray<zCVob*> result;
@@ -296,9 +300,16 @@ namespace GOTHIC_ENGINE {
 
 		curTempVob = search.cur_vob;
 
+		if (!curTempVob)
+		{
+			//cmd << "can't search" << endl;
+			return 0;
+		}
+
 
 		exports.toggleUIElement(UIElementType::UI_LIST_SEARCH_RESULT, FALSE);
 
+		//cmd << "Search: " << curTempVob->GetClassDef()->className << endl;
 
 		ogame->GetWorld()->SearchVobListByClass(curTempVob->GetClassDef(), result, 0);
 
@@ -306,6 +317,8 @@ namespace GOTHIC_ENGINE {
 		{
 			ogame->GetWorld()->SearchVobListByBaseClass(curTempVob->GetClassDef(), result, 0);
 		}
+
+		//cmd << "result: " << result.GetNum() << endl;
 
 		result.RemoveDoubles();
 		int num = result.GetNumInList();

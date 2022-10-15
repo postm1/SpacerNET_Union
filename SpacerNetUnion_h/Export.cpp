@@ -938,6 +938,10 @@ namespace GOTHIC_ENGINE {
 			return result;
 		}
 
+
+		__declspec(dllexport) void Extern_SearchVobList() {
+			FindNearestVobs();
+		}
 		
 		
 	}
