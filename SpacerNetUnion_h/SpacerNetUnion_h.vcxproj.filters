@@ -3014,6 +3014,9 @@
     <ClInclude Include="Export_Union_DLL.cpp">
       <Filter>Plugin\Workspace\Plugin\Interchange</Filter>
     </ClInclude>
+    <ClInclude Include="MeshAndCompiling.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

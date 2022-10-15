@@ -186,7 +186,8 @@ namespace GOTHIC_ENGINE {
 		UI_LIST_ITEMS,
 		UI_ALL_VOBS_TREE_LIST,
 		UI_MAT_LIST,
-		UI_LIST_SEARCH_RESULT
+		UI_LIST_SEARCH_RESULT,
+		UI_WIN_VOBLIST
 	};
 
 	// перечисление событий (индексы для распознавания)

@@ -486,6 +486,8 @@ namespace GOTHIC_ENGINE {
 		zCArray<zCVob*>resVobList;
 		zCArray<zCVob*>finalResultList;
 
+
+		theApp.exports.toggleUIElement(UIElementType::UI_WIN_VOBLIST, FALSE);
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearVobList")();
 
 		auto GetSearchRadius = (voidFuncPointer)GetProcAddress(theApp.module, "GetSearchRadius");
@@ -579,7 +581,7 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-
+		theApp.exports.toggleUIElement(UIElementType::UI_WIN_VOBLIST, TRUE);
 	}
 
 	void WriteLine(char* message)

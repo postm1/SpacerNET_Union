@@ -151,6 +151,7 @@ namespace GOTHIC_ENGINE {
 		struct
 		{
 			callInt2Func toggleUIElement;
+			callVoidFunc getShaString;
 
 		} exports;
 

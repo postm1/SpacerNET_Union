@@ -76,6 +76,8 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SetExportsFuncs()
 	{
 		this->exports.toggleUIElement = (callInt2Func)GetProcAddress(module, "Export_ToggleUIElement");
+		this->exports.getShaString = (callVoidFunc)GetProcAddress(module, "Export_GetSha256");
+
 	}
 
 	zCVob* SpacerApp::GetSelectedVob()

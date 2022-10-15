@@ -44,11 +44,33 @@ namespace GOTHIC_ENGINE {
 		
 		if (theApp.zSpyActive && theApp.spacerWasInit)
 		{
-			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddText");
+			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddTextZSPY");
 
 
 			Stack_PushString(str_text + "\n");
-			Stack_PushString("#000000");
+
+			if (type == zERR_TYPE_OK)
+			{
+				Stack_PushString("#000000");
+			}
+			else if (type == zERR_TYPE_INFO)
+			{
+				Stack_PushString("#000000");
+			}
+			else if (type == zERR_TYPE_WARN)
+			{
+				Stack_PushString("#009600");
+			}
+			else if (type == zERR_TYPE_FAULT)
+			{
+				Stack_PushString("#960000");
+			}
+			else if (type == zERR_TYPE_FATAL)
+			{
+				Stack_PushString("#C80000");
+			}
+
+			
 			pointer();
 		}
 

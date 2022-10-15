@@ -11,3 +11,5 @@ zCPolygon      *Poly(int i) const { zERR_ASSERT(0 <= i && i < numPoly && polyLis
 zCVertFeature  *Feature(int i) const { zERR_ASSERT(0 <= i && i < numFeat && featList); return featList[i]; }
 void SortPolysByList_Hook(zCPolygon** list, int listLength);
 void ShareFeatures_Union();
+zCVertex* zCMesh::VertexInMesh_Union(zVEC3 const &);
+zCVertex* zCMesh::AddVertex_Union(zVEC3 & a);
