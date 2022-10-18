@@ -152,7 +152,15 @@ namespace GOTHIC_ENGINE {
 		{
 			callInt2Func toggleUIElement;
 			callVoidFunc getShaString;
-
+			callVoidFunc Fill_MatFilter_Filters;
+			callVoidFunc Clear_MatFilter_Filters;
+			callVoidFunc AddMatByMatFilterName;
+			callVoidFunc MatFilter_SelectFilterByIndex;
+			callVoidFunc MatFilter_SelectMaterialByAddr;
+			callVoidFunc MatFilter_ToggleWindow;
+			callVoidFunc MatFilter_SetTextureColor;
+			
+			
 		} exports;
 
 		void BlockMouseClick(int time);

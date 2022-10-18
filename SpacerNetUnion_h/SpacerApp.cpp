@@ -77,7 +77,17 @@ namespace GOTHIC_ENGINE {
 	{
 		this->exports.toggleUIElement = (callInt2Func)GetProcAddress(module, "Export_ToggleUIElement");
 		this->exports.getShaString = (callVoidFunc)GetProcAddress(module, "Export_GetSha256");
+		this->exports.Fill_MatFilter_Filters = (callVoidFunc)GetProcAddress(module, "Fill_MatFilter_Filters");
+		this->exports.Clear_MatFilter_Filters = (callVoidFunc)GetProcAddress(module, "Clear_MatFilter_Filters");
+		this->exports.AddMatByMatFilterName = (callVoidFunc)GetProcAddress(module, "AddMatByMatFilterName");
+		this->exports.MatFilter_SelectFilterByIndex = (callVoidFunc)GetProcAddress(module, "MatFilter_SelectFilterByIndex");
+		this->exports.MatFilter_SelectMaterialByAddr = (callVoidFunc)GetProcAddress(module, "MatFilter_SelectMaterialByAddr");
+		this->exports.MatFilter_ToggleWindow = (callVoidFunc)GetProcAddress(module, "MatFilter_ToggleWindow");
+		this->exports.MatFilter_SetTextureColor = (callVoidFunc)GetProcAddress(module, "MatFilter_SetTextureColor");
 
+
+
+		
 	}
 
 	zCVob* SpacerApp::GetSelectedVob()
@@ -363,6 +373,8 @@ namespace GOTHIC_ENGINE {
 		itemsLocator.Reset();
 		restorator.Reset();
 		nograss.Clear();
+
+		//mf.Reset();
 
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearAllEntries")();
 
@@ -877,7 +889,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::PickMaterial()
 	{
-		if (!theApp.TryPickMouse())
+		if (!theApp.TryPickMouse() || camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT)
 		{
 			return;
 		}

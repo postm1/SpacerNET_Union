@@ -15,3 +15,5 @@ zCWorld* zCWorld_Hook();
 zBOOL zCWorld::SaveWorldNew(const zSTRING& fileName, const zTWorldSaveMode saveMode, const zBOOL writeBinary, const zBOOL _saveLevelMesh);
 
 BOOL zCWorld::LoadWorld_Union(const zSTRING& fileName, const zTWorldLoadMode loadMode);
+
+zBOOL __fastcall zCWorld::PickScene_Material(zCCamera& cam, int xscr, int yscr, zREAL rayLength);

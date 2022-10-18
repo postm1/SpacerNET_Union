@@ -491,28 +491,6 @@ namespace GOTHIC_ENGINE {
 		
 
 
-		__declspec(dllexport) void Extern_SelectMat(void* ptr) {
-
-			zCMaterial* pMat = (zCMaterial*)ptr;
-
-
-			if (!IsValidZObject(ptr))
-			{
-				MessageBox(0, "Bad material pointer in Extern_SelectMat!", 0, 0);
-				OutFile("Bad material pointer in Extern_SelectMat: " + AHEX32((int)ptr), false);
-				return;
-			}
-
-
-			OutFile("Extern_SelectMat: " + AHEX32((int)pMat), false);
-
-			if (pMat)
-			{
-				theApp.SetSelectedVob(NULL);
-				mm.CleanSelection();
-				mm.SelectMaterial(pMat);
-			}
-		}
 
 		__declspec(dllexport) void Extern_SelectVob(void* ptr) {
 
@@ -941,6 +919,120 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_SearchVobList() {
 			FindNearestVobs();
+		}
+		
+		
+		__declspec(dllexport) void Extern_FillMatListByFilterName() {
+
+			CString name = Stack_PeekString();
+			//mf.FillMatListByFilterName(name);
+		}
+
+		__declspec(dllexport) int Extern_FillMat_GetCurrentMat_FilterIndex() {
+			
+			if (mm.matSelectedInTree)
+			{
+				return mm.matSelectedInTree->libFlag;
+			}
+			return 0;
+		}
+
+		__declspec(dllexport) int Extern_FillMat_GetCurrentMat_GroupIndex() {
+
+			if (mm.matSelectedInTree)
+			{
+				return mm.matSelectedInTree->matGroup;
+			}
+			return 0;
+		}
+
+		__declspec(dllexport) void Extern_FillMat_ApplyFilterAndGroup(int filter, int gr) {
+
+			if (mm.matSelectedInTree)
+			{
+				auto mat = mm.matSelectedInTree;
+
+				mat->SetMatGroup((zTMat_Group)gr);
+				mat->libFlag = filter;
+
+				auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
+
+				Stack_PushString("");
+				Stack_PushString("");
+
+				AddProps();
+
+
+				zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
+
+				arch->SetStringEOL(zSTRING("\n"));
+				arch->WriteObject(mat);
+				zSTRING arcString;
+				arch->GetBufferString(arcString);
+
+				theApp.SetProperties(arcString, "zCMaterial");
+				arch->Close();
+				zRELEASE(arch);
+
+				mm.OnSelectMaterial(mat);
+				
+			}
+			else
+			{
+				print.PrintRed("No selected mat");
+			}
+			
+		}
+
+
+		__declspec(dllexport) void Extern_SelectMat(void* ptr) {
+
+			zCMaterial* pMat = (zCMaterial*)ptr;
+
+
+			if (!IsValidZObject(ptr))
+			{
+				MessageBox(0, "Bad material pointer in Extern_SelectMat!", 0, 0);
+				OutFile("Bad material pointer in Extern_SelectMat: " + AHEX32((int)ptr), false);
+				return;
+			}
+
+
+			OutFile("Extern_SelectMat: " + AHEX32((int)pMat), false);
+
+			if (pMat)
+			{
+				theApp.SetSelectedVob(NULL);
+				mm.CleanSelection();
+				mm.SelectMaterial(pMat);
+			}
+		}
+		
+		__declspec(dllexport) void Extern_FilterMat_SaveFilters()
+		{
+			//if (mf.init)
+			{
+				//mf.SaveFilterList();
+			}
+		}
+
+		__declspec(dllexport) void Extern_FillMat_AddNewFilter()
+		{
+			CString name = Stack_PeekString();
+			//mf.AddNewFilter(name);
+		}
+
+		__declspec(dllexport) void Extern_MatFilter_SaveCurrentFilter()
+		{
+			int index = Stack_PeekInt();
+			//mf.SaveCurrentFilter(index);
+		}
+
+		__declspec(dllexport) void Extern_MatFilter_RenameFilter()
+		{
+			int index = Stack_PeekInt();
+			CString name = Stack_PeekString();
+			//mf.OnRenameFilter(index, name);
 		}
 		
 		

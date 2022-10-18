@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 	
-	
+
 	CString INTERFACE_DLL_NAME = "SpacerUnionInterface.dll";
 
 	HOOK Ivk_CGameManager_Init AS(&CGameManager::Init, &CGameManager::Init_Spacer);
@@ -71,6 +71,8 @@ namespace GOTHIC_ENGINE {
 			//if (zrenderer) zrenderer->Vid_SetScreenMode(zRND_SCRMODE_HIDE);
 		}
 
+		SetExportsFuncs();
+
 		//cmd << "options" << endl;
 		theApp.options.Init();
 		theApp.options.Load();
@@ -94,7 +96,7 @@ namespace GOTHIC_ENGINE {
 		//cmd << "LoadMat" << endl;
 
 		print.Init();
-		LoadMat();
+		
 
 		mm.Init();
 
@@ -109,7 +111,8 @@ namespace GOTHIC_ENGINE {
 		camMan.Init();
 
 
-		SetExportsFuncs();
+		
+		//mf.Init();
 
 		spacerWasInit = true;
 		

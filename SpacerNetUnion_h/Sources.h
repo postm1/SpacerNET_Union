@@ -27,7 +27,6 @@
 #include "VobManipulator.cpp"
 #include "BboxMovement.cpp"
 #include "zCBinTree3DS.cpp"
-#include "zProgMesh.cpp"
 #include "Play.cpp"
 #include "ItemsLocator.cpp"
 #include "World.cpp"
@@ -41,8 +40,11 @@
 #include "Export.cpp"
 #include "Export_Union_DLL.cpp"
 #include "MatTree.cpp"
+
 #include "MatManager.cpp"
+
 #include "AB_NoGrass_Init.cpp"
+
 #include "GenerateVobsVisualsList.cpp"
 #include "Macros.cpp"
 #include "AB_NoGrass.cpp"

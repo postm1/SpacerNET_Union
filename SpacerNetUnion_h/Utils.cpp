@@ -939,6 +939,46 @@ namespace GOTHIC_ENGINE {
 		}
 
 		return 0;
+	
 	}
+
+	/*
+	// упаковка RGBA цвета в ulong (4 байта)
+	unsigned long RGBA2DWORD(int iR, int iG, int iB, int iA)
+	{
+		return ((iA * 256 + iR) * 256 + iG) * 256 + iB;
+	}
+
+	// разложение 4 байтов на RGBA составл€ющие
+	RGBA DWORD2RGBA(unsigned long dwColor)
+	{
+		RGBA tmp;
+
+		tmp.B = dwColor % 256; dwColor /= 256;
+		tmp.G = dwColor % 256; dwColor /= 256;
+		tmp.R = dwColor % 256; dwColor /= 256;
+		tmp.Alpha = dwColor % 256;
+
+		return tmp;
+	}
+	*/
+
+	/*
+	unsigned long RGBA2DWORD(int iR, int iG, int iB, int iA)
+	{        
+	  return (((((iA << 8) + iR) << 8) + iG) << 8) + iB;
+	}
+
+	RGBA DWORD2RGBA(unsigned long dwColor)
+	{        
+	  RGBA tmp;
+
+	  tmp.B = dwColor & 0xFF; dwColor >>= 8;
+	  tmp.G = dwColor & 0xFF; dwColor >>= 8;
+	  tmp.R = dwColor & 0xFF; dwColor >>= 8;
+	  tmp.Alpha = dwColor & 0xFF;
+	  return tmp;
+	}
+	*/
 }
 

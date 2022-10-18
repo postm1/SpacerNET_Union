@@ -1042,10 +1042,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="zProgMesh.cpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Plugin.h" />

@@ -5,6 +5,7 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 
+
 	class MatManager
 	{
 	public:
@@ -25,6 +26,8 @@ namespace GOTHIC_ENGINE {
 		void CreateNewSelection(zCPolygon* pl);
 		void SelectMaterial(zCMaterial* mat);
 		void OnSelectMaterial(zCMaterial* mat);
+		void OnSelectInMatFilter(zCMaterial* mat);
+		void ExtractTexture(zCMaterial* mat);
 	};
 
 }

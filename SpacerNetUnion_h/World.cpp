@@ -524,6 +524,8 @@ namespace GOTHIC_ENGINE {
 			DoCompileWorld(1);
 			DoCompileLight(2, 0);
 		}
+
+		//mf.FillInterfaceData();
 	}
 
 
@@ -809,6 +811,8 @@ namespace GOTHIC_ENGINE {
 		restorator.GenerateVobsPos();
 
 		mm.CreateMatTree();
+		//mf.FillInterfaceData();
+		
 
 
 		if (options.GetIntVal("soundZenOff"))

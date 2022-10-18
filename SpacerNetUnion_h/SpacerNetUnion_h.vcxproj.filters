@@ -2933,9 +2933,6 @@
     <ClInclude Include="zCBinTree3DS.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Materials</Filter>
     </ClInclude>
-    <ClInclude Include="zProgMesh.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\Materials</Filter>
-    </ClInclude>
     <ClInclude Include="Spacer_Hooks.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Hooks</Filter>
     </ClInclude>
