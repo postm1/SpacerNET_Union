@@ -11,6 +11,7 @@ namespace GOTHIC_ENGINE {
 	extern int GetFPS(void); \
 		extern MatManager mm; \
 		extern SpacerApp theApp; \
+		extern MatFilter mf; \
 		extern void	__cdecl sysEvent(); \
 		extern void CameraMoving(); \
 		extern void VobMoving(); \

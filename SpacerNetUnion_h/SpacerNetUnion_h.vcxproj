@@ -968,6 +968,14 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MatFilter.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="MatFilter_LoadSave.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="MatManager.h">
       <SubType>
       </SubType>

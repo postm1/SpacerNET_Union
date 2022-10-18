@@ -525,7 +525,7 @@ namespace GOTHIC_ENGINE {
 			DoCompileLight(2, 0);
 		}
 
-		//mf.FillInterfaceData();
+		mf.FillInterfaceData();
 	}
 
 
@@ -811,7 +811,7 @@ namespace GOTHIC_ENGINE {
 		restorator.GenerateVobsPos();
 
 		mm.CreateMatTree();
-		//mf.FillInterfaceData();
+		mf.FillInterfaceData();
 		
 
 

@@ -71,7 +71,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::OnSelectInMatFilter(zCMaterial* mat)
 	{
-		//mf.OnSelectInMatFilter(mat);
+		mf.OnSelectInMatFilter(mat);
 	}
 	void MatManager::OnSelectMaterial(zCMaterial* mat)
 	{
@@ -324,7 +324,5 @@ namespace GOTHIC_ENGINE {
 		AddProps();
 
 	}
-
-	
 
 }

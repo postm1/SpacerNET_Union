@@ -112,7 +112,7 @@ namespace GOTHIC_ENGINE {
 
 
 		
-		//mf.Init();
+		mf.Init();
 
 		spacerWasInit = true;
 		

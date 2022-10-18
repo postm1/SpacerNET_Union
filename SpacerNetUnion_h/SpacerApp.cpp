@@ -374,7 +374,7 @@ namespace GOTHIC_ENGINE {
 		restorator.Reset();
 		nograss.Clear();
 
-		//mf.Reset();
+		mf.Reset();
 
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearAllEntries")();
 

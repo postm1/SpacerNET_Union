@@ -11,7 +11,7 @@ namespace GOTHIC_ENGINE {
 	SpacerApp theApp;
 	KeysManager keys;
 	MatManager mm;
-	//MatFilter mf;
+	MatFilter mf;
 
 
   void Game_Entry() {

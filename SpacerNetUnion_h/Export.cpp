@@ -925,7 +925,7 @@ namespace GOTHIC_ENGINE {
 		__declspec(dllexport) void Extern_FillMatListByFilterName() {
 
 			CString name = Stack_PeekString();
-			//mf.FillMatListByFilterName(name);
+			mf.FillMatListByFilterName(name);
 		}
 
 		__declspec(dllexport) int Extern_FillMat_GetCurrentMat_FilterIndex() {
@@ -1010,29 +1010,29 @@ namespace GOTHIC_ENGINE {
 		
 		__declspec(dllexport) void Extern_FilterMat_SaveFilters()
 		{
-			//if (mf.init)
+			if (mf.init)
 			{
-				//mf.SaveFilterList();
+				mf.SaveFilterList();
 			}
 		}
 
 		__declspec(dllexport) void Extern_FillMat_AddNewFilter()
 		{
 			CString name = Stack_PeekString();
-			//mf.AddNewFilter(name);
+			mf.AddNewFilter(name);
 		}
 
 		__declspec(dllexport) void Extern_MatFilter_SaveCurrentFilter()
 		{
 			int index = Stack_PeekInt();
-			//mf.SaveCurrentFilter(index);
+			mf.SaveCurrentFilter(index);
 		}
 
 		__declspec(dllexport) void Extern_MatFilter_RenameFilter()
 		{
 			int index = Stack_PeekInt();
 			CString name = Stack_PeekString();
-			//mf.OnRenameFilter(index, name);
+			mf.OnRenameFilter(index, name);
 		}
 		
 		

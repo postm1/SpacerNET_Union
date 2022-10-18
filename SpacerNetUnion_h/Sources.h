@@ -40,14 +40,13 @@
 #include "Export.cpp"
 #include "Export_Union_DLL.cpp"
 #include "MatTree.cpp"
-
 #include "MatManager.cpp"
-
 #include "AB_NoGrass_Init.cpp"
-
 #include "GenerateVobsVisualsList.cpp"
 #include "Macros.cpp"
 #include "AB_NoGrass.cpp"
+#include "MatFilter.cpp"
+#include "MatFilter_LoadSave.cpp"
 #include "Plugin.cpp"
 #pragma endregion
 

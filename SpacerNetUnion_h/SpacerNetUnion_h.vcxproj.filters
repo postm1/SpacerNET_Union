@@ -3014,6 +3014,12 @@
     <ClInclude Include="MeshAndCompiling.cpp">
       <Filter>Plugin\Workspace\Plugin\Main</Filter>
     </ClInclude>
+    <ClInclude Include="MatFilter.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
+    </ClInclude>
+    <ClInclude Include="MatFilter_LoadSave.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">
