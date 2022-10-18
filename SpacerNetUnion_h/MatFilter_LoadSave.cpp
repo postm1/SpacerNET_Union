@@ -94,7 +94,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		if (index >= 0)
+		if (index > 0)
 		{
 			zoptions->ChangeDir(DIR_TOOLS_DATA);
 

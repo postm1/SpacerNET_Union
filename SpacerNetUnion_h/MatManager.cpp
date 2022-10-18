@@ -65,6 +65,7 @@ namespace GOTHIC_ENGINE {
 			theApp.pickedWaypoint2nd = NULL;
 		}
 
+		//ExtractTexture(matSelectedInTree);
 		RenderSelection();
 	}
 
@@ -88,21 +89,13 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::ExtractTexture(zCMaterial* mat)
 	{
+		if (!mat) return;
+
 		if (auto pTex = mat->texture)
 		{
 			
-			/*
-			spcCDibSection* sect = new spcCDibSection();
+			mf.Render(mat);
 
-			sect->m_Width = 100;
-			sect->m_Height = 100;
-			sect->m_BPP = 32;
-
-			ConvertTextureToDIB(pTex, sect);
-
-
-			cmd << "sect: " << sect->GetWidth() << " " << sect->GetHeight() << endl;
-			*/
 		}
 		else
 		{
@@ -116,37 +109,6 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		return;
-		if (auto pTex = mat->texture)
-		{
-			if (pTex)
-			{
-				int px, py;
-				// получаем размеры текстуры
-				pTex->GetPixelSize(px, py);
-
-				zVEC4 pixelColor;
-				zCArray<zVEC4> colorsList;
-
-				// по горизонтальным строчкам пикселей
-				for (int x = 1; x < px; x++)
-				{
-					// по вертикальным столбцам покселей
-					for (int y = 1; y < py; y++)
-					{
-						// получаем цвет точки по координатам
-						pixelColor = pTex->GetRGBAAtTexel(x, y);
-
-
-						colorsList.Insert(pixelColor);
-						// рисуем точку на элементе управления, напр. pictureBox
-						// ...
-					}
-				}
-
-				cmd << "Pixels: " << colorsList.GetNum() << endl;
-			}
-		}
 	}
 	void MatManager::SelectMaterial(zCMaterial* mat)
 	{
@@ -162,6 +124,7 @@ namespace GOTHIC_ENGINE {
 		theApp.SetProperties(arcString, "zCMaterial");
 		arch->Close();
 		zRELEASE(arch);
+		//cmd << "SelectMaterial" << endl;
 
 		ExtractTexture(mat);
 		//OnSelectMaterial(mat);

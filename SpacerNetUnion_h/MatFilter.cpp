@@ -1,3 +1,4 @@
+
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
@@ -25,6 +26,7 @@ namespace GOTHIC_ENGINE {
 	{
 		ToggleWindow(false);
 	}
+
 
 
 
@@ -140,6 +142,7 @@ namespace GOTHIC_ENGINE {
 
 		cmd << "filterItem: " << filterItem->name << " id: " << filterItem->id << endl;
 
+		zCArray<CString> names;
 		//cmd << "numOfMats: " << numOfMats << endl;
 		// iterate materials in matlist
 		if (pos >= 0)
@@ -153,8 +156,15 @@ namespace GOTHIC_ENGINE {
 
 				if (mat->GetName().Length() > 0 && (mat->matUsage >= zCMaterial::zMAT_USAGE_LEVEL) && (mat->libFlag == filterItem->id))
 				{
-
-					pList.Insert(mat);
+					if (!names.IsInList(mat->GetName()))
+					{
+						pList.Insert(mat);
+						names.Insert(mat->GetName());
+					}
+					else
+					{
+						cmd << "Material has the same name: " << mat->GetName() << endl;
+					}
 					/*
 					// insert to current-list
 					lList = &current_matlist;
@@ -232,4 +242,5 @@ namespace GOTHIC_ENGINE {
 		}
 
 	}
+
 }

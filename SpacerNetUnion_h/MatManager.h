@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	enum TMatLibFlag { NullLib = 0 };
+	
 	// Add your code here . . .
 	const zSTRING MATLIB_FILENAME = "matlib.ini";
 	const zSTRING MATLIB_FILENAME_BACKUP = "matlib_backup.ini";
@@ -25,6 +25,14 @@ namespace GOTHIC_ENGINE {
 			name = "";
 			id = -1;
 		}
+	};
+
+	class MatFilterRenderEntry
+	{
+	public:
+		//zCArray<DWORD> pixels;
+		DWORD pixels[128 * 128];
+		zSTRING name;
 	};
 
 	class MatFilter

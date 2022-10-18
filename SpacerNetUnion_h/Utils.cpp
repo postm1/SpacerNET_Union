@@ -942,12 +942,14 @@ namespace GOTHIC_ENGINE {
 	
 	}
 
-	/*
+
 	// упаковка RGBA цвета в ulong (4 байта)
 	unsigned long RGBA2DWORD(int iR, int iG, int iB, int iA)
 	{
 		return ((iA * 256 + iR) * 256 + iG) * 256 + iB;
 	}
+
+
 
 	// разложение 4 байтов на RGBA составл€ющие
 	RGBA DWORD2RGBA(unsigned long dwColor)
@@ -961,7 +963,7 @@ namespace GOTHIC_ENGINE {
 
 		return tmp;
 	}
-	*/
+
 
 	/*
 	unsigned long RGBA2DWORD(int iR, int iG, int iB, int iA)

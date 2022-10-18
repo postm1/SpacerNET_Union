@@ -23,6 +23,7 @@
 #include "zCBinTree3DS.h"
 #include "MatManager.h"
 #include "Externals.h"
+#include "Structures.h"
 #include "Plugin.h"
 #pragma endregion
 

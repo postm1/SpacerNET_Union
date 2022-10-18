@@ -3020,6 +3020,12 @@
     <ClInclude Include="MatFilter_LoadSave.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
     </ClInclude>
+    <ClInclude Include="MatFilter_Render.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
+    </ClInclude>
+    <ClInclude Include="Structures.h">
+      <Filter>Plugin\Workspace\Plugin\Headers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">
