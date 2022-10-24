@@ -368,6 +368,7 @@ namespace GOTHIC_ENGINE {
 		nograss.Loop();
 
 		mm.Loop();
+		mf.Loop();
 		theApp.KeysLoop();
 		theApp.TriggerLoop();
 		theApp.camMan.Loop();

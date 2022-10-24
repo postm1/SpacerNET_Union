@@ -85,8 +85,8 @@ namespace GOTHIC_ENGINE {
 		this->exports.MatFilter_ToggleWindow = (callVoidFunc)GetProcAddress(module, "MatFilter_ToggleWindow");
 		this->exports.MatFilter_SetTextureColor = (callVoidFunc)GetProcAddress(module, "MatFilter_SetTextureColor");
 		this->exports.MatFilter_SendTexture = (callVoidFunc)GetProcAddress(module, "MatFilter_SendTexture");
-
-
+		this->exports.MatFilter_UpdateTextureSize = (callVoidFunc)GetProcAddress(module, "MatFilter_UpdateTextureSize");
+		this->exports.MatFilter_Clear = (callVoidFunc)GetProcAddress(module, "MatFilter_Clear");
 		
 	}
 

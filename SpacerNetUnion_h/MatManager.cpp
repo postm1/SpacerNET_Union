@@ -105,6 +105,15 @@ namespace GOTHIC_ENGINE {
 			Stack_PushInt(col.g);
 			Stack_PushInt(col.b);
 			theApp.exports.MatFilter_SetTextureColor();
+
+
+			CString sizeStr = Z "0x0";
+
+			Stack_PushString("");
+			Stack_PushString(sizeStr);
+			
+			theApp.exports.MatFilter_UpdateTextureSize();
+
 			//cmd << col.GetDescriptionRGB() << endl;
 
 		}

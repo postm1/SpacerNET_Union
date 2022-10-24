@@ -58,6 +58,7 @@ namespace GOTHIC_ENGINE {
 		void Reset();
 
 		void Render(zCMaterial* mat);
+		void Loop();
 	};
 
 	class MatManager

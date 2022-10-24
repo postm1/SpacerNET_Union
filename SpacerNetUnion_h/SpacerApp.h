@@ -160,6 +160,8 @@ namespace GOTHIC_ENGINE {
 			callVoidFunc MatFilter_ToggleWindow;
 			callVoidFunc MatFilter_SetTextureColor;
 			callVoidFunc MatFilter_SendTexture;
+			callVoidFunc MatFilter_UpdateTextureSize;
+			callVoidFunc MatFilter_Clear;
 			
 		} exports;
 

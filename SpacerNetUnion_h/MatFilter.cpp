@@ -24,6 +24,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatFilter::Reset()
 	{
+		theApp.exports.MatFilter_Clear();
 		ToggleWindow(false);
 	}
 
