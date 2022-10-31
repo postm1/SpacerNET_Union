@@ -5,7 +5,58 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 	zCArray<MatFilterRenderEntry*> pListCache;
-	const int OUTPUT_SIZE = 128;
+	// Размеры выходной текстуры (в пикселях):
+	const int OUTPUT_SIZEX = 128;
+	const int OUTPUT_SIZEY = 128;
+
+	// массив пикселей выходной текстуры
+	//DWORD arr_pixels[OUTPUT_SIZEX * OUTPUT_SIZEY];
+
+	// Флаги конвертации:
+	// масштабировать ли мелкие текстуры в большую сторону ...
+	// ... к выходным размерам (1 - да, 0 - нет)
+	BOOL bResizeSmallTextures = FALSE;
+
+	// использовать ли прозрачность текстур (1 - да, 0 - нет)
+	BOOL bUseAlphaChannels = TRUE;
+
+	// использовать ли выравнивание текстуры по центру (1 - да, 0 - нет)
+	// (справедливо только для маленьких текстур: 32х32, 16х64, 4х4 и т.д.)
+	BOOL bUseCenterAligment = TRUE;
+
+
+	// преобразование цвета RGBA -> DWORD
+	inline DWORD RGBA_2_DWORD(int iR, int iG, int iB, int iA)
+	{
+		return (((((iA << 8) + iR) << 8) + iG) << 8) + iB;
+	}
+
+	// Заливка чёрным цветом всего массива пикселей
+	// для текстур 24 бит, без альфа-канала
+	void FillBlack_ArrPixels(DWORD* arr_pixels)
+	{
+		// цвет заливки в виде 4-х байтного числа
+		// (RGBA = 0, 0, 0, 255)
+		DWORD FillColor = RGBA_2_DWORD(0, 0, 0, 255);
+
+		// число пикселей в массиве
+		int numEle = sizeof(arr_pixels) / 4;
+
+		// пробегаемся по всем пикселям массива
+		for (int i = 0; i < numEle; i++)
+		{
+			// и заполняем их чёрным цветом
+			memcpy(&arr_pixels[i], &FillColor, 4);
+		}
+	}
+
+	// Заливка прозрачным цветом всего массива пикселей
+	// для текстур 32 бит, с альфа-каналом
+	void FillAlpha_ArrPixels(DWORD* arr_pixels)
+	{
+		// заполняем массив прозрачными пикселями
+		memset(&arr_pixels, 0, sizeof(arr_pixels));
+	}
 
 
 	// рендер на экране по пикселям
@@ -27,14 +78,14 @@ namespace GOTHIC_ENGINE {
 			//cmd << "Send: " << entry->name << endl;
 
 			DWORD* addr = &entry->pixels[0];
-			int size = OUTPUT_SIZE * OUTPUT_SIZE;
+			int size = OUTPUT_SIZEX * OUTPUT_SIZEY;
 			uint addrSend = (uint)addr;
 
-			for (int x = 0; x < OUTPUT_SIZE; x++)
+			for (int x = 0; x < OUTPUT_SIZEX; x++)
 			{
-				for (int y = 0; y < OUTPUT_SIZE; y++)
+				for (int y = 0; y < OUTPUT_SIZEY; y++)
 				{
-					int pos = x * OUTPUT_SIZE + y;
+					int pos = x * OUTPUT_SIZEX + y;
 
 					auto COL = entry->pixels[pos];
 
@@ -43,9 +94,16 @@ namespace GOTHIC_ENGINE {
 			}
 
 			Stack_PushUInt(addrSend);
-			Stack_PushInt(size);
-
 			theApp.exports.MatFilter_SendTexture();
+
+			Stack_PushInt(entry->bit);
+			theApp.exports.MatFilter_UpdateTextureBit();
+			
+			Stack_PushInt(entry->hasAlpha);
+			theApp.exports.MatFilter_UpdateTextureAlphaInfo();
+
+
+			
 		}
 		
 	}
@@ -82,6 +140,7 @@ namespace GOTHIC_ENGINE {
 		// видимо как-то упрощает поиск в подкаталогах
 		//zoptions->ChangeDir(DIR_TEX);
 
+		int result = 0;
 
 		zCTextureConvert* texConv = zrenderer->CreateTextureConvert();
 
@@ -101,58 +160,152 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 		
-		// по умолчанию включён старый цветовой набор для цвета пикселя
-		BOOL bUseOriginalColor = TRUE;
-
-		//**************
-		// Конвертация
-		//**************
 		// берём информацию о текстуре, расположенной в памяти конверт-менеджера
 		zCTextureInfo texInfo = texConv->GetTextureInfo();
 
-		cmd << "Original: " << texInfo.texFormat << endl;
-		
-		zTRnd_TextureFormat originalFormat = texInfo.texFormat;
+		// по умолчанию включён цветовой набор BGRA для цвета пикселя
+		BOOL bUseOriginalColor = FALSE;
+
+
+		auto entry = new MatFilterRenderEntry();
+		entry->name = texName;
+
+		pListCache.InsertEnd(entry);
 
 		// Конвертируем текстуру в нужный формат:
-		// устанавливаем новый формат расположения пикселей текстуры
-		texInfo.texFormat = zRND_TEX_FORMAT_RGBA_8888;
-
-		texInfo.numMipMap = 1;
-
-		int result = texConv->ConvertTextureFormat(texInfo);
-
-
-		// если конвертация текстуры прошла успешно
-		// и её размеры отличаются от 128х128
-		if (result && texInfo.sizeX != OUTPUT_SIZE && texInfo.sizeY != OUTPUT_SIZE)
+		// перебираем формат исходной текстуры
+		switch (texInfo.texFormat)
 		{
-			// Выполняем повторное конвертирование:
-			// новые размеры текстуры (лучше указывать в степени двойки)
-			texInfo.sizeX = OUTPUT_SIZE; // ширина
-			texInfo.sizeY = OUTPUT_SIZE; // высота
-
-								 // результат конвертации текстуры
-			result = texConv->ConvertTextureFormat(texInfo);
-
-			// используем новый цветовой набор RGBA для пикселей
-			bUseOriginalColor = FALSE;
+			// если исходная текстура (C-TEX с альфа-каналом, формат #12)
+		case zRND_TEX_FORMAT_DXT3:
+			// сначала заполняем массив выходного изображения прозрачными пикселями
+			FillAlpha_ArrPixels(entry->pixels);
+			// устанавливаем новый формат расположения пикселей текстуры
+			texInfo.texFormat = zRND_TEX_FORMAT_RGBA_8888;
+			// используем раскладку цвевтов: RGBA
+			bUseOriginalColor = TRUE;
+			entry->bit = 32;
+			entry->hasAlpha = 1;
+			break;
+			// если исходная текстура (TGA альфа-каналом, 32 бит)
+		case zRND_TEX_FORMAT_BGRA_8888:
+			// заполняем массив прозрачными пикселями
+			FillAlpha_ArrPixels(entry->pixels);
+			entry->bit = 32;
+			entry->hasAlpha = 1;
+			break;
+			// если исходная текстура (TGA без альфа-канала, 24 бит)
+		case zRND_TEX_FORMAT_BGR_888:
+			// заполняем массив чёрными пикселями
+			FillBlack_ArrPixels(entry->pixels);
+			entry->bit = 24;
+			entry->hasAlpha = 0;
+			break;
+			// в случае использования: C-TEX без альфа-канала(zRND_TEX_FORMAT_DXT1, формат #10) и других
+		default:
+			// заполняем массив чёрными пикселями
+			FillBlack_ArrPixels(entry->pixels);
+			// устанавливаем новый формат расположения пикселей текстуры
+			texInfo.texFormat = zRND_TEX_FORMAT_RGB_565;
+			entry->bit = 16;
+			entry->hasAlpha = 0;
+			break;
 		}
 
-							 // конвертируем текстуру внутри менеджера и получаем результат операции
-		
+		// меняем результирующее число карт детализации
+		texInfo.numMipMap = 1;
 
-		// Если результат успешный, то считываем пиксели
-		// Если нет, то выходим
+		// конвертируем текстуру внутри менеджера и получаем результат операции
+		result = texConv->ConvertTextureFormat(texInfo);
+
+
+
+		// Если результат первой конвертации текстуры - безуспешный
 		if (!result)
 		{
+			cmd << "Convert process #1 failed!" << endl;
+
 			// удаляем конвертёр
 			delete texConv;
-			cmd << "Can't convert! " << texName << endl;
+
 			// выходим
 			return;
 		}
 
+		if (((texInfo.sizeX < OUTPUT_SIZEX) && (texInfo.sizeY < OUTPUT_SIZEY) && (bResizeSmallTextures == TRUE)) || ((texInfo.sizeX > OUTPUT_SIZEX) || (texInfo.sizeY > OUTPUT_SIZEY)))
+		{
+			// исходная ширина текстуры
+			float sx = (float)texInfo.sizeX;
+
+			// исходная высота текстуры
+			float sy = (float)texInfo.sizeY;
+
+			// соотношение сторон текстуры
+			float AspectRatio;
+
+			// Расчитываем пропорциональные размеры текстуры:
+			// если ширина текстуры больше, либо равна её высоте
+			if (sx >= sy)
+			{
+				// расчитываем соотношение сторон текстуры
+				AspectRatio = sx / sy;
+
+				// устанавливаем максимальную ширину
+				sx = OUTPUT_SIZEX;
+
+				// расчитываем пропорциональную высоту текстуры
+				sy = sx / AspectRatio;
+			}
+			else // иначе, ширина текстуры меньше её высоты
+			{
+				// расчитываем соотношение сторон текстуры
+				AspectRatio = sy / sx;
+
+				// устанавливаем максимальную высоту
+				sy = OUTPUT_SIZEY;
+
+				// расчитываем пропорциональную ширину текстуры
+				sx = sy / AspectRatio;
+			}
+
+
+			// записываем новую ширину текстуры
+			texInfo.sizeX = (int)sx;
+
+			// и новую высоту текстуры
+			texInfo.sizeY = (int)sy;
+
+			// округляем расчётные размеры до степени двойки
+			zCTextureConvert::CorrectPow2(texInfo.sizeX, texInfo.sizeY);
+
+			// ограничение минимальной ширины текстуры до 4-х пикселей
+			if (texInfo.sizeX < 4)
+				texInfo.sizeX = 4;
+
+			// ограничение минимальной высоты текстуры до 4-х пикселей
+			if (texInfo.sizeY < 4)
+				texInfo.sizeY = 4;
+
+			//---
+
+			// конвертируем текстуру с её новыми пропорциональными размерами
+			result = texConv->ConvertTextureFormat(texInfo);
+
+			// используем новый цветовой набор для пикселей
+			bUseOriginalColor = FALSE;
+		}
+
+		// Если результат второй конвертации текстуры - безуспешный
+		if (!result)
+		{
+			cmd << "Convert process #2 failed!" << endl;
+
+			// удаляем конвертёр
+			delete texConv;
+
+			// выходим
+			return;
+		}
 
 		// временный цвет пикселя
 		D3DCOLOR COL;
@@ -160,14 +313,70 @@ namespace GOTHIC_ENGINE {
 		// временный RGBA пикселя
 		zVEC4 col;
 
-		auto entry = new MatFilterRenderEntry();
-		entry->name = texName;
+		// смещение для центровки
+		int offsetX = 0;
+		int offsetY = 0;
 
-		pListCache.InsertEnd(entry);
+		// если включено центрирование малых текстур
+		if (bUseCenterAligment)
+		{
+			// есть смысл центрировать только тогда,
+			// когда хотябы один из размеров текстуры
+			// меньше соотв. размера выходного изображения
+			if (texInfo.sizeX < OUTPUT_SIZEX)
+				offsetX = (OUTPUT_SIZEX - texInfo.sizeX) / 2;
+
+			if (texInfo.sizeY < OUTPUT_SIZEY)
+				offsetY = (OUTPUT_SIZEY - texInfo.sizeY) / 2;
+		}
+
+		
 		int count = 0;
 
 		cmd << "Format: " << texInfo.texFormat << endl;
 
+
+		// пробегаемся по вертикальным строкам пикселей
+		for (int x = 0; x < texInfo.sizeX; x++)
+		{
+			// пробегаемся по горизонтальным пикселям
+			for (int y = 0; y < texInfo.sizeY; y++)
+			{
+				// получаем RGBA цвет точки по координатам текстуры
+				zVEC4 col = texConv->GetRGBAAtTexel(x, y);
+
+				// если нужно исключить альфа-каналы у пикселей
+				if (!bUseAlphaChannels)
+					// исключаем прозрачность
+					col[3] = 255;
+
+
+				//***********************************
+				// Преобразоваие BGRA/RGBA -> DWORD
+				//***********************************
+				// если нужно преобразовать BGRA -> DWORD
+				if (bUseOriginalColor)
+				{
+					// преобразуем цвет пикселя в 4-х байтное целое число
+					COL = RGBA_2_DWORD((int)col[2], (int)col[1], (int)col[0], (int)col[3]);
+				}
+				else // иначе, нужно использовать преобразование RGBA -> DWORD
+				{
+					// преобразуем цвет пикселя в 4-х байтное целое число
+					COL = RGBA_2_DWORD((int)col[0], (int)col[1], (int)col[2], (int)col[3]);
+				}
+
+				// записываем цвет пикселя в соотв. ячейку массива пикселей текстуры
+				// (с учётом центровки изображения)
+				//arr_pixels[(y + offsetY) * OUTPUT_SIZEX + (x + offsetX)] = COL;
+
+				entry->pixels[count] = COL;
+
+				count += 1;
+			}
+		}
+
+		/*
 		// по горизонтальным строчкам пикселей (в данном случае 128)
 		for (int x = 0; x < texInfo.sizeX; x++)
 		{
@@ -213,6 +422,7 @@ namespace GOTHIC_ENGINE {
 
 			//cmd << "R: " << col.R << " G: " << col.G << " B: " << col.B << " A: " << col.Alpha  << endl;
 		}
+		*/
 		//cmd << "Count: Image " << count << endl;
 		RX_End(3);
 

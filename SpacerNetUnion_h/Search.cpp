@@ -280,7 +280,27 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName)
+	static int Compare_VobNames(const void *arg1, const void *arg2)
+	{
+		zCVob* pVob1 = *((zCVob**)arg1);
+		zCVob* pVob2 = *((zCVob**)arg2);
+
+		//cmd << "Compare try: ";
+
+		zSTRING name1 = pVob1->GetVobName();
+		zSTRING name2 = pVob2->GetVobName();
+
+		
+
+		int result = strcmp(name1, name2);
+
+		//cmd << name1 << ";" << name2 << " Result: " << result << endl;
+
+		return result;
+
+	}
+
+	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames)
 	{
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
 		int resultCount = 0;
@@ -323,7 +343,10 @@ namespace GOTHIC_ENGINE {
 		result.RemoveDoubles();
 		int num = result.GetNumInList();
 
+
 		
+		Common::Map<CString, zCVob*> vobsNamesMap;
+		zCArraySort<zCVob*> resultSorted;
 
 		for (int i = 0; i < num; i++)
 		{
@@ -333,6 +356,33 @@ namespace GOTHIC_ENGINE {
 
 			if (dynamic_cast<zCVobLevelCompo*>(pVobCur))	continue;
 			if (pVobCur == ogame->GetCamera()->GetVob())	continue;
+
+
+			// поиск дублей имен
+			if (matchNames)
+			{
+				
+
+				auto name = pVobCur->GetVobName();
+
+				if (name.Length() > 0)
+				{
+					auto& foundPair = vobsNamesMap[name];
+
+					if (!foundPair.IsNull())
+					{
+						resultSorted.Insert(pVobCur);
+						resultSorted.Insert(foundPair.GetValue());
+					}
+					else
+					{
+						vobsNamesMap.Insert(name, pVobCur);
+					}
+
+					
+				}
+				continue;
+			}
 		
 
 			if (selectedCount > 0)
@@ -369,6 +419,34 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+		if (matchNames && resultSorted.GetNumInList() > 0)
+		{
+
+			resultSorted.RemoveDoubles();
+
+			//cmd << "found names: " << resultSorted.GetNumInList() << endl;
+
+			
+
+			if (resultSorted.GetNumInList() >= 2)
+			{
+				resultSorted.SetCompare(Compare_VobNames);
+
+				resultSorted.BestSort();
+
+
+				//cmd << "Sorting..." << endl;
+			}
+			
+			resultFound.DeleteList();
+
+			for (int i = 0; i < resultSorted.GetNumInList(); i++)
+			{
+				resultFound.InsertEnd(resultSorted[i]);
+
+				//cmd << resultSorted[i]->GetVobName() << endl;
+			}
+		}
 
 		// search
 		if (searchType == SearchVobType::Search)

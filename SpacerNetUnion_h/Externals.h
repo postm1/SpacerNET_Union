@@ -75,7 +75,7 @@ namespace GOTHIC_ENGINE {
 		extern void CALL_OnDeleteVob(zCVob* pVob); \
 		extern void CALL_OnApplyDataToVob(zCVob* pVob); \
 		extern void CALL_OnSelectVob(zCVob* pVob); \
-
+		extern void DoWork_TestRender(); \
 
 
 	UAPI extern void   Stack_PushString(const char* v);

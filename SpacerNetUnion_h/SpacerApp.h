@@ -162,6 +162,8 @@ namespace GOTHIC_ENGINE {
 			callVoidFunc MatFilter_SendTexture;
 			callVoidFunc MatFilter_UpdateTextureSize;
 			callVoidFunc MatFilter_Clear;
+			callVoidFunc MatFilter_UpdateTextureBit;
+			callVoidFunc MatFilter_UpdateTextureAlphaInfo;
 			
 		} exports;
 
@@ -334,7 +336,7 @@ namespace GOTHIC_ENGINE {
 
 		bool SearchHandleConvert(zCVob *& vob);
 
-		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName);
+		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames);
 
 		void GetAllPfx();
 

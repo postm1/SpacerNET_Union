@@ -33,6 +33,15 @@ namespace GOTHIC_ENGINE {
 		//zCArray<DWORD> pixels;
 		DWORD pixels[128 * 128];
 		zSTRING name;
+		int x, y;
+		int bit;
+		int hasAlpha;
+
+		MatFilterRenderEntry::MatFilterRenderEntry()
+		{
+			bit = 0;
+			hasAlpha = 0;
+		}
 	};
 
 	class MatFilter

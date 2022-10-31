@@ -274,6 +274,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\DialogSplitter">
       <UniqueIdentifier>{ff4b9651-963c-49d0-a296-aaea25ece878}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\Materials\RenderTest">
+      <UniqueIdentifier>{9a2bdb7e-d242-4865-b621-3587f923ca0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -3025,6 +3028,9 @@
     </ClInclude>
     <ClInclude Include="Structures.h">
       <Filter>Plugin\Workspace\Plugin\Headers</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderTest.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\RenderTest</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
