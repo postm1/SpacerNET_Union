@@ -81,6 +81,7 @@ namespace GOTHIC_ENGINE {
 			int size = OUTPUT_SIZEX * OUTPUT_SIZEY;
 			uint addrSend = (uint)addr;
 
+			/*
 			for (int x = 0; x < OUTPUT_SIZEX; x++)
 			{
 				for (int y = 0; y < OUTPUT_SIZEY; y++)
@@ -92,6 +93,7 @@ namespace GOTHIC_ENGINE {
 					RenderOnScreen(x, y, COL);
 				}
 			}
+			*/
 
 			Stack_PushUInt(addrSend);
 			theApp.exports.MatFilter_SendTexture();
@@ -207,7 +209,7 @@ namespace GOTHIC_ENGINE {
 			FillBlack_ArrPixels(entry->pixels);
 			// устанавливаем новый формат расположения пикселей текстуры
 			texInfo.texFormat = zRND_TEX_FORMAT_RGB_565;
-			entry->bit = 16;
+			entry->bit = 24;
 			entry->hasAlpha = 0;
 			break;
 		}
@@ -333,100 +335,54 @@ namespace GOTHIC_ENGINE {
 		
 		int count = 0;
 
-		cmd << "Format: " << texInfo.texFormat << endl;
+		//cmd << "Format: " << texInfo.texFormat << endl;
+
+
 
 
 		// пробегаемся по вертикальным строкам пикселей
-		for (int x = 0; x < texInfo.sizeX; x++)
-		{
-			// пробегаемся по горизонтальным пикселям
 			for (int y = 0; y < texInfo.sizeY; y++)
 			{
-				// получаем RGBA цвет точки по координатам текстуры
-				zVEC4 col = texConv->GetRGBAAtTexel(x, y);
-
-				// если нужно исключить альфа-каналы у пикселей
-				if (!bUseAlphaChannels)
-					// исключаем прозрачность
-					col[3] = 255;
-
-
-				//***********************************
-				// Преобразоваие BGRA/RGBA -> DWORD
-				//***********************************
-				// если нужно преобразовать BGRA -> DWORD
-				if (bUseOriginalColor)
+				// пробегаемся по горизонтальным пикселям
+				for (int x = 0; x < texInfo.sizeX; x++)
 				{
-					// преобразуем цвет пикселя в 4-х байтное целое число
-					COL = RGBA_2_DWORD((int)col[2], (int)col[1], (int)col[0], (int)col[3]);
+					// получаем RGBA цвет точки по координатам текстуры
+					zVEC4 col = texConv->GetRGBAAtTexel(x, y);
+
+					// если нужно исключить альфа-каналы у пикселей
+					if (!bUseAlphaChannels)
+						// исключаем прозрачность
+						col[3] = 255;
+
+
+					//***********************************
+					// Преобразоваие BGRA/RGBA -> DWORD
+					//***********************************
+					// если нужно преобразовать BGRA -> DWORD
+					if (bUseOriginalColor)
+					{
+						// преобразуем цвет пикселя в 4-х байтное целое число
+						COL = RGBA_2_DWORD((int)col[2], (int)col[1], (int)col[0], (int)col[3]);
+					}
+					else // иначе, нужно использовать преобразование RGBA -> DWORD
+					{
+						// преобразуем цвет пикселя в 4-х байтное целое число
+						COL = RGBA_2_DWORD((int)col[0], (int)col[1], (int)col[2], (int)col[3]);
+					}
+
+					// записываем цвет пикселя в соотв. ячейку массива пикселей текстуры
+					// (с учётом центровки изображения)
+					//arr_pixels[(y + offsetY) * OUTPUT_SIZEX + (x + offsetX)] = COL;
+
+					entry->pixels[(y + offsetY) * OUTPUT_SIZEX + (x + offsetX)] = COL;
+
+					count += 1;
 				}
-				else // иначе, нужно использовать преобразование RGBA -> DWORD
-				{
-					// преобразуем цвет пикселя в 4-х байтное целое число
-					COL = RGBA_2_DWORD((int)col[0], (int)col[1], (int)col[2], (int)col[3]);
-				}
-
-				// записываем цвет пикселя в соотв. ячейку массива пикселей текстуры
-				// (с учётом центровки изображения)
-				//arr_pixels[(y + offsetY) * OUTPUT_SIZEX + (x + offsetX)] = COL;
-
-				entry->pixels[count] = COL;
-
-				count += 1;
 			}
-		}
 
-		/*
-		// по горизонтальным строчкам пикселей (в данном случае 128)
-		for (int x = 0; x < texInfo.sizeX; x++)
-		{
-			// по вертикальным столбцам пикселей (в данном случае тоже 128)
-			for (int y = 0; y < texInfo.sizeY; y++)
-			{
-				// получаем RGBA цвет точки по координатам
-				col = texConv->GetRGBAAtTexel(x, y);
-
-
-				// текстура без альфы, но конвертер ее ломает
-				if (originalFormat == zRND_TEX_FORMAT_DXT1)
-				{
-					col.n[3] = 255.0f;
-				}
-				//cmd << "R: " << col.n[0] << " G: " << col.n[1] << " B: " << col.n[2] << " A: " << col.n[3] << endl;
-
-				if (bUseOriginalColor)
-					COL = RGBA(col[0], col[1], col[2], col[3]); // старый
-				else
-					COL = RGBA(col[2], col[1], col[0], col[3]); // новый
-
-
-				
-				entry->pixels[count] = COL;
-				// posX - начало рисования по оси х(в пикселях)
-				// posY - начало рисования по оси y(в пикселях)
-				// x - текущий пиксель по оси Х на текстуре, у - соответственно по оси Y
-				// прямоугольник в виде точки для последующего закрашивания
-
-				RenderOnScreen(x, y, COL);
-				
-				
-
-				
-				count += 1;
-			}
-		}
-		
-		for (int i = 0; i < OUTPUT_SIZE * OUTPUT_SIZE; i++)
-		{
-			RGBA col = DWORD2RGBA(entry->pixels[i]);
-
-			//cmd << "R: " << col.R << " G: " << col.G << " B: " << col.B << " A: " << col.Alpha  << endl;
-		}
-		*/
-		//cmd << "Count: Image " << count << endl;
 		RX_End(3);
 
-		cmd << texName << " convert: " << RX_PerfString(3) << " originalColor: " << bUseOriginalColor << endl;
+		//cmd << texName << " convert: " << RX_PerfString(3) << " originalColor: " << bUseOriginalColor << endl;
 
 		
 
@@ -454,6 +410,11 @@ namespace GOTHIC_ENGINE {
 			// выходим
 			return;
 
+		if (CheckDx11())
+		{
+			return;
+		}
+
 
 		// посылаем размер текстуры в интерфейс
 		int x, y;
@@ -478,7 +439,7 @@ namespace GOTHIC_ENGINE {
 
 		texName.Upper();
 
-		cmd << "Input: " << texName << endl;
+		//cmd << "Input: " << texName << endl;
 
 		zSTRING originalName = texName;
 
@@ -498,13 +459,13 @@ namespace GOTHIC_ENGINE {
 
 		if ((result & VDF_VIRTUAL) == VDF_VIRTUAL)
 		{
-			cmd << innerFormatName << " TEX found in VDF" << endl;
+			//cmd << innerFormatName << " TEX found in VDF" << endl;
 			texFound = true;
 		}
 
 		if ((result & VDF_PHYSICAL) == VDF_PHYSICAL)
 		{
-			cmd << innerFormatName << " TEX found in _WORK" << endl;
+			//cmd << innerFormatName << " TEX found in _WORK" << endl;
 			texFound = true;
 		}
 
@@ -520,13 +481,13 @@ namespace GOTHIC_ENGINE {
 
 			if ((result & VDF_VIRTUAL) == VDF_VIRTUAL)
 			{
-				cmd << texName << " TGA found in VDF" << endl;
+				//cmd << texName << " TGA found in VDF" << endl;
 				TGAFound = true;
 			}
 
 			if ((result & VDF_PHYSICAL) == VDF_PHYSICAL)
 			{
-				cmd << texName << " TGA found in _WORK" << endl;
+				//cmd << texName << " TGA found in _WORK" << endl;
 				TGAFound = true;
 			}
 

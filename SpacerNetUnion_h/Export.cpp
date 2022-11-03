@@ -680,10 +680,12 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) int Extern_SearchVobs(bool derived, bool hasChildren, int type, int onlyVisualOrName) {
 
+			
 			int matchNames = Stack_PeekInt();
+			int searchOCItem = Stack_PeekInt();
 			int selectedCount = Stack_PeekInt();
 
-			return theApp.SearchFillVobClass(derived, hasChildren, type, selectedCount, onlyVisualOrName, matchNames);
+			return theApp.SearchFillVobClass(derived, hasChildren, type, selectedCount, onlyVisualOrName, matchNames, searchOCItem);
 
 		}
 
@@ -1004,7 +1006,19 @@ namespace GOTHIC_ENGINE {
 			if (pMat)
 			{
 				theApp.SetSelectedVob(NULL);
-				mm.CleanSelection();
+				
+
+				auto sel = mm.GetCurrentSelection();
+
+				if (sel && sel->mat && sel->mat != pMat)
+				{
+					if (sel->mat->GetName() != pMat->GetName())
+					{
+						//cmd << "cur: " << sel->mat->GetName() << " new: " << pMat->GetName() << endl;
+						//mm.CleanSelection();
+					}
+					
+				}
 				mm.SelectMaterial(pMat);
 			}
 		}
@@ -1036,7 +1050,16 @@ namespace GOTHIC_ENGINE {
 			mf.OnRenameFilter(index, name);
 		}
 		
-		
+		__declspec(dllexport) void Extern_SetSearchVobName()
+		{
+			CString replaceZenPath = Stack_PeekString();
+			CString name = Stack_PeekString();
+			
+			
+			theApp.search.searchVobNameGlobal = name;
+			theApp.search.replaceZenPath = replaceZenPath;
+			
+		}
 	}
 
 }

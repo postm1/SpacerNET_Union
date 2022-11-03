@@ -300,7 +300,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames)
+	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames, int searchOCItem)
 	{
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
 		int resultCount = 0;
@@ -419,6 +419,39 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+
+		if (searchOCItem)
+		{
+			zCArray<zCVob*> pListMobCont;
+
+			ogame->GetWorld()->SearchVobListByClass(oCMobContainer::classDef, pListMobCont, 0);
+
+			zSTRING itemNameSearch = theApp.search.searchVobNameGlobal;
+
+			if (itemNameSearch.Length() > 0)
+			{
+				for (int i = 0; i < pListMobCont.GetNumInList(); i++)
+				{
+					auto pVob = pListMobCont.GetSafe(i);
+
+					if (pVob)
+					{
+						if (auto pCont = pVob->CastTo<oCMobContainer>())
+						{
+							if (pCont && pCont->contains.contains(itemNameSearch))
+							{
+								resultFound.Insert(pVob);
+							}
+						}
+					}
+
+
+				}
+			}
+
+			
+		}
+
 		if (matchNames && resultSorted.GetNumInList() > 0)
 		{
 
@@ -503,7 +536,7 @@ namespace GOTHIC_ENGINE {
 		{
 			theApp.SetSelectedVob(NULL);
 
-			zSTRING path = Stack_PeekString();
+			zSTRING path = theApp.search.replaceZenPath;
 			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
 
 			for (int i = 0; i < resultFound.GetNum(); i++)

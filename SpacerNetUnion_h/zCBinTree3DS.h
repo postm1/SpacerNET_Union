@@ -37,8 +37,8 @@ namespace GOTHIC_ENGINE {
 
 	public:
 		zCSelPoly() {};
-		zCPolygon*  poly;
-		zCMaterial* mat;
+		zCPolygon*  poly = NULL;
+		zCMaterial* mat = NULL;
 		zCOLOR color;
 	};
 

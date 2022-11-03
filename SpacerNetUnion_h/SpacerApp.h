@@ -50,7 +50,8 @@ namespace GOTHIC_ENGINE {
 			zCVob* cur_vob;
 			zCVob* cur_vob_convert;
 			zSTRING lastClass;
-
+			CString searchVobNameGlobal;
+			CString replaceZenPath;
 		} search;
 
 		struct
@@ -336,7 +337,7 @@ namespace GOTHIC_ENGINE {
 
 		bool SearchHandleConvert(zCVob *& vob);
 
-		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames);
+		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames, int searchOCItem);
 
 		void GetAllPfx();
 

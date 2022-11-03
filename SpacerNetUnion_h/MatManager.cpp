@@ -27,10 +27,14 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::RenderSelection()
 	{
+		//cmd << "RenderSelection " << pList.GetNumInList() << endl;
+
 		auto selection = GetCurrentSelection();
 
 		if (selection)
 		{
+			
+
 			auto poly = selection->GetPolygon();
 
 			if (poly)
@@ -108,14 +112,6 @@ namespace GOTHIC_ENGINE {
 			Stack_PushInt(col.b);
 			theApp.exports.MatFilter_SetTextureColor();
 
-
-			CString sizeStr = Z "0x0";
-
-			Stack_PushString("");
-			Stack_PushString(sizeStr);
-			
-			theApp.exports.MatFilter_UpdateTextureSize();
-
 			//cmd << col.GetDescriptionRGB() << endl;
 
 		}
@@ -165,6 +161,8 @@ namespace GOTHIC_ENGINE {
 
 			matSelectedInTree = newSelection->GetMaterial();
 			OnSelectMaterial(newSelection->GetMaterial());
+
+			//cmd << "CreateNewSelection: End " << Z(int) xPoly << endl;
 		}
 
 	}
@@ -257,6 +255,8 @@ namespace GOTHIC_ENGINE {
 
 		if (selection)
 		{
+
+			//cmd << "Selection exist!" << endl;
 			currentPoly = selection->GetPolygon();
 		}
 
@@ -264,10 +264,13 @@ namespace GOTHIC_ENGINE {
 		CleanSelection();
 
 
-		if (xPoly && xPoly != currentPoly)
+		if (xPoly && (xPoly != currentPoly || currentPoly == NULL))
 		{
+			//cmd << "CreateNewSelection!" << endl;
 			CreateNewSelection(xPoly);
 		}
+
+		//cmd << "OnPick End!" << endl;
 
 		zinput->ClearKeyBuffer();
 		zinput->ClearLeftMouse();
