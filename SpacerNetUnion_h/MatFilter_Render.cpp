@@ -12,17 +12,7 @@ namespace GOTHIC_ENGINE {
 	// массив пикселей выходной текстуры
 	//DWORD arr_pixels[OUTPUT_SIZEX * OUTPUT_SIZEY];
 
-	// Флаги конвертации:
-	// масштабировать ли мелкие текстуры в большую сторону ...
-	// ... к выходным размерам (1 - да, 0 - нет)
-	BOOL bResizeSmallTextures = FALSE;
 
-	// использовать ли прозрачность текстур (1 - да, 0 - нет)
-	BOOL bUseAlphaChannels = TRUE;
-
-	// использовать ли выравнивание текстуры по центру (1 - да, 0 - нет)
-	// (справедливо только для маленьких текстур: 32х32, 16х64, 4х4 и т.д.)
-	BOOL bUseCenterAligment = TRUE;
 
 
 	// преобразование цвета RGBA -> DWORD
@@ -95,11 +85,17 @@ namespace GOTHIC_ENGINE {
 			}
 			*/
 
+
+			CString sizeStr = " " + Z entry->x + " x " + Z entry->y + " x " + Z entry->bit + " ";
+
+			Stack_PushString(entry->name);
+			Stack_PushString(sizeStr);
+			theApp.exports.MatFilter_UpdateTextureSize();
+
+			Stack_PushInt(entry->hasAlpha);
 			Stack_PushUInt(addrSend);
 			theApp.exports.MatFilter_SendTexture();
 
-			Stack_PushInt(entry->bit);
-			theApp.exports.MatFilter_UpdateTextureBit();
 			
 			Stack_PushInt(entry->hasAlpha);
 			theApp.exports.MatFilter_UpdateTextureAlphaInfo();
@@ -112,8 +108,24 @@ namespace GOTHIC_ENGINE {
 
 	
 
-	void RenderTextureByPixels3(const zSTRING& texName)
+	void RenderTextureByPixels3(const zSTRING& texName, zSTRING originalName)
 	{
+		// если нужно скинуть кэш след текстуры, то скидываем
+		bool cleanTextureCache = mf.removeTextureCacheNext;
+
+
+
+		if (cleanTextureCache)
+		{
+			//cmd << "remove cache, new one! " << texName << endl;
+
+		}
+		else
+		{
+			//cmd << "no remove cache! " << texName << endl;
+		}
+
+		mf.removeTextureCacheNext = false;
 
 		//cmd << "RenderTextureByPixels3: try texture: " << texName << endl;
 		// Direct3D девайс для Г2А
@@ -129,8 +141,30 @@ namespace GOTHIC_ENGINE {
 			{
 				if (entry->name == texName)
 				{
+					if (cleanTextureCache)
+					{
+						delete entry;
+						pListCache.RemoveOrderIndex(i);
+						break;
+					}
+					// если кеш не скидывается принудительно, то проверяем, чтобы кэш был актуален (настройки совпадали для текстуры)
+					else if (!cleanTextureCache)
+					{
+						// если хоть одна из настроек не совпадает, удаляем кэш, он не актуален
+						if (entry->bUseAlphaChannels != mf.bUseAlphaChannels
+							|| entry->bResizeSmallTextures != mf.bResizeSmallTextures
+							|| entry->bUseCenterAligment != mf.bUseCenterAligment
+							)
+						{
+							delete entry;
+							pListCache.RemoveOrderIndex(i);
+							break;
+						}
+
+					}
 					//cmd << "Texture " << texName << " found" << endl;
 					RenderTexture_Send(entry);
+					//cmd << "From cache! " << texName << endl;
 					return;
 				}
 			}
@@ -170,7 +204,10 @@ namespace GOTHIC_ENGINE {
 
 
 		auto entry = new MatFilterRenderEntry();
-		entry->name = texName;
+		entry->name = originalName;
+		entry->bUseCenterAligment = mf.bUseCenterAligment;
+		entry->bUseAlphaChannels = mf.bUseAlphaChannels;
+		entry->bResizeSmallTextures = mf.bResizeSmallTextures;
 
 		pListCache.InsertEnd(entry);
 
@@ -214,6 +251,11 @@ namespace GOTHIC_ENGINE {
 			break;
 		}
 
+
+	
+		entry->x = texInfo.sizeX;
+		entry->y = texInfo.sizeY;
+
 		// меняем результирующее число карт детализации
 		texInfo.numMipMap = 1;
 
@@ -234,7 +276,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		if (((texInfo.sizeX < OUTPUT_SIZEX) && (texInfo.sizeY < OUTPUT_SIZEY) && (bResizeSmallTextures == TRUE)) || ((texInfo.sizeX > OUTPUT_SIZEX) || (texInfo.sizeY > OUTPUT_SIZEY)))
+		if (((texInfo.sizeX < OUTPUT_SIZEX) && (texInfo.sizeY < OUTPUT_SIZEY) && (mf.bResizeSmallTextures == TRUE)) || ((texInfo.sizeX > OUTPUT_SIZEX) || (texInfo.sizeY > OUTPUT_SIZEY)))
 		{
 			// исходная ширина текстуры
 			float sx = (float)texInfo.sizeX;
@@ -319,9 +361,14 @@ namespace GOTHIC_ENGINE {
 		int offsetX = 0;
 		int offsetY = 0;
 
+
+		
+
+		
 		// если включено центрирование малых текстур
-		if (bUseCenterAligment)
+		if (mf.bUseCenterAligment)
 		{
+			
 			// есть смысл центрировать только тогда,
 			// когда хотябы один из размеров текстуры
 			// меньше соотв. размера выходного изображения
@@ -350,7 +397,7 @@ namespace GOTHIC_ENGINE {
 					zVEC4 col = texConv->GetRGBAAtTexel(x, y);
 
 					// если нужно исключить альфа-каналы у пикселей
-					if (!bUseAlphaChannels)
+					if (!mf.bUseAlphaChannels)
 						// исключаем прозрачность
 						col[3] = 255;
 
@@ -416,15 +463,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		// посылаем размер текстуры в интерфейс
-		int x, y;
-		pMat->texture->GetPixelSize(x, y);
-		CString sizeStr = Z x + "x" + Z y;
 
-
-		Stack_PushString(pMat->texture->GetObjectName());
-		Stack_PushString(sizeStr);
-		theApp.exports.MatFilter_UpdateTextureSize();
 	
 
 
@@ -434,7 +473,7 @@ namespace GOTHIC_ENGINE {
 		zSTRING cTEX = "-C.TEX";
 		// берём название текстуры материала
 		zSTRING texName = pMat->texture->GetObjectName();
-
+		zSTRING originalNoChangeName = texName;
 		//texName = "roof_batons_alpha.TGA";
 
 		texName.Upper();
@@ -472,7 +511,7 @@ namespace GOTHIC_ENGINE {
 		if (texFound)
 		{
 			lastName = innerFormatName;
-			RenderTextureByPixels3(innerFormatName);
+			RenderTextureByPixels3(innerFormatName, originalNoChangeName);
 		}
 		else
 		{
@@ -493,7 +532,7 @@ namespace GOTHIC_ENGINE {
 
 			if (TGAFound)
 			{
-				RenderTextureByPixels3(texName);
+				RenderTextureByPixels3(texName, originalNoChangeName);
 			}
 		}
 

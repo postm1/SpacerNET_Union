@@ -134,6 +134,8 @@ namespace GOTHIC_ENGINE {
 		//cmd << "SelectMaterial" << endl;
 
 		ExtractTexture(mat);
+
+
 		//OnSelectMaterial(mat);
 	}
 

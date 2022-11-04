@@ -1060,6 +1060,38 @@ namespace GOTHIC_ENGINE {
 			theApp.search.replaceZenPath = replaceZenPath;
 			
 		}
+
+
+		__declspec(dllexport) void Extern_MatFilter_UpdateTextureShowSettings()
+		{
+			mf.bResizeSmallTextures = Stack_PeekInt();
+			mf.bUseCenterAligment = Stack_PeekInt();
+			mf.bUseAlphaChannels = Stack_PeekInt();
+
+			mf.removeTextureCacheNext = true;
+
+
+			if (mm.matSelectedInTree)
+			{
+				mm.ExtractTexture(mm.matSelectedInTree);
+			}
+			
+
+		}
+		
+		__declspec(dllexport) void Extern_Filter_CreateNewMaterial()
+		{
+			CString name = Stack_PeekString();
+			mf.CreateNewMat(name);
+		}
+
+		__declspec(dllexport) void Exter_MatFilter_SearchMatByName()
+		{
+			CString name = Stack_PeekString();
+			mf.SearchMaterialByName(name);
+		}
+
+		
 	}
 
 }

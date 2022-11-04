@@ -12,6 +12,11 @@ namespace GOTHIC_ENGINE {
 		this->LoadFilterList();
 
 		this->init = true;
+		this->removeTextureCacheNext = false;
+
+		this->bResizeSmallTextures = false;
+		this->bUseAlphaChannels = true;
+		this->bUseCenterAligment = true;
 	}
 
 
@@ -28,7 +33,85 @@ namespace GOTHIC_ENGINE {
 		ToggleWindow(false);
 	}
 
+	
+	void MatFilter::SearchMaterialByName(CString name)
+	{
+		zCClassDef* classDef = zCMaterial::classDef;
+		zCMaterial*	mat = 0;
+		unsigned int numOfMats = classDef->objectList.GetNum();
+		zSTRING matName = name.Upper();
 
+		zCArray<zCMaterial*> pList;
+
+		for (int i = 0; i < numOfMats; i++)
+		{
+			mat = dynamic_cast<zCMaterial*>(classDef->objectList[i]);
+
+			if (mat && (mat->GetName().StartWith(matName) || mat->GetName().contains(matName) || mat->GetName() == matName))
+			{
+				pList.Insert(mat);
+			}
+		}
+
+		for (int i = 0; i < pList.GetNumInList(); i++)
+		{
+			auto pMat = pList.GetSafe(i);
+
+			if (pMat)
+			{
+				Stack_PushInt(pMat->libFlag);
+				Stack_PushString(pMat->GetName());
+				theApp.exports.MatFilter_AddMatInSearchByName();
+			}
+			
+		}
+
+	}
+
+	void MatFilter::CreateNewMat(CString name)
+	{
+		zSTRING texture = "RED.TGA";
+		int filterIndex = 10;
+		zSTRING matName = name.Upper();
+
+		zCClassDef* classDef = zCMaterial::classDef;
+
+		zCMaterial*	mat = 0;
+		int numOfMats = classDef->objectList.GetNum();
+
+		for (int i = 0; i < numOfMats; i++)
+		{
+			mat = dynamic_cast<zCMaterial*>(classDef->objectList[i]);
+
+			if (mat && mat->GetName() == matName)
+			{
+				Message::Box(GetLang("WIN_MATFILTER_FILTER_MAT_NAME_ALREADY_EXISTS"));
+				return;
+			}
+
+		}
+
+		auto pMat = new zCMaterial();
+
+		if (pMat)
+		{
+			pMat->SetName(name);
+			//pMat->SetTexture(texture);
+			pMat->AddRef();
+			pMat->SetUsage(zCMaterial::zMAT_USAGE_LEVEL);
+			pMat->libFlag = 0;
+
+			
+
+			Stack_PushString(pMat->GetName());
+			Stack_PushUInt((uint)pMat);
+			theApp.exports.AddMatByMatFilterName();
+
+			Stack_PushInt(pMat->libFlag);
+			Stack_PushString(pMat->GetName());
+			theApp.exports.MatFilter_OnCreateNewMat();
+		}
+	}
 
 
 	void MatFilter::FillInterfaceData()
@@ -141,7 +224,7 @@ namespace GOTHIC_ENGINE {
 
 		if (numOfMats>matIter) mat = dynamic_cast<zCMaterial*>(classDef->objectList[matIter]);
 
-		cmd << "filterItem: " << filterItem->name << " id: " << filterItem->id << endl;
+		//cmd << "filterItem: " << filterItem->name << " id: " << filterItem->id << endl;
 
 		zCArray<CString> names;
 		//cmd << "numOfMats: " << numOfMats << endl;
@@ -197,7 +280,7 @@ namespace GOTHIC_ENGINE {
 				else mat = 0;
 			}
 		}
-		cmd << "pList: " << pList.GetNum() << endl;
+		//cmd << "pList: " << pList.GetNum() << endl;
 		for (int i = 0; i < pList.GetNum(); i++)
 		{
 			auto entry = pList.GetSafe(i);

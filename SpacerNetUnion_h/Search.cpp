@@ -419,14 +419,14 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-
+		//ищем по имени воба (итема) в сундуках
 		if (searchOCItem)
 		{
 			zCArray<zCVob*> pListMobCont;
 
 			ogame->GetWorld()->SearchVobListByClass(oCMobContainer::classDef, pListMobCont, 0);
 
-			zSTRING itemNameSearch = theApp.search.searchVobNameGlobal;
+			zSTRING itemNameSearch = theApp.search.searchVobNameGlobal.Upper();
 
 			if (itemNameSearch.Length() > 0)
 			{
@@ -438,7 +438,7 @@ namespace GOTHIC_ENGINE {
 					{
 						if (auto pCont = pVob->CastTo<oCMobContainer>())
 						{
-							if (pCont && pCont->contains.contains(itemNameSearch))
+							if (pCont && pCont->contains.Upper().contains(itemNameSearch))
 							{
 								resultFound.Insert(pVob);
 							}
@@ -452,6 +452,7 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
+		// ищем дубликаты имен вобов на карте
 		if (matchNames && resultSorted.GetNumInList() > 0)
 		{
 

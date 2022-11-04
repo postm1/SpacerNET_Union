@@ -89,6 +89,10 @@ namespace GOTHIC_ENGINE {
 		this->exports.MatFilter_Clear = (callVoidFunc)GetProcAddress(module, "MatFilter_Clear");
 		this->exports.MatFilter_UpdateTextureBit = (callVoidFunc)GetProcAddress(module, "MatFilter_UpdateTextureBit");
 		this->exports.MatFilter_UpdateTextureAlphaInfo = (callVoidFunc)GetProcAddress(module, "MatFilter_UpdateTextureAlphaInfo");
+		this->exports.MatFilter_OnCreateNewMat = (callVoidFunc)GetProcAddress(module, "MatFilter_OnCreateNewMat");
+		this->exports.MatFilter_AddMatInSearchByName = (callVoidFunc)GetProcAddress(module, "MatFilter_AddMatInSearchByName");
+		this->exports.MatFilter_AddCurrentFilterIndexToSave = (callVoidFunc)GetProcAddress(module, "MatFilter_AddCurrentFilterIndexToSave");
+
 		
 	}
 
@@ -1441,7 +1445,26 @@ namespace GOTHIC_ENGINE {
 				arch->ReadObject(currentMat);
 				arch->Close();
 				zRELEASE(arch);
+
+				theApp.exports.MatFilter_AddCurrentFilterIndexToSave();
 			}
+		}
+		else if (mm.matSelectedInTree)
+		{
+			zCMaterial* currentMat = mm.matSelectedInTree;
+
+			cmd << "ApplyProps for material " << AHEX32((uint)currentMat) << endl;
+
+			zCBuffer buf(propString.ToChar(), propString.Length());
+			zCArchiver* arch = zarcFactory->CreateArchiverRead(&buf, 0);
+			arch->SetStringEOL(zSTRING("\n"));
+
+
+
+			arch->ReadObject(currentMat);
+			arch->Close();
+			zRELEASE(arch);
+			theApp.exports.MatFilter_AddCurrentFilterIndexToSave();
 		}
 		else if (current_object)
 		{

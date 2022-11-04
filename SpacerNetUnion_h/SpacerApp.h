@@ -165,6 +165,9 @@ namespace GOTHIC_ENGINE {
 			callVoidFunc MatFilter_Clear;
 			callVoidFunc MatFilter_UpdateTextureBit;
 			callVoidFunc MatFilter_UpdateTextureAlphaInfo;
+			callVoidFunc MatFilter_OnCreateNewMat;
+			callVoidFunc MatFilter_AddMatInSearchByName;
+			callVoidFunc MatFilter_AddCurrentFilterIndexToSave;
 			
 		} exports;
 

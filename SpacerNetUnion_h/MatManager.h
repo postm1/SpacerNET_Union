@@ -37,10 +37,19 @@ namespace GOTHIC_ENGINE {
 		int bit;
 		int hasAlpha;
 
+		bool bResizeSmallTextures;
+		bool bUseAlphaChannels;
+		bool bUseCenterAligment;
+
+
 		MatFilterRenderEntry::MatFilterRenderEntry()
 		{
 			bit = 0;
 			hasAlpha = 0;
+
+			this->bResizeSmallTextures = false;
+			this->bUseAlphaChannels = true;
+			this->bUseCenterAligment = true;
 		}
 	};
 
@@ -50,6 +59,11 @@ namespace GOTHIC_ENGINE {
 		zCArray<spcCMatFilter*> matFilterList;
 		bool init;
 		bool filterMatBlocked;
+		bool removeTextureCacheNext;
+
+		bool bResizeSmallTextures;
+		bool bUseAlphaChannels;
+		bool bUseCenterAligment;
 
 		void FillInterfaceData();
 		int FindMatFilterIndexByName(CString filterName);
@@ -68,6 +82,9 @@ namespace GOTHIC_ENGINE {
 
 		void Render(zCMaterial* mat);
 		void Loop();
+
+		void CreateNewMat(CString name);
+		void SearchMaterialByName(CString name);
 	};
 
 	class MatManager
