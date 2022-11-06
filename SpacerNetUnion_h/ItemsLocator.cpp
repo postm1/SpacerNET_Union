@@ -20,6 +20,8 @@ namespace GOTHIC_ENGINE {
 
 		showOnlyProbablyBad = true;
 		offsetVertical = 200;
+
+		searchType = 0;
 	}
 
 	void ItemsLocator::Reset()
@@ -193,6 +195,56 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	bool ItemsLocator::IsItemMatchCategory(oCItem* pItem)
+	{
+		bool result = false;
+
+		int cat = pItem->mainflag;
+		
+		if (searchType == 1 && cat == ITM_CAT_NONE)
+		{
+			result = true;
+		}
+		else if (searchType == 2 && cat == ITM_CAT_NF)
+		{
+			result = true;
+		}
+		else if (searchType == 3 && cat == ITM_CAT_FF)
+		{
+			result = true;
+		}
+		else if (searchType == 4 && cat == ITM_CAT_MUN)
+		{
+			result = true;
+		}
+		else if (searchType == 5 && cat == ITM_CAT_ARMOR)
+		{
+			result = true;
+		}
+		else if (searchType == 6 && cat == ITM_CAT_FOOD)
+		{
+			result = true;
+		}
+		else if (searchType == 7 && cat == ITM_CAT_POTION)
+		{
+			result = true;
+		}
+		else if (searchType == 8 && cat == ITM_CAT_LIGHT)
+		{
+			result = true;
+		}
+		else if (searchType == 9 && cat == ITM_CAT_RUNE)
+		{
+			result = true;
+		}
+		else if (searchType == 10 && cat == ITM_CAT_MAGIC)
+		{
+			result = true;
+		}
+
+		return result;
+	}
+
 	void ItemsLocator::Loop()
 	{
 		if (!theApp.IsAWorldLoaded()) return;
@@ -226,6 +278,7 @@ namespace GOTHIC_ENGINE {
 			zCArray<zCVob*>resVobList;
 			
 			ogame->GetWorld()->CollectVobsInBBox3D(resVobList, box);
+
 
 			for (int i = 0; i < resVobList.GetNumInList(); i++)
 			{
@@ -303,6 +356,14 @@ namespace GOTHIC_ENGINE {
 
 			if (entry && entry->pVob && entry->pView)
 			{
+
+				if (searchType > 0 && !IsItemMatchCategory(entry->pVob))
+				{
+					entry->pView->ClrPrintwin();
+					entry->pVob->drawBBox3D = false;
+					continue;
+				}
+
 				if (Dist(entry->pVob, camVob) <= radius)
 				{
 					Draw(entry);

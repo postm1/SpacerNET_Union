@@ -58,7 +58,7 @@ namespace GOTHIC_ENGINE {
 	public:
 		zCArray<spcCMatFilter*> matFilterList;
 		bool init;
-		bool filterMatBlocked;
+		int filterMatBlocked;
 		bool removeTextureCacheNext;
 
 		bool bResizeSmallTextures;
@@ -83,8 +83,9 @@ namespace GOTHIC_ENGINE {
 		void Render(zCMaterial* mat);
 		void Loop();
 
-		void CreateNewMat(CString name);
+		void CreateNewMat(CString name, int index);
 		void SearchMaterialByName(CString name);
+		void RemoveFilterByIndex(int index);
 	};
 
 	class MatManager

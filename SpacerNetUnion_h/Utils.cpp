@@ -411,6 +411,28 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 		}
+		else if (mm.matSelectedInTree)
+		{
+			zSTRING matName = vobName.Upper();
+
+			zCClassDef* classDef = zCMaterial::classDef;
+
+			zCMaterial*	mat = 0;
+			int numOfMats = classDef->objectList.GetNum();
+
+
+			for (int i = 0; i < numOfMats; i++)
+			{
+				mat = dynamic_cast<zCMaterial*>(classDef->objectList[i]);
+
+				if (mat && mat->GetName() == matName)
+				{
+					result = true;
+					break;
+				}
+
+			}
+		}
 
 
 		return result;

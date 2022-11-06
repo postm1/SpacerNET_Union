@@ -488,7 +488,6 @@ namespace GOTHIC_ENGINE {
 
 
 
-
 		// объ€вл€ем окончание дл€ скомпилированных текстур
 		
 		zSTRING innerFormatName = originalName + cTEX;
@@ -533,6 +532,11 @@ namespace GOTHIC_ENGINE {
 			if (TGAFound)
 			{
 				RenderTextureByPixels3(texName, originalNoChangeName);
+			}
+			else
+			{
+				Stack_PushString(originalNoChangeName);
+				theApp.exports.MatFilter_SetEmptyTexture();
 			}
 		}
 

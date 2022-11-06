@@ -92,7 +92,7 @@ namespace GOTHIC_ENGINE {
 		this->exports.MatFilter_OnCreateNewMat = (callVoidFunc)GetProcAddress(module, "MatFilter_OnCreateNewMat");
 		this->exports.MatFilter_AddMatInSearchByName = (callVoidFunc)GetProcAddress(module, "MatFilter_AddMatInSearchByName");
 		this->exports.MatFilter_AddCurrentFilterIndexToSave = (callVoidFunc)GetProcAddress(module, "MatFilter_AddCurrentFilterIndexToSave");
-
+		this->exports.MatFilter_SetEmptyTexture = (callVoidFunc)GetProcAddress(module, "MatFilter_SetEmptyTexture");
 		
 	}
 
@@ -108,7 +108,13 @@ namespace GOTHIC_ENGINE {
 		
 	}
 
-
+	void SpacerApp::OnVobMovement(zCVob* vob)
+	{
+		if (vob)
+		{
+			
+		}
+	}
 	
 
 	void SpacerApp::SetSelectedVob(zCVob* vob, zSTRING funcName)
@@ -1406,7 +1412,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	void SpacerApp::ApplyProps(CString str, CString nameCurrent, CString visualStr)
+	void SpacerApp::ApplyProps(CString str, CString nameCurrent, CString visualStr, int posChanged)
 	{
 		zSTRING propString = zSTRING(str);
 		zSTRING name = zSTRING(nameCurrent);
@@ -1446,6 +1452,7 @@ namespace GOTHIC_ENGINE {
 				arch->Close();
 				zRELEASE(arch);
 
+				Stack_PushString(currentMat->GetName());
 				theApp.exports.MatFilter_AddCurrentFilterIndexToSave();
 			}
 		}
@@ -1464,6 +1471,8 @@ namespace GOTHIC_ENGINE {
 			arch->ReadObject(currentMat);
 			arch->Close();
 			zRELEASE(arch);
+
+			Stack_PushString(currentMat->GetName());
 			theApp.exports.MatFilter_AddCurrentFilterIndexToSave();
 		}
 		else if (current_object)
@@ -1474,6 +1483,11 @@ namespace GOTHIC_ENGINE {
 			zSTRING lastName = current_object->GetObjectName();
 			zSTRING lastVisual = oldVob && oldVob->GetVisual() ? oldVob->GetVisual()->GetVisualName() : "";
 
+			zVEC3 lastPos = oldVob->GetPositionWorld();
+			auto rotRight = oldVob->trafoObjToWorld.GetRightVector();
+			auto rotUp = oldVob->trafoObjToWorld.GetUpVector();
+			auto rotAt = oldVob->trafoObjToWorld.GetAtVector();
+			auto rotMat = oldVob->trafoObjToWorld.ExtractRotation();
 
 			zCBuffer buf(propString.ToChar(), propString.Length());
 			zCArchiver* arch = zarcFactory->CreateArchiverRead(&buf, 0);
@@ -1492,8 +1506,47 @@ namespace GOTHIC_ENGINE {
 
 			if (vob)
 			{
+				//cmd << "Apply " << vob->GetVobName() << endl;
 
+
+				if (posChanged == 0 && lastPos != vob->GetPositionWorld())
+				{
+					//cmd << "lastPos: " << lastPos.ToString() << endl;
+					//cmd << "archivePos: " << vob->GetPositionWorld().ToString() << endl;
+
+					//vob->BeginMovement();
+					HandleVobTranslation(vob, lastPos);
+					//vob->EndMovement(1);
+
+					//cmd << "newPos: " << vob->GetPositionWorld().ToString() << endl;
+
+					//cmd << "Set pos: " << lastPos.ToString() << endl;
+
+					//(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
+					//SelectObject(current_object);
+
+					(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
+					SelectObject(current_object);
+				}
 				
+				/*
+				vob->trafoObjToWorld.SetRightVector(rotMat.GetRightVector3());
+				vob->trafoObjToWorld.SetUpVector(rotMat.GetUpVector3());
+				vob->trafoObjToWorld.SetAtVector(rotMat.GetAtVector3());
+				*/
+				
+				//vob->trafoObjToWorld.ResetRotation();
+
+				/*
+				vob->ResetRotationsLocal();
+				vob->ResetRotationsWorld();
+
+				vob->trafoObjToWorld.SetRightVector(rotRight);
+				vob->trafoObjToWorld.SetUpVector(rotUp);
+				vob->trafoObjToWorld.SetAtVector(rotAt);
+				*/
+				
+		
 
 				if (vob->GetVisual())
 				{

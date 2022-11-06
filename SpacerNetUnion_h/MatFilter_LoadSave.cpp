@@ -89,7 +89,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatFilter::SaveCurrentFilter(int index)
 	{
-		if (this->filterMatBlocked)
+		if (this->filterMatBlocked == 1)
 		{
 			return;
 		}
@@ -132,7 +132,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatFilter::SaveFilterList()
 	{
-		if (this->filterMatBlocked)
+		if (this->filterMatBlocked != 0)
 		{
 			return;
 		}
@@ -253,11 +253,13 @@ namespace GOTHIC_ENGINE {
 
 						filterReadCount += 1;
 
+						/*
 						if (filterReadCount != item->id)
 						{
-							filterMatBlocked = true;
+							filterMatBlocked = 1;
 							cmd << "FILTER FORMAT ERROROR" << endl;
 						}
+						*/
 
 						matFilterList.Insert(item);
 
@@ -285,6 +287,16 @@ namespace GOTHIC_ENGINE {
 			//zERR_WARNING("B: SPC: Configuration: Loading file " + MATLIB_FILENAME + " failed. Not found!");
 		};
 
+		DWORD attr = GetFileAttributes("_work\\tools\\data\\" +  MATLIB_FILENAME);
+
+		if (attr != INVALID_FILE_ATTRIBUTES) {
+			bool isReadOnly = attr & FILE_ATTRIBUTE_READONLY;
+
+			if (isReadOnly)
+			{
+				filterMatBlocked = 2;
+			}
+		}
 
 
 		cmd << "Loaded .PML files: " << counterLoaded << endl;

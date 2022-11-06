@@ -7,11 +7,13 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 	void MatFilter::Init()
 	{
-		this->filterMatBlocked = false;
+		this->filterMatBlocked = 0;
 
 		this->LoadFilterList();
 
 		this->init = true;
+
+		
 		this->removeTextureCacheNext = false;
 
 		this->bResizeSmallTextures = false;
@@ -33,12 +35,39 @@ namespace GOTHIC_ENGINE {
 		ToggleWindow(false);
 	}
 
+	void MatFilter::RemoveFilterByIndex(int index)
+	{
+		if (index > 0)
+		{
+			for (int i = 0; i < matFilterList.GetNum(); i++)
+			{
+				auto entry = matFilterList.GetSafe(i);
+
+				if (entry)
+				{
+					if (i == index)
+					{
+						matFilterList.RemoveOrderIndex(i);
+						cmd << "Remove filter: " << index << " name: " << entry->name << endl;
+						break;
+					}
+
+				}
+			}
+		}
+		else
+		{
+			cmd << "Remove filter, bad index: " << index << endl;
+		}
+	}
+
+		
 	
 	void MatFilter::SearchMaterialByName(CString name)
 	{
 		zCClassDef* classDef = zCMaterial::classDef;
 		zCMaterial*	mat = 0;
-		unsigned int numOfMats = classDef->objectList.GetNum();
+		int numOfMats = classDef->objectList.GetNum();
 		zSTRING matName = name.Upper();
 
 		zCArray<zCMaterial*> pList;
@@ -68,16 +97,21 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	void MatFilter::CreateNewMat(CString name)
+	void MatFilter::CreateNewMat(CString name, int index)
 	{
-		zSTRING texture = "RED.TGA";
-		int filterIndex = 10;
 		zSTRING matName = name.Upper();
 
 		zCClassDef* classDef = zCMaterial::classDef;
 
 		zCMaterial*	mat = 0;
 		int numOfMats = classDef->objectList.GetNum();
+
+
+		if (matName.Length() == 0)
+		{
+			Message::Box(GetLang("MSG_COMMON_NO_EMPTY_NAME"));
+			return;
+		}
 
 		for (int i = 0; i < numOfMats; i++)
 		{
@@ -99,7 +133,16 @@ namespace GOTHIC_ENGINE {
 			//pMat->SetTexture(texture);
 			pMat->AddRef();
 			pMat->SetUsage(zCMaterial::zMAT_USAGE_LEVEL);
-			pMat->libFlag = 0;
+
+			if (index >= 0)
+			{
+				pMat->libFlag = matFilterList.GetSafe(index)->id;
+			}
+			else
+			{
+				pMat->libFlag = 0;
+			}
+			
 
 			
 
@@ -117,9 +160,9 @@ namespace GOTHIC_ENGINE {
 	void MatFilter::FillInterfaceData()
 	{
 
-		ToggleWindow(!filterMatBlocked);
+		ToggleWindow(filterMatBlocked != 1);
 
-		if (filterMatBlocked)
+		if (filterMatBlocked == 1)
 		{
 			return;
 		}
@@ -191,7 +234,7 @@ namespace GOTHIC_ENGINE {
 	void MatFilter::FillMatListByFilterName(CString filter)
 	{
 
-		cmd << "Using filter: " << filter << endl;
+		//cmd << "Using filter: " << filter << endl;
 
 		zCArray<zCMaterial*>	pList;
 
@@ -303,8 +346,30 @@ namespace GOTHIC_ENGINE {
 		matFilterList.Insert(item);
 
 		item->name = name;
-		item->id = matFilterList.GetNum() - 1;
 
+		zCArray<int> occupiedIndexs;
+
+		for (int i = 0; i < matFilterList.GetNum(); i++)
+		{
+			occupiedIndexs.InsertEnd(matFilterList.GetSafe(i)->id);
+		}
+		
+		int k = 1;
+
+		while (true)
+		{
+			if (occupiedIndexs.IsInList(k))
+			{
+				k++;
+				continue;
+			}
+			else
+			{
+				break;
+			}
+		}
+
+		item->id = k;
 		cmd << "Add new filter " << name << " with id " << item->id << endl;
 		//item->id = matFilterList.GetNum() - 1;
 

@@ -370,6 +370,8 @@ namespace GOTHIC_ENGINE {
 
 
 		vobsToMove.DeleteListDatas();
+
+		theApp.OnVobMovement(pickedVob);
 	}
 
 

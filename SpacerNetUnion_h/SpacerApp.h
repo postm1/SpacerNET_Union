@@ -168,7 +168,7 @@ namespace GOTHIC_ENGINE {
 			callVoidFunc MatFilter_OnCreateNewMat;
 			callVoidFunc MatFilter_AddMatInSearchByName;
 			callVoidFunc MatFilter_AddCurrentFilterIndexToSave;
-			
+			callVoidFunc MatFilter_SetEmptyTexture;
 		} exports;
 
 		void BlockMouseClick(int time);
@@ -229,7 +229,7 @@ namespace GOTHIC_ENGINE {
 
 		void SelectObject(zCObject * object);
 
-		void ApplyProps(CString str, CString nameCurrent, CString visualStr);
+		void ApplyProps(CString str, CString nameCurrent, CString visualStr, int posChanged);
 
 		void WorldPreLoad();
 		void WorldAfterLoad();
@@ -350,6 +350,7 @@ namespace GOTHIC_ENGINE {
 
 		void UpdatePFXField();
 		void ToggleInsertBlocked(bool toggle);
+		void OnVobMovement(zCVob* vob);
 
 		// macros
 

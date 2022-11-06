@@ -294,12 +294,14 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_ApplyProps() {
 
+			int posChanged = Stack_PeekInt();
+
 			CString props = Stack_PeekString();
 			CString currentName = Stack_PeekString();
 			CString visual = Stack_PeekString();
 
 			OutFile("Extern_ApplyProps: vob " + A currentName, true);
-			theApp.ApplyProps(props, currentName, visual);
+			theApp.ApplyProps(props, currentName, visual, posChanged);
 		}
 
 		__declspec(dllexport) int Extern_VobNameExist(bool isWaypoint) {
@@ -1082,13 +1084,27 @@ namespace GOTHIC_ENGINE {
 		__declspec(dllexport) void Extern_Filter_CreateNewMaterial()
 		{
 			CString name = Stack_PeekString();
-			mf.CreateNewMat(name);
+			int index = Stack_PeekInt();
+			mf.CreateNewMat(name, index);
 		}
 
 		__declspec(dllexport) void Exter_MatFilter_SearchMatByName()
 		{
 			CString name = Stack_PeekString();
 			mf.SearchMaterialByName(name);
+		}
+
+
+		__declspec(dllexport) void Extern_SetLocatorItemType()
+		{
+			int type = Stack_PeekInt();
+			theApp.itemsLocator.searchType = type;
+		}
+
+		__declspec(dllexport) void Extern_MatFilter_RemoveFilterByIndex()
+		{
+			int index = Stack_PeekInt();
+			mf.RemoveFilterByIndex(index);
 		}
 
 		

@@ -17,7 +17,7 @@ namespace GOTHIC_ENGINE {
 	};
 	class ItemsLocator
 	{
-	private:
+	public:
 		struct
 		{
 			bool show;
@@ -28,6 +28,7 @@ namespace GOTHIC_ENGINE {
 			zCView* pLocatorView;
 			bool showOnlyProbablyBad;
 			int offsetVertical;
+			int searchType;
 		};
 	public:
 		void Loop();
@@ -42,6 +43,7 @@ namespace GOTHIC_ENGINE {
 
 		zVEC3 GetFocus(zCVob* vob);
 		bool IsBadItem(zCVob* vob);
+		bool IsItemMatchCategory(oCItem* pItem);
 
 		ItemsLocator();
 	};

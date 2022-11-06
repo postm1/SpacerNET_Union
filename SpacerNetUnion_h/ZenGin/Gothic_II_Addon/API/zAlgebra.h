@@ -794,6 +794,8 @@ namespace Gothic_II_Addon {
         );
     }
 
+
+
     static zMAT3& s_identity;
 
     // user API
