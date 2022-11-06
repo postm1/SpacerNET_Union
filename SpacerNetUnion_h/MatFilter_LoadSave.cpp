@@ -136,6 +136,14 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+
+		if (!worldWasLoadedOnce)
+		{
+			return;
+		}
+
+		cmd << "Saving Matlib.ini" << endl;
+
 		zoptions->ChangeDir(DIR_TOOLS_DATA);
 
 		zFILE* f = NULL;

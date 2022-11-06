@@ -525,6 +525,7 @@ namespace GOTHIC_ENGINE {
 			DoCompileLight(2, 0);
 		}
 
+		mf.worldWasLoadedOnce = true; 
 		mf.FillInterfaceData();
 	}
 
@@ -844,7 +845,8 @@ namespace GOTHIC_ENGINE {
 
 
 		nograss.SetPercentFromSettings(true);
-
+		mf.worldWasLoadedOnce = true;
+		
 		//zerr->SetFilterLevel(10);
 	}
 
@@ -882,6 +884,8 @@ namespace GOTHIC_ENGINE {
 			std::cout << "Union: Apply settings for World after loading..." << std::endl;
 
 			PlaySoundGame(ToStr "CS_IAI_ME_ME");
+
+			
 		}
 	}
 

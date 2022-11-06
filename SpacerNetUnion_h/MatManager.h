@@ -59,6 +59,7 @@ namespace GOTHIC_ENGINE {
 		zCArray<spcCMatFilter*> matFilterList;
 		bool init;
 		int filterMatBlocked;
+		bool worldWasLoadedOnce;
 		bool removeTextureCacheNext;
 
 		bool bResizeSmallTextures;

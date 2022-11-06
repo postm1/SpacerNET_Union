@@ -19,6 +19,7 @@ namespace GOTHIC_ENGINE {
 		this->bResizeSmallTextures = false;
 		this->bUseAlphaChannels = true;
 		this->bUseCenterAligment = true;
+		this->worldWasLoadedOnce = false;
 	}
 
 
