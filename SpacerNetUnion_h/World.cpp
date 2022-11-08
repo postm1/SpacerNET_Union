@@ -811,7 +811,7 @@ namespace GOTHIC_ENGINE {
 
 		restorator.GenerateVobsPos();
 
-		mm.CreateMatTree();
+		//mm.CreateMatTree();
 		mf.FillInterfaceData();
 		
 

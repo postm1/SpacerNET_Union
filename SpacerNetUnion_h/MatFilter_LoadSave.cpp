@@ -87,6 +87,23 @@ namespace GOTHIC_ENGINE {
 		//zERR_MESSAGE(4, zERR_END, "");
 	}
 
+
+	/*
+	bool blockedSaveTex = false;
+
+	//zBOOL zCTextureConvert::SaveToFileFormat(const zSTRING& fileName)
+	HOOK Invk_zCTextureConvertt_SaveToFileFormat AS(&zCTextureConvert::SaveToFileFormat, &zCTextureConvert::SaveToFileFormat_Union);
+	zBOOL zCTextureConvert::SaveToFileFormat_Union(const zSTRING& fileName)
+	{
+		if (blockedSaveTex)
+		{
+			return FALSE;
+		}
+
+		return THISCALL(Invk_zCTextureConvertt_SaveToFileFormat)(fileName);
+	}
+	*/
+
 	void MatFilter::SaveCurrentFilter(int index)
 	{
 		if (this->filterMatBlocked == 1)
@@ -94,40 +111,211 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+
+		//cmd << "SaveCurrentFilter index: " << index  << endl;
+		RX_Begin(10);
+
 		if (index > 0)
 		{
 			zoptions->ChangeDir(DIR_TOOLS_DATA);
 
-			zSTRING matfilename = Z matFilterList.GetSafe(index)->name + MATLIBFILE_EXT;
 
-			matfilename = matfilename.Upper();
+			CreateDirectory("_work\\tools\\data\\spacernet_backups", NULL);
 
-			zFILE* file = zfactory->CreateZFile(matfilename);
 
-			if (file->Create() == zERR_NONE)
+			// временный файл
+			zSTRING fileNameTempWork = Z matFilterList.GetSafe(index)->name + MATLIBFILE_EXT + "_spacernet";
+			//реальный файл
+			zSTRING realFileName = Z matFilterList.GetSafe(index)->name + MATLIBFILE_EXT;
+
+
+			fileNameTempWork = fileNameTempWork.Upper();
+			realFileName = realFileName.Upper();
+
+			zSTRING matfilenameBackup = "spacernet_backups/" + realFileName;
+
+			// временный файл
+			zFILE* fileTempWork = zfactory->CreateZFile(fileNameTempWork);
+			// создаем в первый раз копию PML файла
+			zFILE* fileBackup = zfactory->CreateZFile(matfilenameBackup);
+
+			if (!fileBackup->Exists())
+			{
+				// реальный файл для создания копии
+				zFILE* fileReal = zfactory->CreateZFile(realFileName);
+				if (fileReal->Exists())
+				{
+					//cmd << "!!!!!!!!!!!Make copy...." << endl;
+
+					zFILE_FILE backupfile(matfilenameBackup);
+					fileReal->FileCopy(&backupfile);
+					SAFE_DELETE(fileReal);
+				}
+				
+			}
+
+			fileBackup->Close();
+
+			
+
+			zoptions->ChangeDir(DIR_TOOLS_DATA);
+
+			int countWrite = 0;
+
+
+			auto ShowLoadingForm = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
+			
+
+			bool windowShown = false;
+			auto updateText = (callVoidFunc)GetProcAddress(theApp.module, "LoadingForm_UpdateText");
+
+			if (fileTempWork->Create() == zERR_NONE)
 			{
 
-				zCArchiver* arch = zarcFactory->CreateArchiverWrite(file, zARC_MODE_ASCII, 0, 0);
+				zCArchiver* arch = zarcFactory->CreateArchiverWrite(fileTempWork, zARC_MODE_ASCII, 0, 0);
 
 				zCMaterial *mat = 0;
 				zCClassDef* matDef = zCMaterial::classDef;
+				int maxCount = matDef->objectList.GetNumInList();
+				int percent = 0;
 
-				for (int matz = 0; matz<matDef->objectList.GetNumInList(); matz++)
+
+				float totalTime = 0;
+				//blockedSaveTex = true;
+
+				zCArray<zSTRING> toConvertList;
+				zCArray<zSTRING> convertedList;
+				zSTRING cTEX = "-C.TEX";
+
+				for (int matz = 0; matz < maxCount; matz++)
+				{
+					auto mat = dynamic_cast<zCMaterial*>(matDef->objectList[matz]);
+
+					if (mat && mat->texture && mat->libFlag == index)
+					{
+						zSTRING pureName = mat->texture->GetObjectName();
+						zSTRING originalName = mat->texture->GetObjectName();
+						zSTRING name = originalName.Cut(originalName.Length() - 4, 4);
+						zSTRING innerFormatName = originalName + cTEX;
+
+						auto result = vdf_fexists(innerFormatName.ToChar(), VDF_DEFAULT);
+						bool texFound = false;
+
+						if ((result & VDF_VIRTUAL) == VDF_VIRTUAL)
+						{
+							//cmd << innerFormatName << " TEX found in VDF" << endl;
+							texFound = true;
+						}
+
+						if ((result & VDF_PHYSICAL) == VDF_PHYSICAL)
+						{
+							//cmd << innerFormatName << " TEX found in _WORK" << endl;
+							texFound = true;
+						}
+
+						if (!texFound && !toConvertList.IsInList(pureName))
+						{
+							//cmd << originalName << endl;
+							toConvertList.Insert(pureName);
+						}
+					}
+				}
+
+				int convertNumList = toConvertList.GetNumInList();
+				int curConvertCount = 0;
+
+				if (convertNumList > 1)
+				{
+					ShowLoadingForm(4);
+
+					//cmd << "ConvertTex: " << convertNumList << endl;
+				}
+
+				CString convText = GetLang("WIN_MATFILTER_CONV_TGA");
+
+				for (int matz = 0; matz<maxCount; matz++)
 				{
 					mat = dynamic_cast<zCMaterial*>(matDef->objectList[matz]);
-					if (
-						(mat->libFlag == index) /*&& (mat->matUsage == zCMaterial::zMAT_USAGE_LEVEL)*/
-						)
+
+					RX_Begin(11);
+					if (mat && (mat->libFlag == index) /*&& (mat->matUsage == zCMaterial::zMAT_USAGE_LEVEL)*/)
+					{
 						arch->WriteObject(mat);
+						//cmd << "Write object: " << mat->GetName() << endl;
+					}
+					RX_End(11);
+					percent = matz * 100 / maxCount;
+
+					totalTime += (perf[11] / 1000);
+
+
+					if (totalTime >= 1000 && !windowShown)
+					{
+						if (!windowShown)
+						{
+							
+							windowShown = true;
+						}
+					}
+
+					//if (windowShown && totalTime >= 500)
+					if (convertNumList > 0 
+						&& mat->texture 
+						&& toConvertList.IsInList(mat->texture->GetObjectName())
+						&& !convertedList.IsInList(mat->texture->GetObjectName())
+					)
+					{
+						convertedList.InsertEnd(mat->texture->GetObjectName());
+
+						
+						totalTime = 0;
+						curConvertCount += 1;
+
+						if (curConvertCount > convertNumList)
+						{
+							curConvertCount = convertNumList;
+						}
+
+						//cmd << "Конвертация TGA текстур: " << Z curConvertCount << "/" << Z convertNumList << " " << mat->texture->GetObjectName() << endl;
+
+						
+
+						Stack_PushString(Z convText + Z curConvertCount + "/" + Z convertNumList);
+						updateText();
+					}
+						
 				}
+
 
 				arch->Close();
 				zRELEASE(arch);
 
-				file->Close();
+				// закрываем, чтобы файл можно было скопировать в другой
+				fileTempWork->Close();
+
+				// пишем в реальный файл
+				fileTempWork->FileCopy(realFileName, true);
+				
+
+				// удаляем временный файл
+				zFILE_FILE fileWorkRemove(fileNameTempWork);
+
+				if (fileWorkRemove.Exists())
+				{
+					fileWorkRemove.FileDelete();
+				}
+				
+
+
 			};
-			delete file; file = 0;
+			//fileTempWork->Close();
+			SAFE_DELETE(fileTempWork);
+
+			(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 		}
+
+		RX_End(10);
+		//cmd << "SaveCurrentFilter index: " << index << " " << RX_PerfString(10) << endl;
 	}
 
 	void MatFilter::SaveFilterList()
@@ -142,15 +330,13 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		//RX_Begin(11);
+
 		cmd << "Saving Matlib.ini" << endl;
 
 		zoptions->ChangeDir(DIR_TOOLS_DATA);
 
-		zFILE* f = NULL;
-
-		f = zfactory->CreateZFile(MATLIB_FILENAME);
-
-
+		zFILE* f = zfactory->CreateZFile(MATLIB_FILENAME);
 
 		if (f->Create() == zERR_NONE)
 		{
@@ -173,10 +359,18 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
-			f->Close();
+			
+		}
+		else
+		{
+			cmd << "Can't save matlib.ini!" << endl;
 		}
 
+		f->Close();
 		SAFE_DELETE(f);
+
+		//RX_End(11);
+		//cmd << "SaveFilterList ok" << endl;
 	}
 
 	void MatFilter::SaveAllMatFilter()
@@ -307,7 +501,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		cmd << "Loaded .PML files: " << counterLoaded << endl;
+		cmd << "MatFilter: Loaded " << counterLoaded << " .PML files" << endl;
 
 
 		SAFE_DELETE(f);

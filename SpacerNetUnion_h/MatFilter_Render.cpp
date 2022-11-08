@@ -92,15 +92,17 @@ namespace GOTHIC_ENGINE {
 			Stack_PushString(sizeStr);
 			theApp.exports.MatFilter_UpdateTextureSize();
 
+			//cmd << "MatFilter_SendTexture 1" << endl;
 			Stack_PushInt(entry->hasAlpha);
 			Stack_PushUInt(addrSend);
 			theApp.exports.MatFilter_SendTexture();
+			//cmd << "MatFilter_SendTexture 2" << endl;
 
-			
+			//cmd << "MatFilter_UpdateTextureAlphaInfo 1" << endl;
 			Stack_PushInt(entry->hasAlpha);
 			theApp.exports.MatFilter_UpdateTextureAlphaInfo();
 
-
+			//cmd << "MatFilter_UpdateTextureAlphaInfo 2" << endl;
 			
 		}
 		
@@ -203,6 +205,7 @@ namespace GOTHIC_ENGINE {
 		BOOL bUseOriginalColor = FALSE;
 
 
+
 		auto entry = new MatFilterRenderEntry();
 		entry->name = originalName;
 		entry->bUseCenterAligment = mf.bUseCenterAligment;
@@ -255,6 +258,25 @@ namespace GOTHIC_ENGINE {
 	
 		entry->x = texInfo.sizeX;
 		entry->y = texInfo.sizeY;
+
+		/*
+		if (entry->x > 4096 || entry->y > 4096)
+		{
+			entry->bIsTextureTooBig = true;
+
+			CString sizeStr = " " + Z texInfo.sizeX + " x " + Z texInfo.sizeY + " x " + Z entry->bit + " ";
+
+			Stack_PushString(entry->name);
+			Stack_PushString(sizeStr);
+			theApp.exports.MatFilter_UpdateTextureSize();
+
+
+			Stack_PushString(originalName);
+			theApp.exports.MatFilter_SetTextureBigDontRender();
+			return;
+		}
+		*/
+
 
 		// меняем результирующее число карт детализации
 		texInfo.numMipMap = 1;

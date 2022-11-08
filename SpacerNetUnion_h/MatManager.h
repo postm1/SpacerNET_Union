@@ -40,6 +40,7 @@ namespace GOTHIC_ENGINE {
 		bool bResizeSmallTextures;
 		bool bUseAlphaChannels;
 		bool bUseCenterAligment;
+		bool bIsTextureTooBig;
 
 
 		MatFilterRenderEntry::MatFilterRenderEntry()
@@ -50,6 +51,7 @@ namespace GOTHIC_ENGINE {
 			this->bResizeSmallTextures = false;
 			this->bUseAlphaChannels = true;
 			this->bUseCenterAligment = true;
+			this->bIsTextureTooBig = false;
 		}
 	};
 

@@ -951,7 +951,7 @@ namespace GOTHIC_ENGINE {
 			return 0;
 		}
 
-		__declspec(dllexport) void Extern_FillMat_ApplyFilterAndGroup(int filter, int gr) {
+		__declspec(dllexport) void Extern_FillMat_ApplyFilterAndGroup(int filter, int gr, int followFilter, int changeFilter) {
 
 			if (mm.matSelectedInTree)
 			{
@@ -968,18 +968,22 @@ namespace GOTHIC_ENGINE {
 				AddProps();
 
 
-				zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
+				if (followFilter || !changeFilter)
+				{
+					zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
 
-				arch->SetStringEOL(zSTRING("\n"));
-				arch->WriteObject(mat);
-				zSTRING arcString;
-				arch->GetBufferString(arcString);
+					arch->SetStringEOL(zSTRING("\n"));
+					arch->WriteObject(mat);
+					zSTRING arcString;
+					arch->GetBufferString(arcString);
 
-				theApp.SetProperties(arcString, "zCMaterial");
-				arch->Close();
-				zRELEASE(arch);
+					theApp.SetProperties(arcString, "zCMaterial");
+					arch->Close();
+					zRELEASE(arch);
 
-				mm.OnSelectMaterial(mat);
+					mm.OnSelectMaterial(mat);
+				}
+
 				
 			}
 			else
@@ -1107,7 +1111,10 @@ namespace GOTHIC_ENGINE {
 			mf.RemoveFilterByIndex(index);
 		}
 
-		
+		__declspec(dllexport) int Extern_GetOption_CanCompileWorldAgain()
+		{
+			return theApp.options.GetIntVal("canCompileWorldAgain");
+		}
 	}
 
 }

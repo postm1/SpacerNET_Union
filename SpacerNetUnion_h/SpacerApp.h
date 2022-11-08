@@ -169,6 +169,9 @@ namespace GOTHIC_ENGINE {
 			callVoidFunc MatFilter_AddMatInSearchByName;
 			callVoidFunc MatFilter_AddCurrentFilterIndexToSave;
 			callVoidFunc MatFilter_SetEmptyTexture;
+			callVoidFunc MatFilter_SetTextureBigDontRender;
+
+			
 		} exports;
 
 		void BlockMouseClick(int time);

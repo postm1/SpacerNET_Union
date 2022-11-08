@@ -35,6 +35,7 @@ namespace GOTHIC_ENGINE {
 
 				zSTRING name = mat->GetName();
 
+				/*
 				if (mat->matUsage == zCMaterial::zMAT_USAGE_LEVEL)
 				{
 
@@ -44,6 +45,7 @@ namespace GOTHIC_ENGINE {
 					//name += "_NOUSAGE";
 					continue;
 				}
+				*/
 				//cmd << mat->GetName() << endl;
 
 				

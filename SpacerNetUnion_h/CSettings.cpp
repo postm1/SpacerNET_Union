@@ -411,6 +411,10 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "infoWinzSpyLevel", "5");
 		list.Insert("infoWinzSpyLevel", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "canCompileWorldAgain", "0");
+		list.Insert("canCompileWorldAgain", set);
+		
+
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");

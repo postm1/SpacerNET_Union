@@ -42,6 +42,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::CreateMobNameList()
 	{
+		return;
+
 		zCArray<zSTRING> mobNames;
 
 
