@@ -852,6 +852,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DllMain.cpp" />
+    <ClInclude Include="AB_Debug.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="AB_Debug.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="AB_NoGrass.h">
       <SubType>
       </SubType>
@@ -1051,6 +1059,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Structures.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="TestLoop.cpp">
       <SubType>
       </SubType>
     </ClInclude>

@@ -1370,7 +1370,7 @@ namespace GOTHIC_ENGINE {
 		
 		if (theApp.camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT) return;
 
-
+		theApp.TestLoop();
 
 		auto pickMode = theApp.GetPickMode();
 

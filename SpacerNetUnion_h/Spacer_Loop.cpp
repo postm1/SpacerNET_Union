@@ -360,7 +360,7 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-
+		debug.Loop();
 		RenderVobsLoop();
 
 		theApp.OnLevelReady();

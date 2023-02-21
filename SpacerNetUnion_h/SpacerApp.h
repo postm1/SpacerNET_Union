@@ -24,6 +24,7 @@ namespace GOTHIC_ENGINE {
 		ItemsLocator itemsLocator;
 		AB_NoGrass nograss;
 		GrassPlacer gp;
+		AB_Debug debug;
 
 		int isBboxChangeMod;
 
@@ -223,7 +224,7 @@ namespace GOTHIC_ENGINE {
 		bool IsAWorldLoaded();
 		zVEC2 GetMousePosVirt();
 		void ExportWorldMesh(zSTRING worldName);
-
+		void CleanTestLoop();
 		void FindVobsVisualsUnique(CString path);
 		int IsVisualInVDF(CString visualName, CString vdfName);
 		void Reset();
@@ -354,6 +355,7 @@ namespace GOTHIC_ENGINE {
 		void UpdatePFXField();
 		void ToggleInsertBlocked(bool toggle);
 		void OnVobMovement(zCVob* vob);
+		void TestLoop();
 
 		// macros
 

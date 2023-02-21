@@ -94,7 +94,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 		//cmd << "LoadMat" << endl;
-
+		debug.Init();
 		print.Init();
 		
 

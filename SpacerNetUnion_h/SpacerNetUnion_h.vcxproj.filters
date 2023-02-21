@@ -277,6 +277,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\Materials\RenderTest">
       <UniqueIdentifier>{9a2bdb7e-d242-4865-b621-3587f923ca0f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Debug">
+      <UniqueIdentifier>{f4af5d43-46ec-4cba-a4a7-5598ddc1f34e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -3031,6 +3034,15 @@
     </ClInclude>
     <ClInclude Include="RenderTest.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Materials\RenderTest</Filter>
+    </ClInclude>
+    <ClInclude Include="TestLoop.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement</Filter>
+    </ClInclude>
+    <ClInclude Include="AB_Debug.h">
+      <Filter>Plugin\Workspace\Plugin\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="AB_Debug.cpp">
+      <Filter>Plugin\Workspace\Plugin\Debug</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
