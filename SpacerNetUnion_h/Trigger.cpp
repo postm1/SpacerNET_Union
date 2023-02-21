@@ -83,6 +83,25 @@ namespace GOTHIC_ENGINE {
 		//ctrl_kf_edit.EnableWindow(false);
 	}
 
+	void SpacerApp::SetTriggerToKey(int actionIndex)
+	{
+		if (!pickedVob) return;
+
+		zCMover* pMover = dynamic_cast<zCMover*>(pickedVob);
+
+		if (pMover)
+		{
+			zREAL position((float)actionIndex);
+			if (
+				pMover->keyframeList.GetNumInList()>0 &&	// keyframeliste nicht leer
+				actionIndex<pMover->keyframeList.GetNumInList()		// position innerhalb erlaubtem Bereich?
+				)
+			{
+				pMover->SetToKeyframe(position, 0);
+				m_kf_pos = position;
+			}
+		}
+	}
 
 	void SpacerApp::SendTrigger(int actionIndex)
 	{

@@ -586,6 +586,15 @@ namespace GOTHIC_ENGINE {
 			theApp.SendTrigger(index);
 		}
 
+		__declspec(dllexport) void Extern_SetMoverToKey() {
+			
+			int index = Stack_PeekInt();
+
+			theApp.SetTriggerToKey(index);
+		}
+
+		
+
 		__declspec(dllexport) int Extern_GetCurrentKey() {
 
 			if (theApp.moverVob)

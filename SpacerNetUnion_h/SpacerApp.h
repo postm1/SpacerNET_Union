@@ -193,6 +193,7 @@ namespace GOTHIC_ENGINE {
 		void UpdateGrattController();
 		void ManagerGrattController();
 		void SendTrigger(int actionIndex);
+		void SetTriggerToKey(int key);
 		void OnAddMoverKey(int mode);
 		void SetCurrentKey(int key);
 		void ToggleNoGrass();

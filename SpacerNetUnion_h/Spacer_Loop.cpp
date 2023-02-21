@@ -448,6 +448,14 @@ namespace GOTHIC_ENGINE {
 			}
 			
 
+			if (GetSelectedTool() == TM_BBOXEDIT)
+			{
+				screen->SetFontColor(zCOLOR(255, 0, 0));
+
+				PrintDebug(zSTRING(GetLang("TOOL_BBOX_EDIT_MODE_SELECTED")));
+				screen->SetFontColor(zCOLOR(255, 255, 255));
+			}
+
 
 			/*
 			if (zmusic)

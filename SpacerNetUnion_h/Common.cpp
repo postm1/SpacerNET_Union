@@ -68,7 +68,9 @@ namespace GOTHIC_ENGINE {
 	HOOK ivk_oCMobInter_CanInteractWith AS(&oCMobInter::CanInteractWith, &oCMobInter::CanInteractWith_Union);
 	int oCMobInter::CanInteractWith_Union(oCNpc* npc) {
 
-		if (theApp.options.GetIntVal("bBlockPlayeUseMobInter"))
+		auto ladder = this->CastTo<oCMobLadder>();
+
+		if (!ladder && theApp.options.GetIntVal("bBlockPlayeUseMobInter"))
 		{
 			return FALSE;
 		}

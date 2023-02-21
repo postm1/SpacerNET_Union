@@ -1411,6 +1411,8 @@ namespace GOTHIC_ENGINE {
 			Stack_PushString("");
 
 			AddProps();
+
+			(callVoidFunc)GetProcAddress(theApp.module, "ClearSelectedObjectInObjTree")();
 		}
 
 		zinput->ClearLeftMouse();
