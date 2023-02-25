@@ -203,6 +203,7 @@ namespace GOTHIC_ENGINE {
 		void RenderSelectedVobBbox();
 		bool IsDx11Active();
 		void RenderDx11_Bbox(zCVob* vob);
+		void RenderDx11_Pivot(zCVob* vob);
 		void RemoveTargetListTrigger();
 		void CollectTargetListTrigger();
 		void CollectSourcerTriggerList();

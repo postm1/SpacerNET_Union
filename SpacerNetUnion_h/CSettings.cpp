@@ -195,6 +195,8 @@ namespace GOTHIC_ENGINE {
 	void CSettings::Init()
 	{
 
+		theApp.spcOpt.Write("1", "OVERRIDES", "VIDEO.zStartupWindowed");
+
 		CSetting* set = NULL;
 
 		set = new CSetting(TYPE_INT, "CAMERA", "camTransSpeed", "16");

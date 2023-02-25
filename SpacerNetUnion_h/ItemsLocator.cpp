@@ -200,6 +200,13 @@ namespace GOTHIC_ENGINE {
 		bool result = false;
 
 		int cat = pItem->mainflag;
+
+		/*
+		if (pItem->GetInstanceName() == "ITPO_HEALTH_03")
+		{
+			print.PrintRed(Z cat + " " + Z searchType);
+		}
+		*/
 		
 		if (searchType == 1 && cat == ITM_CAT_NONE)
 		{
@@ -225,19 +232,23 @@ namespace GOTHIC_ENGINE {
 		{
 			result = true;
 		}
-		else if (searchType == 7 && cat == ITM_CAT_POTION)
+		else if (searchType == 7 && cat == ITM_CAT_DOCS)
 		{
 			result = true;
 		}
-		else if (searchType == 8 && cat == ITM_CAT_LIGHT)
+		else if (searchType == 8 && cat == ITM_CAT_POTION)
 		{
 			result = true;
 		}
-		else if (searchType == 9 && cat == ITM_CAT_RUNE)
+		else if (searchType == 9 && cat == ITM_CAT_LIGHT)
 		{
 			result = true;
 		}
-		else if (searchType == 10 && cat == ITM_CAT_MAGIC)
+		else if (searchType == 10 && cat == ITM_CAT_RUNE)
+		{
+			result = true;
+		}
+		else if (searchType == 11 && cat == ITM_CAT_MAGIC)
 		{
 			result = true;
 		}
@@ -260,6 +271,7 @@ namespace GOTHIC_ENGINE {
 		int radius = theApp.options.GetIntVal("itemLocatorRadius");
 		showOnlyProbablyBad = theApp.options.GetIntVal("itemLocatorOnlySusp");
 
+		//PrintDebug("searchType: " + Z searchType);
 
 		if (showEnabled)
 		{

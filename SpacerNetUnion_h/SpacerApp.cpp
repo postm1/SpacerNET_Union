@@ -489,6 +489,25 @@ namespace GOTHIC_ENGINE {
 		return isEnabled;
 	}
 
+	void SpacerApp::RenderDx11_Pivot(zCVob* vob)
+	{
+		if (!vob)
+		{
+			return;
+		}
+
+		zVEC3 pos = vob->GetPositionWorld() + zVEC3(0, 0, 0);
+		int 	size = 50;
+		static zCOLOR colUp = zCOLOR(229, 223, 45); //255 255 255
+		static zCOLOR colAt = zCOLOR(255, 0, 0);
+		static zCOLOR colRight = zCOLOR(0, 255, 0);
+
+
+		zlineCache->Line3D(pos, pos + vob->GetUpVectorWorld()	* size, colUp, FALSE);
+		zlineCache->Line3D(pos, pos + vob->GetAtVectorWorld()	* size, colAt, FALSE);
+		zlineCache->Line3D(pos, pos + vob->GetRightVectorWorld()* size, colRight, FALSE);
+	}
+
 	void SpacerApp::RenderDx11_Bbox(zCVob* vob)
 	{
 		static zCOLOR colUp = zCOLOR(229, 223, 45);
@@ -607,7 +626,7 @@ namespace GOTHIC_ENGINE {
 		auto vob = GetSelectedVob();
 
 		RenderDx11_Bbox(vob);
-
+		RenderDx11_Pivot(vob);
 		
 
 		return;
@@ -1329,7 +1348,10 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-	
+		if (!theApp.pickedVob)
+		{
+			//(callVoidFunc)GetProcAddress(theApp.module, "ClearSelectedObjectInObjTree")();
+		}
 
 
 
@@ -1412,7 +1434,7 @@ namespace GOTHIC_ENGINE {
 
 			AddProps();
 
-			(callVoidFunc)GetProcAddress(theApp.module, "ClearSelectedObjectInObjTree")();
+			//(callVoidFunc)GetProcAddress(theApp.module, "ClearSelectedObjectInObjTree")();
 		}
 
 		zinput->ClearLeftMouse();
