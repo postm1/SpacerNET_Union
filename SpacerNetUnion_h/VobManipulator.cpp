@@ -1632,7 +1632,7 @@ namespace GOTHIC_ENGINE {
 
 			mm.CleanSelection();
 			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
-			(callVoidFunc)GetProcAddress(theApp.module, "ClearSelectedObjectInObjTree")();
+			//(callVoidFunc)GetProcAddress(theApp.module, "ClearSelectedObjectInObjTree")();
 			
 		}
 

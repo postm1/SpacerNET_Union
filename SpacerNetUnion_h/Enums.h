@@ -76,7 +76,8 @@ namespace GOTHIC_ENGINE {
 		Convert,
 		ReplaceVobTree,
 		Remove,
-		DynColl
+		DynColl,
+		SearchSingleWP
 	};
 
 	struct RespawnEntry

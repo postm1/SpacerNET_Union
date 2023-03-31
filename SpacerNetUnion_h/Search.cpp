@@ -504,6 +504,46 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		if (searchType == SearchVobType::SearchSingleWP)
+		{
+
+			zCWayNet* waynet = ogame->GetWorld()->GetWayNet();
+
+			if (waynet)
+			{
+				for (int i = 0; i < resultFound.GetNum(); i++)
+				{
+					zCVob* vob = resultFound[i];
+
+					if (vob)
+					{
+						if (auto curWp = vob->CastTo<zCVobWaypoint>())
+						{
+							if (auto realWp = waynet->GetWaypoint(curWp->GetVobName()))
+							{
+								if (realWp->GetNumberOfWays() == 0)
+								{
+									if (arr.SearchEqual((uint)vob) == Invalid)
+									{
+										Stack_PushString(GetVobName(vob));
+
+										arr.Insert((uint)vob);
+
+										callFunc((uint)vob);
+
+										resultCount += 1;
+									}
+								}
+								
+							}
+								
+						}
+					}
+				}
+			}
+			
+		}
+
 		//convert
 		if (searchType == SearchVobType::Convert)
 		{
