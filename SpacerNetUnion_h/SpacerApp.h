@@ -53,6 +53,7 @@ namespace GOTHIC_ENGINE {
 			zSTRING lastClass;
 			CString searchVobNameGlobal;
 			CString replaceZenPath;
+			
 		} search;
 
 		struct
@@ -68,6 +69,7 @@ namespace GOTHIC_ENGINE {
 
 			bool isMesh;
 			bool isMerged;
+			int filterPickVobIndex;
 			// выбранный воб
 			zCVob* pickedVob;
 			zCVob* globalParent;
@@ -210,6 +212,7 @@ namespace GOTHIC_ENGINE {
 		void AfterRender();
 		void PickMaterial();
 		void PickVob();
+		void PickVobFilter();
 		zBOOL SpacerApp::PickSceneNew(zCCamera& cam, int xscr, int yscr, zREAL rayLength);
 		void ToggleWP();
 		void ConnectWP();

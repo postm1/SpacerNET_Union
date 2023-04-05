@@ -251,7 +251,7 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
-
+		pickedWaypoint = dynamic_cast<zCVobWaypoint*>(pickedVob);
 
 		moverVob = dynamic_cast<zCMover*>(vob);
 
@@ -1160,6 +1160,166 @@ namespace GOTHIC_ENGINE {
 
 		return true;
 	}
+
+	void SpacerApp::PickVobFilter()
+	{
+		auto cam = ogame->GetCamera();
+		float rayLength = -1;
+		auto world = ogame->GetWorld();
+
+		const zVALUE RAY_DIST = 30000.0f;
+
+		cam->Activate();						
+
+		zPOINT3 ray00, ray, p;
+		// create ray00, ray by backprojection
+		// ray00, ray sind im world(obj)Space
+		// 'ray00	= cam.camMatrixInv * zPOINT3(0,0,0);'  =
+		cam->camMatrixInv.GetTranslation(ray00);
+		p.n[VZ] = RAY_DIST;
+		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace
+		p = cam->camMatrixInv * p;					// p im world(obj)Space  
+		ray = p - ray00;
+
+		if (rayLength>0)
+		{
+			ray.Normalize();
+			ray *= rayLength;
+		};
+
+		world->traceRayReport.Clear();
+		world->traceRayIgnoreVobFlag = TRUE;
+		int	traceFlags = zTRACERAY_STAT_POLY | zTRACERAY_POLY_TEST_WATER;
+
+		if (zCVob::GetShowHelperVisuals())
+			traceFlags |= zTRACERAY_VOB_TEST_HELPER_VISUALS;
+
+
+		//const 
+		//world->traceRayIgnoreVobFlag = FALSE;
+
+		zCArray<zCVob*> ignoreList;
+
+		while (true)
+		{
+			zBOOL hit = world->TraceRayNearestHit(ray00, ray, &ignoreList, traceFlags);
+
+
+			auto pFoundVob = world->traceRayReport.foundVob;
+
+			if (!pFoundVob)
+			{
+				break;
+			}
+
+		
+			if (pFoundVob)
+			{
+				//oCItem
+				if (filterPickVobIndex == 1)
+				{
+					if (auto pItem = pFoundVob->CastTo<oCItem>())
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+				// wp & fp
+				else if (filterPickVobIndex == 2)
+				{
+					auto pTryVob = pFoundVob->CastTo<zCVobSpot>();
+					auto pTryVob2 = pFoundVob->CastTo<zCVobWaypoint>();
+
+					if (pTryVob || pTryVob2)
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+				// wp
+				else if (filterPickVobIndex == 3)
+				{
+					auto pTryVob2 = pFoundVob->CastTo<zCVobWaypoint>();
+
+					if (pTryVob2)
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+				//fp
+				else if (filterPickVobIndex == 4)
+				{
+					auto pTryVob2 = pFoundVob->CastTo<zCVobSpot>();
+
+					if (pTryVob2)
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+				//trigger
+				else if (filterPickVobIndex == 5)
+				{
+					auto pTryVob2 = pFoundVob->CastTo<zCTrigger>();
+
+					if (pTryVob2)
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+				//light
+				else if (filterPickVobIndex == 6)
+				{
+					auto pTryVob2 = pFoundVob->CastTo<zCVobLight>();
+
+					if (pTryVob2)
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+				// zCZone
+				else if (filterPickVobIndex == 7)
+				{
+					auto pTryVob2 = pFoundVob->CastTo<zCVobSound>();
+
+					if (pTryVob2)
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+			}
+
+		}
+
+
+		//return hit;
+	}
+
 	void SpacerApp::PickVob()
 	{
 		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT)
@@ -1169,7 +1329,19 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		ogame->GetWorld()->PickScene(*ogame->GetCamera(), pickTryEntry.ax, pickTryEntry.ay, -1);
+
+		if (filterPickVobIndex != 0)
+		{
+			PickVobFilter();
+		}
+		else
+		{
+			ogame->GetWorld()->PickScene(*ogame->GetCamera(), pickTryEntry.ax, pickTryEntry.ay, -1);
+		}
+		//filterPickVobIndex
+
+
+		
 
 		zCVob* foundVob = ogame->GetWorld()->traceRayReport.foundVob;
 
@@ -1333,7 +1505,7 @@ namespace GOTHIC_ENGINE {
 			}
 
 			theApp.SetSelectedVob(foundVob, "PickSingle");
-			pickedWaypoint = dynamic_cast<zCVobWaypoint*>(theApp.pickedVob);
+			
 
 			if (theApp.pickedVob)
 			{

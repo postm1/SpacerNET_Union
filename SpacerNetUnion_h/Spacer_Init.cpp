@@ -72,6 +72,8 @@ namespace GOTHIC_ENGINE {
 			//if (zrenderer) zrenderer->Vid_SetScreenMode(zRND_SCRMODE_HIDE);
 		}
 
+		filterPickVobIndex = 0;
+
 		SetExportsFuncs();
 
 		//cmd << "options" << endl;

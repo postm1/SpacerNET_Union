@@ -1124,6 +1124,16 @@ namespace GOTHIC_ENGINE {
 		{
 			return theApp.options.GetIntVal("canCompileWorldAgain");
 		}
+
+		__declspec(dllexport) void Extern_SetVobPickFilter(int index)
+		{
+			theApp.filterPickVobIndex = index;
+
+			//print.PrintRed(Z theApp.filterPickVobIndex);
+		}
+
+
+		
 	}
 
 }
