@@ -191,6 +191,24 @@ namespace GOTHIC_ENGINE {
 			Stack_PushString(GetVobName(moverVob));
 			createTrigger(m_kf_pos, moverVob->keyframeList.GetNumInList(), moverVob->GetCollDetDyn(), moverVob->GetCollDetStat());
 		}
+		else if (triggerVob)
+		{
+			auto createTrigger2 = (callVoidFunc)GetProcAddress(theApp.module, "CreateTriggerFormEmpty");
+
+
+			Stack_PushString(GetVobName(triggerVob));
+			createTrigger2();
+			
+		}
+		else if (pickedVob->CastTo<oCMobInter>() || pickedVob->CastTo<zCTriggerUntouch>() || pickedVob->CastTo<zCPFXControler>()
+			||  pickedVob->CastTo<zCMessageFilter>())
+		{
+			auto createTrigger2 = (callVoidFunc)GetProcAddress(theApp.module, "CreateTriggerFormEmpty");
+
+
+			Stack_PushString(GetVobName(triggerVob));
+			createTrigger2();
+		}
 		else
 		{
 			auto cleanTriggerForm = (voidFuncPointer)GetProcAddress(theApp.module, "CleanTriggerForm");

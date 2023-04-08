@@ -42,6 +42,7 @@ namespace GOTHIC_ENGINE {
 		struct
 		{
 			zCMover* moverVob;
+			zCTrigger* triggerVob;
 			int m_kf_pos;
 			int maxKey;
 			zCVob* event_sourcevob;

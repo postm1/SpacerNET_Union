@@ -24,6 +24,7 @@ namespace GOTHIC_ENGINE {
 		this->hideWindowsForce = false;
 		this->treeToCopy = NULL;
 		this->moverVob = NULL;
+		this->triggerVob = NULL;
 		this->m_kf_pos = 0;
 		this->event_sourcevob = NULL;
 		this->isExit = false;
@@ -254,6 +255,7 @@ namespace GOTHIC_ENGINE {
 		pickedWaypoint = dynamic_cast<zCVobWaypoint*>(pickedVob);
 
 		moverVob = dynamic_cast<zCMover*>(vob);
+		triggerVob = dynamic_cast<zCTrigger*>(vob);
 
 		SetMover();
 
@@ -491,7 +493,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::RenderDx11_Pivot(zCVob* vob)
 	{
-		if (!vob)
+		if (!vob || vob->CastTo<zCVobSpot>())
 		{
 			return;
 		}
@@ -628,6 +630,25 @@ namespace GOTHIC_ENGINE {
 		RenderDx11_Bbox(vob);
 		RenderDx11_Pivot(vob);
 		
+
+		if (pickedWaypoint2nd)
+		{
+			//print.PrintRed("pickedWaypoint2nd");
+			static bool		blinkDrawIt = true;
+			static zDWORD	lastBlinkToggle = 0;
+			zREAL	timeValue = ztimer->totalTimeFloat;
+			zDWORD	now = int(timeValue / 250);
+			if (now != lastBlinkToggle)
+			{
+				blinkDrawIt = !blinkDrawIt;
+				lastBlinkToggle = now;
+			}
+
+			if (blinkDrawIt)
+			{
+				RenderDx11_Pivot(pickedWaypoint2nd);
+			}
+		}
 
 		return;
 		
@@ -819,7 +840,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		if (pickedWaypoint2nd)
+		if (pickedWaypoint2nd && !IsDx11Active())
 		{
 			//print.PrintRed("pickedWaypoint2nd");
 			static bool		blinkDrawIt = true;
@@ -831,6 +852,7 @@ namespace GOTHIC_ENGINE {
 				blinkDrawIt = !blinkDrawIt;
 				lastBlinkToggle = now;
 			}
+
 			pickedWaypoint2nd->SetDrawBBox3D(blinkDrawIt);
 		}
 
@@ -1270,10 +1292,37 @@ namespace GOTHIC_ENGINE {
 						ignoreList.InsertEnd(pFoundVob);
 					}
 				}
-				//trigger
+				//oCMob
 				else if (filterPickVobIndex == 5)
 				{
-					auto pTryVob2 = pFoundVob->CastTo<zCTrigger>();
+					auto pTryVob2 = pFoundVob->CastTo<oCMOB>();
+
+					if (pTryVob2)
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+				//ignore no coll
+				else if (filterPickVobIndex == 6)
+				{
+
+					if (pFoundVob->GetCollDetDyn())
+					{
+						break;
+					}
+					else
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+				}
+				//trigger
+				else if (filterPickVobIndex == 7)
+				{
+					auto pTryVob2 = pFoundVob->CastTo<oCMobInter>();
 
 					if (pTryVob2)
 					{
@@ -1285,7 +1334,7 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 				//light
-				else if (filterPickVobIndex == 6)
+				else if (filterPickVobIndex == 8)
 				{
 					auto pTryVob2 = pFoundVob->CastTo<zCVobLight>();
 
@@ -1298,8 +1347,8 @@ namespace GOTHIC_ENGINE {
 						ignoreList.InsertEnd(pFoundVob);
 					}
 				}
-				// zCZone
-				else if (filterPickVobIndex == 7)
+				// zCVobSound
+				else if (filterPickVobIndex == 9)
 				{
 					auto pTryVob2 = pFoundVob->CastTo<zCVobSound>();
 
