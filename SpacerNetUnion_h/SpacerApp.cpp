@@ -257,6 +257,14 @@ namespace GOTHIC_ENGINE {
 		moverVob = dynamic_cast<zCMover*>(vob);
 		triggerVob = dynamic_cast<zCTrigger*>(vob);
 
+
+		if (options.GetIntVal("selectVobTab") && (dynamic_cast<zCVobWaypoint*>(pickedVob) || dynamic_cast<zCWaypoint*>(pickedVob) || dynamic_cast<zCVobSpot*>(pickedVob)))
+		{
+			//cmd << "Select ok " << endl;
+
+			(selectMoversTab)GetProcAddress(theApp.module, "SelectWPTab")();
+		}
+
 		SetMover();
 
 		CALL_OnSelectVob(vob);

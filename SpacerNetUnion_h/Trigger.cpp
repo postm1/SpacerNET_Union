@@ -177,9 +177,9 @@ namespace GOTHIC_ENGINE {
 
 		CollectTargetListTrigger();
 
-		if (dynamic_cast<oCMobWheel*>(pickedVob) || dynamic_cast<oCMobSwitch*>(pickedVob) || dynamic_cast<zCTrigger*>(pickedVob))
+		if (options.GetIntVal("selectVobTab") && (dynamic_cast<zCTriggerBase*>(pickedVob) || dynamic_cast<zCPFXControler*>(pickedVob)))
 		{
-			//(selectMoversTab)GetProcAddress(theApp.module, "SelectMoversTab")();
+			(selectMoversTab)GetProcAddress(theApp.module, "SelectMoversTab")();
 		}
 
 		if (moverVob)

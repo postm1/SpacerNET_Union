@@ -411,6 +411,17 @@ namespace GOTHIC_ENGINE {
 				PrintDebug((zSTRING(GetLang("UNION_CAM_POS")) + "(" + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
 
 					+ zSTRING(", ") + zSTRING(pos.n[2], 6) + zSTRING(")")));
+
+
+				if (theApp.pickedVob)
+				{
+					auto pos = theApp.pickedVob->GetPositionWorld();
+
+					PrintDebug((zSTRING(GetLang("UNION_VOB_POS")) + "(" + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
+
+						+ zSTRING(", ") + zSTRING(pos.n[2], 6) + zSTRING(")")));
+				}
+				
 			}
 
 			if (theApp.options.GetIntVal("showVobsCount"))

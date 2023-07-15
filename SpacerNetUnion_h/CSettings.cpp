@@ -417,6 +417,9 @@ namespace GOTHIC_ENGINE {
 		list.Insert("canCompileWorldAgain", set);
 		
 
+		set = new CSetting(TYPE_INT, "SPACER", "selectVobTab", "0");
+		list.Insert("selectVobTab", set);
+
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");
