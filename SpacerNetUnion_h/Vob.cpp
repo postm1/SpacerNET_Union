@@ -36,6 +36,8 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		//print.PrintRed(visual + " " + Z isItem);
+
 		zCVob* camVob = ogame->GetCamera()->connectedVob;
 
 		if (theApp.currentVobRender)
@@ -48,6 +50,7 @@ namespace GOTHIC_ENGINE {
 		if (visual.Length() == 0)
 		{
 			theApp.currentVobRender = NULL;
+			theApp.currenItemRender = NULL;
 			return;
 		}
 

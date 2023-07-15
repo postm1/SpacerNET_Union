@@ -1563,6 +1563,19 @@ namespace GOTHIC_ENGINE {
 				if (pFoundVob == pfxManager.testVob || pFoundVob == currentVobRender || pFoundVob == currenItemRender 
 					|| pFoundVob == bboxMaxsVob || pFoundVob == bboxMinsVob || pFoundVob == floorVob || pFoundVob == ogame->GetCameraVob())
 				{
+					/*
+					cmd << "protect vob" << endl;
+
+					cmd << "pFoundVob" << Z (int)pFoundVob  << endl;
+					cmd << "pfxManager.testVob" << Z(int)pfxManager.testVob << endl;
+					cmd << "currentVobRender" << Z(int)currentVobRender << endl;
+					cmd << "currenItemRender" << Z(int)currenItemRender << endl;
+					cmd << "bboxMaxsVob" << Z(int)bboxMaxsVob << endl;
+					cmd << "bboxMinsVob" << Z(int)bboxMinsVob << endl;
+					cmd << "floorVob" << Z(int)floorVob << endl;
+					cmd << "ogame->GetCameraVob()" << Z(int)ogame->GetCameraVob() << endl;
+
+					*/
 					ignoreList.InsertEnd(pFoundVob);
 					continue;
 				}
@@ -1570,8 +1583,9 @@ namespace GOTHIC_ENGINE {
 				if (visual && ctrlUsed && (visual->GetVisualName().Search(".PFX", 1) != -1 || visual->GetVisualName().Search(".pfx", 1) != -1))
 				{
 					ignoreList.InsertEnd(pFoundVob);
+					//cmd << "ignore pfx" << endl;
 					continue;
-						//cmd << "ignore pfx" << endl;
+						
 				}
 				
 				
@@ -1599,7 +1613,7 @@ namespace GOTHIC_ENGINE {
 
 		if (!pFoundVob && ctrlUsed)
 		{
-			cmd << "try new selection" << endl;
+			//cmd << "try new selection" << endl;
 			ogame->GetWorld()->traceRayReport.foundVob = TrySpherePick();
 		}
 		/*
@@ -1621,10 +1635,13 @@ namespace GOTHIC_ENGINE {
 		world->traceRayIgnoreVobFlag = false;
 
 		
-		cmd << "========" << endl;
+		//cmd << "========" << endl;
 	}
 	void SpacerApp::PickVob()
 	{
+
+		//cmd << "Error 0" << endl;
+
 		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT)
 		{
 			//print.PrintRed("Error: 1");
@@ -1639,6 +1656,8 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
+
+			//cmd << "Error 1: " << ctrlKeyPressed << endl;
 			PickVobNew(ctrlKeyPressed);
 
 			//ogame->GetWorld()->PickScene(*ogame->GetCamera(), pickTryEntry.ax, pickTryEntry.ay, -1);		
@@ -1650,6 +1669,7 @@ namespace GOTHIC_ENGINE {
 
 		if ((theApp.pickedVob == foundVob && theApp.pickedVob != NULL))
 		{
+			//print.PrintRed("Error: 2");
 			return;
 		}
 
