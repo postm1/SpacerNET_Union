@@ -39,6 +39,16 @@ namespace GOTHIC_ENGINE {
 		return angle;
 	}
 
+	float GetAngleBetweenVectors(zVEC3 a, zVEC3 b)
+	{
+
+		float angle = 2.0f * atan((a - b).Length() / (a + b).Length());
+
+		angle = angle * 180 / PI;
+
+		return angle;
+	}
+
 	void ClearLMB()
 	{
 		*(int*)0x8D1668 = 0;

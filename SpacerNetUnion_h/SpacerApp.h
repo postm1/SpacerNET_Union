@@ -213,6 +213,8 @@ namespace GOTHIC_ENGINE {
 		void AfterRender();
 		void PickMaterial();
 		void PickVob();
+		void PickVobNew(bool ctrlUsed);
+		zCVob* SpacerApp::TrySpherePick();
 		void PickVobFilter();
 		zBOOL SpacerApp::PickSceneNew(zCCamera& cam, int xscr, int yscr, zREAL rayLength);
 		void ToggleWP();
@@ -237,7 +239,7 @@ namespace GOTHIC_ENGINE {
 
 		void SetProperties(zSTRING & propString, zSTRING classNameVob);
 
-		void SelectObject(zCObject * object);
+		void SelectObject(zCObject * object, bool clearInput = true);
 
 		void ApplyProps(CString str, CString nameCurrent, CString visualStr, int posChanged);
 

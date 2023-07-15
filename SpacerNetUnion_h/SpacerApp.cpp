@@ -1189,7 +1189,7 @@ namespace GOTHIC_ENGINE {
 		float rayLength = -1;
 		auto world = ogame->GetWorld();
 
-		const zVALUE RAY_DIST = 30000.0f;
+		const zVALUE RAY_DIST = 60000.0f;
 
 		cam->Activate();						
 
@@ -1215,7 +1215,6 @@ namespace GOTHIC_ENGINE {
 
 		if (zCVob::GetShowHelperVisuals())
 			traceFlags |= zTRACERAY_VOB_TEST_HELPER_VISUALS;
-
 
 		//const 
 		//world->traceRayIgnoreVobFlag = FALSE;
@@ -1299,6 +1298,7 @@ namespace GOTHIC_ENGINE {
 
 					if (pTryVob2)
 					{
+						//print.PrintRed("oCMOb found");
 						break;
 					}
 					else
@@ -1361,6 +1361,19 @@ namespace GOTHIC_ENGINE {
 						ignoreList.InsertEnd(pFoundVob);
 					}
 				}
+				else if (filterPickVobIndex == 10)
+				{
+					zCVisual* visual = pFoundVob->GetVisual();
+
+					if (visual && (visual->GetVisualName().Search(".PFX", 1) != -1 || visual->GetVisualName().Search(".pfx", 1) != -1))
+					{
+						ignoreList.InsertEnd(pFoundVob);
+					}
+					else
+					{
+						break;
+					}
+				}
 			}
 
 		}
@@ -1369,6 +1382,239 @@ namespace GOTHIC_ENGINE {
 		//return hit;
 	}
 
+	zCVob* SpacerApp::TrySpherePick()
+	{
+		zCVob* pFoundVob = NULL;
+
+		zTBBox3D box;
+
+		zCVob* camVob = ogame->GetCamera()->connectedVob;
+		zCCamera* cam = ogame->GetCamera();
+		zVEC3 currentPos = camVob->GetPositionWorld();
+		zCArray<zCVob*> baseVobList;
+		zCArray<zCVob*> resVobList;
+		zCArray<zCVob*> resultVobList;
+		int bBoxSize = 2000;
+		int radius_sp = 220;
+		zCVob* tryVob = NULL;
+		int dist = 10e9;
+		int stepDist = 25;
+		bool flagExit = false;
+		
+
+		box.maxs = camVob->GetPositionWorld() + zVEC3(bBoxSize, bBoxSize, bBoxSize);
+		box.mins = camVob->GetPositionWorld() - zVEC3(bBoxSize, bBoxSize, bBoxSize);
+		ogame->GetWorld()->CollectVobsInBBox3D(baseVobList, box);
+
+
+
+		zVEC3 ray00, ray, p;
+		cam->camMatrixInv.GetTranslation(ray00);
+		p.n[VZ] = 1;
+		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace
+		p = cam->camMatrixInv * p;					// p im world(obj)Space  
+		ray = p - ray00;
+
+		ray = ray.Normalize();
+		// Собираем список допустимых вобов
+		for (int i = 0; i < baseVobList.GetNumInList(); i++) {
+
+
+			zCVob* vob = baseVobList[i];
+
+			if (vob
+				&& vob != camVob
+				&& !dynamic_cast<zCVobWaypoint*>(vob)
+				&& !dynamic_cast<zCVobSpot*>(vob)
+				&& !dynamic_cast<zCVobLight*>(vob)
+				&& !dynamic_cast<zCVobLevelCompo*>(vob)
+				&& !dynamic_cast<zCZone*>(vob)
+				&& vob->GetVisual()
+				&& vob->GetVisual()->GetVisualName().Search(".PFX", 1) == -1
+				&& vob->GetVisual()->GetVisualName().Search(".pfx", 1) == -1
+				&& vob != currentVobRender
+				&& vob != pfxManager.testVob
+				&& vob != currenItemRender	
+				&& vob != bboxMaxsVob
+				&& vob != bboxMinsVob
+				&& vob != floorVob
+				)
+			{
+				zVEC3 sphInt = IsSphIntersect(camVob->GetPositionWorld(), vob->GetPositionWorld(), ray, radius_sp);
+
+				if (sphInt != NULL)
+				{
+					resVobList.Insert(vob);
+				}
+
+			}
+		}
+
+		cmd << "Intersect count: " << resVobList.GetNumInList() << endl;
+
+		int i_num = 0;
+
+		for (int i = 0; i < resVobList.GetNumInList(); i++)
+		{
+			int cur_dist = Dist(camVob, resVobList[i]);
+
+			if (cur_dist < dist)
+			{
+				dist = cur_dist;
+				i_num = i;
+			}
+
+
+		}
+
+		if (resVobList.GetNumInList() > 0)
+		{
+			pFoundVob = resVobList[i_num];
+		}
+
+		return pFoundVob;
+	}
+
+	void SpacerApp::PickVobNew(bool ctrlUsed)
+	{
+		auto cam = ogame->GetCamera();
+		float rayLength = -1;
+		auto world = ogame->GetWorld();
+
+		const zVALUE RAY_DIST = 60000.0f;
+
+		cam->Activate();
+
+		zPOINT3 ray00, ray, p;
+		// create ray00, ray by backprojection
+		// ray00, ray sind im world(obj)Space
+		// 'ray00	= cam.camMatrixInv * zPOINT3(0,0,0);'  =
+		cam->camMatrixInv.GetTranslation(ray00);
+		p.n[VZ] = RAY_DIST;
+		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace
+		p = cam->camMatrixInv * p;					// p im world(obj)Space  
+		ray = p - ray00;
+
+		if (rayLength>0)
+		{
+			ray.Normalize();
+			ray *= rayLength;
+		};
+
+		world->traceRayReport.Clear();
+		world->traceRayIgnoreVobFlag = TRUE;
+		int	traceFlags = zTRACERAY_STAT_POLY |
+			zTRACERAY_POLY_TEST_WATER;
+
+		if (zCVob::GetShowHelperVisuals())
+			traceFlags |= zTRACERAY_VOB_TEST_HELPER_VISUALS;
+
+		if (ctrlUsed)
+		{
+			traceFlags |= zTRACERAY_VOB_BBOX;
+			//traceFlags |= zTRACERAY_VOB_OBB;
+		}
+		
+		//traceFlags |= zTRACERAY_VOB_OBB;
+		//const 
+		//world->traceRayIgnoreVobFlag = FALSE;
+
+		zCArray<zCVob*> ignoreList;
+
+		//cmd << "KeyCtrl: " << ctrlUsed << endl;
+		
+		zCVob* pFoundVob = NULL;
+
+		while (true)
+		{
+			zBOOL hit = world->TraceRayNearestHit(ray00, ray, &ignoreList, traceFlags);
+
+
+			pFoundVob = world->traceRayReport.foundVob;
+
+			if (!pFoundVob)
+			{
+				break;
+			}
+
+
+			if (pFoundVob)
+			{
+
+				zCVisual* visual = pFoundVob->GetVisual();
+
+				if (visual)
+				{
+					cmd << "Try Visual: " + visual->GetVisualName() << endl;
+				}
+
+				auto wp = pFoundVob->CastTo<zCVobWaypoint>();
+				auto fp = pFoundVob->CastTo<zCVobSpot>();
+
+				// технические вобы игнорируем
+				if (pFoundVob == pfxManager.testVob || pFoundVob == currentVobRender || pFoundVob == currenItemRender 
+					|| pFoundVob == bboxMaxsVob || pFoundVob == bboxMinsVob || pFoundVob == floorVob || pFoundVob == ogame->GetCameraVob())
+				{
+					ignoreList.InsertEnd(pFoundVob);
+					continue;
+				}
+
+				if (visual && ctrlUsed && (visual->GetVisualName().Search(".PFX", 1) != -1 || visual->GetVisualName().Search(".pfx", 1) != -1))
+				{
+					ignoreList.InsertEnd(pFoundVob);
+					continue;
+						//cmd << "ignore pfx" << endl;
+				}
+				
+				
+				if (ctrlUsed)
+				{
+					float angle = GetAngleBetweenVectors(ogame->GetCameraVob()->GetAtVectorWorld(), (pFoundVob->GetPositionWorld() - ogame->GetCameraVob()->GetPositionWorld()).Normalize());
+					float fovH = ogame->GetCamera()->fovH * 180 / PI;
+
+					//print.PrintRed(Z angle + "/" + Z fovH + "/" + Z (fovH / 2 + 10));
+
+					if (angle >= fovH / 2 + 10)
+					{
+						ignoreList.InsertEnd(pFoundVob);
+						continue;
+					}
+				}
+
+				//cmd << "Vob found: " << endl;
+				break;
+				
+			}
+
+		}
+
+
+		if (!pFoundVob && ctrlUsed)
+		{
+			cmd << "try new selection" << endl;
+			ogame->GetWorld()->traceRayReport.foundVob = TrySpherePick();
+		}
+		/*
+		cmd << "traceRayVobList: " <<  world->traceRayVobList.GetNum() << endl;
+
+
+		for (int i = 0; i < world->traceRayVobList.GetNum(); i++)
+		{
+			zCVisual* visual = world->traceRayVobList.GetSafe(i)->GetVisual();
+
+			if (visual)
+			{
+				cmd << "List Visual: " << visual->GetVisualName() << endl;
+			}
+		}
+		*/
+
+		
+		world->traceRayIgnoreVobFlag = false;
+
+		
+		cmd << "========" << endl;
+	}
 	void SpacerApp::PickVob()
 	{
 		if (!theApp.TryPickMouse() || !zCVob::s_renderVobs || camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT)
@@ -1377,7 +1623,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-
+		bool ctrlKeyPressed = zinput->KeyPressed(KEY_LCONTROL);
 
 		if (filterPickVobIndex != 0)
 		{
@@ -1385,15 +1631,13 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
-			ogame->GetWorld()->PickScene(*ogame->GetCamera(), pickTryEntry.ax, pickTryEntry.ay, -1);
+			PickVobNew(ctrlKeyPressed);
+
+			//ogame->GetWorld()->PickScene(*ogame->GetCamera(), pickTryEntry.ax, pickTryEntry.ay, -1);		
 		}
-		//filterPickVobIndex
 
-
-		
 
 		zCVob* foundVob = ogame->GetWorld()->traceRayReport.foundVob;
-
 
 
 		if ((theApp.pickedVob == foundVob && theApp.pickedVob != NULL))
@@ -1401,22 +1645,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		if (theApp.floorVob && foundVob == theApp.floorVob && theApp.pickedVob != NULL)
-		{
-			//print.PrintRed("Error: 2");
-			return;
-		}
 
-		if (foundVob != NULL)
-		{
-			if (foundVob == bboxMaxsVob || foundVob == bboxMinsVob)
-			{
-				//print.PrintRed("Error: 3");
-				return;
-			}
-		}
-
-		
 
 		oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(foundVob);
 		
@@ -1433,11 +1662,9 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		if (foundVob && (foundVob == pfxManager.testVob || foundVob == currentVobRender || foundVob == currenItemRender))
-		{
-			foundVob = NULL;
-		}
 
+
+		/*
 		// если расширенный режим выбор и мы выделили pfx, то убираем такой воб
 		if (foundVob && zinput->KeyPressed(KEY_LCONTROL))
 		{
@@ -1448,15 +1675,20 @@ namespace GOTHIC_ENGINE {
 				foundVob = NULL;
 			}
 		}
-		
+		*/
+
 		if (!foundVob && isGrattControlActive)
 		{
 			SetSelectedVob(NULL);
 		}
 
-
+		/*
 		if (!foundVob && zinput->KeyPressed(KEY_LCONTROL))
 		{
+			PickVobCtrl();
+
+			foundVob = ogame->GetWorld()->traceRayReport.foundVob;
+			/*
 			zTBBox3D box;
 
 			zCVob* camVob = ogame->GetCamera()->connectedVob;
@@ -1536,8 +1768,9 @@ namespace GOTHIC_ENGINE {
 			{
 				foundVob = resVobList[i_num];
 			}
-		}
-
+			*/
+		//}
+		
 
 
 		if (zinput->KeyPressed(KEY_LSHIFT))
@@ -1565,7 +1798,8 @@ namespace GOTHIC_ENGINE {
 				auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectVob");
 				onSelect((int)theApp.pickedVob);
 			}
-			SelectObject(theApp.pickedVob);
+			SelectObject(theApp.pickedVob, false);
+
 		}
 
 
@@ -1600,7 +1834,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	void SpacerApp::SelectObject(zCObject* object)
+	void SpacerApp::SelectObject(zCObject* object, bool clearInput)
 	{
 		OutFile("SelectObject: object " + AHEX32((uint)object), true);
 
@@ -1659,7 +1893,13 @@ namespace GOTHIC_ENGINE {
 		}
 
 		zinput->ClearLeftMouse();
-		zinput->ClearKeyBuffer();
+
+		if (clearInput)
+		{
+			//cmd << "clear" << endl;
+			zinput->ClearKeyBuffer();
+		}
+		
 	}
 
 
