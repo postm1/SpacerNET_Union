@@ -139,6 +139,7 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("VOB_TRANSLATE", "0_2");
 		defaultValues.Insert("VOB_ROTATE", "0_3");
 		defaultValues.Insert("WP_TOGGLE", "0_4");
+		defaultValues.Insert("VOB_ONEMODE", "0_50");
 		defaultValues.Insert("VOB_DISABLE_SELECT", "0_5");
 		defaultValues.Insert("VOB_FLOOR", "8_33");
 		defaultValues.Insert("VOB_RESET_AXIS", "8_19");

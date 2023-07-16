@@ -1432,7 +1432,20 @@ namespace GOTHIC_ENGINE {
 			SetSelectedTool(TM_ROTATE);
 		}
 
-
+		if (keys.KeyPressed("VOB_ONEMODE", true))
+		{
+			if (selectedTool != TM_ONEMODE)
+			{
+				print.PrintRed(GetLang("VOB_ONEMODE"));
+				SetSelectedTool(TM_ONEMODE);
+			}
+			else
+			{
+				print.PrintRed(GetLang("VOB_ONEMODE_OFF"));
+				SetSelectedTool(TM_TRANSLATE);
+			}
+			
+		}
 		
 
 		if (pickMode == SWM_MATERIALS)
@@ -2034,13 +2047,14 @@ namespace GOTHIC_ENGINE {
 
 
 				// перемещение
-				if (selectedTool == TM_TRANSLATE)
+				if (selectedTool == TM_TRANSLATE || selectedTool == TM_ONEMODE)
 				{
 
 					y = pos.n[1];
 					zVEC3 unit = camUnit;
 					unit[1] = 0;
 
+					//print.PrintRed("1");
 
 					if (keys.KeyPressed("VOB_TRANS_FORWARD", false, true))
 					{
@@ -2076,9 +2090,9 @@ namespace GOTHIC_ENGINE {
 
 				}
 				// вращение
-				if (selectedTool == TM_ROTATE)
+				if (selectedTool == TM_ROTATE || selectedTool == TM_ONEMODE)
 				{
-
+					//print.PrintRed("2");
 
 					if (keys.KeyPressed("VOB_ROT_BACK", false, true))
 					{
