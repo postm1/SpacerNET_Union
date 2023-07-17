@@ -733,6 +733,8 @@ namespace GOTHIC_ENGINE {
 
 	void SetSelectedTool(SpacerToolMode tool)
 	{
+		//cmd << "SetSelectedTool: " << (int)tool << endl;
+
 		selectedTool = tool;
 
 		if (theApp.isGrattControlActive)
@@ -1414,6 +1416,11 @@ namespace GOTHIC_ENGINE {
 		if (GetSelectedTool() == TM_NONE)
 		{
 			SetSelectedTool(TM_TRANSLATE);
+
+			if (theApp.options.GetIntVal("safeOneMode") && theApp.options.GetIntVal("oneModeToggle"))
+			{
+				SetSelectedTool(TM_ONEMODE);
+			}
 		}
 
 		zCVob* pickedVob = theApp.GetSelectedVob();
@@ -1438,11 +1445,13 @@ namespace GOTHIC_ENGINE {
 			{
 				print.PrintRed(GetLang("VOB_ONEMODE"));
 				SetSelectedTool(TM_ONEMODE);
+				theApp.options.SetIntVal("oneModeToggle", TRUE);
 			}
 			else
 			{
 				print.PrintRed(GetLang("VOB_ONEMODE_OFF"));
 				SetSelectedTool(TM_TRANSLATE);
+				theApp.options.SetIntVal("oneModeToggle", FALSE);
 			}
 			
 		}
@@ -1586,7 +1595,7 @@ namespace GOTHIC_ENGINE {
 
 					if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))
 					{
-						if (!theApp.isGrattControlActive)
+						if (!theApp.isGrattControlActive && GetSelectedTool() != TM_ONEMODE)
 							SetSelectedTool(TM_TRANSLATE);
 					}
 
@@ -1620,7 +1629,7 @@ namespace GOTHIC_ENGINE {
 					print.PrintRed(GetLang("VOB_NEAR_CAMERA"));
 				}
 			}
-			if (!theApp.isGrattControlActive)
+			if (!theApp.isGrattControlActive && GetSelectedTool() != TM_ONEMODE)
 				SetSelectedTool(TM_TRANSLATE);
 
 		}
@@ -1864,10 +1873,17 @@ namespace GOTHIC_ENGINE {
 
 		}
 		*/
-
+		
 		if (GetSelectedTool() == TM_NONE)
 		{
+			//cmd << "tool is none, set tranlation" << endl;
+
 			SetSelectedTool(TM_TRANSLATE);
+
+			if (theApp.options.GetIntVal("safeOneMode") && theApp.options.GetIntVal("oneModeToggle"))
+			{
+				SetSelectedTool(TM_ONEMODE);
+			}
 		}
 
 		zCVob* pickedVob = theApp.GetSelectedVob();

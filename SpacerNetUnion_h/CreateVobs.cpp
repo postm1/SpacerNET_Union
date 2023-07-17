@@ -3,6 +3,7 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
+	extern SpacerToolMode GetSelectedTool();
 
 	void InsertIntoWorld(zCVob* newVob, zCVob* parentVobBase, bool selectVob)
 	{
@@ -413,7 +414,7 @@ namespace GOTHIC_ENGINE {
 
 		nextInsertBlocked = flag;
 
-		if (!theApp.isGrattControlActive)
+		if (!theApp.isGrattControlActive && GetSelectedTool() != TM_ONEMODE)
 			SetSelectedTool(TM_TRANSLATE);
 
 	}

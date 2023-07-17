@@ -420,6 +420,12 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "selectVobTab", "0");
 		list.Insert("selectVobTab", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "safeOneMode", "0");
+		list.Insert("safeOneMode", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "oneModeToggle", "0");
+		list.Insert("oneModeToggle", set);
+
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");

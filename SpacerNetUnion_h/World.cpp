@@ -848,6 +848,11 @@ namespace GOTHIC_ENGINE {
 		mf.worldWasLoadedOnce = true;
 		
 		//zerr->SetFilterLevel(10);
+
+		if (theApp.options.GetIntVal("safeOneMode") && theApp.options.GetIntVal("oneModeToggle"))
+		{
+			SetSelectedTool(TM_ONEMODE);
+		}
 	}
 
 	// применяется на первом тике когда уровень загружен
