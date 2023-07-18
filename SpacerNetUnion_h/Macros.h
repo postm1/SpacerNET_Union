@@ -36,7 +36,8 @@ namespace GOTHIC_ENGINE {
 		// максимальный размер экрана
 	#define SCREEN_MAX 8192
 
-
+	// для сортировки надо
+	#define d(i) (((char *)data)+(i)*size)
 		// каст пикселей в в.юниты и наоборот
 		// pView
 	#define PixelToVirtualX(pView, value) pView->anx(value) // по оси Х

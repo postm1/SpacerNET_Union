@@ -1014,5 +1014,162 @@ namespace GOTHIC_ENGINE {
 	  return tmp;
 	}
 	*/
+
+	// Struct to hold data for each worker thread
+	struct ThreadData {
+		void* data;
+		size_t num;
+		size_t size;
+		int(*compare)(const void*, const void*);
+		int result;
+		HANDLE mutex;
+	};
+
+	// Thread function to sort a portion of the data
+	DWORD WINAPI sortThread(LPVOID lpParam) {
+		ThreadData* threadData = static_cast<ThreadData*>(lpParam);
+		qsort(threadData->data, threadData->num, threadData->size, threadData->compare);
+		// Signal that the thread has completed
+		WaitForSingleObject(threadData->mutex, INFINITE);
+		threadData->result = 0;
+		ReleaseMutex(threadData->mutex);
+		return 0;
+	}
+
+	void sortMulti(void* data, size_t num, size_t size, int(*compare)(const void*, const void*)) {
+		const int numThreads = 4;
+
+
+		const size_t chunkSize = num / numThreads;  // Size of each portion to sort
+		HANDLE threads[numThreads];
+		ThreadData threadData[numThreads];
+		HANDLE mutex = CreateMutex(NULL, FALSE, NULL);
+		int result = 0;
+
+
+		cmd << "sortMulti: " << num << endl;
+
+		LARGE_INTEGER freq;
+		QueryPerformanceFrequency(&freq);
+		LARGE_INTEGER start, end;
+		QueryPerformanceCounter(&start);
+
+		// Create worker threads
+		for (int i = 0; i < numThreads; i++) {
+			ThreadData& td = threadData[i];
+			td.data = static_cast<char*>(data) + i * chunkSize * size;
+			td.num = (i == numThreads - 1) ? num - i * chunkSize : chunkSize;
+			td.size = size;
+			td.compare = compare;
+			td.result = -1;
+			td.mutex = mutex;
+			threads[i] = CreateThread(NULL, 0, sortThread, &td, 0, NULL);
+			if (threads[i] == NULL) {
+				result = 1;
+				break;
+			}
+		}
+
+		// Wait for worker threads to complete
+		for (int i = 0; i < numThreads; i++) {
+			ThreadData& td = threadData[i];
+			if (td.result == -1) {
+				WaitForSingleObject(threads[i], INFINITE);
+				GetExitCodeThread(threads[i], reinterpret_cast<DWORD*>(&td.result));
+				CloseHandle(threads[i]);
+			}
+			if (td.result != 0) {
+				result = 1;
+			}
+		}
+
+		// Merge the sorted portions of the data
+		if (result == 0) {
+			char* buffer = new char[num * size];
+			char* dst = buffer;
+			char* src[numThreads];
+			for (int i = 0; i < numThreads; i++) {
+				src[i] = static_cast<char*>(threadData[i].data);
+			}
+			for (size_t i = 0; i < num; i++) {
+				int minIndex = -1;
+				for (int j = 0; j < numThreads; j++) {
+					if (threadData[j].num > 0 &&
+						(minIndex == -1 || compare(src[j], src[minIndex]) < 0)) {
+						minIndex = j;
+					}
+				}
+				if (minIndex == -1) {
+					result = 1;
+					break;
+				}
+				memcpy(dst, src[minIndex], size);
+				dst += size;
+				src[minIndex] += size;
+				threadData[minIndex].num--;
+			}
+			memcpy(data, buffer, num * size);
+			delete[] buffer;
+		}
+
+		CloseHandle(mutex);
+
+		if (result != 0) {
+			// Error occurred, fall back to single-threaded sort
+			qsort(data, num, size, compare);
+		}
+
+
+		QueryPerformanceCounter(&end);
+		double elapsed = static_cast<double>(end.QuadPart - start.QuadPart) / freq.QuadPart;
+		cmd << "Time: " << elapsed << " s" << endl;
+	}
+
+	
+
+	//.text:00553CC0 ; void __cdecl insertionsort(void *Base, size_t NumOfElements, unsigned int, int (__cdecl *PtFuncCompare)(const void *, const void *), bool)
+	//0x00553CC0 void __cdecl insertionsort(void *,unsigned int,unsigned int,int (__cdecl*)(void const *,void const *),bool)
+
+	void __cdecl insertionsort_Hook(void *, unsigned int, unsigned int, int(__cdecl*)(void const *, void const *), bool);
+	//CInvoke <void(__cdecl *) (void *, unsigned int, unsigned int, int(__cdecl*)(void const *, void const *), bool)> insertionsort_Hooked(0x00553CC0, insertionsort_Hook, IVK_AUTO);
+	void __cdecl insertionsort_Hook(void *data, size_t num, size_t size, int(__cdecl *compare)(const void *, const void *), bool falltoqs)
+	{
+		if (num >= 200000 && theApp.options.GetVal("bSortPolysMultiThread"))
+		{
+			sortMulti(data, num, size, compare);
+		}
+		else
+		{
+			const int MAXSIZE = 24;
+
+			char swapplace[MAXSIZE];
+
+			if (size>MAXSIZE) {
+				qsort(data, num, size, compare);
+				return;
+			}
+
+			int swaps = 0;
+			for (int i = 1; i<(int)num; i++) {
+				void *lower = d(i);
+				for (int j = i - 1; j >= 0; j--) {
+					void *upper = lower;
+					lower = d(j);
+					if ((*compare)(upper, lower) < 0) { // ok. Ist im Moment BubbleSort. Was solls...
+						swaps++;
+						memcpy(&swapplace, upper, size);
+						memcpy(upper, lower, size);
+						memcpy(lower, &swapplace, size);
+					}
+					else
+						j = 0; // hier kann man die innere Schleife schon abbrechen.
+				}
+				if (falltoqs && swaps > 5 * i + 5) {
+					qsort(data, num, size, compare);
+					return;
+				}
+			}
+		}
+	}
 }
 
