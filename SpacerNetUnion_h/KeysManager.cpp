@@ -185,6 +185,9 @@ namespace GOTHIC_ENGINE {
 
 		
 
+		defaultValues.Insert("VOB_RESTORE_POS", "2_19");
+
+		
 		auto arr = defaultValues.GetArray();
 
 		CString value = "";

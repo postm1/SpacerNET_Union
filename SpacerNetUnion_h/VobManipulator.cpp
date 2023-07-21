@@ -1564,6 +1564,13 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+		if (keys.KeyPressed("VOB_RESTORE_POS", true))
+		{
+			theApp.restorator.RestoreVobPos(theApp.pickedVob);
+		}
+
+
+
 		if (keys.KeyPressed("VOB_CUT", true))
 		{
 			print.PrintRed(GetLang("VOB_CUT_OK"));
