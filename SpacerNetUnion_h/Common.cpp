@@ -232,25 +232,35 @@ namespace GOTHIC_ENGINE {
 	}
 
 	// ”бивает запуск контроллера PFX в спейсере
-	//0x006148B0 public: virtual void __thiscall zCPFXControler::PostLoad(void)
 	HOOK ivk_zCPFXControler_PostLoad AS(&zCPFXControler::PostLoad, &zCPFXControler::PostLoad_Hook);
-	//void PostLoad_Hook();
 	void zCPFXControler::PostLoad_Hook()
 	{
 		//THISCALL(ivk_zCPFXControler_PostLoad)();
 	}
 
-	//0x00614960 public: virtual void __thiscall zCPFXControler::OnUntrigger(class zCVob *,class zCVob *)
+	HOOK ivk_zCPFXControler_OnTrigger AS(&zCPFXControler::OnUntrigger, &zCPFXControler::OnTrigger_Hook);
+	void zCPFXControler::OnTrigger_Hook(zCVob *otherVob, zCVob *vobInstigator)
+	{
+		zCParticleFX *pfx = GetPFX();
+
+		if (pfx)
+		{
+			pfx->dontKillPFXWhenDone = TRUE;
+			pfx->RestoreEmitterOutput();
+			pfx->CreateParticles();
+		};
+	}
+
 	HOOK ivk_zCPFXControler_OnUntrigger AS(&zCPFXControler::OnUntrigger, &zCPFXControler::OnUntrigger_Hook);
-	//void OnUntrigger_Hook(zCVob *vob1, zCVob *vob2);
 	void zCPFXControler::OnUntrigger_Hook(zCVob *vob1, zCVob *vob2)
 	{
+
 		zCParticleFX *pfx = dynamic_cast<zCParticleFX*>(GetVisual());
 		if (!pfx) return;
 
 		pfx->StopEmitterOutput();
-		// если убрать визуал, то PPX-дочерние не будут показывать (динамеческие, которые добавл€ютс€ при активации PFX)
-		//_this->SetVisual(0);
+
+		SetVisual(0);
 	}
 
 	//¬ключает добавление зон в мир

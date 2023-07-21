@@ -5,3 +5,4 @@
 
 void PostLoad_Hook();
 void OnUntrigger_Hook(zCVob *vob1, zCVob *vob2);
+void OnTrigger_Hook(zCVob *otherVob, zCVob *vobInstigator);
