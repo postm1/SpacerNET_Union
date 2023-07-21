@@ -1553,7 +1553,7 @@ namespace GOTHIC_ENGINE {
 
 				if (visual)
 				{
-					cmd << "Try Visual: " + visual->GetVisualName() << endl;
+					//cmd << "Try Visual: " + visual->GetVisualName() << endl;
 				}
 
 				auto wp = pFoundVob->CastTo<zCVobWaypoint>();

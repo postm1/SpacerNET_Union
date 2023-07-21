@@ -1126,17 +1126,65 @@ namespace GOTHIC_ENGINE {
 	}
 
 	
+	void merge(void* arr, size_t left, size_t mid, size_t right, size_t size, int(*compare)(const void*, const void*)) {
+		char* left_arr = (char*)arr + left * size;
+		char* right_arr = (char*)arr + mid * size;
+		char* temp = new char[(right - left) * size];
+
+		size_t i = 0, j = 0, k = 0;
+		while (i < mid - left && j < right - mid) {
+			if (compare(left_arr + i * size, right_arr + j * size) < 0) {
+				memcpy(temp + k * size, left_arr + i * size, size);
+				i++;
+			}
+			else {
+				memcpy(temp + k * size, right_arr + j * size, size);
+				j++;
+			}
+			k++;
+		}
+
+		while (i < mid - left) {
+			memcpy(temp + k * size, left_arr + i * size, size);
+			i++;
+			k++;
+		}
+
+		while (j < right - mid) {
+			memcpy(temp + k * size, right_arr + j * size, size);
+			j++;
+			k++;
+		}
+
+		memcpy((char*)arr + left * size, temp, (right - left) * size);
+		delete[] temp;
+	}
+
+	void merge_sort(void* arr, size_t left, size_t right, size_t size, int(*compare)(const void*, const void*)) {
+		if (left + 1 < right) {
+			size_t mid = (left + right) / 2;
+			merge_sort(arr, left, mid, size, compare);
+			merge_sort(arr, mid, right, size, compare);
+			merge(arr, left, mid, right, size, compare);
+		}
+	}
+
+	void sortData(void* data, size_t num, size_t size, int(*compare)(const void*, const void*)) {
+		merge_sort(data, 0, num, size, compare);
+	}
 
 	//.text:00553CC0 ; void __cdecl insertionsort(void *Base, size_t NumOfElements, unsigned int, int (__cdecl *PtFuncCompare)(const void *, const void *), bool)
 	//0x00553CC0 void __cdecl insertionsort(void *,unsigned int,unsigned int,int (__cdecl*)(void const *,void const *),bool)
 
 	void __cdecl insertionsort_Hook(void *, unsigned int, unsigned int, int(__cdecl*)(void const *, void const *), bool);
-	//CInvoke <void(__cdecl *) (void *, unsigned int, unsigned int, int(__cdecl*)(void const *, void const *), bool)> insertionsort_Hooked(0x00553CC0, insertionsort_Hook, IVK_AUTO);
+	CInvoke <void(__cdecl *) (void *, unsigned int, unsigned int, int(__cdecl*)(void const *, void const *), bool)> insertionsort_Hooked(0x00553CC0, insertionsort_Hook, IVK_AUTO);
 	void __cdecl insertionsort_Hook(void *data, size_t num, size_t size, int(__cdecl *compare)(const void *, const void *), bool falltoqs)
 	{
-		if (num >= 200000 && theApp.options.GetVal("bSortPolysMultiThread"))
+		if (num >= 200000 && theApp.options.GetVal("bSortMerge"))
 		{
-			sortMulti(data, num, size, compare);
+			cmd << "Sort merging... Elements: " << num << endl;
+
+			sortData(data, num, size, compare);
 		}
 		else
 		{
@@ -1170,6 +1218,29 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 		}
+	}
+
+	//.text:007D0F6F ; void __cdecl qsort(void *Base, size_t NumOfElements, size_t SizeOfElements, int (__cdecl *PtFuncCompare)(const void *, const void *))
+
+	void __cdecl qsort_Hook(void *Base, size_t NumOfElements, size_t SizeOfElements, int(__cdecl *PtFuncCompare)(const void *, const void *));
+	//CInvoke <void(__cdecl *) (void *Base, size_t NumOfElements, size_t SizeOfElements, int(__cdecl *PtFuncCompare)(const void *, const void *))> qsort_HookFunc(0x007D0F6F, qsort_Hook, IVK_AUTO);
+	void __cdecl qsort_Hook(void *Base, size_t NumOfElements, size_t SizeOfElements, int(__cdecl *PtFuncCompare)(const void *, const void *))
+	{
+
+		RX_Begin(10);
+		//qsort_HookFunc(Base, NumOfElements, SizeOfElements, PtFuncCompare);
+		RX_End(10);
+
+
+		RX_Begin(11);
+		sortData(Base, NumOfElements, SizeOfElements, PtFuncCompare);
+		RX_End(11);
+
+		
+		
+		
+
+		cmd << "qsort() Num: " << NumOfElements << " Time: << " << RX_PerfString(10) << "/" << RX_PerfString(11) << endl;
 	}
 }
 
