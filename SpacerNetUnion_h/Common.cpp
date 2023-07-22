@@ -140,13 +140,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	HOOK Invk_zCParticleFX   AS(&zCParticleFX::zCParticleFX, &zCParticleFX::zCParticleFX_Hook);
-	zCParticleFX* zCParticleFX::zCParticleFX_Hook()
-	{
-		THISCALL(Invk_zCParticleFX)();
-		this->dontKillPFXWhenDone = TRUE;
-		return this;
-	}
+	
 
 
 	HOOK Invk_zCVobArchive   AS(&zCVob::Archive, &zCVob::Archive_Hook);
@@ -231,6 +225,15 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+
+	HOOK Invk_zCParticleFX   AS(&zCParticleFX::zCParticleFX, &zCParticleFX::zCParticleFX_Hook);
+	zCParticleFX* zCParticleFX::zCParticleFX_Hook()
+	{
+		THISCALL(Invk_zCParticleFX)();
+		this->dontKillPFXWhenDone = TRUE;
+		return this;
+	}
+
 	// Убивает запуск контроллера PFX в спейсере
 	HOOK ivk_zCPFXControler_PostLoad AS(&zCPFXControler::PostLoad, &zCPFXControler::PostLoad_Hook);
 	void zCPFXControler::PostLoad_Hook()
@@ -238,7 +241,7 @@ namespace GOTHIC_ENGINE {
 		//THISCALL(ivk_zCPFXControler_PostLoad)();
 	}
 
-	HOOK ivk_zCPFXControler_OnTrigger AS(&zCPFXControler::OnUntrigger, &zCPFXControler::OnTrigger_Hook);
+	HOOK ivk_zCPFXControler_OnTrigger AS(&zCPFXControler::OnTrigger, &zCPFXControler::OnTrigger_Hook);
 	void zCPFXControler::OnTrigger_Hook(zCVob *otherVob, zCVob *vobInstigator)
 	{
 		zCParticleFX *pfx = GetPFX();
@@ -254,6 +257,8 @@ namespace GOTHIC_ENGINE {
 	HOOK ivk_zCPFXControler_OnUntrigger AS(&zCPFXControler::OnUntrigger, &zCPFXControler::OnUntrigger_Hook);
 	void zCPFXControler::OnUntrigger_Hook(zCVob *vob1, zCVob *vob2)
 	{
+
+		//print.PrintRed(Z killVobWhenDone);
 
 		zCParticleFX *pfx = dynamic_cast<zCParticleFX*>(GetVisual());
 		if (!pfx) return;
