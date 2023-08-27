@@ -43,6 +43,12 @@ namespace GOTHIC_ENGINE {
 		Stack_Push(value);
 	}
 
+	UAPI void Stack_PushBool(bool v) {
+		TBOOL* value = new TBOOL();
+		value->value = v;
+		Stack_Push(value);
+	}
+
 	UAPI void Stack_PushInt(int v) {
 		TINT* value = new TINT();
 		value->value = v;
@@ -105,6 +111,16 @@ namespace GOTHIC_ENGINE {
 		CStringW value = Stack_PeekString_SW();
 		Stack_Pop();
 		return value;
+	}
+
+	UAPI bool Stack_PeekBool() {
+		TBOOL* value = dynamic_cast<TBOOL*>(arrStack.GetLast());
+		if (!value)
+			Message::Fatal("Value is not TBOOL");
+
+		bool result = value->value;
+		Stack_Pop(); 
+		return result;
 	}
 
 	UAPI int Stack_PeekInt() {
