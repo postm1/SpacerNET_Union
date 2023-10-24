@@ -171,8 +171,13 @@ namespace GOTHIC_ENGINE {
 				s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
 
 		vobLightSelected = dynamic_cast<zCVobLight*>(pickedVob);
-		if (vobLightSelected && dynLightCompile)
-			theApp.DoCompileLight(1, 15);
+		if (vobLightSelected)
+		{
+			theApp.UpdateLightPresetView(vobLightSelected->lightData);
+
+			if (dynLightCompile)
+				theApp.DoCompileLight(1, 15);
+		}
 
 		if (auto pCam = dynamic_cast<zCCSCamera*>(pickedVob))
 		{
@@ -2151,4 +2156,36 @@ namespace GOTHIC_ENGINE {
 		zmusic->PlayThemeByScript(name, 0, NULL);
 	}
 
+	void SpacerApp::UpdateLightPresetView(zCVobLightData& lightData)
+	{
+		Stack_PushBool(lightData.rangeAniSmooth);
+		Stack_PushFloat(lightData.rangeAniFPS);
+
+		for (int j = lightData.rangeAniScaleList.GetNumInList() - 1; j >= 0; --j)
+			Stack_PushFloat(lightData.rangeAniScaleList[j]);
+
+		Stack_PushInt(lightData.rangeAniScaleList.GetNumInList());
+
+		Stack_PushBool(lightData.colorAniSmooth);
+		Stack_PushFloat(lightData.colorAniFPS);
+
+		if (!lightData.isStatic)
+		{
+			for (int j = lightData.colorAniList.GetNumInList() - 1; j >= 0; --j)
+				Stack_PushInt(lightData.colorAniList[j].GetARGBDword());
+
+			Stack_PushInt(lightData.colorAniList.GetNumInList());
+		}
+		else
+		{
+			Stack_PushInt(lightData.lightColor.GetARGBDword());
+			Stack_PushInt(1);
+		}
+
+		Stack_PushInt(lightData.range);
+		Stack_PushInt(lightData.lightQuality);
+		Stack_PushBool(lightData.isStatic);
+
+		GetProcAddress(theApp.module, "UpdateLightPresetView")();
+	}
 }

@@ -214,13 +214,14 @@ namespace GOTHIC_ENGINE {
 		void PickMaterial();
 		void PickVob();
 		void PickVobNew(bool ctrlUsed);
-		zCVob* SpacerApp::TrySpherePick();
+		zCVob* TrySpherePick();
 		void PickVobFilter();
-		zBOOL SpacerApp::PickSceneNew(zCCamera& cam, int xscr, int yscr, zREAL rayLength);
+		zBOOL PickSceneNew(zCCamera& cam, int xscr, int yscr, zREAL rayLength);
 		void ToggleWP();
 		void ConnectWP();
 		void DisconnectWP();
-		void SpacerApp::PlayMusic(CString name);
+		void PlayMusic(CString name);
+		void UpdateLightPresetView(zCVobLightData& lightData);
 		zSTRING GenerateWPName(zSTRING baseName);
 		void Loop();
 		void SetMover();
