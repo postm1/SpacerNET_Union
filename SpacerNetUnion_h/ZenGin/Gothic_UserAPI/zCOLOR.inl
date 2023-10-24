@@ -12,3 +12,16 @@ zBYTE			GetRedByte() const { return r; };
 zBYTE			GetGreenByte() const { return g; };
 zBYTE			GetBlueByte() const { return b; };
 zBYTE			GetAlphaByte() const { return alpha; };
+
+zDWORD			GetARGBDword() const { return (alpha << 24) | (r << 16) | (g << 8) | b; }
+static zCOLOR	FromARGB(zDWORD argb) 
+{
+	zCOLOR result;
+
+	result.alpha = (argb >> 24) & 0xFF;
+	result.r = (argb >> 16) & 0xFF;
+	result.g = (argb >> 8) & 0xFF;
+	result.b = argb & 0xFF;
+
+	return result;
+}

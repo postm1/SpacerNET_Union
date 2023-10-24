@@ -167,27 +167,12 @@ namespace GOTHIC_ENGINE {
 			selectedWaypointForNet = dynamic_cast<zCVobWaypoint*>(vob);
 		}
 
-		auto light = dynamic_cast<zCVobLight*>(pickedVob);
+		if (!s_pLightSphereMesh)
+				s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
 
-		if (!pickedVob || light)
-		{
-			
-				if (!s_pLightSphereMesh)
-				{
-					s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
-				}
-
-				if (theApp.options.GetIntVal("showLightRadiusVob"))
-				{
-					vobLightSelected = light;
-				}
-			
-		}
-
-		if (!light || !pickedVob)
-		{
-			vobLightSelected = NULL;
-		}
+		vobLightSelected = dynamic_cast<zCVobLight*>(pickedVob);
+		if (vobLightSelected && dynLightCompile)
+			theApp.DoCompileLight(1, 15);
 
 		if (auto pCam = dynamic_cast<zCCSCamera*>(pickedVob))
 		{
@@ -729,7 +714,7 @@ namespace GOTHIC_ENGINE {
 				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetUpVectorWorld()	* size, colUp, 1);
 				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetAtVectorWorld()	* size, colAt, 1);
 
-				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetRightVectorWorld()* size, colRight, 1); // зеленый
+				zlineCache->Line3D(vob->GetPositionWorld(), vob->GetPositionWorld() + vob->GetRightVectorWorld()* size, colRight, 1); // Г§ДєГ«ДєГ­Е±Г©
 
 
 				//vob->bbox3D.Draw(zCOLOR(255, 0, 0));
@@ -922,30 +907,30 @@ namespace GOTHIC_ENGINE {
 
 	if (player && ogame && ogame->GetWorld() && zlineCache)
 	{
-	// трассировка мира сильно вниз от центра ГГ
+	// Е€Д‘Е•Е„Е„ДЌД‘Г®ГўД™Е• Д›ДЌД‘Е• Е„ДЌГ«ГјГ­Г® ГўГ­ДЌГ§ Г®Е€ Г¶ДєГ­Е€Д‘Е• Д‚Д‚
 	BOOL result = ogame->GetWorld()->TraceRayNearestHit(player->GetPositionWorld(), zVEC3(0, -10000, 0), (zCVob*)player, zTRACERAY_VOB_BBOX);
 
-	// зелёная(свободная) линия трассировки
+	// Г§ДєГ«ВёГ­Е•Л™(Е„ГўГ®ГЎГ®Г¤Г­Е•Л™) Г«ДЌГ­ДЌЛ™ Е€Д‘Е•Е„Е„ДЌД‘Г®ГўД™ДЌ
 	zCOLOR col = zCOLOR(0, 255, 0);
 
-	// если трассировка прошла успешно и найден воб
+	// ДєЕ„Г«ДЌ Е€Д‘Е•Е„Е„ДЌД‘Г®ГўД™Е• ДЏД‘Г®Е™Г«Е• ГіЕ„ДЏДєЕ™Г­Г® ДЌ Г­Е•Г©Г¤ДєГ­ ГўГ®ГЎ
 	if (result && ogame->GetWorld()->traceRayReport.foundVob)
 	{
-	// линия трассировки красная(занята)
+	// Г«ДЌГ­ДЌЛ™ Е€Д‘Е•Е„Е„ДЌД‘Г®ГўД™ДЌ Д™Д‘Е•Е„Г­Е•Л™(Г§Е•Г­Л™Е€Е•)
 	col = zCOLOR(255, 0, 0);
 
-	// включаем боунд бокс найденного воба
+	// ГўД™Г«ЕЈГ·Е•ДєД› ГЎГ®ГіГ­Г¤ ГЎГ®Д™Е„ Г­Е•Г©Г¤ДєГ­Г­Г®ДѓГ® ГўГ®ГЎЕ•
 	ogame->GetWorld()->traceRayReport.foundVob->SetDrawBBox3D(TRUE);
 
-	// если у воба есть визуал
+	// ДєЕ„Г«ДЌ Гі ГўГ®ГЎЕ• ДєЕ„Е€Гј ГўДЌГ§ГіЕ•Г«
 	if (screen && ogame->GetWorld()->traceRayReport.foundVob->visual)
 	{
-	// выводим на экран название
+	// ГўЕ±ГўГ®Г¤ДЌД› Г­Е• ГЅД™Д‘Е•Г­ Г­Е•Г§ГўЕ•Г­ДЌДє
 	screen->Print(10, 2000, ogame->GetWorld()->traceRayReport.foundVob->visual->GetVisualName());
 	}
 	}
 
-	// тестовая линия, показывающая успешность трассировки
+	// Е€ДєЕ„Е€Г®ГўЕ•Л™ Г«ДЌГ­ДЌЛ™, ДЏГ®Д™Е•Г§Е±ГўЕ•ЕЈЕЇЕ•Л™ ГіЕ„ДЏДєЕ™Г­Г®Е„Е€Гј Е€Д‘Е•Е„Е„ДЌД‘Г®ГўД™ДЌ
 	zlineCache->Line3D(player->GetPositionWorld(), player->GetPositionWorld() + zVEC3(0, -10000, 0), col, 0);
 	}
 
@@ -994,7 +979,7 @@ namespace GOTHIC_ENGINE {
 		return result;
 	}
 
-	// попадает ли мышь по экрану, или же задевает меню
+	// ДЏГ®ДЏЕ•Г¤Е•ДєЕ€ Г«ДЌ Д›Е±Е™Гј ДЏГ® ГЅД™Д‘Е•Г­Гі, ДЌГ«ДЌ Д‡Дє Г§Е•Г¤ДєГўЕ•ДєЕ€ Д›ДєГ­ЕЈ
 	bool SpacerApp::TryPickMouse()
 	{
 		POINT  cur;
@@ -1424,7 +1409,7 @@ namespace GOTHIC_ENGINE {
 		ray = p - ray00;
 
 		ray = ray.Normalize();
-		// Собираем список допустимых вобов
+		// ЕѓГ®ГЎДЌД‘Е•ДєД› Е„ДЏДЌЕ„Г®Д™ Г¤Г®ДЏГіЕ„Е€ДЌД›Е±Е‘ ГўГ®ГЎГ®Гў
 		for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
 
@@ -1559,7 +1544,7 @@ namespace GOTHIC_ENGINE {
 				auto wp = pFoundVob->CastTo<zCVobWaypoint>();
 				auto fp = pFoundVob->CastTo<zCVobSpot>();
 
-				// технические вобы игнорируем
+				// Е€ДєЕ‘Г­ДЌГ·ДєЕ„Д™ДЌДє ГўГ®ГЎЕ± ДЌДѓГ­Г®Д‘ДЌД‘ГіДєД›
 				if (pFoundVob == pfxManager.testVob || pFoundVob == currentVobRender || pFoundVob == currenItemRender 
 					|| pFoundVob == bboxMaxsVob || pFoundVob == bboxMinsVob || pFoundVob == floorVob || pFoundVob == ogame->GetCameraVob())
 				{
@@ -1693,7 +1678,7 @@ namespace GOTHIC_ENGINE {
 
 
 		/*
-		// если расширенный режим выбор и мы выделили pfx, то убираем такой воб
+		// ДєЕ„Г«ДЌ Д‘Е•Е„Е™ДЌД‘ДєГ­Г­Е±Г© Д‘ДєД‡ДЌД› ГўЕ±ГЎГ®Д‘ ДЌ Д›Е± ГўЕ±Г¤ДєГ«ДЌГ«ДЌ pfx, Е€Г® ГіГЎДЌД‘Е•ДєД› Е€Е•Д™Г®Г© ГўГ®ГЎ
 		if (foundVob && zinput->KeyPressed(KEY_LCONTROL))
 		{
 			zCVisual* visual = foundVob->GetVisual();
@@ -1747,7 +1732,7 @@ namespace GOTHIC_ENGINE {
 			ray = p - ray00;
 
 			ray = ray.Normalize();
-			// Собираем список допустимых вобов
+			// ЕѓГ®ГЎДЌД‘Е•ДєД› Е„ДЏДЌЕ„Г®Д™ Г¤Г®ДЏГіЕ„Е€ДЌД›Е±Е‘ ГўГ®ГЎГ®Гў
 			for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
 

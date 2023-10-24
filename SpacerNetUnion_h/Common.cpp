@@ -453,4 +453,18 @@ namespace GOTHIC_ENGINE {
 		
 	}
 	*/
+
+	HOOK Ivk_zCVobLight_LoadLightPresets AS(&zCVobLight::LoadLightPresets, &zCVobLight::LoadLightPresets_Hook);
+	void zCVobLight::LoadLightPresets_Hook()
+	{
+		Ivk_zCVobLight_LoadLightPresets.Detach();
+
+		zCVobLight::LoadLightPresets();
+
+		for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
+		{
+			Stack_PushString(zCVobLight::lightPresetList[i]->presetName);
+			GetProcAddress(theApp.module, "AddLightPresetToList")();
+		}
+	}
 }

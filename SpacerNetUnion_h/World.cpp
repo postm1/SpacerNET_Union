@@ -904,11 +904,11 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		if (dynLightCompile)
+		if (dynLightCompile && theApp.vobLightSelected)
 		{
 			bbox = new zTBBox3D;
 			float x, y, z;
-			zCVobLight *light = NULL;// CMainFrame::mainframe->winInfoBar_Lights->cur_vob;
+			zCVobLight *light = vobLightSelected;
 			light->GetPositionWorld(x, y, z);
 			bbox->maxs = light->GetBBox3DWorld().maxs;
 			bbox->mins = light->GetBBox3DWorld().mins;

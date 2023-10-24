@@ -1132,8 +1132,102 @@ namespace GOTHIC_ENGINE {
 			//print.PrintRed(Z theApp.filterPickVobIndex);
 		}
 
+		__declspec(dllexport) void Extern_Light_AddPreset(const char* presetName)
+		{
+			zCVobLightPreset* preset = zNEW(zCVobLightPreset);
 
-		
+			preset->presetName = presetName;
+
+			preset->lightData.isStatic = Stack_PeekBool();
+			preset->lightData.lightQuality = Stack_PeekInt();
+			preset->lightData.range = Stack_PeekInt();
+
+			for (int i = 0, colorsCount = Stack_PeekInt(); i < colorsCount; ++i)
+				preset->lightData.colorAniList.InsertAtPos(zCOLOR::FromARGB(Stack_PeekInt()), 0);
+
+			preset->lightData.colorAniFPS = Stack_PeekFloat();
+			preset->lightData.colorAniSmooth = Stack_PeekBool();
+
+			for (int i = 0, rangeAniScalesCount = Stack_PeekInt(); i < rangeAniScalesCount; ++i)
+				preset->lightData.rangeAniScaleList.InsertAtPos(Stack_PeekFloat(), 0);
+
+			preset->lightData.rangeAniFPS = Stack_PeekFloat();
+			preset->lightData.rangeAniSmooth = Stack_PeekBool();
+
+			zCVobLight::lightPresetList.Insert(preset);
+		}
+
+		__declspec(dllexport) void Extern_Light_DeletePreset(const char* presetName)
+		{
+			for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
+			{
+				zCVobLightPreset* preset = zCVobLight::lightPresetList[i];
+
+				if (preset->presetName != presetName)
+					continue;
+
+				zRELEASE(preset);
+				zCVobLight::lightPresetList.RemoveIndex(i);
+
+				break;
+			}
+		}
+
+		__declspec(dllexport) void Extern_Light_QueryPresetData(const char* presetName)
+		{
+			for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
+			{
+				zCVobLightPreset* preset = zCVobLight::lightPresetList[i];
+
+				if (preset->presetName != presetName)
+					continue;
+
+				Stack_PushBool(preset->lightData.rangeAniSmooth);
+				Stack_PushFloat(preset->lightData.rangeAniFPS);
+
+				for (int j = preset->lightData.rangeAniScaleList.GetNumInList() - 1; j >= 0; --j)
+					Stack_PushFloat(preset->lightData.rangeAniScaleList[j]);
+
+				Stack_PushInt(preset->lightData.rangeAniScaleList.GetNumInList());
+
+				Stack_PushBool(preset->lightData.colorAniSmooth);
+				Stack_PushFloat(preset->lightData.colorAniFPS);
+
+				if (!preset->lightData.isStatic)
+				{
+					for (int j = preset->lightData.colorAniList.GetNumInList() - 1; j >= 0; --j)
+						Stack_PushInt(preset->lightData.colorAniList[j].GetARGBDword());
+
+					Stack_PushInt(preset->lightData.colorAniList.GetNumInList());
+				}
+				else
+				{
+					Stack_PushInt(preset->lightData.lightColor.GetARGBDword());
+					Stack_PushInt(1);
+				}
+
+				Stack_PushInt(preset->lightData.range);
+				Stack_PushInt(preset->lightData.lightQuality);
+				Stack_PushBool(preset->lightData.isStatic);
+
+				GetProcAddress(theApp.module, "UpdateLightPresetView")();
+
+				break;
+			}
+		}
+
+		__declspec(dllexport) void Extern_Light_SavePresets()
+		{
+			zCVobLight::SaveLightPresets();
+		}
+
+		__declspec(dllexport) void Extern_Light_DynamicCompile(bool toggle)
+		{
+			theApp.dynLightCompile = toggle;
+
+			if (theApp.dynLightCompile && theApp.vobLightSelected)
+				theApp.DoCompileLight(1, 15);
+		}
 	}
 
 }
