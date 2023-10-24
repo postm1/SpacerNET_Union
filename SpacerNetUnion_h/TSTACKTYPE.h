@@ -22,6 +22,11 @@ namespace GOTHIC_ENGINE {
 		CStringW value;
 	};
 
+	struct TBOOL : public TSTACKTYPE {
+		virtual void Destroy() { delete this; }
+		virtual string GetTypeName() { return "TBOOL"; }
+		bool value;
+	};
 
 	struct TINT : public TSTACKTYPE {
 		virtual void Destroy() { delete this; }

@@ -3,3 +3,4 @@
 // User API for zCVobLight
 // Add your methods here
 
+static void LoadLightPresets_Hook();
