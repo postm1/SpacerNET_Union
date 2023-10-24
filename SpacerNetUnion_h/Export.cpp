@@ -1182,36 +1182,7 @@ namespace GOTHIC_ENGINE {
 				if (preset->presetName != presetName)
 					continue;
 
-				Stack_PushBool(preset->lightData.rangeAniSmooth);
-				Stack_PushFloat(preset->lightData.rangeAniFPS);
-
-				for (int j = preset->lightData.rangeAniScaleList.GetNumInList() - 1; j >= 0; --j)
-					Stack_PushFloat(preset->lightData.rangeAniScaleList[j]);
-
-				Stack_PushInt(preset->lightData.rangeAniScaleList.GetNumInList());
-
-				Stack_PushBool(preset->lightData.colorAniSmooth);
-				Stack_PushFloat(preset->lightData.colorAniFPS);
-
-				if (!preset->lightData.isStatic)
-				{
-					for (int j = preset->lightData.colorAniList.GetNumInList() - 1; j >= 0; --j)
-						Stack_PushInt(preset->lightData.colorAniList[j].GetARGBDword());
-
-					Stack_PushInt(preset->lightData.colorAniList.GetNumInList());
-				}
-				else
-				{
-					Stack_PushInt(preset->lightData.lightColor.GetARGBDword());
-					Stack_PushInt(1);
-				}
-
-				Stack_PushInt(preset->lightData.range);
-				Stack_PushInt(preset->lightData.lightQuality);
-				Stack_PushBool(preset->lightData.isStatic);
-
-				GetProcAddress(theApp.module, "UpdateLightPresetView")();
-
+				theApp.UpdateLightPresetView(preset->lightData);
 				break;
 			}
 		}
