@@ -57,7 +57,6 @@ namespace GOTHIC_ENGINE {
 		if (!Success)
 			Success = SetForegroundWindow(Wnd);
 
-		// [EDENFELD] neuen Code musste ich erst mal wieder deaktivierten, da es hдufiger zu Crashes bei Focusverlust fьhrt als der alte Code
 #else
 		SetForegroundWindow(Wnd);
 		return TRUE;

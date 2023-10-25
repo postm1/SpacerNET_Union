@@ -307,14 +307,10 @@ namespace GOTHIC_ENGINE {
 		{
 		case SAVE_ZEN:
 			ogame->OpenSavescreen(FALSE);
-
-			// [EDENFELD] 1.33c: Kein Mesh hier mit abspeichern
 			ogame->SaveWorld(worldName, zCWorld::zWLD_SAVE_EDITOR_COMPILED, false, false); // mesh, ascii
 
 			break;
 		case SAVE_ZEN_UC:
-
-		
 			ogame->OpenSavescreen(FALSE);
 			ogame->SaveWorld(worldName, zCWorld::zWLD_SAVE_EDITOR_UNCOMPILED, false, false); // mesh, ascii
 

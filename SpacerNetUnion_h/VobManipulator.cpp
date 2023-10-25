@@ -771,14 +771,12 @@ namespace GOTHIC_ENGINE {
 		zCMaterial *mat = zNEW(zCMaterial("Occluder_Poly_Mat"));
 		mat->color = zCOLOR(255, 255, 255);
 
-		// [EDENFELD] 1.09 Crash bei ZMARK OCCLUDERPOLYS behoben
 		auto bspTree = ogame->GetWorld()->bspTree;
 
 		bspTree.mesh->CreateListsFromArrays();
 
 		for (int i = 0; i<bspTree.mesh->numPoly; i++) {
 			zCPolygon *poly = bspTree.mesh->Poly(i);
-			// [EDENFELD] 1.09 Portale werden nicht mit markiert
 			if (poly->flags.occluder || poly->flags.ghostOccluder) {
 				poly->SetMaterial(mat);
 			};
