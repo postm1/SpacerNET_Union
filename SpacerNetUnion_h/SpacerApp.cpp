@@ -170,13 +170,28 @@ namespace GOTHIC_ENGINE {
 		if (!s_pLightSphereMesh)
 				s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
 
+		bool wasVobLightSelected = vobLightSelected != nullptr;
 		vobLightSelected = dynamic_cast<zCVobLight*>(pickedVob);
+
 		if (vobLightSelected)
 		{
 			theApp.UpdateLightPresetView(vobLightSelected->lightData);
 
+			Stack_PushString(vobLightSelected->lightPresetInUse.ToChar());
+			Stack_PushString(vobLightSelected->objectName.ToChar());
+			(callVoidFunc)GetProcAddress(theApp.module, "OnSelectLightVob")();
+
+			(selectMoversTab)GetProcAddress(theApp.module, "SelectLightTab")();
+
 			if (dynLightCompile)
+			{
 				theApp.DoCompileLight(1, 15);
+				PlaySoundGame(ToStr "CS_IAI_ME_ME");
+			}
+		}
+		else if (wasVobLightSelected)
+		{
+			(callVoidFunc)GetProcAddress(theApp.module, "OnDeselectLightVob")();
 		}
 
 		if (auto pCam = dynamic_cast<zCCSCamera*>(pickedVob))
@@ -2156,6 +2171,43 @@ namespace GOTHIC_ENGINE {
 		zmusic->PlayThemeByScript(name, 0, NULL);
 	}
 
+	int SpacerApp::GetLightPresetIdx(const char* presetName)
+	{
+		for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
+		{
+			zCVobLightPreset* preset = zCVobLight::lightPresetList[i];
+
+			if (preset->presetName == presetName)
+				return i;
+		}
+
+		return -1;
+	}
+
+	void SpacerApp::UpdateLightPresetData(zCVobLightData& lightData)
+	{
+		lightData.isStatic = Stack_PeekBool();
+		lightData.lightQuality = Stack_PeekInt();
+		lightData.range = Stack_PeekInt();
+
+		lightData.colorAniList.EmptyList();
+		for (int i = 0, colorsCount = Stack_PeekInt(); i < colorsCount; ++i)
+			lightData.colorAniList.InsertAtPos(zCOLOR::FromARGB(Stack_PeekInt()), 0);
+
+		if (lightData.colorAniList.GetNumInList() > 0)
+			lightData.lightColor = lightData.colorAniList[0];
+
+		lightData.colorAniFPS = Stack_PeekFloat();
+		lightData.colorAniSmooth = Stack_PeekBool();
+
+		lightData.rangeAniScaleList.EmptyList();
+		for (int i = 0, rangeAniScalesCount = Stack_PeekInt(); i < rangeAniScalesCount; ++i)
+			lightData.rangeAniScaleList.InsertAtPos(Stack_PeekFloat(), 0);
+
+		lightData.rangeAniFPS = Stack_PeekFloat();
+		lightData.rangeAniSmooth = Stack_PeekBool();
+	}
+
 	void SpacerApp::UpdateLightPresetView(zCVobLightData& lightData)
 	{
 		Stack_PushBool(lightData.rangeAniSmooth);
@@ -2186,6 +2238,6 @@ namespace GOTHIC_ENGINE {
 		Stack_PushInt(lightData.lightQuality);
 		Stack_PushBool(lightData.isStatic);
 
-		GetProcAddress(theApp.module, "UpdateLightPresetView")();
+		(callVoidFunc)GetProcAddress(theApp.module, "UpdateLightPresetView")();
 	}
 }

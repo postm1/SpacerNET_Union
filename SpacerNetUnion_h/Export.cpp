@@ -3,7 +3,7 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
-	// Ôóíêöèè âûçûâàþòñÿ èç C#
+	// Ã”Ã³Ã­Ä™Ã¶ÄÄ Ã¢Å±Ã§Å±Ã¢Å•Å£ÅˆÅ„Ë™ ÄÃ§ C#
 
 
 	extern "C"
@@ -1137,54 +1137,107 @@ namespace GOTHIC_ENGINE {
 			zCVobLightPreset* preset = zNEW(zCVobLightPreset);
 
 			preset->presetName = presetName;
-
-			preset->lightData.isStatic = Stack_PeekBool();
-			preset->lightData.lightQuality = Stack_PeekInt();
-			preset->lightData.range = Stack_PeekInt();
-
-			for (int i = 0, colorsCount = Stack_PeekInt(); i < colorsCount; ++i)
-				preset->lightData.colorAniList.InsertAtPos(zCOLOR::FromARGB(Stack_PeekInt()), 0);
-
-			preset->lightData.colorAniFPS = Stack_PeekFloat();
-			preset->lightData.colorAniSmooth = Stack_PeekBool();
-
-			for (int i = 0, rangeAniScalesCount = Stack_PeekInt(); i < rangeAniScalesCount; ++i)
-				preset->lightData.rangeAniScaleList.InsertAtPos(Stack_PeekFloat(), 0);
-
-			preset->lightData.rangeAniFPS = Stack_PeekFloat();
-			preset->lightData.rangeAniSmooth = Stack_PeekBool();
-
+			theApp.UpdateLightPresetData(preset->lightData);
+			
 			zCVobLight::lightPresetList.Insert(preset);
 		}
 
 		__declspec(dllexport) void Extern_Light_DeletePreset(const char* presetName)
 		{
-			for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
-			{
-				zCVobLightPreset* preset = zCVobLight::lightPresetList[i];
+			int idx = theApp.GetLightPresetIdx(presetName);
+			zCVobLightPreset* preset = zCVobLight::lightPresetList.GetSafe(idx);
 
-				if (preset->presetName != presetName)
+			zRELEASE(preset);
+			zCVobLight::lightPresetList.RemoveIndex(idx);
+		}
+
+		__declspec(dllexport) void Extern_Light_UpdatePresetName(const char* currentPresetName, const char* newPresetName)
+		{
+			int idx = theApp.GetLightPresetIdx(currentPresetName);
+
+			zCVobLightPreset* preset = zCVobLight::lightPresetList.GetSafe(idx);
+			preset->presetName = newPresetName;
+		}
+
+		_declspec(dllexport) void Extern_Light_ApplyPresetOnLightVobs(const char* presetName)
+		{
+			zCArray<zCVob*> lightVobs;
+			ogame->GetGameWorld()->SearchVobListByClass(zCVobLight::classDef, lightVobs, nullptr);
+
+			for (int i = 0; i < lightVobs.GetNumInList(); i++)
+			{
+				zCVobLight* lightVob = dynamic_cast<zCVobLight*>(lightVobs[i]);
+				if (!lightVob)
 					continue;
 
-				zRELEASE(preset);
-				zCVobLight::lightPresetList.RemoveIndex(i);
+				if (lightVob->lightPresetInUse != presetName)
+					continue;
 
-				break;
+				lightVob->SetByPreset(presetName);
 			}
+		}
+
+		_declspec(dllexport) int Extern_Light_UpdatePresetFromLightVob()
+		{
+			if (!theApp.vobLightSelected)
+				return false;
+
+			int idx = theApp.GetLightPresetIdx(theApp.vobLightSelected->lightPresetInUse);
+			if (idx == -1)
+				return false;
+
+			zCVobLightPreset* preset = zCVobLight::lightPresetList[idx];
+			preset->lightData = theApp.vobLightSelected->lightData;
+
+			return true;
+		}
+
+		_declspec(dllexport) void Extern_Light_UsePresetOnLightVob(const char* presetName)
+		{
+			if (!theApp.vobLightSelected)
+				return;
+
+			theApp.vobLightSelected->SetByPreset(presetName);
 		}
 
 		__declspec(dllexport) void Extern_Light_QueryPresetData(const char* presetName)
 		{
-			for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
+			int idx = theApp.GetLightPresetIdx(presetName);
+
+			zCVobLightPreset* preset = zCVobLight::lightPresetList.GetSafe(idx);
+			theApp.UpdateLightPresetView(preset->lightData);
+		}
+
+		__declspec(dllexport) int Extern_Light_ApplyChanges(const char* presetName)
+		{
+			const char* newVobName = Stack_PeekString();
+
+			if (theApp.vobLightSelected)
 			{
-				zCVobLightPreset* preset = zCVobLight::lightPresetList[i];
+				theApp.vobLightSelected->objectName = newVobName;
+				theApp.UpdateLightPresetData(theApp.vobLightSelected->lightData);
 
-				if (preset->presetName != presetName)
-					continue;
+				zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
 
-				theApp.UpdateLightPresetView(preset->lightData);
-				break;
+				arch->SetStringEOL(zSTRING("\n"));
+				arch->WriteObject(theApp.vobLightSelected);
+				zSTRING arcString;
+				arch->GetBufferString(arcString);
+
+				theApp.SetProperties(arcString, "zCVobLight");
+
+				return false;
 			}
+
+			if (presetName == "")
+				return false;
+
+			int idx = theApp.GetLightPresetIdx(presetName);
+			zCVobLightPreset* preset = zCVobLight::lightPresetList.GetSafe(idx);
+
+			theApp.UpdateLightPresetData(preset->lightData);
+
+			return true;
 		}
 
 		__declspec(dllexport) void Extern_Light_SavePresets()
@@ -1197,7 +1250,10 @@ namespace GOTHIC_ENGINE {
 			theApp.dynLightCompile = toggle;
 
 			if (theApp.dynLightCompile && theApp.vobLightSelected)
+			{
 				theApp.DoCompileLight(1, 15);
+				PlaySoundGame(ToStr "CS_IAI_ME_ME");
+			}
 		}
 	}
 

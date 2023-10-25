@@ -221,6 +221,8 @@ namespace GOTHIC_ENGINE {
 		void ConnectWP();
 		void DisconnectWP();
 		void PlayMusic(CString name);
+		int GetLightPresetIdx(const char* presetName);
+		void UpdateLightPresetData(zCVobLightData& lightData);
 		void UpdateLightPresetView(zCVobLightData& lightData);
 		zSTRING GenerateWPName(zSTRING baseName);
 		void Loop();
