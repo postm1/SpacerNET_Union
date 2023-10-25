@@ -193,15 +193,15 @@ namespace GOTHIC_ENGINE {
 
 			SetSelectedVob(NULL);
 
-			// Parser Global Vars resetten
+			// Reset parser global vars
 			parser->ResetGlobalVars();
 			parser->SetInstance("SELF", NULL);
 			parser->SetInstance("OTHER", NULL);
 			parser->SetInstance("VICTIM", NULL);
 			parser->SetInstance("ITEM", NULL);
-			// SpawnListe leeren 
+			// Clear SpawnList 
 			ogame->spawnman->ClearList();
-			// InfoMan clearen
+			// Clear InfoMan
 			ogame->infoman = zNEW(oCInfoManager)(parser);
 			// Clear Logs
 			oCLogManager::GetLogManager().Clear();
@@ -292,15 +292,15 @@ namespace GOTHIC_ENGINE {
 
 			//SpacerIsActive = TRUE;
 			ogame->m_bWorldEntered = false;
-			// Parser Global Vars resetten
+			// Reset parser global vars
 			parser->ResetGlobalVars();
 			parser->SetInstance("SELF", NULL);
 			parser->SetInstance("OTHER", NULL);
 			parser->SetInstance("VICTIM", NULL);
 			parser->SetInstance("ITEM", NULL);
-			// SpawnListe leeren 
+			// Clear SpawnList 
 			ogame->spawnman->ClearList();
-			// InfoMan clearen
+			// Clear InfoMan
 			delete ogame->infoman;
 			ogame->infoman = zNEW(oCInfoManager)(parser);
 			// Clear Logs
@@ -356,7 +356,7 @@ namespace GOTHIC_ENGINE {
 
 			ogame->RemovePlayerFromWorld();
 
-			// удаляем камеры из c# списков
+			// ГіГ¤Е•Г«Л™ДєД› Д™Е•Д›ДєД‘Е± ДЌГ§ c# Е„ДЏДЌЕ„Д™Г®Гў
 			for (int i = 0; i < targetList.GetNumInList(); i++)
 			{
 				auto pVob = targetList.GetSafe(i);
