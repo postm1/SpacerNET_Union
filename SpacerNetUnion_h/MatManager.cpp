@@ -171,27 +171,18 @@ namespace GOTHIC_ENGINE {
 
 	zBOOL __fastcall zCWorld::PickScene_Material(zCCamera& cam, int xscr, int yscr, zREAL rayLength)
 	{
-		// Sucht den naechstliegendsten Hit.
 		const zVALUE RAY_DIST = 600000.0F;
-		// alle Vobs in der räumlichen Nähe durchlaufen.
-		// - check, ob vob-center im Frustum ?
-		// - check, ob vob-bbox/sphere im Frustum ?
-		// - check, ob ray die bbox/sphere schneidet ?
-		// - check, ob ray exakt ein vob-Poly trifft ?
 
-		cam.Activate();									// FIXME: checken, welche 'activate' Aktionen wirklich noetig sind !!
+		cam.Activate();
 
 		zPOINT3 ray00, ray, p;
-		// create ray00, ray by backprojection
-		// ray00, ray sind im world(obj)Space
-		// 'ray00	= cam.camMatrixInv * zPOINT3(0,0,0);'  =
+
 		cam.camMatrixInv.GetTranslation(ray00);
 		p.n[VZ] = RAY_DIST;
 		cam.BackProject(xscr, yscr, p);				// p im camSpace
 		p = cam.camMatrixInv * p;					// p im world(obj)Space  
 		ray = p - ray00;
 
-		// wuenscht der Benutzer eine bestimmte Ray-Laenge?
 		if (rayLength>0)
 		{
 			ray.Normalize();
@@ -211,8 +202,6 @@ namespace GOTHIC_ENGINE {
 			if (traceRayReport.foundPoly)
 				if (!traceRayReport.foundVob)
 				{
-					// foundVertex, only static geom
-					// nearest vertex finden
 					zCPolygon	*poly = traceRayReport.foundPoly;
 					zREAL		best = zREAL_MAX;
 					for (int i = 0; i<poly->polyNumVert; i++)

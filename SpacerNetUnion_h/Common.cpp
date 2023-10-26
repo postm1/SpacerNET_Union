@@ -3,67 +3,6 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
-	//void zCRnd_D3D :: Vid_SetScreenMode( zTRnd_ScreenMode mode ) 
-
-
-	/*
-#define scrSTATUS_Used			1
-#define scrSTATUS_Free			0
-
-	HOOK ivk_Vid_SetScreenMode AS(&zCRnd_D3D::Vid_SetScreenMode, &zCRnd_D3D::Vid_SetScreenMode_Union);
-	void zCRnd_D3D::Vid_SetScreenMode_Union(zTRnd_ScreenMode mode) {
-
-
-		//Wechsel zwischen Fullscreen und Windowed
-		if (mode == zRND_SCRMODE_HIDE)
-			mode = zRND_SCRMODE_WINDOWED;
-		if (mode == xd3d_scrMode)
-		{
-			//zERR_MESSAGE(5, 0, "X: Vid_SetScreenMode: No changes ...");
-			cmd << "X: Vid_SetScreenMode: No changes ..."  << endl;
-			return;
-		}
-		if (xd3d_pdd7 && (xd3d_scrStatus == scrSTATUS_Used))
-		{
-			if (XD3D_SetDevice(xd3d_tryDevnum, xd3d_scrWidth, xd3d_scrHeight, xd3d_scrBpp, mode) == FALSE)
-			{
-				//zERR_WARNING("X: Vid_SetScreenMode: SetD3Ddevice failed !");
-				cmd << "X: Vid_SetScreenMode: SetD3Ddevice failed !" << endl;
-				XD3D_SetDevice(xd3d_actStatus.devnum, xd3d_scrWidth, xd3d_scrHeight, xd3d_scrBpp, xd3d_scrMode);
-			}
-			else
-			{
-				switch (mode)
-				{
-				case	zRND_SCRMODE_FULLSCREEN:
-					//zERR_MESSAGE(5, 0, "X: Vid_SetScreenMode: Switched to fullscreen mode ...");
-					cmd << "X: Vid_SetScreenMode: Switched to fullscreen mode ..." << endl;
-					ShowCursor(FALSE);
-					//sysKillWindowsKeys(true);
-					break;
-				case	zRND_SCRMODE_WINDOWED:
-				default:
-					//zERR_MESSAGE(5, 0, "X: Vid_SetScreenMode: Switched to windowed mode   ...");
-					cmd << "X: Vid_SetScreenMode: Switched to windowed mode   ..." << endl;
-					ShowCursor(TRUE);
-					//sysKillWindowsKeys(false);
-					break;
-				}
-				xd3d_scrMode = mode;
-			}
-		}
-		else
-		{
-			//zERR_MESSAGE(5, 0, "X: Vid_SetScreenMode: Setting New Mode...");
-			xd3d_scrMode = mode;
-			cmd << "X: Vid_SetScreenMode: Setting New Mode..." << endl;
-		}
-		SetSurfaceLost(FALSE);
-
-		//THISCALL(ivk_Vid_SetScreenMode)(mode);
-	}
-	*/
-
 
 	HOOK ivk_oCMobInter_CanInteractWith AS(&oCMobInter::CanInteractWith, &oCMobInter::CanInteractWith_Union);
 	int oCMobInter::CanInteractWith_Union(oCNpc* npc) {

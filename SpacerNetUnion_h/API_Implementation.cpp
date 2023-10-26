@@ -55,8 +55,6 @@ namespace GOTHIC_ENGINE {
 
 
 	inline void zCCamera::BackProject(const int xscr, const int yscr, zVEC3& p) const {
-		// coord-trafo: screen->3d
-		// Assumption : p.n[VZ] must have been set before call !
 		p.n[VX] = zREAL(xscr - zFloat2Int(vpData.xcenter)) * zREAL(viewDistanceXInv) * p.n[VZ];
 		p.n[VY] = zREAL(zFloat2Int(vpData.ycenter) - yscr) * zREAL(viewDistanceYInv) * p.n[VZ];
 	};

@@ -192,7 +192,6 @@ namespace GOTHIC_ENGINE {
 		bbox.mins[0] -= distance; bbox.mins[1] -= distance; bbox.mins[2] -= distance;
 		ogame->GetWorld()->CollectVobsInBBox3D(found, bbox);
 
-		// Nach zCVobSpots durchsuchen
 		for (int i = 0; i<found.GetNumInList(); i++)
 		{
 			auto vob = found.GetSafe(i);

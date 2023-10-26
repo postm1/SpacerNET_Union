@@ -892,8 +892,6 @@ namespace GOTHIC_ENGINE {
 
 	inline float CalcAlphaFromDistToPlane(const zTPlane &camPlane, const zVEC3& pos)
 	{
-		// optimierung: ist die farclipping distanz diesselbe wie die im letzten call, so sparen wir uns eine division
-
 		static float lastZ = -1;
 		static float DETAIL_MAX_DIST = -1;
 		static float ONE_OVER_DETAIL_MAX_DIST = -1;

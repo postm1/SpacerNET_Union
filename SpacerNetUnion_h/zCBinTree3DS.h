@@ -56,8 +56,8 @@ namespace GOTHIC_ENGINE {
 	struct TVertex3ds {
 		zPOINT3		position;
 		zPOINT2		texCoord;
-		zWORD		lastObjHasBeenWrittenTo;			// save: vert fuer dieses Objekt bereits geschrieben worden ?
-		zWORD		remappedIndex;						// save: wenn Mesh in mehrere Objekte gesplittet werden muss, dann muessen auch die VertIndices remapped werden
+		zWORD		lastObjHasBeenWrittenTo;
+		zWORD		remappedIndex;
 		int			mappedIndex;
 		int			leafIndex;
 		TVertex3ds() {
@@ -139,7 +139,7 @@ namespace GOTHIC_ENGINE {
 
 	private:
 		int						act3DSObject;
-		zCArray<zTBinTreeNode>	nodeList;		// FIXME: eigentlich brauchen nur alle 'leafs' allokiert werden, nicht alle 'nodes'..
+		zCArray<zTBinTreeNode>	nodeList;
 		zTBBox3D				bbox3D;
 
 		zBOOL					IsLeaf(int nodeIndex) const { return (nodeIndex * 2) >= nodeList.GetNum(); };

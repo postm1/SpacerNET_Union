@@ -153,32 +153,6 @@ namespace GOTHIC_ENGINE {
 					drawEntry->pView->Blit();
 					pLocatorView->RemoveItem(drawEntry->pView);
 				}
-	
-				
-				/*
-				if (wld->TraceRayNearestHit(drawEntry->pVob->GetPositionWorld() + zVEC3(0, 200, 0), zVEC3(0, -3000, 0), drawEntry->pVob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN)) {
-					// Poly gefunden
-					if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVertex) {
-
-						zVEC3 newpos = wld->traceRayReport.foundIntersection;
-
-						if (newpos.n[1] > (drawEntry->pVob->GetPositionWorld().n[1] + offset) || !showOnlyProbablyBad)
-						{
-							drawEntry->pView->ClrPrintwin();
-							//itemView->InsertBack(Z * allowedTextures.GetSafe(param.textureId));
-
-							//drawEntry->pVob->drawBBox3D = true;
-
-							drawEntry->pView->SetPos(px, py);
-							drawEntry->pView->SetSize(sx, sy);
-							pLocatorView->InsertItem(drawEntry->pView);
-							drawEntry->pView->Blit();
-							pLocatorView->RemoveItem(drawEntry->pView);
-						}
-
-					}
-				}
-				*/
 				else
 				{
 					drawEntry->pView->ClrPrintwin();

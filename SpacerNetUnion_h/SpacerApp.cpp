@@ -1052,16 +1052,13 @@ namespace GOTHIC_ENGINE {
 		cam.Activate();	
 
 		zPOINT3 ray00, ray, p;
-		// create ray00, ray by backprojection
-		// ray00, ray sind im world(obj)Space
-		// 'ray00	= cam.camMatrixInv * zPOINT3(0,0,0);'  =
+
 		cam.camMatrixInv.GetTranslation(ray00);
 		p.n[VZ] = RAY_DIST;
 		cam.BackProject(xscr, yscr, p);				// p im camSpace
 		p = cam.camMatrixInv * p;					// p im world(obj)Space  
 		ray = p - ray00;
 
-		// wuenscht der Benutzer eine bestimmte Ray-Laenge?
 		if (rayLength>0)
 		{
 			ray.Normalize();
@@ -1207,9 +1204,7 @@ namespace GOTHIC_ENGINE {
 		cam->Activate();						
 
 		zPOINT3 ray00, ray, p;
-		// create ray00, ray by backprojection
-		// ray00, ray sind im world(obj)Space
-		// 'ray00	= cam.camMatrixInv * zPOINT3(0,0,0);'  =
+
 		cam->camMatrixInv.GetTranslation(ray00);
 		p.n[VZ] = RAY_DIST;
 		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace
@@ -1499,9 +1494,7 @@ namespace GOTHIC_ENGINE {
 		cam->Activate();
 
 		zPOINT3 ray00, ray, p;
-		// create ray00, ray by backprojection
-		// ray00, ray sind im world(obj)Space
-		// 'ray00	= cam.camMatrixInv * zPOINT3(0,0,0);'  =
+
 		cam->camMatrixInv.GetTranslation(ray00);
 		p.n[VZ] = RAY_DIST;
 		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace

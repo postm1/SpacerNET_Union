@@ -48,22 +48,18 @@ namespace GOTHIC_ENGINE {
 		else if ((p1x - p2x) > 0) return +1;
 		else
 		{
-			// die x koords sind gleich, dann die y coords vergleichen
 			if ((p1y - p2y) < 0) return -1;
 			else if ((p1y - p2y) > 0) return +1;
 			else
 			{
-				// die x und die y coords sind gleich, z vergleichen
 				if ((p1z - p2z) < 0) return -1;
 				else if ((p1z - p2z) > 0) return +1;
 				else
 				{
-					// alle koords gleich, uv mappings können aber unterschiedlich sein
 					if ((uv1x - uv2x)<0) return -1;
 					else if ((uv1x - uv2x)>0) return +1;
 					else
 					{
-						// alle koords gleich, uv mappings können aber unterschiedlich sein
 						if ((uv1y - uv2y)<0) return -1;
 						else if ((uv1y - uv2y)>0) return +1;
 					}
@@ -71,8 +67,6 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		//zERR_WARNING("C: Compare_Verts3DS: Bug! Should be never here!");
-		// hier darf man niemals hinkommen
 		return 0;
 	}
 
@@ -98,7 +92,6 @@ namespace GOTHIC_ENGINE {
 
 	void zCBinTree3DS::GetMatListComplete(zCArray<zCMaterial*> &matList)
 	{
-		// linear Search, zu langsam ?
 		for (int i = 0; i<numPoly3DS; i++)
 		{
 			if (polyList3DS[i].material)
@@ -121,7 +114,6 @@ namespace GOTHIC_ENGINE {
 
 	int zCBinTree3DS::CalcNum3DSObject()
 	{
-		// Breitensuche
 		int index = 1;
 		do {
 			int lastIndex = (index * 2 - 1);
@@ -147,9 +139,8 @@ namespace GOTHIC_ENGINE {
 		{
 			for (int i = 0; i<nodeList[nodeIndex].polyIndList3DS.GetNum(); i++)
 			{
-				// Poly eintragen
 				polyIndexList.Insert(nodeList[nodeIndex].polyIndList3DS[i]);
-				// Vertices eintragen
+
 				int polyInd = nodeList[nodeIndex].polyIndList3DS[i];
 				for (int j = 0; j<3; j++)
 				{
@@ -175,13 +166,10 @@ namespace GOTHIC_ENGINE {
 		mesh3DS->Clear();
 		mesh3DS->meshName = ToStr "zenGin" + zSTRING(objectNr);
 
-		// Poly und Vert Listen
 		int nodeIndex = numObject + objectNr;
 		act3DSObject = objectNr + 1;
 		GetPolyListFor3DSObj(nodeIndex, mesh3DS->polyIndList3DS, mesh3DS->vertIndList3DS);
 
-		// BuildUsedMatList
-		// erstmal alle verwendeten Materials sammeln
 		for (int i = 0; i<mesh3DS->polyIndList3DS.GetNum(); i++)
 		{
 			zCMaterial *mat = polyList3DS[mesh3DS->polyIndList3DS[i]].material;
@@ -199,7 +187,7 @@ namespace GOTHIC_ENGINE {
 					zCMesh3DS::zTMatEntry *matEntry = zNEW(zCMesh3DS::zTMatEntry);
 					matEntry->material = mat;
 					//				matEntry->polyIndList.Insert	(mesh3DS->polyIndList3DS[i]);
-					matEntry->polyIndList.Insert(i);							// bezieht sich auf Reihenfolge in 'Mesh3DS' und nicht BinTree3DS!!
+					matEntry->polyIndList.Insert(i);
 					mesh3DS->matList.Insert(matEntry);
 				};
 			foundMat:;
@@ -218,19 +206,6 @@ namespace GOTHIC_ENGINE {
 			mask = mask >> 1;
 		}
 
-		/* wenig effizient:
-		// das höchstwertigste bit suchen
-		int last,i;
-		last = i = 0;
-		do {
-		if (value & 1) last = i;
-		value = value >> 1;
-		i++;
-		} while (value!=0);
-
-		if (bit != last)
-		abort();*/
-
 		return bit;
 	};
 
@@ -239,7 +214,6 @@ namespace GOTHIC_ENGINE {
 	};
 
 	inline int zMakePowerOf2Higher(int value) {
-		// das höchstwertigste bit+1 suchen
 		int i = zMakePowerOf2Lower(value);
 		if (value>i) i = i << 1;
 
@@ -249,7 +223,6 @@ namespace GOTHIC_ENGINE {
 
 	void zCBinTree3DS::CreateNodeList(int numVert, int numPoly)
 	{
-		// 15 verts pro Leaf im Schnitt
 		int	numLeafs = zMakePowerOf2Higher(int(float(numVert) / 15.0F));
 		zClamp(numLeafs, 512, 8192);
 		int	numNodes = numLeafs * 2;
@@ -262,7 +235,7 @@ namespace GOTHIC_ENGINE {
 
 	int zCBinTree3DS::GetLeafIndex(const zVEC3& pos)
 	{
-		int			axisTable[3] = { 0, 2, 1 };		// erst in der XZ Eben splitten, dann erst Y
+		int			axisTable[3] = { 0, 2, 1 };
 		int			oldIndex = 1;
 		int			index = 1;
 		int			axis = 0;
@@ -306,7 +279,7 @@ namespace GOTHIC_ENGINE {
 				return nodeList[leafIndex].vertIndList3DS[i];
 			};
 		};
-		// Vertex nicht gefunden, neuen erzeugen
+
 		vertList3DS[numVert3DS].position = pos;
 		vertList3DS[numVert3DS].texCoord = texUV;
 		numVert3DS++;
@@ -348,42 +321,35 @@ namespace GOTHIC_ENGINE {
 
 		// Create:
 		// vertList3DS, FACELIST
-		// Achtung: wenn Verts mit verschiedenen Texture-Koordinaten vorkommen,
-		// muessen diese Verts auch mehrfach rausgeschrieben werden !
 
 		zBOOL meshHasNPolys = FALSE;
 
-		//zERR_MESSAGE(3, zERR_BEGIN, "D: 3DS-EXP: Drop mesh \"" + mesh->GetMeshName() + "\" (" + zSTRING(mesh->numPoly) + " polys) ...");
 		int vertInd[256];
 		for (int i = 0; i<mesh->numPoly; i++) {
 
-			if ((i & 1023) == 0) {} // zERR_MESSAGE(4, 0, "D: 3DS-EXP: ... still working (" + zSTRING(i) + " polys)");
+			if ((i & 1023) == 0) {}
 
 			zCPolygon *poly = mesh->Poly(i);
 
-			// Verts in die VertList eintragen
 			for (int j = 0; j<poly->polyNumVert; j++)
 			{
 				if (poly->polyNumVert>3) meshHasNPolys = TRUE;
 				zCVertex		*vert = poly->GetVertexPtr(j);
 				zCVertFeature	*feat = (poly->feature) ? poly->feature[j] : 0;
-				// keine Texture ? UV auf 0 setzen!
+
 				if (!poly->material->texture) {
 					feat->texu = 0;
 					feat->texv = 0;
-				};
+				}
 				vertInd[j] = GetVert3DSIndex(vert->position, zVEC2(feat->texu, feat->texv));
-			};
-
-			// FIXME: ACHTUNG, was bei degenerierten Polys ? (3 Verts kolinear)
+			}
 
 			for (int j = 2; j<poly->polyNumVert; j++) {
-				// Verts eintragen
 				polyList3DS[numPoly3DS].vertIndex[0] = vertInd[0];
 				polyList3DS[numPoly3DS].vertIndex[1] = vertInd[j - 1];
 				polyList3DS[numPoly3DS].vertIndex[2] = vertInd[j];
 				polyList3DS[numPoly3DS].material = poly->material;
-				polyList3DS[numPoly3DS].wrapu = FALSE;				// FIXME: ????
+				polyList3DS[numPoly3DS].wrapu = FALSE;
 				polyList3DS[numPoly3DS].wrapv = FALSE;
 				WORD flags = 0x02;										// BC
 				if (j == 2)					flags |= 0x01 | 0x02;		// AB BC
@@ -392,15 +358,13 @@ namespace GOTHIC_ENGINE {
 				if (poly->material)
 					if (poly->material->texture)
 						dumpTexCoords = TRUE;
-				// Poly in Baum einfuegen
+
 				{
 					int leafIndex = GetLeafIndex(poly->GetCenter());
 					nodeList[leafIndex].polyIndList3DS.Insert(numPoly3DS);
-				};
+				}
 				numPoly3DS++;
-			};
-		};
-
-		//zERR_MESSAGE(3, zERR_END, "");
-	};
+			}
+		}
+	}
 }

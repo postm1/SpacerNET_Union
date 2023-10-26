@@ -57,10 +57,6 @@ namespace GOTHIC_ENGINE {
 			zCVob* v = NULL;
 
 			if(cur_cam->camKeysFOR == zCCSCamera::zCAMTRJ_KEY_FOR_OBJECT) {
-				// suche refCam, und setzt ihn
-				//zSTRING refCamVobName = zSTRING(m_ref_cam.GetBuffer(0));
-				//if (!refCamVobName.IsEmpty()) v = CSpacerDoc::doc->GetWorld()->SearchVobByName(refCamVobName);
-
 				zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE);
 
 				if (!v) msg_c->MD_SetVobParam(cur_cam);
@@ -70,11 +66,6 @@ namespace GOTHIC_ENGINE {
 			}
 
 			if (cur_cam->targetKeysFOR == zCCSCamera::zCAMTRJ_KEY_FOR_OBJECT) {
-
-				//zSTRING refTargetVobName = zSTRING(m_ref_target.GetBuffer(0));
-				////if (!refTargetVobName.IsEmpty()) v = CSpacerDoc::doc->GetWorld()->SearchVobByName(refTargetVobName);
-				//else v = 0;
-
 				zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE);
 				if (!v) msg_t->MD_SetVobParam(cur_cam);
 				else	msg_t->MD_SetVobParam(v);
@@ -86,9 +77,6 @@ namespace GOTHIC_ENGINE {
 
 			}
 
-
-			// hole EVManager
-			// sende EV_Play
 			zCCSCamera_EventMsg* msg = new zCCSCamera_EventMsg(zCCSCamera_EventMsg::EV_GOTO_KEY);
 			msg->time = timeDurationOnSpacer;
 			msg->key = key;
@@ -148,8 +136,6 @@ namespace GOTHIC_ENGINE {
 
 		cur_cam->Refresh();
 
-		// hole EVManager
-		// sende EV_Play
 		zCCSCamera_EventMsg* msg = new zCCSCamera_EventMsg(zCCSCamera_EventMsg::EV_PLAY);
 		lastPresetTime = cur_cam->totalTime;
 
@@ -236,8 +222,7 @@ namespace GOTHIC_ENGINE {
 		cur_cam = tempCam;
 
 		if (cur_cam == 0) return;
-		// hole EVManager
-		// sende EV_Play
+
 		zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE);
 		zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE);
 
