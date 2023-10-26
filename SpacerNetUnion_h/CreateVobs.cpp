@@ -824,14 +824,10 @@ namespace GOTHIC_ENGINE {
 
 			if (pVob && pVob->GetRigidBody())
 			{
-
-				// aktuelle Position holen ...
 				zPOINT3 oldpos, pos, posneu;
 				oldpos = pVob->GetPositionWorld();
 				pos = posneu = oldpos;
 
-				// Sleepingmode und Physics entsprechend merken und setzen
-				// zTVobSleepingMode	mode	= _vob->GetSleepingMode();
 				zBOOL				physics = pVob->GetPhysicsEnabled();
 				pVob->SetSleeping(FALSE);
 				pVob->SetPhysicsEnabled(TRUE);

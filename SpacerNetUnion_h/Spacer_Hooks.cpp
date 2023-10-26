@@ -60,12 +60,10 @@ namespace GOTHIC_ENGINE {
 	{
 		_this->zCObject::Unarchive(arc);
 
-		// einen sauberen Zustand herstellen
 		_this->ResetOnTimer();
 
-		// Packing DWord Trailer lesen und auswerten
 		{
-			int	pack = 0;	// 0 WICHTIG!
+			int	pack = 0;
 			arc.ReadInt("pack", pack);
 			if (pack == 0)			_this->UnarchiveVerbose(arc);
 			else					_this->UnarchivePacked(arc, pack);
@@ -75,7 +73,7 @@ namespace GOTHIC_ENGINE {
 		if (arc.InSaveGame())
 		{
 			_this->SetSleepingMode(zTVobSleepingMode(arc.ReadByte("sleepMode")));
-			// nextOnTimer: ist absolut, muss aber relativ gespeichert werden
+
 			zREAL nextOnTimerRel = _this->nextOnTimer;
 			arc.ReadFloat("nextOnTimer", nextOnTimerRel);
 			_this->nextOnTimer = (nextOnTimerRel >= zREAL_MAX) ? nextOnTimerRel : (ztimer->totalTimeFloat + nextOnTimerRel);
@@ -326,10 +324,6 @@ namespace GOTHIC_ENGINE {
 	{
 		zCPolygon::S_ResetMorphedVerts();
 
-		//
-		//zERR_MESSAGE(5, 0, "D: WORLD: Saving World: \"" + fileName + "\"");
-
-		// CamVob entfernen
 		zCVob *camVob = 0;
 		if (zCCamera::activeCam)
 			if (zCCamera::activeCam->GetVob())
@@ -348,23 +342,19 @@ namespace GOTHIC_ENGINE {
 			// fileIOMode
 			s_worldSaveMode = saveMode;
 
-			//
 			s_firstVobSaveWorld = &globalVobTree;
 			s_saveLevelMesh = _saveLevelMesh;
 			s_saveWayNet = (s_worldSaveMode != zWLD_SAVE_COMPILED_ONLY);
 		};
 
-		// ArcMode ermitteln
 		zTArchiveMode arcSaveMode = writeBinary ? zARC_MODE_BINARY_SAFE : zARC_MODE_ASCII;
 		if ((writeBinary) && (saveGame))
 		{
-			// .ini auswerten: falls gewuenscht den schnellen/unsicheren Modus benutzen
 			zBOOL fastBinSaveGames = zoptions->ReadBool("INTERNAL", "zFastSaveGames", TRUE);
 			if (fastBinSaveGames)
 				arcSaveMode = zARC_MODE_BINARY;
 		};
 
-		// Archiv schreiben
 		zoptions->ChangeDir(DIR_WORLD);
 		zCArchiver *arc = zarcFactory->CreateArchiverWrite(fileName, arcSaveMode, saveGame, 0);
 		zBOOL res = (arc != 0);
@@ -374,7 +364,6 @@ namespace GOTHIC_ENGINE {
 			zRELEASE(arc);
 		};
 
-		// CamVob einfuegen
 		if (camVob) {
 			AddVob(camVob);
 			zRELEASE_ACCT_NONULL(camVob);
@@ -400,8 +389,6 @@ namespace GOTHIC_ENGINE {
 
 	zBOOL oCWorld::LoadWorld_UnionOCWorld(const zSTRING& fileName, const zTWorldLoadMode loadMode)
 	{
-		//zERR_MESSAGE(9, 0, "U: (oCWorld::LoadWorld) " + fileName);
-
 		zBOOL	success = FALSE;
 		zSTRING curFileName = fileName;
 		curFileName.Upper();
@@ -409,9 +396,8 @@ namespace GOTHIC_ENGINE {
 		cmd << "LoadWorld_UnionOCWorld " << endl;
 
 		if (loadMode != zCWorld::zWLD_LOAD_GAME_SAVED_DYN) {
-			// setze worldFilename (ausser beim Laden von nur dynamischen Daten)
 			worldFilename = curFileName;
-			// setze worldName
+
 			zFILE_FILE path(worldFilename);
 			worldName = path.GetFilename();
 
@@ -446,12 +432,6 @@ namespace GOTHIC_ENGINE {
 		{
 			s_worldLoadMode = loadMode;
 
-			// dispose dynamic world
-			// Der Dynamische Anteil der Welt muss IMMER geloescht werden. Falls man ein Archive mit Vobs
-			// laedt sowieso, beim Laden eines Archives mit statischen Level Daten haetten nicht entfernte Vobs
-			// noch illegale Refs auf bereits tote BspLeafs.
-			// (Alternative Loesungen: Vobs bei einem LoadDyn in den Level mergen, Vobs bei einem LoadStat neu 
-			//  zu den BspLeafs linken).
 			// if (loadMode!=zWLD_LOAD_GAME_SAVED_STAT) 
 			{
 				DisposeVobs(0);
@@ -466,14 +446,8 @@ namespace GOTHIC_ENGINE {
 				) {
 				DisposeStaticWorld();
 			};
-
-			/*		// Set FileIOMode
-			if ((loadMode==zWLD_LOAD_GAME_SAVED_DYN) || (loadMode==zWLD_LOAD_GAME_SAVED_STAT))
-			SetWorldFileIOMode	(zWLD_FILEIO_SAVED_STATE);
-			else	SetWorldFileIOMode	(zWLD_FILEIO_STARTUP_STATE);*/
 		};
 
-		// Hints an den VertexBufferManager
 		zvertexBufferMan->StartChangeWorld();
 
 		//
@@ -495,7 +469,6 @@ namespace GOTHIC_ENGINE {
 
 		cmd << "End Reading" << endl;
 
-		// Hints an den VertexBufferManager
 		zvertexBufferMan->EndChangeWorld();
 
 
@@ -507,8 +480,6 @@ namespace GOTHIC_ENGINE {
 			//SetFadeOutFarVertices(FALSE);
 		}
 
-		//
-		//zERR_MESSAGE(1, zERR_END, "");
 		if (res)
 		{
 			zFILE_FILE path(fileName);
@@ -517,7 +488,6 @@ namespace GOTHIC_ENGINE {
 			//int warnTotal2 = TRUE;
 			if (GetBspTree())
 			{
-				// den BspTree informieren, das ein neuer Level am Start ist
 				GetBspTree()->m_bRenderedFirstTime = true;
 
 

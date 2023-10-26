@@ -15,7 +15,6 @@ namespace GOTHIC_ENGINE {
 		zCWayNet* waynet = world->GetWayNet(); if (!waynet) return;
 
 		zCWaypoint* wp = waynet->SearchWaypoint(static_cast<zCVobWaypoint*>(wpvob));
-		// neue koordinaten des Wp
 		if (wp) wp->UpdatePositionWorld();
 	}
 
@@ -24,16 +23,13 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!vob->GetHomeWorld()) return FALSE;
 
-		// Auf passende Höhe setzen
 		zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
 		zCWorld* wld = vob->GetHomeWorld();
 
 		vob->ignoredByTraceRay = true;
 
 		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -10000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_TEST_WATER)) {
-			// Poly gefunden
 			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
-				// Schnittpunkt schnappen und Position neu setzen
 				zVEC3 newpos = wld->traceRayReport.foundIntersection;
 
 				if (wld->traceRayReport.foundPoly)
@@ -43,7 +39,6 @@ namespace GOTHIC_ENGINE {
 
 				foundVob = wld->traceRayReport.foundVob ? foundVob = true : foundVob = false;
 
-				// 4 cm bis zum Bodem, um Kollision zu vermeiden.
 				centerPos = newpos;
 				vob->ignoredByTraceRay = false;
 				return TRUE;
@@ -57,16 +52,12 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!vob->GetHomeWorld()) return FALSE;
 
-		// Auf passende Höhe setzen
 		zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
 		zCWorld* wld = vob->GetHomeWorld();
 
 		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -5000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN)) {
-			// Poly gefunden
 			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
-				// Schnittpunkt schnappen und Position neu setzen
 				zVEC3 newpos = wld->traceRayReport.foundIntersection;
-				// 4 cm bis zum Bodem, um Kollision zu vermeiden.
 				newpos[VY] += diff + 2;
 				centerPos = newpos;
 				return TRUE;

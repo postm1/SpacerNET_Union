@@ -277,11 +277,6 @@ namespace GOTHIC_ENGINE {
 		{
 			while (mat)
 			{
-				// zCTexture* texture = mat->GetTexture();
-				// if (texture) texture->SetCacheOutLock(TRUE);
-				// So, nun feststellen, ob das Material wirklich zu dem Filter gehoert
-
-
 				if (mat->GetName().Length() > 0 && (mat->matUsage >= zCMaterial::zMAT_USAGE_LEVEL) && (mat->libFlag == filterItem->id))
 				{
 					if (!names.IsInList(mat->GetName()))
@@ -293,30 +288,6 @@ namespace GOTHIC_ENGINE {
 					{
 						cmd << "Material has the same name: " << mat->GetName() << endl;
 					}
-					/*
-					// insert to current-list
-					lList = &current_matlist;
-					if (lList)
-					{
-					// suche nach einfuegepunkt (sortiert)
-					do
-					{
-					nextMat = 0;
-					nextList = lList->GetNextInList();
-					if (nextList)
-					{
-					nextMat = nextList->GetData();
-					if (mat->GetName() < nextMat->GetName()) break;
-					lList = nextList;
-					}
-					} while (nextList);
-					if (lList) lList->Insert(mat);
-					}
-					else
-					{
-					current_matlist.Insert(mat);
-					}
-					*/
 				}
 
 				matIter++;

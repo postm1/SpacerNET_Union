@@ -58,8 +58,8 @@ namespace GOTHIC_ENGINE {
 		if (!moverVob) return;
 		zREAL position((float)m_kf_pos);
 		if (
-			moverVob->keyframeList.GetNumInList()>0 &&	// keyframeliste nicht leer
-			m_kf_pos<moverVob->keyframeList.GetNumInList()		// position innerhalb erlaubtem Bereich?
+			moverVob->keyframeList.GetNumInList()>0 &&
+			m_kf_pos<moverVob->keyframeList.GetNumInList()
 			)
 		{
 			moverVob->SetToKeyframe(position, 0);
@@ -93,8 +93,8 @@ namespace GOTHIC_ENGINE {
 		{
 			zREAL position((float)actionIndex);
 			if (
-				pMover->keyframeList.GetNumInList()>0 &&	// keyframeliste nicht leer
-				actionIndex<pMover->keyframeList.GetNumInList()		// position innerhalb erlaubtem Bereich?
+				pMover->keyframeList.GetNumInList()>0 &&
+				actionIndex<pMover->keyframeList.GetNumInList()
 				)
 			{
 				pMover->SetToKeyframe(position, 0);

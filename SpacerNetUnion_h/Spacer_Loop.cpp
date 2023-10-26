@@ -207,7 +207,6 @@ namespace GOTHIC_ENGINE {
 
 		int distDraw = 4000;
 
-		// Nach zCVobSpots durchsuchen
 		for (int i = 0; i<found.GetNumInList(); i++)
 		{
 			auto vob = found.GetSafe(i);
@@ -215,7 +214,6 @@ namespace GOTHIC_ENGINE {
 			if (vob && vob->GetVobName() == "VOB_TEST_NAME" && vob->GetVisual())
 			{
 				zCProgMeshProto* progMesh = static_cast<zCProgMeshProto*>(vob->GetVisual());
-				// der einfachheit halber nehmen wir das erste material was ok ist 
 				for (int i = 0; i<progMesh->numSubMeshes; i++)
 				{
 					if (auto mat = progMesh->subMeshList[i].material)
@@ -530,8 +528,6 @@ namespace GOTHIC_ENGINE {
 				screen->SetFontColor(zCOLOR(255, 255, 255));
 
 				int distDraw = 4000;
-
-				// Nach zCVobSpots durchsuchen
 				for (int i = 0; i<found.GetNumInList(); i++)
 				{
 					auto vob = found.GetSafe(i);

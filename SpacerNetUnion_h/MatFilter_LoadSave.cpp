@@ -17,9 +17,6 @@ namespace GOTHIC_ENGINE {
 			return false;
 		}
 
-
-		//zERR_MESSAGE(4, zERR_BEGIN, "B: SPC: Loading mat-filter " + matfilename);
-
 		file->Open(false);
 		file->Reset();
 
@@ -76,15 +73,12 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		//zERR_MESSAGE(4, 0, "B: SPC: Num of materials found: " + zSTRING(numLoaded));
-
 		arch->Close();
 		zRELEASE(arch);
 
 		file->Close(); delete file;
 
 		return true;
-		//zERR_MESSAGE(4, zERR_END, "");
 	}
 
 
@@ -404,21 +398,15 @@ namespace GOTHIC_ENGINE {
 
 		if (f->Exists())
 		{
-
-
-			//zERR_MESSAGE(7, 0, "B: SPC: Configuration: Loading file " + MATLIB_FILENAME);
 			if (f->Open(false) == 0)
 			{
-				// Liste leeren
 				matFilterList.EmptyList();
 
-				// Trash-Filter erzuegen
 				spcCMatFilter* item = new spcCMatFilter;
 				item->id = 0;
 				item->name = FILTER_NAME_TRASH;
 				matFilterList.Insert(item);
 
-				// In der INI-Datei vorkommende Filter einfuegen
 				zSTRING line;
 				zSTRING filterName;
 
@@ -444,7 +432,6 @@ namespace GOTHIC_ENGINE {
 						line.Delete("#", zSTR_TO);
 						zSTRING idStr = line;
 
-						//zERR_MESSAGE(7, 0, "B: SPC: Configuration: MaterialFilter " + item->name + ", #" + zSTRING(item->id));
 						item = new spcCMatFilter;
 
 
@@ -477,16 +464,11 @@ namespace GOTHIC_ENGINE {
 				} while (!f->Eof());
 				f->Close();
 			}
-			else
-			{
-				//zERR_WARNING("B: SPC: Configuration: Loading file " + MATLIB_FILENAME + " failed.");
-			};
 
 		}
 		else
 		{
 			cmd << "B: SPC: Configuration: Loading file " << MATLIB_FILENAME << " failed. Not found!" << endl;
-			//zERR_WARNING("B: SPC: Configuration: Loading file " + MATLIB_FILENAME + " failed. Not found!");
 		};
 
 		DWORD attr = GetFileAttributes("_work\\tools\\data\\" +  MATLIB_FILENAME);
@@ -551,7 +533,6 @@ namespace GOTHIC_ENGINE {
 			else
 			{
 				cmd << "B: SPC: Configuration: Loading file " << MATLIB_FILENAME << " failed." << endl;
-				//zERR_WARNING("B: SPC: Configuration: Loading file " + MATLIB_FILENAME + " failed.");
 			}
 			delete f;
 			f = 0;
@@ -559,7 +540,6 @@ namespace GOTHIC_ENGINE {
 		else
 		{
 			cmd << "B: SPC: Configuration: Loading file " << MATLIB_FILENAME << " failed. Not found!" << endl;
-			//zERR_WARNING("B: SPC: Configuration: Loading file " + MATLIB_FILENAME + " failed. Not found!");
 		}
 
 

@@ -1,5 +1,0 @@
-
-
-namespace GOTHIC_ENGINE {
-
-}

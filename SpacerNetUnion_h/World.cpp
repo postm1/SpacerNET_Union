@@ -99,14 +99,14 @@ namespace GOTHIC_ENGINE {
 			for (int j = i - 1; j >= 0; j--) {
 				void *upper = lower;
 				lower = d(j);
-				if ((*compare)(upper, lower) < 0) { // ok. Ist im Moment BubbleSort. Was solls...
+				if ((*compare)(upper, lower) < 0) {
 					swaps++;
 					memcpy(&swapplace, upper, size);
 					memcpy(upper, lower, size);
 					memcpy(lower, &swapplace, size);
 				}
 				else
-					j = 0; // hier kann man die innere Schleife schon abbrechen.
+					j = 0;
 			}
 			if (falltoqs && swaps > 5 * i + 5) {
 				qsort(data, num, size, compare);
@@ -211,14 +211,12 @@ namespace GOTHIC_ENGINE {
 		{
 			OutFile("=================featList", false);
 			//OutFile("s_actNumClipVert: " + ToStr((*featList)->, false);
-			//zERR_MESSAGE(5, 0, "M: Assigning indices to features...    ");
 			OutFile("s_polyVertIndex.Insert", false);
 			OutFile("numPoly: " + ToStr numPoly, false);
 			OutFile("numFeat: " + ToStr numFeat, false);
 			OutFile("numVert: " + ToStr numVert, false);
 
 			OutFile("polyNumVert: " + ToStr(*polyList)->polyNumVert, false);
-			//		 gib den Vertices dann die Nummer des Polygons, in dem sie zuerst auftauchen
 			for (i = numPoly - 1; i >= 0; i--)
 			{
 				zCPolygon *p = polyList[i];
