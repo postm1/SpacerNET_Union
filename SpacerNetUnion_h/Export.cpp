@@ -1177,17 +1177,17 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		_declspec(dllexport) int Extern_Light_UpdatePresetFromLightVob()
+		_declspec(dllexport) int Extern_Light_UpdatePresetFromLightVob(const char* presetName)
 		{
 			if (!theApp.vobLightSelected)
 				return false;
 
-			int idx = theApp.GetLightPresetIdx(theApp.vobLightSelected->lightPresetInUse);
-			if (idx == -1)
-				return false;
+			int idx = theApp.GetLightPresetIdx(presetName);
 
-			zCVobLightPreset* preset = zCVobLight::lightPresetList[idx];
+			zCVobLightPreset* preset = zCVobLight::lightPresetList.GetSafe(idx);
 			preset->lightData = theApp.vobLightSelected->lightData;
+
+			theApp.UpdateLightPresetView(preset->lightData);
 
 			return true;
 		}
@@ -1198,6 +1198,15 @@ namespace GOTHIC_ENGINE {
 				return;
 
 			theApp.vobLightSelected->SetByPreset(presetName);
+
+			zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
+
+			arch->SetStringEOL(zSTRING("\n"));
+			arch->WriteObject(theApp.vobLightSelected);
+			zSTRING arcString;
+			arch->GetBufferString(arcString);
+
+			theApp.SetProperties(arcString, "zCVobLight");
 		}
 
 		__declspec(dllexport) void Extern_Light_QueryPresetData(const char* presetName)
