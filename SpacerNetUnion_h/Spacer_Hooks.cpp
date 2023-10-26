@@ -275,25 +275,17 @@ namespace GOTHIC_ENGINE {
 		*/
 	}
 
-	//0x00630580 void __cdecl zDieter_StartUp(struct HWND__ * *)
-	void  __cdecl zDieter_StartUp(struct HWND__** handle);
-	CInvoke <void(__cdecl *) (struct HWND__** handle)> pzDieter_StartUp(0x00630580, zDieter_StartUp, IVK_AUTO);
-	void  __cdecl zDieter_StartUp(struct HWND__** handle)
+	// This hook prevents the game from modifying the window style on lower resolutions.
+	// Without this, the main window in C# will have additional border that will prevent
+	// from interacting with C# UI while using mouse.
+	// NOTE! this fix works only during game startup, changing the game resolution
+	// while Spacer.NET is running might still not work properly.
+	int vidSetMode_Union(VIDMODE*);
+	HOOK ivk_vidSetMode AS(&vidSetMode, &vidSetMode_Union);
+	int vidSetMode_Union(VIDMODE*)
 	{
-		int xRes = zoptions->ReadInt("VIDEO", "zVidResFullscreenX", 800);
-
-		if (xRes <= 1000)
-		{
-			int x, y;
-			GetDesktopResolution(x, y);
-
-			zoptions->WriteInt("VIDEO", "zVidResFullscreenX", x, 0);
-			zoptions->WriteInt("VIDEO", "zVidResFullscreenY", y, 0);
-			zoptions->WriteInt("VIDEO", "zVidResFullscreenBPP", 32, 0);
-
-		}
-
-		pzDieter_StartUp(handle);
+		ivk_vidSetMode.Detach();
+		return false;
 	}
 
 	/*
