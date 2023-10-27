@@ -1237,8 +1237,9 @@ namespace GOTHIC_ENGINE {
 		__declspec(dllexport) void Extern_Light_CreateVob()
 		{
 			CString vobName = Stack_PeekString();
+			CString presetName = Stack_PeekString();
 			OutFile("Extern_Light_CreateVob: vob " + A vobName, true);
-			theApp.CreateLightVob(vobName);
+			theApp.CreateLightVob(vobName, presetName);
 		}
 
 		__declspec(dllexport) int Extern_Light_ApplyChanges()

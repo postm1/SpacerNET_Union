@@ -514,7 +514,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	zCVobLight* SpacerApp::CreateLightVob(CString vobName)
+	zCVobLight* SpacerApp::CreateLightVob(CString vobName, CString presetName)
 	{
 		auto parent = theApp.GetSelectedVob();
 		if (theApp.globalParent)
@@ -536,6 +536,7 @@ namespace GOTHIC_ENGINE {
 		pVob->SetCollDetStat(FALSE);
 		pVob->SetPhysicsEnabled(FALSE);
 
+		pVob->SetByPreset(presetName);
 		pVob->lightData.m_bCanMove = true;
 		pVob->SetPositionWorld(pos);
 
