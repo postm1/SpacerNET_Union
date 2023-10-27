@@ -514,7 +514,37 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+	zCVobLight* SpacerApp::CreateLightVob(CString vobName)
+	{
+		auto parent = theApp.GetSelectedVob();
+		if (theApp.globalParent)
+			parent = theApp.globalParent;
 
+		if (parent && parent->IsPFX())
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+			return NULL;
+		}
+
+		zCVobLight* pVob = new zCVobLight();
+		zVEC3 pos = ogame->GetCamera()->connectedVob->GetPositionWorld();
+		zVEC3 dir = ogame->GetCamera()->connectedVob->GetAtVectorWorld().Normalize();
+
+		pos = pos + dir * 250;
+		pVob->SetVobName(vobName.Upper());
+		pVob->SetCollDet(FALSE);
+		pVob->SetCollDetStat(FALSE);
+		pVob->SetPhysicsEnabled(FALSE);
+
+		pVob->lightData.m_bCanMove = true;
+		pVob->SetPositionWorld(pos);
+
+		InsertIntoWorld(pVob, parent);
+
+		pVob->Release();
+
+		theApp.SetSelectedVob(pVob, "CreateLightVob");
+	}
 
 	void SpacerApp::OnCreateVob(zCVob* vob, bool select)
 	{
