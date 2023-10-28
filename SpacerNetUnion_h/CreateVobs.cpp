@@ -119,7 +119,7 @@ namespace GOTHIC_ENGINE {
 		theApp.selectNextVob = selectVob;
 
 
-		// убираем превью с экрана
+		// remove preview model from screen
 		AddVobToRender("", false);
 
 
@@ -788,7 +788,7 @@ namespace GOTHIC_ENGINE {
 
 		oCItem* isItem = dynamic_cast<oCItem*>(pVob);
 	
-		// удал€ем из списка oCVisualFX от итема
+		// remove oCVisualFX from the item list
 #if ENGINE > Engine_G1
 		if (isItem && isItem->effectVob)
 		{
@@ -825,60 +825,5 @@ namespace GOTHIC_ENGINE {
 
 		zRELEASE(pVob);
 
-	}
-
-
-
-	void SpacerApp::ApplyPhysicsVob()
-	{
-
-		zCVob* pVob = pickedVob;
-		zCWorld* world = ogame->GetWorld();
-		zVEC3 vec = ogame->GetCamera()->GetVob()->GetAtVectorWorld();
-
-		if (pVob && !pVob->staticVob && world)
-		{
-			zVEC3 cam = ogame->GetCamera()->GetVob()->GetAtVectorWorld();
-
-
-
-			if (dynamic_cast<zCVobWaypoint*>(pVob))
-			{
-				zCWayNet* waynet = world->GetWayNet();
-				zCWaypoint* wp = waynet->SearchWaypoint(dynamic_cast<zCVobWaypoint*>(pVob));
-				if (wp) wp->CorrectHeight(world);
-				return;
-			}
-
-			if (!pVob->GetCollDetStat()) return;
-
-
-			if (pVob && pVob->GetRigidBody())
-			{
-				zPOINT3 oldpos, pos, posneu;
-				oldpos = pVob->GetPositionWorld();
-				pos = posneu = oldpos;
-
-				zBOOL				physics = pVob->GetPhysicsEnabled();
-				pVob->SetSleeping(FALSE);
-				pVob->SetPhysicsEnabled(TRUE);
-
-				if (zinput->KeyPressed(KEY_LSHIFT))
-				{
-					vec = vec * 10000;
-				}
-				else
-				{
-					vec.n[VX] = 0;
-					vec.n[VZ] = 0;
-					vec.n[VY] = -300;
-				}
-				//zerr.Message("B: (Spacer) ApplyForceCM on Vob " + zSTRING(vec.n[VX]) + "/" + zSTRING(vec.n[VY]) + "/" + zSTRING(vec.n[VZ]));
-				pVob->GetRigidBody()->ApplyImpulseCM(vec);
-
-
-				//pVob->SetPhysicsEnabled(physics);
-			}
-		}
 	}
 }

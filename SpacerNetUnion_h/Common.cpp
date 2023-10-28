@@ -118,7 +118,7 @@ namespace GOTHIC_ENGINE {
 		this->CreateVobDependencies(world);
 	}
 
-	//убивает определенные триггеры, которые запускаютс€ автоматом, иначе в игре они будут не в нужном состо€нии
+	//kills certain triggers that are launch automatically, otherwise they will not be in the desired state in the game
 	HOOK Invk_zCTriggerWorldStart_PostLoad AS(&zCTriggerWorldStart::PostLoad, &zCTriggerWorldStart::PostLoad_Hook);
 	void zCTriggerWorldStart::PostLoad_Hook()
 	{
@@ -140,7 +140,7 @@ namespace GOTHIC_ENGINE {
 		//THISCALL(ivk_oCGame_OpenSavescreen)(a);
 	}
 
-	//”бивает внутриигровое меню
+	//Kills the in-game menu
 	HOOK ivk_CGameManager_InitScreen_Menu AS(&CGameManager::InitScreen_Menu, &CGameManager::InitScreen_Menu_Hook);
 	//void InitScreen_Menu_Hook();
 	void CGameManager::InitScreen_Menu_Hook()
@@ -151,7 +151,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-	// ’ук на камеру, чтобы она летала по кадрам в инструменте работы с камерой
+	// Hook the camera so that it flies through the frames in the camera tool
 	//0x004BFBC0 public: virtual void __thiscall zCCSCamera::Unarchive(class zCArchiver &)
 	HOOK ivk_zCCSCamera_Unarchive AS(&zCCSCamera::Unarchive, &zCCSCamera::Unarchive_Hook);
 	void Unarchive_Hook(zCArchiver &);
@@ -207,7 +207,7 @@ namespace GOTHIC_ENGINE {
 		SetVisual(0);
 	}
 
-	//¬ключает добавление зон в мир
+	//Enables adding zones to the world
 	//0x0061FA40 public: __thiscall zCWorld::zCWorld(void)
 	HOOK ivk_zCWorld_zCWorld AS(&zCWorld::zCWorld, &zCWorld::zCWorld_Hook);
 	//zCWorld* zCWorld_Hook();
@@ -222,7 +222,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-	// ‘икс звука после сохранени€ звукового воба
+	// Fix sound after saving sound vob
 	//0x0063E3D0 protected: virtual void __thiscall zCVobSound::Archive(class zCArchiver &)
 	HOOK ivk_zCVobSound_Archive AS(&zCVobSound::Archive, &zCVobSound::Archive_Hook);
 	//void Archive_Hook(zCArchiver &);
@@ -236,7 +236,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	// ‘икс звука после загрузки звукового воба
+	// Fix sound after loading sound vob
 	//0x0063E540 protected: virtual void __thiscall zCVobSound::Unarchive(class zCArchiver &)
 	HOOK ivk_zCVobSound_Unarchive AS(&zCVobSound::Unarchive, &zCVobSound::Unarchive_Hook);
 	//void Unarchive_Hook(zCArchiver &);

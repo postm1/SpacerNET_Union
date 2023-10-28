@@ -130,12 +130,11 @@ namespace GOTHIC_ENGINE {
 
 			// временный файл
 			zFILE* fileTempWork = zfactory->CreateZFile(fileNameTempWork);
-			// создаем в первый раз копию PML файла
+			// creating a copy of the PML file for the first time
 			zFILE* fileBackup = zfactory->CreateZFile(matfilenameBackup);
 
 			if (!fileBackup->Exists())
 			{
-				// реальный файл для создания копии
 				zFILE* fileReal = zfactory->CreateZFile(realFileName);
 				if (fileReal->Exists())
 				{
@@ -284,14 +283,14 @@ namespace GOTHIC_ENGINE {
 				arch->Close();
 				zRELEASE(arch);
 
-				// закрываем, чтобы файл можно было скопировать в другой
+				// close it so that the file can be copied to another
 				fileTempWork->Close();
 
-				// пишем в реальный файл
+				// write to a real file
 				fileTempWork->FileCopy(realFileName, true);
 				
 
-				// удаляем временный файл
+				// delete temporary file
 				zFILE_FILE fileWorkRemove(fileNameTempWork);
 
 				if (fileWorkRemove.Exists())

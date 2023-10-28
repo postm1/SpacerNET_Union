@@ -18,7 +18,7 @@ namespace GOTHIC_ENGINE {
 
 		zVEC3 center;
 
-		// находитс€ ли воб в €чейке
+		// is a vob in the grid
 		bool IsPosInGrid(zVEC3 pos)
 		{
 

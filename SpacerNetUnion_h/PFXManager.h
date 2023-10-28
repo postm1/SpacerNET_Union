@@ -6,10 +6,8 @@ namespace GOTHIC_ENGINE {
 
 	struct PFXManager
 	{
-		// рисуемый эффект
 		zCParticleFX* m_pPfx;
 
-		// воб-родитель на котором рисуется эффект
 		zCVob* testVob;
 
 		zCWorld* m_pWorld;

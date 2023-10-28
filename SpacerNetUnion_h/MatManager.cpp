@@ -60,8 +60,6 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		//DoWork_TestRender();
-
 		if (theApp.GetSelectedVob())
 		{
 			if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);

@@ -128,7 +128,7 @@ namespace GOTHIC_ENGINE {
 
 	*/
 
-	// Убирает лишний код в обработке звука по зонам, нужно для спейсера
+	// Removes unnecessary code in sound processing by zone, needed for a spacer
 	//0x0063E8D0 public: virtual void __thiscall zCVobSound::
 	//ProcessZoneList(class zCArraySort<class zCZone *> const &,class zCArraySort<class zCZone *> const &,class zCWorld *)
 	void __fastcall ProcessZoneList(zCVobSound* _this, void*, class zCArraySort<class zCZone *> const &, class zCArraySort<class zCZone *> const &, class zCWorld *);
@@ -285,6 +285,8 @@ namespace GOTHIC_ENGINE {
 		ivk_vidSetMode.Detach();
 		return false;
 	}
+
+	/////////============================ SOME TEST HOOKS/CODE BELOW ===================================//////////////////////
 
 	/*
 	//0x0055F010 public: void __thiscall zCFile3DS::Save3DS(class zSTRING const &,class zCMesh *)

@@ -81,6 +81,8 @@ namespace GOTHIC_ENGINE {
 		return false;
 	}
 
+	// test loop, some test code always here...
+
 	void SpacerApp::TestLoop()
 	{
 		return;

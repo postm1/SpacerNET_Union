@@ -5,10 +5,10 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 	struct CameraMovement
 	{
-		// углы поворота камеры
+		// camera rotation angles
 		float yaw;
 		float pitch;
-		// координаты мыши на прошлом тике
+		// mouse coordinates on the last frame
 		POINT mousePrev;
 		// спрятан ли курсор
 		bool hideCursor;
@@ -31,8 +31,7 @@ namespace GOTHIC_ENGINE {
 	} camMov;
 
 
-	// Мышка может уйти за "границу" экрана, поэтому устанавливаем ее в центр, если надо
-
+	// The mouse may go beyond the “border” of the screen, so we place it in the center if necessary
 	bool IsSetMouseCenter(POINT& mouse)
 	{
 		bool flag = false;
@@ -150,7 +149,7 @@ namespace GOTHIC_ENGINE {
 		zVEC3 newVec = zVEC3(0, 0, 0);
 
 
-		/*************************** Поступательное движение камеры *****************************/
+		/*************************** TRANSLATION MOVEMENT *****************************/
 		float speedTranslate = ((float)(theApp.options.GetIntVal("camTransSpeed")) / 100) * ztimer->frameTimeFloat;
 
 
@@ -188,19 +187,19 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		// ускоряем в n-раз при нажатом левом шифте
+		// accelerate n-times with left shift pressed
 		if (keys.KeyPressed("CAM_SPEED_X10", false, true))
 		{
 			newVec *= 10;
 		}
 
-		// замедляем в 5 раз при нажатом левом контроле
+		// slow down n-times with left control pressed
 		if (keys.KeyPressed("CAM_SPEED_MINUS_10", false, true))
 		{
 			newVec *= 0.2;
 		}
 
-		// очень быстрое перемещение по карте в направлении взгляда
+		// very fast movement on the map in the direction of view
 		if (KeyClick(MOUSE_WHEELUP))
 		{
 			newVec = unit * 2000;
@@ -211,13 +210,11 @@ namespace GOTHIC_ENGINE {
 			newVec = unit.Minus() * 2000;
 		}
 
-		// приращение позиции в мире
 		movvob->SetPositionWorld(pos + newVec);
 
 
-		/*************************** Вращательное движение камеры *****************************/
+		/*************************** ROTATION MOVEMENT*****************************/
 
-		// изменение координат мыши
 		delta.x = (mouse.x - camMov.mousePrev.x);
 		delta.y = (camMov.mousePrev.y - mouse.y);
 
@@ -238,14 +235,12 @@ namespace GOTHIC_ENGINE {
 		camMov.yaw -= delta.x * rotSpeed;
 		camMov.pitch += delta.y * rotSpeed;
 
-		// ограничиваем макс угол камеры, чтобы она не вращалась на 360 градусов по вертикали и мир не переворачивался
+		// we limit the maximum angle of the camera so that it does not rotate 360 degrees vertically and the world does not turn upside down
 		if (camMov.pitch > 89.0f)
 			camMov.pitch = 89.0f;
 		if (camMov.pitch < -89.0f)
 			camMov.pitch = -89.0f;
 
-
-		// вектор поворота в пространстве
 		zVEC3 rot;
 
 		rot.n[0] = cos(Radian(camMov.yaw)) * cos(Radian(camMov.pitch));

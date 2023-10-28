@@ -8,7 +8,7 @@ namespace GOTHIC_ENGINE {
 
 	typedef void(*ptr_EVENTFUNC)(zCVob*);
 
-	// массивы зарегистрированных указателей на функции, которые вызовуются при возникновении событий
+	// arrays of registered pointers to functions that are called when events occur
 	Array<ptr_EVENTFUNC> arr_OnCreateVob_RegFuncs;
 	Array<ptr_EVENTFUNC> arr_OnDeleteVob_RegFuncs;
 	Array<ptr_EVENTFUNC> arr_OnApplyDataToVob_RegFuncs;
@@ -17,48 +17,40 @@ namespace GOTHIC_ENGINE {
 
 	void CALL_OnCreateVob(zCVob* pVob)
 	{
-		// пробегаемся по всем указателям на функции
 		for (uint i = 0; i < arr_OnCreateVob_RegFuncs.GetNum(); i++)
 		{
-			// вызываем функцию
 			arr_OnCreateVob_RegFuncs[i](pVob);
 		}
 	}
 
 	void CALL_OnDeleteVob(zCVob* pVob)
 	{
-		// пробегаемся по всем указателям на функции
 		for (uint i = 0; i < arr_OnDeleteVob_RegFuncs.GetNum(); i++)
 		{
-			// вызываем функцию
 			arr_OnDeleteVob_RegFuncs[i](pVob);
 		}
 	}
 
 	void CALL_OnApplyDataToVob(zCVob* pVob)
 	{
-		// пробегаемся по всем указателям на функции
 		for (uint i = 0; i < arr_OnApplyDataToVob_RegFuncs.GetNum(); i++)
 		{
-			// вызываем функцию
 			arr_OnApplyDataToVob_RegFuncs[i](pVob);
 		}
 	}
 
 	void CALL_OnSelectVob(zCVob* pVob)
 	{
-		// пробегаемся по всем указателям на функции
 		for (uint i = 0; i < arr_OnSelectVob_RegFuncs.GetNum(); i++)
 		{
-			// вызываем функцию
 			arr_OnSelectVob_RegFuncs[i](pVob);
 		}
 	}
 
-	// экспорт функции для других DLL
+	// export for another dlls
 	extern "C"
 	{
-		// добавляет текст в окно Информации, color в формате html #000000
+		// adds text to the Information window, color in html format #000000
 		__declspec(dllexport) void SPC_SendMsgInfo(string txt, string color)
 		{
 			Stack_PushString(txt);
@@ -67,14 +59,14 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		// возвращает текущий выделенный объект
+		// returns the currently selected object
 		__declspec(dllexport) zCVob* SPC_GetSelectedObject()
 		{
 			return theApp.GetSelectedVob();
 		}
 
 
-		// обновляет свойства воба в окне редактора
+		// updates vob properties in the editor window
 		__declspec(dllexport) void SPC_RefreshProps()
 		{
 			if (auto pVob = theApp.GetSelectedVob())
@@ -85,12 +77,9 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void SPC_RegEventFunc(enum SPC_EVENTLIST evt, ptr_EVENTFUNC func)
 		{
-			// если указателя на функцию нет
 			if (!func)
-				// выходим
 				return;
 
-			// Иначе, добавляем в соотв. массив функций:
 			switch (evt)
 			{
 			case Gothic_II_Addon::SPC_EVT_OnCreateVob:

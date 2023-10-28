@@ -3,7 +3,7 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
-	// Ôóíęöčč âűçűâŕţňń˙ čç C#
+	// Functions which calls c# code
 
 
 	extern "C"

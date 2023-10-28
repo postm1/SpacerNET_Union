@@ -3032,9 +3032,6 @@
     <ClInclude Include="Structures.h">
       <Filter>Plugin\Workspace\Plugin\Headers</Filter>
     </ClInclude>
-    <ClInclude Include="RenderTest.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\Materials\RenderTest</Filter>
-    </ClInclude>
     <ClInclude Include="TestLoop.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Movement</Filter>
     </ClInclude>

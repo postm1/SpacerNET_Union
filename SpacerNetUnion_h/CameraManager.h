@@ -16,7 +16,7 @@ namespace GOTHIC_ENGINE {
 		bool hideVisualWhileActive;
 		bool hideHelpVisualsTemp;
 		float timeDurationOnSpacer;
-		float		lastPresetTime; // временная, для сохранения
+		float		lastPresetTime;
 		zCVob*		cur_vob;
 		
 		

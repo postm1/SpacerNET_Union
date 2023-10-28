@@ -11,7 +11,6 @@ namespace GOTHIC_ENGINE {
 
 	#define ToStr (zSTRING)
 
-		// напсать строчку на несколько секунд, максимум 6 шт.
 	#define printWin(a) ogame->game_text->Printwin(ToStr a);
 	#define INP_CLR zinput->ClearKey();
 	#define FACTOR_M 81.919998
@@ -24,26 +23,23 @@ namespace GOTHIC_ENGINE {
 	#define LogicKey(a)	zinput->GetState(a)
 	#define DllExport __declspec(dllexport)
 
-		// максимальное из двух
+
 	#define max(a,b) (a > b ? a : b)
 
-		// минимальное из двух
 	#define min(a,b) (a < b ? a : b)
 
-		//ЦЕНТР ЭКРАНА
+	//CENTER_SCREEN
 	#define _CENTER_SCREEN 4096								
 
-		// максимальный размер экрана
+	// MAX SCREEN SIZE
 	#define SCREEN_MAX 8192
 
-	// для сортировки надо
+	// sorting stuff
 	#define d(i) (((char *)data)+(i)*size)
-		// каст пикселей в в.юниты и наоборот
-		// pView
+
 	#define PixelToVirtualX(pView, value) pView->anx(value) // по оси Х
 	#define PixelToVirtualY(pView, value) pView->any(value) // по оси У
 
-		// Преобразование виртуальных координат в пиксели относительно заданного объекта "pView"
 	#define VirtualToPixelX(pView, value) pView->nax(value) // по оси Х
 	#define VirtualToPixelY(pView, value) pView->nay(value) // по оси У
 

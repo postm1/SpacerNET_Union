@@ -32,7 +32,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	// линий трейсинга
+	// Trance lines output
 	void AB_Debug::ManageLines()
 	{
 		viewText->ClrPrintwin();

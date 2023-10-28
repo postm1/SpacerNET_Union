@@ -3,7 +3,8 @@
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
-	// вывод линий на экран, например, трейсинга
+	
+
 	struct DebugPointEntry
 	{
 		zVEC3 origin;

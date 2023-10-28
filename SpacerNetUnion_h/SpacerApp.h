@@ -261,7 +261,6 @@ namespace GOTHIC_ENGINE {
 		void RemoveAllChilds(zCVob* pVob);
 		void MakeGlobalParent(zCVob* pVob);
 		void Extern_RemoveAsParent(zCVob* pVob);
-		void ApplyPhysicsVob();
 		void CleanGlobalParent();
 
 

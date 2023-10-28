@@ -192,13 +192,13 @@ namespace GOTHIC_ENGINE {
 		UI_WIN_VOBLIST
 	};
 
-	// перечисление событий (индексы для распознавания)
+	// Some events for external library
 	enum SPC_EVENTLIST
 	{
-		SPC_EVT_OnCreateVob,        // событие после создания объекта
-		SPC_EVT_OnDeleteVob,        // событие перед удалением объекта
-		SPC_EVT_OnApplyDataToVob,    // событие после применения свойств объекта
-		SPC_EVT_OnSelectVob          // событие при выборе воба
+		SPC_EVT_OnCreateVob,        // after object is created
+		SPC_EVT_OnDeleteVob,        // before object is removed
+		SPC_EVT_OnApplyDataToVob,    // after apply properties to a vob
+		SPC_EVT_OnSelectVob          // when a vob is selected
 	};
 
 

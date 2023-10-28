@@ -5,17 +5,16 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 	zCArray<MatFilterRenderEntry*> pListCache;
-	// –азмеры выходной текстуры (в пиксел€х):
+	// Output texture size (in pixels):
 	const int OUTPUT_SIZEX = 128;
 	const int OUTPUT_SIZEY = 128;
 
-	// массив пикселей выходной текстуры
 	//DWORD arr_pixels[OUTPUT_SIZEX * OUTPUT_SIZEY];
 
 
 
 
-	// преобразование цвета RGBA -> DWORD
+	// RGBA -> DWORD
 	inline DWORD RGBA_2_DWORD(int iR, int iG, int iB, int iA)
 	{
 		return (((((iA << 8) + iR) << 8) + iG) << 8) + iB;
@@ -29,13 +28,11 @@ namespace GOTHIC_ENGINE {
 		// (RGBA = 0, 0, 0, 255)
 		DWORD FillColor = RGBA_2_DWORD(0, 0, 0, 255);
 
-		// число пикселей в массиве
+		// number of pixels in the array
 		int numEle = sizeof(arr_pixels) / 4;
-
-		// пробегаемс€ по всем пиксел€м массива
 		for (int i = 0; i < numEle; i++)
 		{
-			// и заполн€ем их чЄрным цветом
+			// and fill them with black
 			memcpy(&arr_pixels[i], &FillColor, 4);
 		}
 	}
@@ -60,7 +57,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	// посылаем текстуру в интерфейс
+	// sending the texture to the interface
 	void RenderTexture_Send(MatFilterRenderEntry* entry)
 	{
 		if (entry)
@@ -476,7 +473,6 @@ namespace GOTHIC_ENGINE {
 	void MatFilter::Render(zCMaterial* pMat)
 	{
 		if (!pMat || !pMat->texture)
-			// выходим
 			return;
 
 		if (CheckDx11())

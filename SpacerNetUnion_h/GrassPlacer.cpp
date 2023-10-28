@@ -47,8 +47,8 @@ namespace GOTHIC_ENGINE {
 				zVEC3 ray00, ray, p;
 				cam->camMatrixInv.GetTranslation(ray00);
 				p.n[VZ] = 1;
-				cam->BackProject(ax, ay, p);				// p im camSpace
-				p = cam->camMatrixInv * p;					// p im world(obj)Space  
+				cam->BackProject(ax, ay, p);
+				p = cam->camMatrixInv * p;
 				ray = p - ray00;
 
 				ray = ray.Normalize();
@@ -58,9 +58,9 @@ namespace GOTHIC_ENGINE {
 
 
 				if (ogame->GetWorld()->TraceRayFirstHit(cam->GetVob()->GetPositionWorld(), ray * 25000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_VOB_IGNORE)) {
-					// Poly gefunden
+
 					if (ogame->GetWorld()->traceRayReport.foundPoly) {
-						// Schnittpunkt schnappen und Position neu setzen
+
 						auto poly = ogame->GetWorld()->traceRayReport.foundPoly;
 						auto posToPlace = ogame->GetWorld()->traceRayReport.foundIntersection;
 

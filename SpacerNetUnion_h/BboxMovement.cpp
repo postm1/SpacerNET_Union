@@ -16,7 +16,6 @@ namespace GOTHIC_ENGINE {
 				bboxMinsVob->SetVobName("SPACER_VOB_BBOX_MINS");
 				bboxMinsVob->dontWriteIntoArchive = true;
 				bboxMinsVob->SetCollDet(FALSE);
-				//bboxMinsVob->SetVisual("ITMI_STONEFIRE_ENCH.3DS");
 				bboxMinsVob->ignoredByTraceRay = true;
 				bboxMinsVob->SetShowVisual(FALSE);
 
@@ -31,7 +30,6 @@ namespace GOTHIC_ENGINE {
 				bboxMaxsVob->SetVobName("SPACER_VOB_BBOX_MAXS");
 				bboxMaxsVob->dontWriteIntoArchive = true;
 				bboxMaxsVob->SetCollDet(FALSE);
-				//bboxMaxsVob->SetVisual("ITMI_STONEFIRE_ENCH.3DS");
 				
 				bboxMaxsVob->ignoredByTraceRay = true;
 
@@ -199,7 +197,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-			// общие манипуляции, вне зависимости от выбранного инструмента
+			// general manipulations, regardless of the selected tool
 			if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
 			{
 				zVEC3 pos = bboxCurrentVob->GetPositionWorld();
@@ -287,7 +285,7 @@ namespace GOTHIC_ENGINE {
 				zTBBox3D bbox;
 				bbox.mins = theApp.bboxMinsVob->GetPositionWorld();
 				bbox.maxs = theApp.bboxMaxsVob->GetPositionWorld();
-				// Korrektur	
+
 				for (int d = 0; d<3; d++)
 				{
 					if (bbox.mins[d]>bbox.maxs[d])

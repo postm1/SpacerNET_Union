@@ -45,7 +45,6 @@
 #include "AB_NoGrass.cpp"
 #include "MatFilter.cpp"
 #include "MatFilter_LoadSave.cpp"
-#include "RenderTest.cpp"
 #include "AB_Debug.cpp"
 #include "MatFilter_Render.cpp"
 #include "TestLoop.cpp"

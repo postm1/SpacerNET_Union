@@ -6,8 +6,7 @@ namespace GOTHIC_ENGINE {
 	extern Timer mainTimer;
 	extern void _GetCursorPos(POINT* cur);
 
-	// Add your code here . . .
-	// обновить сетку вейпоинтов при перемещении WP
+	// update waypoint grid when moving WP
 	void WayMovePoint(zCVob* wpvob)
 	{
 		if (!dynamic_cast<zCVobWaypoint*>(wpvob)) return;
@@ -322,7 +321,7 @@ namespace GOTHIC_ENGINE {
 		//bool parentAlone = theApp.options.GetIntVal("translateParentAlone");
 
 
-		//проверка коллизии для мувера
+		//collision check for mover
 		if (IsVobMover(pickedVob))
 		{
 			pickedVob->SetPositionWorld(pos);
@@ -640,7 +639,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	//vob - Воб, которому меняем родителя; newParent - воб новый родитель
+	//vob - The vob whose parent we are changing; newParent - new parent
 	void HandleParentChange(zCVob* vob, zCVob* newParent)
 	{
 		zCWorld* pWorld = ogame->GetWorld();
@@ -672,7 +671,7 @@ namespace GOTHIC_ENGINE {
 		if (vob  && vob != newParent && pWorld)
 		{
 			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
-			// если есть новый родитель
+			// if there is a new parent
 			if (newParent)
 			{
 				pWorld->MoveVobSubtreeTo(vob, newParent->globalVobTreeNode);
@@ -682,7 +681,7 @@ namespace GOTHIC_ENGINE {
 			}
 			else
 			{
-				// иначе вставляем в случайный zCVobLevelCompo
+				// otherwise we insert it into a random zCVobLevelCompo
 				zCArray<zCVob*> resultList;
 				pWorld->SearchVobListByClass(zCVobLevelCompo::classDef, resultList, 0);
 
@@ -1035,7 +1034,7 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 			cmd << endl;
-			cmd << ("Всего PFX: " + Z pList.GetNumInList()) << endl;
+			cmd << ("All PFX: " + Z pList.GetNumInList()) << endl;
 
 			int childCount = 0;
 
@@ -1858,17 +1857,6 @@ namespace GOTHIC_ENGINE {
 		}
 		*/
 
-
-
-		
-
-		/*
-		if (keys.KeyPressed("TEST_MOVE_LC", true))
-		{
-			print.PrintRed("Хаарт опускает вобы");
-
-		}
-		*/
 		
 		if (GetSelectedTool() == TM_NONE)
 		{
@@ -1984,7 +1972,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-			// общие манипуляции, вне зависимости от выбранного инструмента
+			// general manipulations, regardless of the selected tool
 			if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
 			{
 				zVEC3 pos = pickedVob->GetPositionWorld();
@@ -2058,7 +2046,7 @@ namespace GOTHIC_ENGINE {
 				}
 
 
-				// перемещение
+				// moving
 				if (selectedTool == TM_TRANSLATE || selectedTool == TM_ONEMODE)
 				{
 
@@ -2101,7 +2089,7 @@ namespace GOTHIC_ENGINE {
 
 
 				}
-				// вращение
+				// rotation
 				if (selectedTool == TM_ROTATE || selectedTool == TM_ONEMODE)
 				{
 					//print.PrintRed("2");

@@ -15,7 +15,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		//если ничего не скрываем, то ничего и не делаем
+		//if we donТt hide anything, then we donТt do anything.
 		if (percentGrass == 0 && percentBush == 0)
 		{
 			return;
@@ -69,14 +69,14 @@ namespace GOTHIC_ENGINE {
 		//cmd << "GrassOrBust list: " << vobListGrass.GetNumInList() << endl;
 
 
-		// считаем геометрический центр всех вобов
+		// calculating the geometric center of all vobs
 		bariCenter /= hiddenAmount;
 
 		//cmd << "bariCenter: " << bariCenter.ToString() << endl;
 
 
 
-		// ищем самый удаленый воб, чтоб сделать квадрат нужного размера
+		// we are looking for the most distant object to make a square of the required size
 		for (int i = 0; i < vobListGrass.GetNumInList(); i++)
 		{
 			zCVob* pVob = vobListGrass.GetSafe(i);
@@ -94,21 +94,15 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		//увеличиваем размер, потому что воб может оказатьс€ за квадратом в некоторых случа€х
+		//we increase the size, because the vob may end up outside the square in some cases
 		maxDist *= sqrt(2.0f);
-
-		// еще небольшой запас
 		maxDist *= 1.10f;
-
-
-
-
 
 
 		//cmd << "maxDist: " << maxDist << endl;
 
 
-		//4 точки квадрата, который покрывает всю карту
+		//4 points square that covers the entire map
 		zVEC3 first = bariCenter + zVEC3(maxDist * cos(PI / 4), 0, maxDist * sin(PI / 4));
 		zVEC3 second = bariCenter + zVEC3(maxDist * cos(PI / 4 + PI / 2), 0, maxDist * sin(PI / 4 + PI / 2));
 		zVEC3 third = bariCenter + zVEC3(maxDist * cos(5 * PI / 4), 0, maxDist * sin(5 * PI / 4));
