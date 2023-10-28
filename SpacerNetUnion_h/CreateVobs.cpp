@@ -802,7 +802,6 @@ namespace GOTHIC_ENGINE {
 
 
 		zCVobWaypoint* wpvob = dynamic_cast<zCVobWaypoint*>(pVob);
-		// Wegpunkt
 		if (wpvob)
 		{
 			zCWayNet* waynet = ogame->GetWorld()->wayNet;

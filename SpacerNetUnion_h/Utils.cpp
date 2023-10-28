@@ -72,7 +72,6 @@ namespace GOTHIC_ENGINE {
 		XCALL(0x005053E0)
 	}
 
-	// Устанавливает время суток
 	void SetTime(int hour, int min)
 	{
 		int day, hour_, min_;
@@ -222,13 +221,13 @@ namespace GOTHIC_ENGINE {
 		return str;
 	}
 
-	// Нарисовать линию определенным цветом
+	// Draw a line with a specific color
 	void DrawLine(zCCamera *cam, zCVob* v1, zCVob* v2, zCOLOR col)
 	{
 		if (!cam || !v1 || !v2) return;
 
-		zVEC3 wsPoint1, wsPoint2, csPoint1, csPoint2;	// world/camera-space
-		zVEC3 ssPoint1, ssPoint2;						// screen-space X,Y
+		zVEC3 wsPoint1, wsPoint2, csPoint1, csPoint2;
+		zVEC3 ssPoint1, ssPoint2;
 
 		wsPoint1 = v1->GetPositionWorld();
 		wsPoint2 = v2->GetPositionWorld();
@@ -641,9 +640,7 @@ namespace GOTHIC_ENGINE {
 		const HWND hDesktop = GetDesktopWindow();
 		// Get the size of screen to the variable desktop
 		GetWindowRect(hDesktop, &desktop);
-		// The top left corner will have coordinates (0,0)
-		// and the bottom right corner will have coordinates
-		// (horizontal, vertical)
+
 		horizontal = desktop.right;
 		vertical = desktop.bottom;
 	}
@@ -770,21 +767,14 @@ namespace GOTHIC_ENGINE {
 
 	zVEC3 Slerp(zVEC3 start, zVEC3 end, float percent)
 	{
-		// Dot product - the cosine of the angle between 2 vectors.
 		float dot = start.Dot(end);
 
-		// Clamp it to be in the range of Acos()
-		// This may be unnecessary, but floating point
-		// precision can be a fickle mistress.
 		zClamp(dot, -1.0f, 1.0f);
-		// Acos(dot) returns the angle between start and end,
-		// And multiplying that by percent returns the angle between
-		// start and the final result.
+
 		float theta = acos(dot)*percent;
 		zVEC3 RelativeVec = end - start*dot;
 		RelativeVec.Normalize();
-		// Orthonormal basis
-		// The final result.
+
 		return ((start*cos(theta)) + (RelativeVec*sin(theta)));
 	}
 
@@ -973,7 +963,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	// упаковка RGBA цвета в ulong (4 байта)
+	// packing RGBA colors in ulong (4 bytes)
 	unsigned long RGBA2DWORD(int iR, int iG, int iB, int iA)
 	{
 		return ((iA * 256 + iR) * 256 + iG) * 256 + iB;
@@ -981,7 +971,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-	// разложение 4 байтов на RGBA составляющие
+	// decomposition of 4 bytes into RGBA components
 	RGBA DWORD2RGBA(unsigned long dwColor)
 	{
 		RGBA tmp;

@@ -6,16 +6,16 @@ namespace GOTHIC_ENGINE {
 
 	class MyPrint {
 		struct PrintWinMessage {
-			int id; // айди сообщения, нужен для сортировки одинаковых сообщений
-			zSTRING msg; // сообщение
-			int amountMillisec; // колличество миллисекунд, что сообщение активно
-			zCOLOR color; // цвет сообщения, по умолчанию - белый
+			int id;
+			zSTRING msg;
+			int amountMillisec;
+			zCOLOR color;
 		};
-		int currentId; // максимально используемоей айди в текущей сессии
+		int currentId;
 		zCView * pView;
 		zCArray<PrintWinMessage> arrMsgs;
-		int pwMaxTime; // максимальное время, что сообщения висят на экране
-		int pwMaxMsgs; // количество сообщений
+		int pwMaxTime;
+		int pwMaxMsgs;
 
 	public:
 

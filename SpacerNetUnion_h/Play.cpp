@@ -15,7 +15,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-
+	// game mod inside spacer
 	void SpacerApp::GameLoop()
 	{
 
@@ -193,34 +193,34 @@ namespace GOTHIC_ENGINE {
 
 			SetSelectedVob(NULL);
 
-			// Reset parser global vars
+		
 			parser->ResetGlobalVars();
 			parser->SetInstance("SELF", NULL);
 			parser->SetInstance("OTHER", NULL);
 			parser->SetInstance("VICTIM", NULL);
 			parser->SetInstance("ITEM", NULL);
-			// Clear SpawnList 
+
 			ogame->spawnman->ClearList();
-			// Clear InfoMan
+
 			ogame->infoman = zNEW(oCInfoManager)(parser);
-			// Clear Logs
+
 			oCLogManager::GetLogManager().Clear();
-			// Clear NewsManager
+
 
 			ogame->newsman = zNEW(oCNewsManager());
-			// Clear Soundos
+
 			if (zsound) zsound->StopAllSounds();
-			// delete all homeworld references of all CVisualFX Objects 
+
 			oCVisualFX::PreSaveGameProcessing(TRUE);
 			oCVisualFX::PostSaveGameProcessing();
-			// Clear DebugList
+	
 			oCNpc::SetNpcAIDisabled(FALSE);
 			ogame->GetSpawnManager()->SetSpawningEnabled(TRUE);
 
 			oCVob::ClearDebugList();
-			// Clear ProtalManager
+
 			if (ogame->portalman) ogame->portalman->CleanUp();
-			// Clear ObjectRoutineList
+
 			ogame->ClearObjectRoutineList();
 			//ogame->CallScriptStartup();
 			//ogame->CallScriptInit();
@@ -292,36 +292,33 @@ namespace GOTHIC_ENGINE {
 
 			//SpacerIsActive = TRUE;
 			ogame->m_bWorldEntered = false;
-			// Reset parser global vars
+
 			parser->ResetGlobalVars();
 			parser->SetInstance("SELF", NULL);
 			parser->SetInstance("OTHER", NULL);
 			parser->SetInstance("VICTIM", NULL);
 			parser->SetInstance("ITEM", NULL);
-			// Clear SpawnList 
+
 			ogame->spawnman->ClearList();
-			// Clear InfoMan
+
 			delete ogame->infoman;
 			ogame->infoman = zNEW(oCInfoManager)(parser);
-			// Clear Logs
+	
 			oCLogManager::GetLogManager().Clear();
-			// Clear NewsManager
+
 			delete ogame->newsman;
 			ogame->newsman = zNEW(oCNewsManager());
-			// Clear Soundos
+	
 			zsound->StopAllSounds();
-			// delete all homeworld references of all CVisualFX Objects 
+	
 			oCVisualFX::PreSaveGameProcessing(TRUE);
 			oCVisualFX::PostSaveGameProcessing();
 			
-			//ogame->GetCamera()->connectedVob->SetPositionWorld(oCNpc::player->GetPositionWorld());
-			// Clear Cam ?!
-			//CEditorDoc::doc->InitCamera(oCNpc::player->GetPositionWorld());
-			// Clear DebugList
+
 			oCVob::ClearDebugList();
-			// Clear ProtalManager
+
 			if (ogame->portalman) ogame->portalman->CleanUp();
-			// Clear ObjectRoutineList
+
 			ogame->ClearObjectRoutineList();
 
 
@@ -356,7 +353,6 @@ namespace GOTHIC_ENGINE {
 
 			ogame->RemovePlayerFromWorld();
 
-			// óäŕë˙ĺě ęŕěĺđű čç c# ńďčńęîâ
 			for (int i = 0; i < targetList.GetNumInList(); i++)
 			{
 				auto pVob = targetList.GetSafe(i);

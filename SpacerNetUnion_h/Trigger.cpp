@@ -133,8 +133,6 @@ namespace GOTHIC_ENGINE {
 	{
 		if (moverVob)
 		{
-			//if (moverVob->keyframeList.GetNumInList() == 0)
-			//ctrl_kf_edit.EnableWindow(true);
 			zCMover::zTMov_Keyframe KF = zCMover::GetKeyframe(moverVob);
 			int numInList = moverVob->keyframeList.GetNumInList();
 
@@ -228,7 +226,6 @@ namespace GOTHIC_ENGINE {
 			s = eventCore->MD_GetSubTypeString(i);
 			Stack_PushString(s);
 			addActionType();
-			//ctrl_event_list.AddString(s.ToChar());
 		}
 
 		zRELEASE(eventCore);

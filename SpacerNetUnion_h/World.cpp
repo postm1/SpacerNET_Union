@@ -322,7 +322,7 @@ namespace GOTHIC_ENGINE {
 		nograss.RestoreObjectsSaveGame();
 	}
 
-	// фикс визуалов определенных вобов при сохранении зена
+	// fixed visuals of certain vobs while saving zen
 	void callBackVob(zCVob* vob)
 	{
 		static const zSTRING INVISIBLE_FILEPREFIX = "INVISIBLE_";
@@ -768,7 +768,7 @@ namespace GOTHIC_ENGINE {
 
 		levelReady = false;
 
-		// убиваем gLogStatistics
+		// kill gLogStatistics
 		*(int*)0x008C2B50 = 0;
 
 
@@ -779,7 +779,7 @@ namespace GOTHIC_ENGINE {
 
 		
 
-		// создает список итемов, pfx, 1 раз на все время работы программы
+		// creates a list of items, pfx, 1 time for the entire duration of the program
 		if (!dataFilled)
 		{
 			dataFilled = true;
@@ -849,7 +849,7 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	// применяется на первом тике когда уровень загружен
+	// applied on the first frame when the level is loaded
 	void SpacerApp::OnLevelReady()
 	{
 		if (!levelReady)
@@ -985,14 +985,6 @@ namespace GOTHIC_ENGINE {
 
 		float value = 1.0f;
 
-		/*
-		ClearLeakPolys();
-
-		leakPolyList = new zCArray<zCPolygon*>;
-		*/
-
-		//if (mode.quick)			value = 0.2F; else value = 1.0F;
-		//if (mode.editormode)	value = 0.1F; // Editormode don't need optimization
 		zCWorld* world = ogame->GetWorld();
 		treeIsReady = false;
 		world->DisposeStaticWorld();
@@ -1051,13 +1043,6 @@ namespace GOTHIC_ENGINE {
 	{
 		zCVob* vob = node->GetData();
 
-		//MessageBox(0, ToStr *(int*)vob, 0, 0);
-
-		//auto addNode = (strFuncPoiterTree)GetProcAddress(theApp.module, "AddTreeNode");
-		
-
-		//MessageBox(0, s + " [3] " + zSTRING(parentId), 0, 0);
-		//addNode(GetVobName(vob), (int)vob, vob->GetParent(), vob->_GetClassDef()->className.ToChar());
 
 		node = node->GetFirstChild();
 		while (node != NULL)

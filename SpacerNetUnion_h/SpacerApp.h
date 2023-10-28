@@ -9,10 +9,10 @@ namespace GOTHIC_ENGINE {
 
 	struct SpacerApp
 	{
-		// handle ГЛАВНОЙ формы c#
+		// handle of main form of c#
 		HWND mainWin;
 		HWND vobsWin;
-		// Библиотека c#
+		// library c#
 		HMODULE module;
 
 		COption spcOpt;
@@ -71,7 +71,7 @@ namespace GOTHIC_ENGINE {
 			bool isMesh;
 			bool isMerged;
 			int filterPickVobIndex;
-			// выбранный воб
+			// selected current vob
 			zCVob* pickedVob;
 			zCVob* globalParent;
 
@@ -84,9 +84,9 @@ namespace GOTHIC_ENGINE {
 
 			TurnWpMode turnWpMode;
 
-			// воб для копирования
+			// vob to copy
 			zCVob* vobToCopy;
-			// нужно для отрисовки bbox выбранного воба
+			// needed to draw the bbox of the selected vob
 			bool pickedVobBBoxMode;
 			bool isVobParentChange;
 			bool dynLightCompile;

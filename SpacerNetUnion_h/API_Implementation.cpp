@@ -60,11 +60,11 @@ namespace GOTHIC_ENGINE {
 	};
 
 	struct zTMouseState {
-		int						xpos;				// relative, centered at 0
-		int						ypos;				// relative
-		int						zpos;				// relative (mouse wheel)
+		int						xpos;				
+		int						ypos;			
+		int						zpos;				
 		zBOOL					buttonPressedLeft;
-		zBOOL					buttonPressedMid;	// (mouse wheel)
+		zBOOL					buttonPressedMid;	
 		zBOOL					buttonPressedRight;
 	};
 

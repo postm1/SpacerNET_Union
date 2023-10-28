@@ -81,7 +81,7 @@ namespace GOTHIC_ENGINE {
 		bool modCondition = true;
 		bool keyKodeMatch = zinput->KeyPressed(code);
 
-		// фикс для одиночных клавиш типа shift/ctrl/alt, если нажата только она
+		// fix for single keys like shift/ctrl/alt, if only one is pressed
 		if (code == 1)
 		{
 			keyKodeMatch = true;

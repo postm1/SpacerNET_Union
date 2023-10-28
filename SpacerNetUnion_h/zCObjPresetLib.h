@@ -32,7 +32,6 @@ namespace GOTHIC_ENGINE {
 		virtual ~zCObjPresetLib();
 		void Dispose();
 
-		// load/save
 		int Load();
 		int Load(zSTRING& filename);
 		int Save();
@@ -40,11 +39,9 @@ namespace GOTHIC_ENGINE {
 		void SetDirty(zBOOL dirt = TRUE) { isDirty = dirt; };
 		zBOOL IsDirty() { return isDirty; };
 
-		// find first perset with that name
 		zCObject*	GetObjectByName(zSTRING& pName);
 		int			GetIndexByName(const zSTRING& name);
 
-		// Create new view from class (do not delete!)
 		zCPresetView* GetNewView(zSTRING& className);
 
 		zBOOL AddPreset(zCObject* obj, zSTRING& name);

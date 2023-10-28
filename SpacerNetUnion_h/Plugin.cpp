@@ -3,9 +3,6 @@
 
 namespace GOTHIC_ENGINE {
 
-  // TO DO
-  // Your code ...
-
 	MyPrint print;
 	PFXManager pfxManager;
 	SpacerApp theApp;

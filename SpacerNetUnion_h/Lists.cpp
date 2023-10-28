@@ -65,7 +65,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 	}
-	// список всех визуалов из файловой системы игры
+	// list of all visuals from the game file system
 	void SpacerApp::CreateVisualsList()
 	{
 
@@ -98,7 +98,7 @@ namespace GOTHIC_ENGINE {
 		modelsStrVDF.DeleteList();
 	}
 
-	// список PFX в окно CreateVisualsList
+	// PFX list into the CreateVisualsList window
 	void SpacerApp::CreatePFXList()
 	{
 		auto addPFX = (callVoidFunc)GetProcAddress(theApp.module, "AddPacticleToList");
@@ -117,7 +117,7 @@ namespace GOTHIC_ENGINE {
 		exports.toggleUIElement(UIElementType::UI_LIST_PFX, TRUE);
 	}
 
-	// список Sounds в окно
+	// list of Sounds
 	void SpacerApp::CreateSoundList()
 	{
 		auto addSound = (callVoidFunc)GetProcAddress(theApp.module, "AddSoundToList");

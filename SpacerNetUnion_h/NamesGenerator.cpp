@@ -38,7 +38,7 @@ namespace GOTHIC_ENGINE {
 		return wayPoints;
 	}
 
-	// Проверяет есть ли в коллекции вейпоинтов такой же индекс
+	// Checks whether the collection of waypoints has the same index
 	bool HasWayPointInCollection(uint targetIndex, Common::Array<zCWaypoint*> wayPoints) {
 		for (uint i = 0; i < wayPoints.GetNum(); i++) {
 			Common::string baseName = wayPoints[i]->name;

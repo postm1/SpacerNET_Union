@@ -104,14 +104,12 @@ namespace GOTHIC_ENGINE {
 					{
 						if (IsAWorldLoaded())
 						{
-							//cmd << " MergeVobSubtree" << endl;
-							//ogame->GetGameWorld()->MergeVobSubtree(Z entry->arg, 0, zCWorld::zWLD_LOAD_MERGE_ADD);
+							
 							this->MergeZen(entry->arg, true); break;
 						}
 						else
 						{
 
-							//cmd << " MergeZen" << endl;
 							this->LoadWorld(entry->arg, LOAD_ZEN_UC, true);
 
 						}
@@ -130,7 +128,7 @@ namespace GOTHIC_ENGINE {
 				zSTRING result = waynet->MergeWaypoints();
 				if (!result.IsEmpty())
 				{
-					//AfxMessageBox(zSTRING(zSTRING("Merged the following waypoints: \r\n") + result).ToChar(), MB_OK | MB_TOPMOST);
+					
 				};
 			};
 		}

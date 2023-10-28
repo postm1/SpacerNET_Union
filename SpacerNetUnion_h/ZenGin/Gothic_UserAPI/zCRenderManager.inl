@@ -8,7 +8,7 @@ void __fastcall zCRenderManager::BuildShader_Union(zCMaterial		*mat,				// IN
 	zDWORD			dlightmap,
 	zBOOL			useScratchPadShader,
 	zBOOL			bInSector,
-	zCShader*		&shader				// OUT
+	zCShader*		&shader
 );
 
 

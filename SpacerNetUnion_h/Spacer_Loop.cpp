@@ -15,8 +15,6 @@ namespace GOTHIC_ENGINE {
 	{
 		BOOL Success = FALSE;
 
-#ifndef COMPILING_SPACER
-		// Validate param
 		if ((Wnd == NULL))
 			return FALSE;
 
@@ -26,10 +24,10 @@ namespace GOTHIC_ENGINE {
 		DWORD	TargetProcessId = GetCurrentProcessId();
 		UINT	TargetThreadId = GetWindowThreadProcessId(TargetWndHandle, &TargetProcessId);
 
-		// Window already owns the input focus
+
 		if ((Wnd == TargetWndHandle))
 			return TRUE;
-		// Our process already owns the input focus
+
 		if (OwnProcessId == TargetProcessId)
 		{
 			SetForegroundWindow(Wnd);
@@ -46,21 +44,14 @@ namespace GOTHIC_ENGINE {
 			}
 			else if (AttachThreadInput(OwnThreadId, TargetThreadId, TRUE))
 			{
-				// Set focus
 				Success = (SetFocus(Wnd) != NULL);
-				// Detach input queue
+
 				AttachThreadInput(OwnThreadId, TargetThreadId, FALSE);
 			}
 		}
 
-		// Call original function if no success
 		if (!Success)
 			Success = SetForegroundWindow(Wnd);
-
-#else
-		SetForegroundWindow(Wnd);
-		return TRUE;
-#endif
 
 		return (Success != 0);
 	}
@@ -79,8 +70,8 @@ namespace GOTHIC_ENGINE {
 		SetForegroundWindowEx(hWndApp);
 		SetFocus(hWndApp);
 
-		ShowWindow(hWndApp, SW_RESTORE);							// Restore window position
-		ShowWindow(hWndApp, SW_SHOWNORMAL);							// Restore window position
+		ShowWindow(hWndApp, SW_RESTORE);							
+		ShowWindow(hWndApp, SW_SHOWNORMAL);							
 	}
 
 	//0x00503630 void __cdecl HandleFocusLoose(void)
@@ -116,14 +107,13 @@ namespace GOTHIC_ENGINE {
 		{
 			do
 			{
-				//AppWndProc->HandleFocusLoose[zrenderer->SetSurfaceLost(TRUE);, 
 				sysEvent();
 
 				POINT   mPos;
 				GetCursorPos(&mPos);
 				zCView::GetInput();
 
-				//Base render
+
 				if (GetGame() && gameSession && ogame->GetWorld() && ogame->GetCamera() && theApp.IsAWorldLoaded() && ogame->GetWorld()->compiled)
 				{
 
@@ -137,18 +127,9 @@ namespace GOTHIC_ENGINE {
 
 					gameSession->RenderBlit();
 
-					//mainTimer.Attach();
+				
 					mainTimer.ClearUnused();
-					/*
-					//if (!IsAppForeground() && !ogame->singleStep)
-					if ((GetForegroundWindow() != hWndApp && GetForegroundWindow() != theApp.mainWin) && !ogame->singleStep)
-					{
-						zrenderer->SetSurfaceLost(TRUE);
-						ogame->Pause();
-						sysSetFocus();
-					}
 
-					*/
 
 					if ((GetForegroundWindow() != hWndApp && GetForegroundWindow() != theApp.mainWin))
 					{
@@ -230,7 +211,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::RenderPortals()
 	{
-		static zCOLOR PORTALINFO_PC_COLOR = zCOLOR(128, 128, 128);	// Color for player portal info (RGB), default: gray color
+		static zCOLOR PORTALINFO_PC_COLOR = zCOLOR(128, 128, 128);	
 		static zCOLOR PORTALINFO_CAM_COLOR = zCOLOR(0, 255, 0);
 		static int PORTALINFO_TEXT_POS[2] = { 10, 10 };
 
@@ -281,19 +262,18 @@ namespace GOTHIC_ENGINE {
 		//----------------------------------------------------------------
 
 
-		// ptr on the sector
+
 		zCBspSector* sector = NULL;
 
-		// protect ptr's
+
 		if (playerPortalName)
 		{
-			// getting sector ptr for player object
+
 			sector = player->groundPoly->material->bspSectorFront;
 
-			// run through for all polygons of the portal
 			for (int i = 0; i < sector->sectorPortals.GetNum(); i++)
 			{
-				// drawing polygon wire
+
 				zCPolygon* poly = sector->sectorPortals[i];
 
 				DrawPolygon(poly, PORTALINFO_PC_COLOR);

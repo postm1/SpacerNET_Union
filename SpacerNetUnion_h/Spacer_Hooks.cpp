@@ -174,7 +174,6 @@ namespace GOTHIC_ENGINE {
 
 		if (theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == _this && theApp.options.GetIntVal("showLightRadiusVob"))
 		{
-			// Mesh entsprechend der lightrange skalieren
 			zREAL actRadius = theApp.s_pLightSphereMesh->GetBBox3D().GetSphere3D().radius;
 			zREAL scaler = theApp.vobLightSelected->lightData.range / actRadius;
 			theApp.s_pLightSphereMesh->Scale(scaler, scaler, scaler);

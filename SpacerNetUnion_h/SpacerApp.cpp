@@ -914,51 +914,6 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-
-
-
-
-
-
-
-
-
-	/*
-
-	if (player && ogame && ogame->GetWorld() && zlineCache)
-	{
-	// ňđŕńńčđîâęŕ ěčđŕ ńčëüíî âíčç îň öĺíňđŕ ĂĂ
-	BOOL result = ogame->GetWorld()->TraceRayNearestHit(player->GetPositionWorld(), zVEC3(0, -10000, 0), (zCVob*)player, zTRACERAY_VOB_BBOX);
-
-	// çĺë¸íŕ˙(ńâîáîäíŕ˙) ëčíč˙ ňđŕńńčđîâęč
-	zCOLOR col = zCOLOR(0, 255, 0);
-
-	// ĺńëč ňđŕńńčđîâęŕ ďđîřëŕ óńďĺříî č íŕéäĺí âîá
-	if (result && ogame->GetWorld()->traceRayReport.foundVob)
-	{
-	// ëčíč˙ ňđŕńńčđîâęč ęđŕńíŕ˙(çŕí˙ňŕ)
-	col = zCOLOR(255, 0, 0);
-
-	// âęëţ÷ŕĺě áîóíä áîęń íŕéäĺííîăî âîáŕ
-	ogame->GetWorld()->traceRayReport.foundVob->SetDrawBBox3D(TRUE);
-
-	// ĺńëč ó âîáŕ ĺńňü âčçóŕë
-	if (screen && ogame->GetWorld()->traceRayReport.foundVob->visual)
-	{
-	// âűâîäčě íŕ ýęđŕí íŕçâŕíčĺ
-	screen->Print(10, 2000, ogame->GetWorld()->traceRayReport.foundVob->visual->GetVisualName());
-	}
-	}
-
-	// ňĺńňîâŕ˙ ëčíč˙, ďîęŕçűâŕţůŕ˙ óńďĺříîńňü ňđŕńńčđîâęč
-	zlineCache->Line3D(player->GetPositionWorld(), player->GetPositionWorld() + zVEC3(0, -10000, 0), col, 0);
-	}
-
-
-	*/
-
-
-
 	void SpacerApp::PickMaterial()
 	{
 		if (!theApp.TryPickMouse() || camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT)
@@ -999,7 +954,7 @@ namespace GOTHIC_ENGINE {
 		return result;
 	}
 
-	// ďîďŕäŕĺň ëč ěűřü ďî ýęđŕíó, čëč ćĺ çŕäĺâŕĺň ěĺíţ
+	// Mouse try pick on scene
 	bool SpacerApp::TryPickMouse()
 	{
 		POINT  cur;
@@ -1055,8 +1010,8 @@ namespace GOTHIC_ENGINE {
 
 		cam.camMatrixInv.GetTranslation(ray00);
 		p.n[VZ] = RAY_DIST;
-		cam.BackProject(xscr, yscr, p);				// p im camSpace
-		p = cam.camMatrixInv * p;					// p im world(obj)Space  
+		cam.BackProject(xscr, yscr, p);				
+		p = cam.camMatrixInv * p;					
 		ray = p - ray00;
 
 		if (rayLength>0)
@@ -1207,8 +1162,8 @@ namespace GOTHIC_ENGINE {
 
 		cam->camMatrixInv.GetTranslation(ray00);
 		p.n[VZ] = RAY_DIST;
-		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace
-		p = cam->camMatrixInv * p;					// p im world(obj)Space  
+		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);
+		p = cam->camMatrixInv * p;
 		ray = p - ray00;
 
 		if (rayLength>0)
@@ -1419,12 +1374,12 @@ namespace GOTHIC_ENGINE {
 		zVEC3 ray00, ray, p;
 		cam->camMatrixInv.GetTranslation(ray00);
 		p.n[VZ] = 1;
-		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace
-		p = cam->camMatrixInv * p;					// p im world(obj)Space  
+		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);
+		p = cam->camMatrixInv * p;
 		ray = p - ray00;
 
 		ray = ray.Normalize();
-		// Ńîáčđŕĺě ńďčńîę äîďóńňčěűő âîáîâ
+		
 		for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
 
@@ -1497,8 +1452,8 @@ namespace GOTHIC_ENGINE {
 
 		cam->camMatrixInv.GetTranslation(ray00);
 		p.n[VZ] = RAY_DIST;
-		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);				// p im camSpace
-		p = cam->camMatrixInv * p;					// p im world(obj)Space  
+		cam->BackProject(pickTryEntry.ax, pickTryEntry.ay, p);
+		p = cam->camMatrixInv * p;
 		ray = p - ray00;
 
 		if (rayLength>0)
@@ -1691,7 +1646,6 @@ namespace GOTHIC_ENGINE {
 
 
 		/*
-		// ĺńëč đŕńřčđĺííűé đĺćčě âűáîđ č ěű âűäĺëčëč pfx, ňî óáčđŕĺě ňŕęîé âîá
 		if (foundVob && zinput->KeyPressed(KEY_LCONTROL))
 		{
 			zCVisual* visual = foundVob->GetVisual();
@@ -1745,7 +1699,6 @@ namespace GOTHIC_ENGINE {
 			ray = p - ray00;
 
 			ray = ray.Normalize();
-			// Ńîáčđŕĺě ńďčńîę äîďóńňčěűő âîáîâ
 			for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
 

@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 
 	// Add your code here . . .
-	// Построение списка в с#
+	// Building a list in C#
 	void CreateTree()
 	{
 		//MessageBox(0, "Crate in c++", 0, 0);
@@ -30,7 +30,7 @@ namespace GOTHIC_ENGINE {
 
 		if (auto pItem = vob->CastTo<oCItem>())
 		{
-			//итемы что нет в скриптах помечаем отдельно
+			//items that are not in the scripts are marked separately
 			if (pItem && (pItem->GetInstanceName() == "" || pItem->GetInstance() == -1))
 			{
 				Stack_PushString("oCItem (Broken)");
@@ -261,87 +261,6 @@ namespace GOTHIC_ENGINE {
 		(callVoidFunc)GetProcAddress(theApp.module, "FillClassNodes")();
 		
 		theApp.exports.toggleUIElement(UIElementType::UI_MAIN_CLASSES, TRUE);
-		/*
-
-		zSTRING base_class_name3 = "zCVob";
-
-		if (base_class_name != base_class_name3)
-		{
-			c = 0;
-			found = FALSE;
-			vobClass = 0;
-			while (c<zCClassDef::GetNum() && !found)
-			{
-				vobClass = zCClassDef::GetClassDefByIndex(c);
-				found = (vobClass->GetClassName_() == base_class_name3);
-				if (!found) c++;
-			}
-
-			if (found)
-			{
-				zSTRING s = vobClass->GetClassName_();
-				CString prefix = "";
-				//newITEM2 = ctrl_classtree.InsertItem(s.ToChar(), TVI_ROOT);
-				//MessageBox(0, "Found", 0, 0);
-
-				
-
-				if (addNode)
-				{
-					//MessageBox(0, s + " [2] " + zSTRING(parentId), 0, 0);
-
-					Stack_PushString(base_class_name3);
-					Stack_PushString(s);
-
-					addNode(parentId);
-				}
-
-
-				BuildClassHierarchy(parentId, vobClass);
-
-			}
-		}
-
-
-		/*
-		zSTRING base_class_name2 = "zCEventMessage";
-
-		if (base_class_name != base_class_name2)
-		{
-		c = 0;
-		found = FALSE;
-		vobClass = 0;
-		while (c<zCClassDef::GetNum() && !found)
-		{
-		vobClass = zCClassDef::GetClassDefByIndex(c);
-		found = (vobClass->GetClassName_() == base_class_name2);
-		if (!found) c++;
-		}
-
-		if (found)
-		{
-		zSTRING s = vobClass->GetClassName_();
-
-		//newITEM2 = ctrl_classtree.InsertItem(s.ToChar(), TVI_ROOT);
-
-
-		auto addNode = (strFuncPoiter)GetProcAddress(theApp.module, "AddClassNode");
-
-		if (addNode)
-		{
-		//MessageBox(0, s + " [2] " + zSTRING(parentId), 0, 0);
-
-		addNode(s.ToChar(), parentId, base_class_name2.ToChar());
-		}
-
-
-		BuildClassHierarchy(parentId, vobClass);
-
-		}
-		}
-		*/
-
-
 
 	}
 

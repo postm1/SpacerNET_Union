@@ -88,7 +88,7 @@ namespace GOTHIC_ENGINE {
 		CString baseName;
 		CString s;
 
-		// Abgeleitete Klassen von parentClassDef ermitteln
+
 		for (int i = 0; i < zCClassDef::GetNum(); i++)
 		{
 			zCClassDef* classDef = zCClassDef::GetClassDefByIndex(i);
@@ -108,13 +108,11 @@ namespace GOTHIC_ENGINE {
 				s = A classDef->GetClassName_();
 				if (!baseOK) s = s + A LIST_POSTFIX + A LIST_CORRUPT;
 
-				// Eigenschaften
 				if (classDef->IsAbstractClass()) s = s + A LIST_POSTFIX + A LIST_ABSTRACT;
 				if (classDef->IsScriptedClass()) s = s + A LIST_POSTFIX + A LIST_SCRIPTED;
-				// Einruecken
+	
 				s = A Characters(LIST_PREFIX, depth * 2 - 2) + s;
-				//s = Characters(LIST_PREFIX, depth * 2 - 2) + s;
-				// Den Klassenbezeichner der entsprechenden Listebox hinzufuegen
+
 
 				Stack_PushString(s);
 				callFunc();
@@ -197,7 +195,7 @@ namespace GOTHIC_ENGINE {
 
 		if (!vob) return false;
 
-		//если выбрано 1 поле, то делаем быстрый поиск сначала
+		//if 1 field is selected, then do a quick search first
 		if (onlyVisualOrName > 0)
 		{
 			zSTRING vobName = vob->GetVobName();
@@ -419,7 +417,7 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		//ищем по имени воба (итема) в сундуках
+		//search by name of vob (item) in chests
 		if (searchOCItem)
 		{
 			zCArray<zCVob*> pListMobCont;
@@ -452,7 +450,7 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
-		// ищем дубликаты имен вобов на карте
+		// look for duplicate vob names on the map
 		if (matchNames && resultSorted.GetNumInList() > 0)
 		{
 
@@ -779,7 +777,7 @@ namespace GOTHIC_ENGINE {
 		//MessageBox(0, zSTRING(base->m_sName) + zSTRING(base->f.tNumber), 0, 0);
 		for (int i = 0; i < instanceFieldSize; i++)
 		{
-			// берем следующие base->f.tNumber символов, они и являются полями инстанции
+			// take the following base->f.tNumber characters, they are the instance fields
 			zCPar_Symbol* param = s_pfxParser->GetSymbol(baseClassIndex + i + 1);
 
 			if (!param)
@@ -908,7 +906,7 @@ namespace GOTHIC_ENGINE {
 		//MessageBox(0, zSTRING(base->m_sName) + zSTRING(base->f.tNumber), 0, 0);
 		for (int i = 0; i < instanceFieldSize; i++)
 		{
-			// берем следующие base->f.tNumber символов, они и являются полями инстанции
+
 			zCPar_Symbol* param = s_pfxParser->GetSymbol(baseClassIndex + i + 1);
 
 			if (!param)
