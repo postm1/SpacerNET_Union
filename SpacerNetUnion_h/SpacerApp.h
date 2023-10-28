@@ -283,6 +283,7 @@ namespace GOTHIC_ENGINE {
 
 		oCItem* CreateItem(CString name);
 
+		zCVobLight* CreateLightVob(CString vobName, CString presetName);
 
 		void CreateItemsList();
 

@@ -1155,6 +1155,11 @@ namespace GOTHIC_ENGINE {
 			zCVobLight::lightPresetList.RemoveIndex(idx);
 		}
 
+		__declspec(dllexport) void Extern_Light_SavePresets()
+		{
+			zCVobLight::SaveLightPresets();
+		}
+
 		__declspec(dllexport) void Extern_Light_UpdatePresetName()
 		{
 			CString currentPresetName = Stack_PeekString();
@@ -1229,6 +1234,14 @@ namespace GOTHIC_ENGINE {
 			theApp.UpdateLightPresetView(preset->lightData);
 		}
 
+		__declspec(dllexport) void Extern_Light_CreateVob()
+		{
+			CString vobName = Stack_PeekString();
+			CString presetName = Stack_PeekString();
+			OutFile("Extern_Light_CreateVob: vob " + A vobName, true);
+			theApp.CreateLightVob(vobName, presetName);
+		}
+
 		__declspec(dllexport) int Extern_Light_ApplyChanges()
 		{
 			CString presetName = Stack_PeekString();
@@ -1260,11 +1273,6 @@ namespace GOTHIC_ENGINE {
 			theApp.UpdateLightPresetData(preset->lightData);
 
 			return true;
-		}
-
-		__declspec(dllexport) void Extern_Light_SavePresets()
-		{
-			zCVobLight::SaveLightPresets();
 		}
 
 		__declspec(dllexport) void Extern_Light_DynamicCompile(bool toggle)
