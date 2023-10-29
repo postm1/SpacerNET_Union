@@ -536,7 +536,11 @@ namespace GOTHIC_ENGINE {
 		pVob->SetCollDetStat(FALSE);
 		pVob->SetPhysicsEnabled(FALSE);
 
-		pVob->SetByPreset(presetName);
+		if (presetName == "")
+			UpdateLightPresetData(pVob->lightData);
+		else
+			pVob->SetByPreset(presetName);
+
 		pVob->lightData.m_bCanMove = true;
 		pVob->SetPositionWorld(pos);
 
