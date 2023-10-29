@@ -2134,7 +2134,7 @@ namespace GOTHIC_ENGINE {
 	{
 		lightData.isStatic = Stack_PeekBool();
 		lightData.lightQuality = Stack_PeekInt();
-		lightData.range = Stack_PeekInt();
+		lightData.SetRange(Stack_PeekInt(), TRUE);
 
 		lightData.colorAniList.EmptyList();
 		for (int i = 0, colorsCount = Stack_PeekInt(); i < colorsCount; ++i)
