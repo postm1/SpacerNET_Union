@@ -230,8 +230,12 @@ namespace GOTHIC_ENGINE {
 							auto bboxCenter = newVob->bbox3D.GetCenter();
 							auto point = newVob->trafoObjToWorld.GetTranslation() - newVob->bbox3D.GetCenterFloor();
 
-							newVob->SetCollDetStat(FALSE);
-							newVob->SetCollDetDyn(FALSE);
+							if (!isItem)
+							{
+								newVob->SetCollDetStat(FALSE);
+								newVob->SetCollDetDyn(FALSE);
+							}
+
 							newVob->SetPositionWorld(posToPlace + zVEC3(0, offsetVert, 0) + point);
 
 							if (!isItem)
