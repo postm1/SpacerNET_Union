@@ -55,13 +55,18 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SetToKeyPos()
 	{
+		//cmd << "SetToKeyPos: " << endl;
+
 		if (!moverVob) return;
+
 		zREAL position((float)m_kf_pos);
+
 		if (
-			moverVob->keyframeList.GetNumInList()>0 &&
-			m_kf_pos<moverVob->keyframeList.GetNumInList()
+			moverVob->keyframeList.GetNumInList() > 0 
+			&& m_kf_pos < moverVob->keyframeList.GetNumInList()
 			)
 		{
+			//cmd << "SetToKeyframe: " << position << endl;
 			moverVob->SetToKeyframe(position, 0);
 		}
 	}
@@ -69,16 +74,32 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::OnKeyRemove()
 	{
+		if (!moverVob) return;
+
 		if (moverVob->keyframeList.GetNumInList() == 0) return;
+
+		//cmd << "Remove key: " << m_kf_pos << endl;
 
 		moverVob->keyframeList.RemoveOrderIndex(m_kf_pos);
 
-		if (m_kf_pos>0)
+		if (m_kf_pos > 0)
 		{
-			m_kf_pos--;
-			SetToKeyPos();
+			m_kf_pos -= 1;
+			moverVob->SetToKeyframe(m_kf_pos, 0);
 		}
 
+		//cmd << "keyframeList: " << Z moverVob->keyframeList.GetNum() << "/m_kf_pos:" <<  Z m_kf_pos << endl;
+	
+		SetToKeyPos();
+
+		if (moverVob->keyframeList.GetNum() > 0)
+		{
+			moverVob->actKeyframeF = zREAL(moverVob->keyframeList.GetNum() - 1);
+			moverVob->advanceDir = 0;
+			moverVob->actKeyframe = moverVob->keyframeList.GetNum() - 1;
+		}
+
+		
 		//if (moverVob->keyframeList.GetNumInList() == 0)
 		//ctrl_kf_edit.EnableWindow(false);
 	}
@@ -147,11 +168,12 @@ namespace GOTHIC_ENGINE {
 				switch (mode)
 				{
 				case 0: // Insert After
-					if (m_kf_pos + 1 == numInList)
-						moverVob->keyframeList.Insert(KF);
-					else
-						moverVob->keyframeList.InsertAtPos(KF, m_kf_pos + 1);
+					moverVob->keyframeList.InsertAtPos(KF, m_kf_pos + 1);
+						
 					m_kf_pos++;
+
+					SetToKeyPos();
+
 					break;
 				case 1: // Insert Before
 					moverVob->keyframeList.InsertAtPos(KF, m_kf_pos);
