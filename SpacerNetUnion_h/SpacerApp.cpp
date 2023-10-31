@@ -2134,20 +2134,29 @@ namespace GOTHIC_ENGINE {
 	{
 		lightData.isStatic = Stack_PeekBool();
 		lightData.lightQuality = Stack_PeekInt();
-		lightData.range = Stack_PeekInt();
+		lightData.SetRange(Stack_PeekInt(), TRUE);
 
 		lightData.colorAniList.EmptyList();
-		for (int i = 0, colorsCount = Stack_PeekInt(); i < colorsCount; ++i)
-			lightData.colorAniList.InsertAtPos(zCOLOR::FromARGB(Stack_PeekInt()), 0);
+		int colorAniListCount = Stack_PeekInt();
+		if (colorAniListCount > 0)
+		{
+			if (colorAniListCount != 1)
+			{
+				for (int i = 0; i < colorAniListCount; ++i)
+					lightData.colorAniList.InsertAtPos(zCOLOR::FromARGB(Stack_PeekInt()), 0);
 
-		if (lightData.colorAniList.GetNumInList() > 0)
-			lightData.lightColor = lightData.colorAniList[0];
+				lightData.lightColor = lightData.colorAniList[0];
+			}
+			else
+				lightData.lightColor = zCOLOR::FromARGB(Stack_PeekInt());
+		}
 
 		lightData.colorAniFPS = Stack_PeekFloat();
 		lightData.colorAniSmooth = Stack_PeekBool();
 
 		lightData.rangeAniScaleList.EmptyList();
-		for (int i = 0, rangeAniScalesCount = Stack_PeekInt(); i < rangeAniScalesCount; ++i)
+		int rangeAniScaleListCount = Stack_PeekInt();
+		for (int i = 0; i < rangeAniScaleListCount; ++i)
 			lightData.rangeAniScaleList.InsertAtPos(Stack_PeekFloat(), 0);
 
 		lightData.rangeAniFPS = Stack_PeekFloat();
@@ -2159,20 +2168,22 @@ namespace GOTHIC_ENGINE {
 		Stack_PushBool(lightData.rangeAniSmooth);
 		Stack_PushFloat(lightData.rangeAniFPS);
 
-		for (int j = lightData.rangeAniScaleList.GetNumInList() - 1; j >= 0; --j)
+		int rangeAniScaleListCount = lightData.rangeAniScaleList.GetNumInList();
+		for (int j = rangeAniScaleListCount - 1; j >= 0; --j)
 			Stack_PushFloat(lightData.rangeAniScaleList[j]);
 
-		Stack_PushInt(lightData.rangeAniScaleList.GetNumInList());
+		Stack_PushInt(rangeAniScaleListCount);
 
 		Stack_PushBool(lightData.colorAniSmooth);
 		Stack_PushFloat(lightData.colorAniFPS);
 
-		if (!lightData.isStatic)
+		int colorAniListCount = lightData.colorAniList.GetNumInList();
+		if (colorAniListCount != 0)
 		{
-			for (int j = lightData.colorAniList.GetNumInList() - 1; j >= 0; --j)
+			for (int j = colorAniListCount - 1; j >= 0; --j)
 				Stack_PushInt(lightData.colorAniList[j].GetARGBDword());
 
-			Stack_PushInt(lightData.colorAniList.GetNumInList());
+			Stack_PushInt(colorAniListCount);
 		}
 		else
 		{

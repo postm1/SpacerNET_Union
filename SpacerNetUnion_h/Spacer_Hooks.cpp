@@ -113,7 +113,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-	//Проверка на инициализацию парсера для oCVisualFX, в спейсере именной такой код
+	//ДЋД‘Г®ГўДєД‘Д™Е• Г­Е• ДЌГ­ДЌГ¶ДЌЕ•Г«ДЌГ§Е•Г¶ДЌЕЈ ДЏЕ•Д‘Е„ДєД‘Е• Г¤Г«Л™ oCVisualFX, Гў Е„ДЏДєГ©Е„ДєД‘Дє ДЌД›ДєГ­Г­Г®Г© Е€Е•Д™Г®Г© Д™Г®Г¤
 	void __cdecl InitParser();
 	CInvoke <void(__cdecl*) ()> pInitParser(0x0048B3F0, InitParser, IVK_AUTO);
 	void __cdecl InitParser()
@@ -174,9 +174,11 @@ namespace GOTHIC_ENGINE {
 
 		if (theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == _this && theApp.options.GetIntVal("showLightRadiusVob"))
 		{
-			zREAL actRadius = theApp.s_pLightSphereMesh->GetBBox3D().GetSphere3D().radius;
-			zREAL scaler = theApp.vobLightSelected->lightData.range / actRadius;
-			theApp.s_pLightSphereMesh->Scale(scaler, scaler, scaler);
+			if (theApp.vobLightSelected->lightData.range != 0.0f)
+			{
+				zREAL scaler = theApp.vobLightSelected->lightData.range / theApp.s_pLightSphereMesh->GetBBox3D().GetSphere3D().radius;
+				theApp.s_pLightSphereMesh->Scale(scaler, scaler, scaler);
+			}
 
 			zCCamera::activeCam->SetTransform(zCAM_TRAFO_WORLD, _this->trafoObjToWorld);
 			zTCam_ClipType	meshClip = zCCamera::activeCam->BBox3DInFrustum(theApp.s_pLightSphereMesh->GetBBox3D(), renderContext.clipFlags);
@@ -195,7 +197,8 @@ namespace GOTHIC_ENGINE {
 				//zrenderer->SetAlphaBlendFunc  (zRND_ALPHA_FUNC_BLEND	 );
 				//zrenderer->SetAlphaBlendFactor(0.5F						 );
 
-				theApp.s_pLightSphereMesh->Render(renderContext);
+				if (theApp.vobLightSelected->lightData.range != 0.0f)
+					theApp.s_pLightSphereMesh->Render(renderContext);
 
 				//zrenderer->SetAlphaBlendSource(oldBlendSrc);
 				//zrenderer->SetAlphaBlendFunc  (oldBlendFunc);

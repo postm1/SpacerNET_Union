@@ -13,3 +13,4 @@ void SortPolysByList_Hook(zCPolygon** list, int listLength);
 void ShareFeatures_Union();
 zCVertex* zCMesh::VertexInMesh_Union(zVEC3 const &);
 zCVertex* zCMesh::AddVertex_Union(zVEC3 & a);
+zBOOL Render_Patch(zTRenderContext& renderContext, zCOLOR* vertexColor);
