@@ -406,4 +406,75 @@ namespace GOTHIC_ENGINE {
 			GetProcAddress(theApp.module, "AddLightPresetToList")();
 		}
 	}
+
+	HOOK Ivk_zCMesh_Render AS(&zCMesh::Render, &zCMesh::Render_Patch);
+	zBOOL zCMesh::Render_Patch(zTRenderContext& renderContext, zCOLOR* vertexColor)
+	{
+		const zPOINT3& camPos = zCCamera::activeCamPos;
+		zREAL texCacheInPrio = (renderContext.distVobToCam / renderContext.cam->farClipZ) * 0.5F + 0.25F;
+
+		if (renderContext.clipFlags == -1)
+		{
+			renderContext.clipFlags = zCCamera::CLIP_FLAGS_FULL;
+			zTCam_ClipType meshClip = zCCamera::activeCam->BBox3DInFrustum(bbox3D, renderContext.clipFlags);
+
+			if (meshClip == zCAM_CLIP_TRIV_OUT)
+				return FALSE;
+		};
+
+		size_t markedPos = zCVertexTransform::s_MemMan.Mark();
+
+		for (int polyCtr = 0; polyCtr < numPoly; ++polyCtr)
+		{
+			zCPolygon* actPoly = Poly(polyCtr);
+
+			// backface culling
+			if (zrenderer->GetPolyDrawMode() != zRND_DRAW_WIRE
+			&&  zrenderer->GetPolyDrawMode() != zRND_DRAW_FLAT
+			&&  camPos.Dot(actPoly->polyPlane.normal) <= actPoly->polyPlane.distance)
+				continue;
+
+
+			// 3D-Clipping im Frustum, in World Coordinates
+			if (renderContext.clipFlags > 0)
+			{
+				if (!actPoly->ClipToFrustum(renderContext.clipFlags))
+					continue;
+			}
+			else
+				actPoly->Unclip();
+
+			if (actPoly->GetMaterial())
+			{
+				actPoly->GetMaterial()->ApplyTexAniMapping(actPoly);
+				if (actPoly->GetMaterial()->texture)
+					actPoly->GetMaterial()->texture->CacheIn(texCacheInPrio);
+			}
+
+
+			int	vertCtr = actPoly->numClipVert - 1;
+			do
+			{
+				zCVertex* actVert = (actPoly->clipVert[vertCtr]);
+				if (!actVert->transformedIndex)
+				{
+					zCVertexTransform* trans = actVert->CreateVertexTransform();
+
+					trans->vertCamSpace = (zCCamera::activeCam->camMatrix) * (actVert->position);
+					trans->vertCamSpaceZInv = (zVALUE(1)) / trans->vertCamSpace.n[VZ];
+
+					zCCamera::activeCam->ProjectClamp(trans, trans->vertCamSpaceZInv);
+				}
+
+				if (vertexColor)
+					actPoly->clipFeat[vertCtr]->lightDyn = *vertexColor;
+			} while (vertCtr--);
+
+			actPoly->LightDynCamSpace(camPos, playerLightInt);
+			zrenderer->DrawPoly(actPoly);
+		}
+
+		zCVertexTransform::s_MemMan.Restore(markedPos);
+		return TRUE;
+	}
 }
