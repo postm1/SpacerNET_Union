@@ -2138,15 +2138,18 @@ namespace GOTHIC_ENGINE {
 
 		lightData.colorAniList.EmptyList();
 		int colorAniListCount = Stack_PeekInt();
-		if (colorAniListCount != 1)
+		if (colorAniListCount > 0)
 		{
-			for (int i = 0; i < colorAniListCount; ++i)
-				lightData.colorAniList.InsertAtPos(zCOLOR::FromARGB(Stack_PeekInt()), 0);
+			if (colorAniListCount != 1)
+			{
+				for (int i = 0; i < colorAniListCount; ++i)
+					lightData.colorAniList.InsertAtPos(zCOLOR::FromARGB(Stack_PeekInt()), 0);
 
-			lightData.lightColor = lightData.colorAniList[0];
+				lightData.lightColor = lightData.colorAniList[0];
+			}
+			else
+				lightData.lightColor = zCOLOR::FromARGB(Stack_PeekInt());
 		}
-		else
-			lightData.lightColor = zCOLOR::FromARGB(Stack_PeekInt());
 
 		lightData.colorAniFPS = Stack_PeekFloat();
 		lightData.colorAniSmooth = Stack_PeekBool();
