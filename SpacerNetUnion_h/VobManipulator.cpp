@@ -1557,6 +1557,12 @@ namespace GOTHIC_ENGINE {
 			theApp.restorator.RestoreVobPos(theApp.pickedVob);
 		}
 
+		if (keys.KeyPressed("VOB_ADD_FAV", true))
+		{
+			print.PrintRed(GetLang("MSG_VOB_FAV_ADD"));
+			theApp.AddVobToFavorite(theApp.pickedVob);
+		}
+
 
 
 		if (keys.KeyPressed("VOB_CUT", true))

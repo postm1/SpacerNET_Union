@@ -2186,4 +2186,14 @@ namespace GOTHIC_ENGINE {
 
 		(callVoidFunc)GetProcAddress(theApp.module, "UpdateLightPresetView")();
 	}
+
+	void SpacerApp::AddVobToFavorite(zCVob* pVob)
+	{
+		if (pVob)
+		{
+			Stack_PushUInt((uint)pVob);
+			(callUIntFunc)GetProcAddress(theApp.module, "AddVobToFastList")();
+		}
+	}
+
 }

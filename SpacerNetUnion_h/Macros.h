@@ -75,6 +75,7 @@ namespace GOTHIC_ENGINE {
 	typedef void(*voidFuncPointerStart)(void);
 	typedef void(*callVoidFunc)(void);
 	typedef void(*callIntFunc)(int);
+	typedef void(*callUIntFunc)(int);
 	typedef void(*callInt2Func)(int, int);
 	typedef int(*voidFuncPointer)(void);
 	typedef int(*intFuncPointer)(void);

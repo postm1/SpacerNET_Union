@@ -186,7 +186,7 @@ namespace GOTHIC_ENGINE {
 		
 
 		defaultValues.Insert("VOB_RESTORE_POS", "2_19");
-
+		defaultValues.Insert("VOB_ADD_FAV", "8_34");
 		
 		auto arr = defaultValues.GetArray();
 

@@ -239,7 +239,7 @@ namespace GOTHIC_ENGINE {
 		void FindVobsVisualsUnique(CString path);
 		int IsVisualInVDF(CString visualName, CString vdfName);
 		void Reset();
-
+		void AddVobToFavorite(zCVob* pVob);
 		void SetProperties(zSTRING & propString, zSTRING classNameVob);
 
 		void SelectObject(zCObject * object, bool clearInput = true);
