@@ -509,8 +509,28 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "GRASS", "grassToolSetNormal", "0");
 		list.Insert("grassToolSetNormal", set);
+
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolcomboBoxVisualCamAlignValue", "0");
+		list.Insert("grassToolcomboBoxVisualCamAlignValue", set);
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolcomboBoxVisualAniModeValue", "0");
+		list.Insert("grassToolcomboBoxVisualAniModeValue", set);
 		
-	}
+
+		set = new CSetting(TYPE_FLOAT, "GRASS", "grassToolvisualAniModeStrengthValue", "0.0");
+		list.Insert("grassToolvisualAniModeStrengthValue", set);
+
+		set = new CSetting(TYPE_FLOAT, "GRASS", "grassToolVobFarClipZScaleValue", "1.0");
+		list.Insert("grassToolVobFarClipZScaleValue", set);
+
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolcdStaticValue", "0");
+		list.Insert("grassToolcdStaticValue", set);
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolStaticVobValue", "0");
+		list.Insert("grassToolStaticVobValue", set);
+	}	
 
 	CSettings::~CSettings()
 	{

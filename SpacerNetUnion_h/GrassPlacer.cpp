@@ -91,6 +91,19 @@ namespace GOTHIC_ENGINE {
 							int grassToolSetNormal = theApp.options.GetIntVal("grassToolSetNormal");
 
 
+							int grassToolcomboBoxVisualCamAlignValue = theApp.options.GetIntVal("grassToolcomboBoxVisualCamAlignValue");
+							int grassToolcomboBoxVisualAniModeValue = theApp.options.GetIntVal("grassToolcomboBoxVisualAniModeValue");
+
+
+							float grassToolvisualAniModeStrengthValue = theApp.options.GetFloatVal("grassToolvisualAniModeStrengthValue");
+							float grassToolVobFarClipZScaleValue = theApp.options.GetFloatVal("grassToolVobFarClipZScaleValue");
+
+							int grassToolcdStaticValue = theApp.options.GetIntVal("grassToolcdStaticValue");
+							int grassToolstaticVobValue = theApp.options.GetIntVal("grassToolStaticVobValue");
+
+
+
+
 							if (modelName.Length() == 0) {
 								return;
 							}
@@ -225,6 +238,7 @@ namespace GOTHIC_ENGINE {
 
 							if (!newVob) return;
 
+						
 
 
 							auto bboxCenter = newVob->bbox3D.GetCenter();
@@ -273,11 +287,36 @@ namespace GOTHIC_ENGINE {
 							}
 
 
+							//apply some settings from sewer window
 
+							newVob->m_fVobFarClipZScale = grassToolVobFarClipZScaleValue;
 
 							if (!isItem)
 							{
 								newVob->Release();
+
+
+
+								/*cmd << " grassToolcomboBoxVisualCamAlignValue: " << grassToolcomboBoxVisualCamAlignValue << endl;
+								cmd << " grassToolcomboBoxVisualAniModeValue: " << grassToolcomboBoxVisualAniModeValue << endl;
+								cmd << " grassToolvisualAniModeStrengthValue: " << grassToolvisualAniModeStrengthValue << endl;
+								cmd << " grassToolVobFarClipZScaleValue: " << grassToolVobFarClipZScaleValue << endl;
+								cmd << " grassToolcdStaticValue: " << grassToolcdStaticValue << endl;
+								cmd << " grassToolStaticVobValue: " << grassToolstaticVobValue << endl;*/
+
+
+								newVob->SetCollDetStat(grassToolcdStaticValue);
+								newVob->SetStaticVob((zBOOL)grassToolstaticVobValue);
+
+								switch (grassToolcomboBoxVisualCamAlignValue)
+								{
+								case 0: newVob->SetVisualCamAlign((zTVisualCamAlign)zVISUAL_CAMALIGN_NONE); break;
+								case 1: newVob->SetVisualCamAlign((zTVisualCamAlign)zVISUAL_CAMALIGN_YAW); break;
+								case 2: newVob->SetVisualCamAlign((zTVisualCamAlign)zVISUAL_CAMALIGN_FULL); break;
+								}
+								
+								newVob->m_AniMode = (zTAnimationMode)grassToolcomboBoxVisualAniModeValue;
+								newVob->m_aniModeStrength = grassToolvisualAniModeStrengthValue;
 
 								if (grassToolDynColl)
 								{

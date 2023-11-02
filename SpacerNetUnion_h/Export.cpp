@@ -405,11 +405,28 @@ namespace GOTHIC_ENGINE {
 			return theApp.options.GetIntVal(name);
 		}
 
+		__declspec(dllexport) float Extern_GetSettingFloat()
+		{
+			CString name = Stack_PeekString();
+
+			return theApp.options.GetFloatVal(name);
+		}
+		
+
 		__declspec(dllexport) void Extern_SetSetting(int value)
 		{
 			CString name = Stack_PeekString();
 
 			theApp.options.SetIntVal(name, value);
+			theApp.options.Apply();
+
+		}
+
+		__declspec(dllexport) void Extern_SetSettingFloat(float value)
+		{
+			CString name = Stack_PeekString();
+
+			theApp.options.SetFloatVal(name, value);
 			theApp.options.Apply();
 
 		}

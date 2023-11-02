@@ -203,6 +203,7 @@ namespace GOTHIC_ENGINE {
 
 
 	enum TMatLibFlag { NullLib = 0 };
+
 }
 
 DllExport Gothic_II_Addon::zTWE_ControllerEvents ControllerEvents;

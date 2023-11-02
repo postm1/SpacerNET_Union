@@ -128,6 +128,12 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+		
+		// if we deselect vob and we have selected one, remove bbox drawing
+		if (pickedVob && !vob)
+		{
+			pickedVob->SetDrawBBox3D(FALSE);
+		}
 
 		pickedVob = vob;
 

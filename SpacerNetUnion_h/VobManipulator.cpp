@@ -1370,7 +1370,6 @@ namespace GOTHIC_ENGINE {
 			if (theApp.GetSelectedVob())
 			{
 				theApp.SetSelectedVob(NULL);
-
 			}
 
 			theApp.gp.DoPlace();
