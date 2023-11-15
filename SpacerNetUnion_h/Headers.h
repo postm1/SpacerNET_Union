@@ -20,7 +20,7 @@
 #include "GrassPlacer.h"
 #include "zCObjPresetLib.h"
 #include "SpacerApp.h"
-#include "zCBinTree3DS.h"
+#include "zCSelPoly.h"
 #include "MatManager.h"
 #include "Externals.h"
 #include "Structures.h"

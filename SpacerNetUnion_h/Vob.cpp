@@ -4,31 +4,6 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	void ScaleVob(zCVob* pVob, float scale)
-	{
-
-		if (pVob && pVob->GetVisual())
-		{
-
-			zTBBox3D bbox = pVob->GetVisual()->GetBBox3D();
-			float length = (bbox.maxs - bbox.mins).Length();
-			//float vobSizeMult = SafeDiv(1.0f, length) * 80.0f;
-			//print.PrintRed(A vobSizeMult);
-
-			zMAT4& trafo = pVob->trafoObjToWorld;
-			zVEC3 scaleVec = zVEC3(0.5f, 0.5f, 0.5f);
-
-			//trafo.MakeIdentity();
-			trafo.PreScale(scaleVec);
-			//	trafo = Alg_Scaling3D(scaleVec) * trafo;
-			//trafo.MakeOrthonormal();
-			pVob->bbox3D.Scale(scaleVec);
-		}
-	}
-
-
-
-
 	void AddVobToRender(zSTRING visual, bool isItem = false)
 	{
 		if (!ogame || !ogame->GetCamera() || !ogame->GetCamera()->connectedVob)
@@ -192,7 +167,7 @@ namespace GOTHIC_ENGINE {
 					theApp.nextInsertBlocked = false;
 				}
 
-				// если воб выделен
+				// if a vob is selected
 				if (auto pVob = theApp.GetSelectedVob())
 				{
 

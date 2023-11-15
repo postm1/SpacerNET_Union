@@ -5,6 +5,7 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 
+	//class for hiding grass & other models
 
 	struct GridEntry
 	{

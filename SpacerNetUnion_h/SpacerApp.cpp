@@ -334,7 +334,6 @@ namespace GOTHIC_ENGINE {
 		}
 
 		debug.CleanLines();
-		CleanTestLoop();
 
 		pickedVob = NULL;
 		vobToCopy = NULL;

@@ -77,36 +77,6 @@ namespace GOTHIC_ENGINE {
 	
 	void ActionRestore::GenerateVobsPos()
 	{
-		/*
-		oCWorld* pGameWorld = dynamic_cast<oCWorld*> (ogame->GetWorld());
-
-		if (!pGameWorld) return;
-
-
-		zCListSort<zCVob>* voblist_items = pGameWorld->voblist;
-
-		int foundCount = 0;
-
-		while (voblist_items) {
-			auto pVob = voblist_items->data;
-
-			voblist_items = voblist_items->next;
-
-			if (pVob
-				) {
-
-				auto entry = this->Add(pVob, ART_VOB_POS);
-
-				if (entry)
-				{
-					entry->pos = pVob->GetPositionWorld();
-					entry->rot = pVob->trafoObjToWorld;
-				}
-			}
-		}
-		*/
-
-		
 		zCArray<zCVob*> activeVobList;
 
 		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, activeVobList, 0);

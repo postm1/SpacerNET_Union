@@ -4,6 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 	
+	//class for drawing lines, debug output
 
 	struct DebugPointEntry
 	{

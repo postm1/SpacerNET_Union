@@ -6,8 +6,6 @@ namespace GOTHIC_ENGINE {
 
 	void AB_NoGrass::HideObjects()
 	{
-		//RX_Begin(0);
-
 		int count = filteredList.GetNumInList();
 
 		if (count == 0)
@@ -36,9 +34,7 @@ namespace GOTHIC_ENGINE {
 
 				if (!pVob->showVisual)
 				{
-					//Col16 color_red(CMD_RED);
 
-					//cmd << "ShowVisual false for " << name << color_red << endl;
 				}
 
 				if (hideGrass && grassList.IsInList(name))
@@ -274,19 +270,6 @@ namespace GOTHIC_ENGINE {
 						}
 					}
 
-					/*
-					while (numberToSelect > 0)
-					{
-					int x = rand() % entry->pListGrass.GetNumInList();
-
-					if (entry->pListGrass.GetSafe(x))
-					{
-					entry->pListGrass.GetSafe(x)->showVisual = 0;
-					hiddenList.Insert(entry->pListGrass.GetSafe(x));
-					numberToSelect -= 1;
-					}
-					}
-					*/
 				}
 
 			}
@@ -322,19 +305,6 @@ namespace GOTHIC_ENGINE {
 						}
 					}
 
-					/*
-					while (numberToSelect > 0)
-					{
-					int x = rand() % entry->pListBush.GetNumInList();
-
-					if (entry->pListBush.GetSafe(x))
-					{
-					entry->pListBush.GetSafe(x)->showVisual = 0;
-					hiddenList.Insert(entry->pListBush.GetSafe(x));
-					numberToSelect -= 1;
-					}
-					}
-					*/
 				}
 
 			}

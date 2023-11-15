@@ -916,10 +916,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="DialogSplit.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="Enums.h">
       <SubType>
       </SubType>
@@ -1128,11 +1124,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="zCBinTree3DS.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="zCBinTree3DS.cpp">
+    <ClInclude Include="zCSelPoly.h">
       <SubType>
       </SubType>
     </ClInclude>

@@ -82,22 +82,6 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	/*
-	bool blockedSaveTex = false;
-
-	//zBOOL zCTextureConvert::SaveToFileFormat(const zSTRING& fileName)
-	HOOK Invk_zCTextureConvertt_SaveToFileFormat AS(&zCTextureConvert::SaveToFileFormat, &zCTextureConvert::SaveToFileFormat_Union);
-	zBOOL zCTextureConvert::SaveToFileFormat_Union(const zSTRING& fileName)
-	{
-		if (blockedSaveTex)
-		{
-			return FALSE;
-		}
-
-		return THISCALL(Invk_zCTextureConvertt_SaveToFileFormat)(fileName);
-	}
-	*/
-
 	void MatFilter::SaveCurrentFilter(int index)
 	{
 		if (this->filterMatBlocked == 1)
