@@ -6,6 +6,8 @@ namespace GOTHIC_ENGINE {
 	extern Timer mainTimer;
 	extern void _GetCursorPos(POINT* cur);
 
+	// THIS FILE CONTAINS MUCH CODE, NOT ALL OF IT IS USED 
+
 	// update waypoint grid when moving WP
 	void WayMovePoint(zCVob* wpvob)
 	{
@@ -776,33 +778,6 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	/*
-	zCArray<zCVob*> vobs;
-	zCArray<zCVob*> vobsNeed;
-
-	ogame->GetWorld()->SearchVobListByClass(zCVob::classDef, vobs, 0);
-
-	ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
-
-	for (int i = 0; i < vobs.GetNum(); i++)
-	{
-	zCVob* pVob = vobs.GetSafe(i);
-
-	if (dynamic_cast<zCVobLevelCompo*>(pVob))	continue;
-	if (pVob == ogame->GetCamera()->GetVob())	continue;
-
-
-	if (pVob && pVob->GetVisual() && pVob->GetVisual()->GetVisualName() == "NW_NATURE_GRASSGROUP_01.3DS")
-	{
-	vobsNeed.Insert(pVob);
-
-	}
-
-
-	}
-	*/
-
-
 	
 
 	zCTexture* GetScreenTex(zSTRING name)
@@ -1396,8 +1371,6 @@ namespace GOTHIC_ENGINE {
 		}
 		
 
-	
-		//SearchBadHierarchy();
 		
 
 		if (GetSelectedTool() == TM_NONE)
@@ -1692,175 +1665,6 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
-
-
-
-		//CreateInvIcons();
-		
-		
-
-			/*
-			zinput->ClearKeyBuffer();
-			found = 0;
-
-			if (mm.selPolyList->GetNum() == 0)
-			{
-				return;
-			}
-
-			zTBBox3D  camBox;
-
-			zCPolygon **polyList;
-			int	numPolys = 0;
-
-			zVEC3 testPos = ogame->GetCamera()->connectedVob->GetPositionWorld();
-
-			camBox.mins = testPos - (zVEC3(1, 1, 1) * 40000);
-			camBox.maxs = testPos + (zVEC3(1, 1, 1) * 40000);
-			
-			
-			if (ogame->GetWorld()->GetBspTree()->bspRoot->CollectPolysInBBox3D(camBox, polyList, numPolys))
-			{
-				zCMaterial*		mat = 0;
-				int				planeClass;
-				for (int i = 0; i<numPolys; i++)
-				{
-					mat = polyList[i]->material;
-
-					if (mat->GetName() == mm.selPolyList->Get(0)->GetMaterial()->GetName())
-					{
-						polyList[i]->SetMaterial(mm.SelectMaterial);
-						found++;
-
-
-						//mm.selPolyList->Insert(polyList[i]);
-
-						//ogame->GetCamera()->connectedVob->SetPositionWorld((*polyList[i]->vertex)->position);
-					}
-				}
-			}
-
-			print.PrintRed("found: " + ToStr found);
-		}
-
-		
-		
-
-		if (zinput->KeyPressed(KEY_H))
-		{
-			for (int i = 0; i < polys.GetNumInList(); i++)
-			{
-				if (indexA == i)
-				{
-					ogame->GetCamera()->connectedVob->SetPositionWorld((*polys[i]->vertex)->position);
-					indexA++;
-					break;
-				}
-			}
-		}
-		*/	
-
-			/*
-			zCArray<zCVob*> vobs;
-			zCArray<zCVob*> vobsNeed;
-
-			zVEC3 pos1 = zVEC3(-24041, -4272, 63022);
-			zVEC3 pos2 = zVEC3(-15210, -3878, 49644);
-
-			zVEC3 offset = zVEC3(0, 0, 0); // zVEC3(-8883.83, -3753.78, 26805.9) - zVEC3(12868.4, 3665, -21332);
-			zCVob* vobPivot = NULL;
-
-			 //(17500)
-			//	- 15210, -3878, 49644 (14000)
-
-			ogame->GetWorld()->SearchVobListByClass(zCVob::classDef, vobs, 0);
-
-			ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
-
-			for (int i = 0; i < vobs.GetNum(); i++)
-			{
-				zCVob* pVob= vobs.GetSafe(i);
-
-				if (dynamic_cast<zCVobLevelCompo*>(pVob))	continue;
-				if (pVob == ogame->GetCamera()->GetVob())	continue;
-
-
-				if (pVob->GetVobName() == "VOBTREE_PIVOT")
-				{
-					vobPivot = pVob;
-
-				}
-
-				if (pVob && ((pVob->GetPositionWorld() - pos1).Length() <= 17500) || (pVob->GetPositionWorld() - pos2).Length() <= 14000)
-				{
-					
-					vobsNeed.Insert(pVob);
-				}
-			}
-
-			vobsNeed.RemoveDoubles();
-
-			theApp.CreateNewVob("zCVob", "VOBTREE_MAIN_ADDONWORLD", "", 0, 0);
-
-			if (vobPivot)
-			{
-				theApp.GetSelectedVob()->SetPositionWorld(vobPivot->GetPositionWorld());
-			}
-			else
-			{
-				Message::Box("no pivot vob");
-				return;
-			}
-			
-
-			zCVob* parent = theApp.GetSelectedVob();
-			int p = 0;
-
-			for (int i = 0; i < vobsNeed.GetNum(); i++)
-			{
-				zCVob* pVob = vobsNeed.GetSafe(i);
-
-				if (pVob && (pVob->GetParentVob() && dynamic_cast<zCVobLevelCompo*>(pVob->GetParentVob())))
-				{
-					HandleVobTranslation(pVob, pVob->GetPositionWorld() + offset);
-					HandleParentChange(pVob, parent);
-					p++;
-				}
-			}
-
-			print.PrintRed(ToStr vobs.GetNumInList());
-			print.PrintRed(ToStr vobsNeed.GetNumInList());
-			print.PrintRed(ToStr p);
-			return;
-		}
-		*/
-
-
-		/*
-		if (zinput->GetMouseButtonPressedRight() && selPolyList && selPolyList->GetNum() > 0)
-		{
-			selPolyList->Get(0)->GetMaterial()->SetTexture(zSTRING("AV_FIREDRAGON_GROUND_03.TGA"));
-		}
-		*/
-
-
-		/*
-		if (selectedVertext)
-		{
-			if (keys.KeyPressed("VOB_TRANS_UP", false, true))
-			{
-
-				selectedVertext->position[1] += 10;
-			}
-
-			if (keys.KeyPressed("VOB_TRANS_DOWN", false, true))
-			{
-
-				selectedVertext->position[1] -= 10;
-			}
-
-		}
-		*/
 
 		
 		if (GetSelectedTool() == TM_NONE)
