@@ -2930,12 +2930,6 @@
     <ClInclude Include="Play.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="Spacer_Hooks.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Hooks</Filter>
-    </ClInclude>
-    <ClInclude Include="Common.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Hooks</Filter>
-    </ClInclude>
     <ClInclude Include="Search.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
     </ClInclude>
@@ -3031,6 +3025,9 @@
     </ClInclude>
     <ClInclude Include="zCSelPoly.h">
       <Filter>Plugin\Workspace\Plugin\Main\Materials</Filter>
+    </ClInclude>
+    <ClInclude Include="Spacer_Hooks.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Hooks</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

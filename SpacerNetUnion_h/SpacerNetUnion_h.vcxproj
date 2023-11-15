@@ -900,7 +900,7 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Common.cpp">
+    <ClInclude Include="Spacer_Hooks.cpp">
       <SubType>
       </SubType>
     </ClInclude>
@@ -1076,10 +1076,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="SpacerApp.cpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="Spacer_Hooks.cpp">
       <SubType>
       </SubType>
     </ClInclude>
