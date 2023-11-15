@@ -7,6 +7,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+	// generates HMTL report about used models in the current location
 	struct VisualReportEntry
 	{
 		int amount;

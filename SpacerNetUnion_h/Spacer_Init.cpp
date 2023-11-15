@@ -27,7 +27,7 @@ namespace GOTHIC_ENGINE {
 
 				DestroyWindow(hwnd);
 
-				//получить handler из с#
+				//get handler from c#
 				hWndApp = (HWND)GetHandlerFunc();
 
 				auto getMainWinHandle = (intFuncPointer)GetProcAddress(theApp.module, "GetMainWinHandler");

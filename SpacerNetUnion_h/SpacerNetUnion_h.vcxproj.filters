@@ -2969,9 +2969,6 @@
     <ClInclude Include="zCObjPresetLib.h">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
     </ClInclude>
-    <ClInclude Include="zCObjPresetLib.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="GenerateVobsVisualsList.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
     </ClInclude>
@@ -2998,9 +2995,6 @@
     </ClInclude>
     <ClInclude Include="Export_Union_DLL.cpp">
       <Filter>Plugin\Workspace\Plugin\Interchange</Filter>
-    </ClInclude>
-    <ClInclude Include="MeshAndCompiling.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main</Filter>
     </ClInclude>
     <ClInclude Include="MatFilter.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>

@@ -137,12 +137,11 @@ namespace GOTHIC_ENGINE {
 		return 0;
 	}
 
-	// Add your code here . . .
 	//0x00572DC0 public: void __thiscall zCMesh::SortPolysByList(class zCPolygon * *,int)
 	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
 	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
 	{
-
+		// no sorting polys for saving ZEN, much less time
 		if (!theApp.useSortPolys)
 		{
 			cmd << "Saving no sort polys" << endl;
@@ -152,95 +151,6 @@ namespace GOTHIC_ENGINE {
 		{
 			THISCALL(Invk_SortPolysByList)(list, listLength);
 		}
-		
-
-		return;
-
-		if (theApp.firstTimeZenSaved)
-		{
-			OutFile("No sorting polygons anymore...", true);
-			return;
-		}
-
-		
-		theApp.firstTimeZenSaved = true;
-		return;
-
-		OutFile("SortPolysByList_Hook Start: " + ToStr listLength, true);
-
-
-		int i = 0;
-		
-		//zCMesh::DeleteAll();
-
-		OutFile("ArraysToLists", false);
-		this->ClearLists();
-		this->ArraysToLists();
-
-		
-		//this->s_usesVertexCache = 0;
-		OutFile("s_polyVertIndex.Clear()", false);
-		s_polyVertIndex.Clear();
-		
-		
-
-		
-
-		OutFile("listLength: " + ToStr listLength, false);
-
-		OutFile("Insert", false);
-
-		for (i = listLength - 1; i >= 0; i--)
-			*(s_polyVertIndex.Insert(list[i])) = i;
-
-		
-		
-		OutFile("numPoly: " + ToStr numPoly, false);
-		OutFile("s_numVertListScene: " + ToStr (*polyList)->s_numVertListScene, false);
-		OutFile("s_numFeatListScene: " + ToStr(*polyList)->s_numFeatListScene, false);
-		OutFile("polyNumVert: " + ToStr(*polyList)->polyNumVert, false);
-		OutFile("s_actNumClipVert: " + ToStr(*polyList)->s_actNumClipVert, false);
-		
-
-		OutFile("insertionsort", false);
-		insertionsort(polyList, numPoly, sizeof(void *), &S_ComparePolyVerts, true);
-
-		
-
-		if (featList)
-		{
-			OutFile("=================featList", false);
-			//OutFile("s_actNumClipVert: " + ToStr((*featList)->, false);
-			OutFile("s_polyVertIndex.Insert", false);
-			OutFile("numPoly: " + ToStr numPoly, false);
-			OutFile("numFeat: " + ToStr numFeat, false);
-			OutFile("numVert: " + ToStr numVert, false);
-
-			OutFile("polyNumVert: " + ToStr(*polyList)->polyNumVert, false);
-			for (i = numPoly - 1; i >= 0; i--)
-			{
-				zCPolygon *p = polyList[i];
-				//OutFile(" => numPoly: " + ToStr (p->polyNumVert), false);
-				for (int j = p->polyNumVert - 1; j >= 0; j--)
-					*(s_polyVertIndex.Insert(p->feature[j])) = i;
-			}
-			
-			
-			OutFile("numFeat: " + ToStr this->numFeat, false);
-			OutFile("insertionsort 2", false);
-			insertionsort(featList, numFeat, sizeof(void *), &S_ComparePolyVerts, false);
-			
-		}
-		else
-		{
-			OutFile("!featList", false);
-		}
-
-
-		OutFile("s_polyVertIndex.Clear()", false);
-		s_polyVertIndex.Clear();
-		OutFile("SortPolysByList_Hook End: " + ToStr listLength, false);
-		
 	}
 
 	void SpacerApp::RemoveBadLevelCompoVisual()
@@ -274,32 +184,6 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SaveFile(zSTRING worldName, int type)
 	{
 		nograss.PrepareObjectsSaveGame();
-
-		//0x00831C10 const zCSparseArray<void const *,int>::`vftable'
-		//static zCSparseArray<const void *, int> s_polyVertIndex; 8D8798
-		//static	zCTree<zCVob>*& s_firstVobSaveWorld = *(zCTree<zCVob>**)(0x9A4410);
-
-
-		//zCSparseArrayBase::Clear(&unk_8D8798);
-
-
-		//OutFile("s_firstVobSaveWorld: " + ToStr (int)s_firstVobSaveWorld->GetData(), false);
-
-		//static zCSparseArray<const void *, int> s_polyVertIndex = *(zCSparseArray<const void *, int>*)(0x8D8798);
-		//static zCSparseArray<const void *, void*> s_accounts = *(zCSparseArray<const void *, void*>*)(0xAAC2F8);
-		
-		//s_polyVertIndex.Clear();
-		//s_polyVertIndex.Destroy();
-		//s_polyVertIndex.Create(12);
-		
-		//s_accounts.Clear();
-		//s_accounts.Destroy();
-
-		//s_polyVertIndex.;
-
-
-
-		//MessageBox(0, worldName + " with index: " + ToStr type, 0, 0);
 
 		switch (type)
 		{

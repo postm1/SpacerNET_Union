@@ -996,10 +996,6 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="MeshAndCompiling.cpp">
-      <SubType>
-      </SubType>
-    </ClInclude>
     <ClInclude Include="MultiSelect.h">
       <SubType>
       </SubType>
@@ -1059,10 +1055,6 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="zCObjPresetLib.h">
-      <SubType>
-      </SubType>
-    </ClInclude>
-    <ClInclude Include="zCObjPresetLib.cpp">
       <SubType>
       </SubType>
     </ClInclude>

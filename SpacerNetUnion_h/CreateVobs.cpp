@@ -48,7 +48,7 @@ namespace GOTHIC_ENGINE {
 			oCItem* pItemParent = dynamic_cast<oCItem*>(parentVobBase);
 
 
-			// Вставляем в родителя, только если он не Вейпоинт и не итем, иначе ищем compoLevel и он будет родителем нового воба
+			// We insert it into the parent only if it is not a Waypoint or an item, otherwise we look for compoLevel and it will be the parent of the new vob
 			if (parentVobBase && !pickedVobWaypont && !pItemParent)
 			{
 				ogame->GetGameWorld()->AddVobAsChild(newVob, parentVobBase->globalVobTreeNode);
@@ -742,7 +742,7 @@ namespace GOTHIC_ENGINE {
 			pTree = pTree->GetNextChild();
 
 			if (pVob)
-				RemoveVob(pVob, false); // удаляем воб
+				RemoveVob(pVob, false);
 		}
 	}
 
