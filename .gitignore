@@ -23,20 +23,20 @@ bld/
 [Oo]bj/
 
 # Build platform specific results
-/SpacerNetUnion_h/G1 Debug/
-/SpacerNetUnion_h/G1 Release/
+/SpacerNET_Union/G1 Debug/
+/SpacerNET_Union/G1 Release/
 
-/SpacerNetUnion_h/G1A Debug/
-/SpacerNetUnion_h/G1A Release/
+/SpacerNET_Union/G1A Debug/
+/SpacerNET_Union/G1A Release/
 
-/SpacerNetUnion_h/G2 Debug/
-/SpacerNetUnion_h/G2 Release/
+/SpacerNET_Union/G2 Debug/
+/SpacerNET_Union/G2 Release/
 
-/SpacerNetUnion_h/G2A Debug/
-/SpacerNetUnion_h/G2A Release/
+/SpacerNET_Union/G2A Debug/
+/SpacerNET_Union/G2A Release/
 
-/SpacerNetUnion_h/MP Debug/
-/SpacerNetUnion_h/MP Release/
+/SpacerNET_Union/MP Debug/
+/SpacerNET_Union/MP Release/
 
 # Visual Studio 2015 cache/options directory
 .vs/

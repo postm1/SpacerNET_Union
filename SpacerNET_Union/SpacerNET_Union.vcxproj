@@ -77,9 +77,9 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{ee974c79-03de-47fb-ad8b-7f77985e428b}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SpacerNetUnion_h</RootNamespace>
+    <RootNamespace>SpacerNET_Union</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>SpacerNetUnion_h</ProjectName>
+    <ProjectName>SpacerNET_Union</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MP Debug|Win32'" Label="Configuration">
