@@ -20,6 +20,12 @@ It's mainly inspired by the original **Spacer** editor, it offers almost the sam
 This project is a back-end plugin written in **cpp** for **Spacer.NET** editor using **Union SDK**.  
 It's responsibility is to integrate editor features into the game and communicate with the interface.
 
+The **Spacer.NET** contains also two additional files that can be only obtained from **SpacerNET.mod**:
+- **zwe_controller.dll**  
+    Contains code responsible for implementing alternative controller for camera movement / picking vobs.
+- **SpacerNET.patch**  
+    Contains memory patches required to run the editor.
+
 #### Project details
 
 - **NOTE!** Do not add new Union Files via Visual Studio 2015 UI, because it won't work.
