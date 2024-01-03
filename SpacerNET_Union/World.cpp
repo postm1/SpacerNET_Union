@@ -836,6 +836,12 @@ namespace GOTHIC_ENGINE {
 			};
 
 		}
+
+		if (bbox)
+		{
+			delete bbox; 
+			bbox = nullptr;
+		}
 	}
 
 
