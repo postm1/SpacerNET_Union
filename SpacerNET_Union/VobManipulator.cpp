@@ -1005,6 +1005,11 @@ namespace GOTHIC_ENGINE {
 					{
 						pList.Insert(entry);
 					}
+					else
+					{
+						delete entry;
+						entry = nullptr;
+					}
 					
 				}
 			}
