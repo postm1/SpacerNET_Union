@@ -50,6 +50,8 @@ namespace GOTHIC_ENGINE {
 					{
 						matFilterList.RemoveOrderIndex(i);
 						cmd << "Remove filter: " << index << " name: " << entry->name << endl;
+						delete entry;
+						entry = nullptr;
 						break;
 					}
 
