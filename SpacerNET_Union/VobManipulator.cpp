@@ -963,7 +963,7 @@ namespace GOTHIC_ENGINE {
 
 			ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
 
-			pList.DeleteList();
+			pList.DeleteListDatas();
 
 			for (int i = 0; i < vobs.GetNum(); i++)
 			{
