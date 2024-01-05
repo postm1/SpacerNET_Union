@@ -1083,8 +1083,6 @@ namespace GOTHIC_ENGINE {
 
 		void Clear()
 		{
-			ZeroMemory(&vobFoundStruct, sizeof vobFoundStruct);
-
 			itemsLoc.DeleteListDatas();
 
 			
