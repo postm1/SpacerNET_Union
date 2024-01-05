@@ -383,7 +383,7 @@ namespace GOTHIC_ENGINE {
 		{
 			if (f->Open(false) == 0)
 			{
-				matFilterList.EmptyList();
+				matFilterList.DeleteListDatas();
 
 				spcCMatFilter* item = new spcCMatFilter;
 				item->id = 0;
