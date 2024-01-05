@@ -534,7 +534,7 @@ namespace GOTHIC_ENGINE {
 
 	CSettings::~CSettings()
 	{
-		list.Clear();
+		DeleteAndClearMap(list);
 	}
 
 }

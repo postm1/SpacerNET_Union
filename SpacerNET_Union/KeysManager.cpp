@@ -260,7 +260,7 @@ namespace GOTHIC_ENGINE {
 
 	void KeysManager::ResetDefault()
 	{
-		keysMap.Clear();
+		DeleteAndClearMap(keysMap);
 
 		auto arr = defaultValues.GetArray();
 
