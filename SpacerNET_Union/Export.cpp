@@ -1302,6 +1302,12 @@ namespace GOTHIC_ENGINE {
 				PlaySoundGame(ToStr "CS_IAI_ME_ME");
 			}
 		}
+
+
+		__declspec(dllexport) int Extern_IsGameModActive()
+		{
+			return (int)theApp.g_bIsPlayingGame;
+		}
 	}
 
 }

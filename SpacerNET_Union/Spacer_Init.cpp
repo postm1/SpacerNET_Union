@@ -67,6 +67,10 @@ namespace GOTHIC_ENGINE {
 		}
 		*/
 
+		// create directories for spacer_net
+		CreateDirectory("_work\\tools", NULL);
+		CreateDirectory("_work\\tools\\data", NULL);
+
 		if (!IsDx11Active())
 		{
 			//if (zrenderer) zrenderer->Vid_SetScreenMode(zRND_SCRMODE_HIDE);
