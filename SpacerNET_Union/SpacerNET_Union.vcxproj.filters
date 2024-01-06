@@ -3023,6 +3023,9 @@
     <ClInclude Include="Spacer_Hooks.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Hooks</Filter>
     </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Plugin\Workspace\Plugin\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

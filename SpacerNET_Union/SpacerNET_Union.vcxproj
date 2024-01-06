@@ -1062,6 +1062,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="zCObjPresetLib.h">
       <SubType>
       </SubType>

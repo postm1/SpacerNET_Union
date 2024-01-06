@@ -34,8 +34,7 @@ namespace GOTHIC_ENGINE {
 
 		void ClearRespList()
 		{
-
-			respawnShowList.Clear();
+			DeleteAndClearMap(respawnShowList);
 		}
 
 

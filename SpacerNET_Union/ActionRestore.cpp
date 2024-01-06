@@ -116,6 +116,7 @@ namespace GOTHIC_ENGINE {
 			auto entry = list->data;
 			if (entry && entry->pVob == pVob)
 			{
+				delete entry;
 				pList.Remove(entry);
 				break;
 			}

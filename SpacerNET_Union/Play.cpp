@@ -201,12 +201,13 @@ namespace GOTHIC_ENGINE {
 			parser->SetInstance("ITEM", NULL);
 
 			ogame->spawnman->ClearList();
-
+			
+			delete ogame->infoman;
 			ogame->infoman = zNEW(oCInfoManager)(parser);
 
 			oCLogManager::GetLogManager().Clear();
 
-
+			delete ogame->newsman;
 			ogame->newsman = zNEW(oCNewsManager());
 
 			if (zsound) zsound->StopAllSounds();

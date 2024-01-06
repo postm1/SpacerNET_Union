@@ -421,7 +421,8 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 
 		outfile << endFile;
 
-		searchVisualUniqList.Clear();
+		DeleteAndClearMap(searchVisualUniqList);
+
 
 		outfile.close();
 	}

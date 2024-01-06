@@ -963,7 +963,7 @@ namespace GOTHIC_ENGINE {
 
 			ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, vobs, 0);
 
-			pList.DeleteList();
+			pList.DeleteListDatas();
 
 			for (int i = 0; i < vobs.GetNum(); i++)
 			{
@@ -1004,6 +1004,11 @@ namespace GOTHIC_ENGINE {
 					if (entry->vobParentChangeList.GetNumInList() > 0)
 					{
 						pList.Insert(entry);
+					}
+					else
+					{
+						delete entry;
+						entry = nullptr;
 					}
 					
 				}
@@ -1078,8 +1083,6 @@ namespace GOTHIC_ENGINE {
 
 		void Clear()
 		{
-			ZeroMemory(&vobFoundStruct, sizeof vobFoundStruct);
-
 			itemsLoc.DeleteListDatas();
 
 			
