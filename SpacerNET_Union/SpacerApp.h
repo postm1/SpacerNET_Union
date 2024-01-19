@@ -215,6 +215,7 @@ namespace GOTHIC_ENGINE {
 		void PickVobNew(bool ctrlUsed);
 		zCVob* TrySpherePick();
 		void PickVobFilter();
+		void PickVobInvisible(zVEC3 start, zVEC3 ray);
 		zBOOL PickSceneNew(zCCamera& cam, int xscr, int yscr, zREAL rayLength);
 		void ToggleWP();
 		void ConnectWP();

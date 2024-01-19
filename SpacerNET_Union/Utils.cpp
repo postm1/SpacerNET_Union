@@ -535,6 +535,8 @@ namespace GOTHIC_ENGINE {
 
 		for (int i = 0; i < resVobList.GetNumInList(); i++)
 		{
+			auto pVob = resVobList.GetSafe(i);
+
 			if (type == 0)
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
@@ -589,6 +591,10 @@ namespace GOTHIC_ENGINE {
 				finalResultList.Insert(resVobList.GetSafe(i));
 			}
 			else if (type == 9 && dynamic_cast<oCMOB*>(resVobList.GetSafe(i)))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+			}
+			else if (type == 10 && pVob && !pVob->GetShowVisual() && pVob->GetVisual())
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
 			}

@@ -1073,6 +1073,88 @@ namespace GOTHIC_ENGINE {
 		return true;
 	}
 
+
+	void SpacerApp::PickVobInvisible(zVEC3 start, zVEC3 ray)
+	{
+		//cmd << start.ToString() << " ; " << ray.ToString() << endl;
+
+		zCVob* pFoundVob = NULL;
+
+		zTBBox3D box;
+
+		zCVob* camVob = ogame->GetCamera()->connectedVob;
+		zCCamera* cam = ogame->GetCamera();
+		zVEC3 currentPos = camVob->GetPositionWorld();
+		zCArray<zCVob*> baseVobList;
+		zCArray<zCVob*> resVobList;
+		zCArray<zCVob*> resultVobList;
+		int bBoxSize = 1000;
+		int radius_sp = 220;
+		zCVob* tryVob = NULL;
+		int dist = 10e9;
+		int stepDist = 25;
+		bool flagExit = false;
+
+		ogame->GetWorld()->traceRayReport.Clear();
+
+
+		box.maxs = camVob->GetPositionWorld() + zVEC3(bBoxSize, bBoxSize, bBoxSize);
+		box.mins = camVob->GetPositionWorld() - zVEC3(bBoxSize, bBoxSize, bBoxSize);
+		ogame->GetWorld()->CollectVobsInBBox3D(baseVobList, box);
+
+		for (int i = 0; i < baseVobList.GetNumInList(); i++) {
+
+
+			zCVob* vob = baseVobList[i];
+
+			if (vob
+				&& vob != camVob
+				&& vob->GetVisual()
+				&& !vob->GetShowVisual()
+				&& vob != currentVobRender
+				&& vob != pfxManager.testVob
+				&& vob != currenItemRender
+				&& vob != bboxMaxsVob
+				&& vob != bboxMinsVob
+				&& vob != floorVob
+				)
+			{
+				float m1, m2;
+
+				if (vob->bbox3D.IsIntersecting(camVob->GetPositionWorld(), ray, m1, m2))
+				{
+					resVobList.Insert(vob);
+				}
+
+			}
+		}
+
+		//cmd << "Intersect count: " << resVobList.GetNumInList() << endl;
+
+		int i_num = 0;
+
+		for (int i = 0; i < resVobList.GetNumInList(); i++)
+		{
+			int cur_dist = Dist(camVob, resVobList[i]);
+
+			if (cur_dist < dist)
+			{
+				dist = cur_dist;
+				i_num = i;
+			}
+
+
+		}
+
+		if (resVobList.GetNumInList() > 0)
+		{
+			pFoundVob = resVobList[i_num];
+		}
+
+		ogame->GetWorld()->traceRayReport.foundVob = pFoundVob;
+		ogame->GetWorld()->traceRayReport.foundHit = TRUE;
+	}
+
 	void SpacerApp::PickVobFilter()
 	{
 		auto cam = ogame->GetCamera();
@@ -1115,6 +1197,13 @@ namespace GOTHIC_ENGINE {
 
 
 			auto pFoundVob = world->traceRayReport.foundVob;
+
+			//only invisible vobs
+			if (filterPickVobIndex == 11)
+			{
+				PickVobInvisible(ray00, ray);
+				break;
+			}
 
 			if (!pFoundVob)
 			{
@@ -1544,6 +1633,7 @@ namespace GOTHIC_ENGINE {
 
 		zCVob* foundVob = ogame->GetWorld()->traceRayReport.foundVob;
 
+		ogame->GetWorld()->traceRayReport.Clear();
 
 		if ((theApp.pickedVob == foundVob && theApp.pickedVob != NULL))
 		{
