@@ -289,7 +289,15 @@ namespace GOTHIC_ENGINE {
 
 							//apply some settings from sewer window
 
-							newVob->m_fVobFarClipZScale = grassToolVobFarClipZScaleValue;
+							if (isItem)
+							{
+								newVob->m_fVobFarClipZScale = 1;
+							}
+							else
+							{
+								newVob->m_fVobFarClipZScale = grassToolVobFarClipZScaleValue;
+							}
+							
 
 							if (!isItem)
 							{
