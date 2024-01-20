@@ -437,6 +437,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_STRING, "PATH", "vobResPath", "");
 		list.Insert("vobResPath", set);
 
+		set = new CSetting(TYPE_STRING, "PATH", "grassWinFilePath", "");
+		list.Insert("grassWinFilePath", set);
+
 		set = new CSetting(TYPE_INT, "PATH", "openLastZen", "0");
 		list.Insert("openLastZen", set);
 
