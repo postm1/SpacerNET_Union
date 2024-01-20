@@ -1117,6 +1117,9 @@ namespace GOTHIC_ENGINE {
 				&& vob != bboxMaxsVob
 				&& vob != bboxMinsVob
 				&& vob != floorVob
+				&& !dynamic_cast<zCVobLight*>(vob)
+				&& !dynamic_cast<zCVobLevelCompo*>(vob)
+				&& !dynamic_cast<zCZone*>(vob)
 				)
 			{
 				float m1, m2;
