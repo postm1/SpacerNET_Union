@@ -655,6 +655,36 @@ namespace GOTHIC_ENGINE {
 			call(ToggleMenuType::ToggleInvis);
 		}
 
+
+		if (keys.KeyPressed("TOGGLE_MUSIC", true))
+		{
+			int opt = zoptions->ReadInt("SOUND", "musicEnabled", 0);
+			int& musicAutoChange = *(int*)0x008AAF6C;
+
+			opt = !opt;
+
+
+			if (opt)
+			{
+				print.PrintGreen(ToStr GetLang("UNION_MUSIC_ON"));
+				zoptions->WriteInt("SOUND", "musicEnabled", 1, 0);
+				zCMusicSystem::DisableMusicSystem(FALSE);
+				zCZoneMusic::SetAutochange(TRUE);
+			}
+			else
+			{
+				print.PrintRed(ToStr GetLang("UNION_MUSIC_OFF"));
+				zoptions->WriteInt("SOUND", "musicEnabled", 0, 0);
+				zCZoneMusic::SetAutochange(FALSE);
+				zCMusicSystem::DisableMusicSystem(TRUE);
+
+				if (zsound) {
+					//zsound->StopAllSounds();
+				}
+			}
+
+		}
+
 		if (keys.KeyPressed("LIGHT_RAD_INC", true))
 		{
 			if (playerLightInt <= 20000)

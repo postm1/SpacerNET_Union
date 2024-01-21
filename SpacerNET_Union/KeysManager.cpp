@@ -170,6 +170,7 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("TOGGLE_HELPERS", "8_4");
 		defaultValues.Insert("TOGGLE_BBOX", "8_5");
 		defaultValues.Insert("TOGGLE_INVIS", "8_6");
+		defaultValues.Insert("TOGGLE_MUSIC", "0_22");
 
 		defaultValues.Insert("LIGHT_RAD_INC", "0_78");
 		defaultValues.Insert("LIGHT_RAD_DEC", "0_74");
