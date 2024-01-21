@@ -168,7 +168,7 @@ namespace GOTHIC_ENGINE {
 
 		if (moverVob->keyframeList.GetNumInList() == 0) return;
 
-		//cmd << "Remove key: " << m_kf_pos << endl;
+		cmd << "Remove key: " << m_kf_pos << endl;
 
 		moverVob->keyframeList.RemoveOrderIndex(m_kf_pos);
 
@@ -178,7 +178,7 @@ namespace GOTHIC_ENGINE {
 			moverVob->SetToKeyframe(m_kf_pos, 0);
 		}
 
-		//cmd << "keyframeList: " << Z moverVob->keyframeList.GetNum() << "/m_kf_pos:" <<  Z m_kf_pos << endl;
+		cmd << "keyframeList: " << Z moverVob->keyframeList.GetNum() << "/m_kf_pos:" <<  Z m_kf_pos << endl;
 	
 		SetToKeyPos();
 
@@ -187,6 +187,17 @@ namespace GOTHIC_ENGINE {
 			moverVob->actKeyframeF = zREAL(moverVob->keyframeList.GetNum() - 1);
 			moverVob->advanceDir = 0;
 			moverVob->actKeyframe = moverVob->keyframeList.GetNum() - 1;
+
+
+			//hardfix last key
+			if (m_kf_pos == 0 && moverVob->keyframeList.GetNum() == 1)
+			{
+				HandleVobTranslation(moverVob, moverVob->keyframeList.GetSafe(0).pos);
+
+				auto quat = moverVob->keyframeList.GetSafe(0).quat;
+
+				moverVob->SetRotationWorld(quat);
+			}
 		}
 
 		
