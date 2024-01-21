@@ -301,6 +301,9 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "showLightRadiusVob", "1");
 		list.Insert("showLightRadiusVob", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "showMoverKeysVisually", "1");
+		list.Insert("showMoverKeysVisually", set);
 		
 		//=======================================================
 

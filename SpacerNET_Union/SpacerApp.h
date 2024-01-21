@@ -191,6 +191,7 @@ namespace GOTHIC_ENGINE {
 		void PrepareBboxVobs(zCVob * vob);
 		void SetToKeyPos();
 		void TriggerLoop();
+		void Trigger_DrawKey(int key, zVEC3 pos);
 		void OnKeyRemove();
 		void UpdateGrattController();
 		void ManagerGrattController();

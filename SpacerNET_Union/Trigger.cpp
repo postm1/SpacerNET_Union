@@ -42,8 +42,57 @@ namespace GOTHIC_ENGINE {
 		};
 	};
 
+
+	static zCView* pViewTrigger = NULL;
+
+	void SpacerApp::Trigger_DrawKey(int key, zVEC3 pos)
+	{
+		
+		int sx, sy;
+
+		if (!pViewTrigger)
+		{
+			pViewTrigger = new zCView(0, 0, SCREEN_MAX, SCREEN_MAX);
+			pViewTrigger->SetPos(0, 0);
+
+			screen->InsertItem(pViewTrigger);
+		}
+
+
+		sx = 120;
+		sy = screen->any(screen->nax(sx));
+
+		zCCamera* cam = ogame->GetCamera();
+
+		zVEC3 iconPosition = pos + zVEC3(0.0f, 120, 0.0f);
+		zVEC3 viewPos = cam->GetTransform(zTCamTrafoType::zCAM_TRAFO_VIEW) * iconPosition;
+		zCWorld* wld = ogame->GetWorld();
+
+		int x, y;
+		cam->Project(&viewPos, x, y);
+
+		if (viewPos[2] > cam->nearClipZ) {
+			int px = pViewTrigger->anx(x);
+			int py = pViewTrigger->any(y);
+
+			bool isWrong = sx <= 0 || sx >= 8192 || sy <= 0 || sy >= 8192 || px <= 0 || px >= 8192 || py <= 0 || py >= 8192;
+			bool isWrong2 = (px + sx <= 0) || (px + sx >= 8192) || (py + sy <= 0) || (py + sy >= 8192);
+			if (!isWrong && !isWrong2) {
+
+				pViewTrigger->SetFontColor(zCOLOR(211, 202, 24));
+				pViewTrigger->Print(px, py, Z key);
+			}
+		}
+	}
+
 	void SpacerApp::TriggerLoop()
 	{
+
+		if (pViewTrigger)
+		{
+			pViewTrigger->ClrPrintwin();
+		}
+
 		if (!moverVob) return;
 
 
@@ -51,6 +100,47 @@ namespace GOTHIC_ENGINE {
 		
 		auto callFunc = (callIntInt)GetProcAddress(theApp.module, "Trigger_UpdateKeys");
 		callFunc(m_kf_pos, moverVob->keyframeList.GetNumInList());
+
+
+		
+		if (!theApp.options.GetIntVal("showMoverKeysVisually"))
+		{
+			return;
+		}
+
+		
+
+		zCArray<zVEC3> positions;
+
+		// draw key number
+		for (int i = 0; i < moverVob->keyframeList.GetNumInList(); i++)
+		{
+			auto key = moverVob->keyframeList.GetSafe(i);
+
+			Trigger_DrawKey(i, key.pos);
+
+			positions.InsertEnd(key.pos);
+
+			
+		}
+
+		// lines between keys
+		for (int i = 0; i < positions.GetNumInList() - 1; i++)
+		{
+			zlineCache->Line3D(positions.GetSafe(i), positions.GetSafe(i+1), GFX_YELLOW, FALSE);
+
+
+			zlineCache->Line3D(positions.GetSafe(i), positions.GetSafe(i) + zVEC3(0, 50, 0), GFX_YELLOW, FALSE);
+		}
+
+		// vertical lines
+		for (int i = 0; i < positions.GetNumInList(); i++)
+		{
+			zlineCache->Line3D(positions.GetSafe(i), positions.GetSafe(i) + zVEC3(0, 50, 0), GFX_YELLOW, FALSE);
+		}
+
+		
+		
 	}
 
 	void SpacerApp::SetToKeyPos()
