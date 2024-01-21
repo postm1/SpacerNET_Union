@@ -168,7 +168,7 @@ namespace GOTHIC_ENGINE {
 
 		if (moverVob->keyframeList.GetNumInList() == 0) return;
 
-		cmd << "Remove key: " << m_kf_pos << endl;
+		//cmd << "Remove key: " << m_kf_pos << endl;
 
 		moverVob->keyframeList.RemoveOrderIndex(m_kf_pos);
 
@@ -178,7 +178,7 @@ namespace GOTHIC_ENGINE {
 			moverVob->SetToKeyframe(m_kf_pos, 0);
 		}
 
-		cmd << "keyframeList: " << Z moverVob->keyframeList.GetNum() << "/m_kf_pos:" <<  Z m_kf_pos << endl;
+		//cmd << "keyframeList: " << Z moverVob->keyframeList.GetNum() << "/m_kf_pos:" <<  Z m_kf_pos << endl;
 	
 		SetToKeyPos();
 
