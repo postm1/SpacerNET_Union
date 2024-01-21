@@ -668,6 +668,39 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		if (theApp.options.GetIntVal("showInvisibleVobs"))
+		{
+			int bBoxSize = 5000;
+			zCArray<zCVob*> baseVobList;
+			zTBBox3D box;
+			zVEC3 posToPlace = ogame->GetCameraVob()->GetPositionWorld();
+			auto camVob = ogame->GetCamera()->GetVob();
+
+			box.maxs = posToPlace + zVEC3(bBoxSize, bBoxSize, bBoxSize);
+			box.mins = posToPlace - zVEC3(bBoxSize, bBoxSize, bBoxSize);
+			ogame->GetWorld()->CollectVobsInBBox3D(baseVobList, box);
+
+
+			for (int i = 0; i < baseVobList.GetNumInList(); i++) {
+
+				zCVob* vob = baseVobList[i];
+
+				if (vob &&
+					(vob != ogame->GetCameraVob()
+						&& !vob->GetShowVisual() && vob->GetVisual()
+						&& !dynamic_cast<zCVobLight*>(vob)
+						&& !dynamic_cast<zCVobLevelCompo*>(vob)
+						&& !dynamic_cast<zCZone*>(vob)
+						&& vob != theApp.currentVobRender
+						&& vob != pfxManager.testVob
+						)
+					)
+				{
+					vob->bbox3D.Draw(GFX_GREEN);
+				}
+			}
+		}
+
 	}
 
 	void SpacerApp::UpdateGrattController()
