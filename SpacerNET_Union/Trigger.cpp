@@ -161,6 +161,42 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void SpacerApp::RemoveAllMoverKeysWithSavePosition()
+	{
+		if (!moverVob) return;
+		if (moverVob->keyframeList.GetNumInList() == 0) return;
+
+		auto pos = moverVob->GetPositionWorld();
+		
+		moverVob->keyframeList.DeleteList();
+		moverVob->actKeyframeF = 0;
+		moverVob->advanceDir = 0;
+		moverVob->actKeyframe = 0;
+
+		moverVob->ClearStateInternals();
+		m_kf_pos = 0;
+	}
+
+	void SpacerApp::RemoveAllMoverKeysWithSetZero()
+	{
+		if (!moverVob) return;
+		if (moverVob->keyframeList.GetNumInList() == 0) return;
+
+		auto pos = moverVob->keyframeList.GetSafe(0).pos;
+		auto quat = moverVob->keyframeList.GetSafe(0).quat;
+
+		moverVob->keyframeList.DeleteList();
+		moverVob->actKeyframeF = 0;
+		moverVob->advanceDir = 0;
+		moverVob->actKeyframe = 0;
+
+		m_kf_pos = 0;
+
+		HandleVobTranslation(moverVob, pos);
+		moverVob->SetRotationWorld(quat);
+
+		moverVob->ClearStateInternals();
+	}
 
 	void SpacerApp::OnKeyRemove()
 	{
@@ -178,7 +214,7 @@ namespace GOTHIC_ENGINE {
 			moverVob->SetToKeyframe(m_kf_pos, 0);
 		}
 
-		//cmd << "keyframeList: " << Z moverVob->keyframeList.GetNum() << "/m_kf_pos:" <<  Z m_kf_pos << endl;
+		
 	
 		SetToKeyPos();
 
@@ -189,9 +225,28 @@ namespace GOTHIC_ENGINE {
 			moverVob->actKeyframe = moverVob->keyframeList.GetNum() - 1;
 
 
+			//do nothing if we have the last key, bullshit code
+			if (moverVob->keyframeList.GetNum() == 1 && moverVob->nextKeyframe == 1)
+			{
+
+			}
+			else
+			{
+				m_kf_pos = moverVob->nextKeyframe;
+				moverVob->actKeyframe = m_kf_pos;
+			}
+			
+
+			/*cmd << "keyframeList: " << Z moverVob->keyframeList.GetNum() 
+				<< "/m_kf_pos:" << Z m_kf_pos 
+				<< "/nextKeyframe: " << Z moverVob->nextKeyframe
+				
+				<< endl;*/
+
 			//hardfix last key
 			if (m_kf_pos == 0 && moverVob->keyframeList.GetNum() == 1)
 			{
+				//print.PrintRed("TRIGGER 0");
 				HandleVobTranslation(moverVob, moverVob->keyframeList.GetSafe(0).pos);
 
 				auto quat = moverVob->keyframeList.GetSafe(0).quat;

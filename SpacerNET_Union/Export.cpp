@@ -576,6 +576,13 @@ namespace GOTHIC_ENGINE {
 			theApp.OnKeyRemove();
 		}
 
+		__declspec(dllexport) void Extern_RemoveAllMoverKeysWithSavePosition() {
+			theApp.RemoveAllMoverKeysWithSavePosition();
+		}
+
+		__declspec(dllexport) void Extern_RemoveAllMoverKeysWithSetZero() {
+			theApp.RemoveAllMoverKeysWithSetZero();
+		}
 
 		__declspec(dllexport) void Extern_OnAddKey(int mode) {
 			return theApp.OnAddMoverKey(mode);

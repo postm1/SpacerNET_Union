@@ -43,7 +43,6 @@ namespace GOTHIC_ENGINE {
 			zCMover* moverVob;
 			zCTrigger* triggerVob;
 			int m_kf_pos;
-			int maxKey;
 			zCVob* event_sourcevob;
 		};
 		struct 
@@ -193,6 +192,8 @@ namespace GOTHIC_ENGINE {
 		void TriggerLoop();
 		void Trigger_DrawKey(int key, zVEC3 pos);
 		void OnKeyRemove();
+		void RemoveAllMoverKeysWithSavePosition();
+		void RemoveAllMoverKeysWithSetZero();
 		void UpdateGrattController();
 		void ManagerGrattController();
 		void SendTrigger(int actionIndex);
