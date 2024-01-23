@@ -604,6 +604,30 @@ namespace GOTHIC_ENGINE {
 					theApp.moverVob->SetCollDetStat(value);
 				}
 			}
+			else if (theApp.triggerVob)
+			{
+				if (type == 0)
+				{
+					theApp.triggerVob->SetCollDetDyn(value);
+				}
+
+				if (type == 1)
+				{
+					theApp.triggerVob->SetCollDetStat(value);
+				}
+			}
+			else if (theApp.triggerBaseVob)
+			{
+				if (type == 0)
+				{
+					theApp.triggerBaseVob->SetCollDetDyn(value);
+				}
+
+				if (type == 1)
+				{
+					theApp.triggerBaseVob->SetCollDetStat(value);
+				}
+			}
 		}
 
 		__declspec(dllexport) void Extern_SendTrigger(int index) {
@@ -1045,7 +1069,8 @@ namespace GOTHIC_ENGINE {
 			if (pMat)
 			{
 				theApp.SetSelectedVob(NULL);
-				
+				(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
+
 
 				auto sel = mm.GetCurrentSelection();
 
