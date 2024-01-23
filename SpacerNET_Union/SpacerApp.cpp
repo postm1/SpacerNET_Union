@@ -451,6 +451,12 @@ namespace GOTHIC_ENGINE {
 
 						if (pickMode == SWM_VOBS)
 						{
+							if (mm.IsMaterialSelected())
+							{
+								//print.PrintRed("CLEAN");
+								mm.CleanSelection();
+							}
+
 							theApp.PickVob();
 							zinput->ClearKey(MOUSE_LEFT);
 							ClearLMB();

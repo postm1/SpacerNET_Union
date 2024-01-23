@@ -1069,8 +1069,22 @@ namespace GOTHIC_ENGINE {
 			if (pMat)
 			{
 				theApp.SetSelectedVob(NULL);
-				(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
 
+				auto pickMode = theApp.GetPickMode();
+
+				if (pickMode != SWM_MATERIALS)
+				{
+					pickMode = SWM_MATERIALS;
+
+					theApp.options.SetIntVal("bToggleWorkMode", TRUE);
+					theApp.options.Apply();
+
+					auto func = (callIntFunc)GetProcAddress(theApp.module, "TogglePickMaterialIcon");
+
+					func(TRUE);
+				}
+
+				//print.PrintRed(Z pickMode);
 
 				auto sel = mm.GetCurrentSelection();
 
