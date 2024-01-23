@@ -163,6 +163,34 @@ namespace GOTHIC_ENGINE {
 
 		return result;
 	}
+
+
+	
+
+	zSTRING GetVobClassName(zCVob* vob)
+	{
+		zSTRING str = "";
+
+		if (vob && vob->_GetClassDef())
+		{
+			str = "(" + vob->_GetClassDef()->className + ")";
+		}
+
+		return str;
+	}
+
+	zSTRING GetCleanVobName(zCVob* vob)
+	{
+		zSTRING str = "";
+
+		if (vob)
+		{
+			str = vob->GetVobName();
+		}
+
+		return str;
+	}
+
 	zSTRING GetVobName(zCVob* vob)
 	{
 		zSTRING str = "";

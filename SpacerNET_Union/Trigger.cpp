@@ -364,15 +364,17 @@ namespace GOTHIC_ENGINE {
 			m_kf_pos = moverVob->GetActKeyframe();
 			auto createTrigger = (createTriggerForm)GetProcAddress(theApp.module, "CreateTriggerForm");
 
-			Stack_PushString(GetVobName(moverVob));
+			Stack_PushString(GetVobClassName(moverVob));
+
+			Stack_PushString(GetCleanVobName(moverVob));
 			createTrigger(m_kf_pos, moverVob->keyframeList.GetNumInList(), moverVob->GetCollDetDyn(), moverVob->GetCollDetStat());
 		}
 		else if (triggerVob)
 		{
 			auto createTrigger2 = (callVoidFunc)GetProcAddress(theApp.module, "CreateTriggerFormEmptyRealTrigger");
 
-
-			Stack_PushString(GetVobName(triggerVob));
+			Stack_PushString(GetVobClassName(triggerVob));
+			Stack_PushString(GetCleanVobName(triggerVob));
 			createTrigger2();
 			
 		}
@@ -380,8 +382,8 @@ namespace GOTHIC_ENGINE {
 		{
 			auto createTrigger2 = (callVoidFunc)GetProcAddress(theApp.module, "CreateTriggerFormEmptyRealTrigger");
 
-
-			Stack_PushString(GetVobName(triggerBaseVob));
+			Stack_PushString(GetVobClassName(triggerBaseVob));
+			Stack_PushString(GetCleanVobName(triggerBaseVob));
 			createTrigger2();
 		}
 		else if (pickedVob->CastTo<oCMobInter>() || pickedVob->CastTo<zCTriggerUntouch>() || pickedVob->CastTo<zCPFXControler>()
@@ -389,8 +391,8 @@ namespace GOTHIC_ENGINE {
 		{
 			auto createTrigger2 = (callVoidFunc)GetProcAddress(theApp.module, "CreateTriggerFormEmpty");
 
-
-			Stack_PushString(GetVobName(triggerVob));
+			Stack_PushString(GetVobClassName(pickedVob));
+			Stack_PushString(GetCleanVobName(pickedVob));
 			createTrigger2();
 		}
 		else
