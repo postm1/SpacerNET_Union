@@ -25,6 +25,7 @@ namespace GOTHIC_ENGINE {
 		this->treeToCopy = NULL;
 		this->moverVob = NULL;
 		this->triggerVob = NULL;
+		this->triggerBaseVob = NULL;
 		this->m_kf_pos = 0;
 		this->event_sourcevob = NULL;
 		this->isExit = false;
@@ -267,6 +268,7 @@ namespace GOTHIC_ENGINE {
 
 		moverVob = dynamic_cast<zCMover*>(vob);
 		triggerVob = dynamic_cast<zCTrigger*>(vob);
+		triggerBaseVob = dynamic_cast<zCTriggerBase*>(vob);
 
 
 		if (options.GetIntVal("selectVobTab") && (dynamic_cast<zCVobWaypoint*>(pickedVob) || dynamic_cast<zCWaypoint*>(pickedVob) || dynamic_cast<zCVobSpot*>(pickedVob)))

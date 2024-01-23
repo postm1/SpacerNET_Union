@@ -369,12 +369,20 @@ namespace GOTHIC_ENGINE {
 		}
 		else if (triggerVob)
 		{
-			auto createTrigger2 = (callVoidFunc)GetProcAddress(theApp.module, "CreateTriggerFormEmpty");
+			auto createTrigger2 = (callVoidFunc)GetProcAddress(theApp.module, "CreateTriggerFormEmptyRealTrigger");
 
 
 			Stack_PushString(GetVobName(triggerVob));
 			createTrigger2();
 			
+		}
+		else if (triggerBaseVob)
+		{
+			auto createTrigger2 = (callVoidFunc)GetProcAddress(theApp.module, "CreateTriggerFormEmptyRealTrigger");
+
+
+			Stack_PushString(GetVobName(triggerBaseVob));
+			createTrigger2();
 		}
 		else if (pickedVob->CastTo<oCMobInter>() || pickedVob->CastTo<zCTriggerUntouch>() || pickedVob->CastTo<zCPFXControler>()
 			||  pickedVob->CastTo<zCMessageFilter>())

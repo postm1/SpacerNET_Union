@@ -42,6 +42,7 @@ namespace GOTHIC_ENGINE {
 		{
 			zCMover* moverVob;
 			zCTrigger* triggerVob;
+			zCTriggerBase* triggerBaseVob;
 			int m_kf_pos;
 			zCVob* event_sourcevob;
 		};
