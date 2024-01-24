@@ -1354,6 +1354,49 @@ namespace GOTHIC_ENGINE {
 		{
 			return (int)theApp.g_bIsPlayingGame;
 		}
+
+
+		__declspec(dllexport) void Extern_SetFilterMatActive(bool toggle) {
+
+			theApp.filterMatWindowActive = toggle;
+
+			//print.PrintRed("filterMatWindowActive: " + Z(int)toggle);
+
+			if (theApp.filterMatWindowActive)
+			{
+				if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
+				if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
+
+				theApp.SetSelectedVob(NULL);
+				theApp.pickedWaypoint2nd = NULL;
+
+				mm.CleanSelection();
+				(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
+
+				theApp.options.SetIntVal("bToggleWorkMode", TRUE);
+				theApp.options.Apply();
+
+				auto func = (callIntFunc)GetProcAddress(theApp.module, "TogglePickMaterialIcon");
+
+				func(TRUE);
+			}
+		}
+
+		__declspec(dllexport) void Extern_OnExitPolySelectMod()
+		{
+			if (theApp.pickedVob) theApp.pickedVob->SetDrawBBox3D(FALSE);
+			if (theApp.pickedWaypoint2nd) theApp.pickedWaypoint2nd->SetDrawBBox3D(FALSE);
+
+			theApp.SetSelectedVob(NULL);
+			theApp.pickedWaypoint2nd = NULL;
+
+			theApp.current_object = NULL;
+
+			mm.CleanSelection();
+			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
+		}
+
+		
 	}
 
 }

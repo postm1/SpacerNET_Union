@@ -62,6 +62,7 @@ namespace GOTHIC_ENGINE {
 		this->zSpyActive = false;
 		this->zSpyLevel = 5;
 		this->spacerWasInit = false;
+		this->filterMatWindowActive = false;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 		
@@ -455,6 +456,7 @@ namespace GOTHIC_ENGINE {
 							{
 								//print.PrintRed("CLEAN");
 								mm.CleanSelection();
+								//(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
 							}
 
 							theApp.PickVob();

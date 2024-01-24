@@ -19,6 +19,7 @@ namespace GOTHIC_ENGINE {
 		CSettings options;
 		bool visualEditorActive;
 		bool pluginsChecked;
+		bool filterMatWindowActive;
 		zCArray<zSTRING> whiteArrayPlugins;
 		zCArray<zSTRING> blackArrayPlugins;
 		ItemsLocator itemsLocator;

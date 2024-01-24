@@ -1388,6 +1388,11 @@ namespace GOTHIC_ENGINE {
 
 		zCVob* pickedVob = theApp.GetSelectedVob();
 
+		if (theApp.filterMatWindowActive) 
+		{
+			return;
+		}
+
 		
 
 		if (keys.KeyPressed("VOB_TRANSLATE", true))
