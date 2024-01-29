@@ -2165,7 +2165,7 @@ namespace GOTHIC_ENGINE {
 			Stack_PushInt(1);
 		}
 
-		Stack_PushInt(lightData.range);
+		Stack_PushInt(lightData.rangeBackup);
 		Stack_PushInt(lightData.lightQuality);
 		Stack_PushBool(lightData.isStatic);
 
