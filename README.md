@@ -62,6 +62,9 @@ In order to build this project, you'll need to install:
 - **Union SDK 1.0l**  
     Install it via [Union Resource Manager](https://worldofplayers.ru/threads/41415/).
 
+ ## Download
+Last version: [Google drive](https://drive.google.com/drive/folders/1shwV7oFBP2vQfxZkBCw9KjScDlx-Wueq)
+
 ## Contributing
 
 Any contribution to this repository is welcome.  
