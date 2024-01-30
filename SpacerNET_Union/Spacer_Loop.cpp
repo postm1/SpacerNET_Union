@@ -358,7 +358,7 @@ namespace GOTHIC_ENGINE {
 
 		
 
-		if (screen && ogame->GetCamera() && ogame->GetWorld())
+		if (screen && ogame->GetCamera() && ogame->GetWorld() && theApp.showScreenInfo)
 		{
 			zVEC3 pos = ogame->GetCamera()->activeCamPos;
 
@@ -589,6 +589,11 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 		*/
+
+		if (keys.KeyPressed("TOGGLE_SCREENINFO", true))
+		{
+			showScreenInfo = !showScreenInfo;
+		}
 
 
 		if (keys.KeyPressed("VOBLIST_COLLECT", true))

@@ -63,6 +63,7 @@ namespace GOTHIC_ENGINE {
 		this->zSpyLevel = 5;
 		this->spacerWasInit = false;
 		this->filterMatWindowActive = false;
+		this->showScreenInfo = true;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 		
@@ -350,6 +351,7 @@ namespace GOTHIC_ENGINE {
 
 		current_object = NULL;
 		treeToCopy = NULL;
+	
 
 		if (GetSelectedTool() == TM_BBOXEDIT)
 		{

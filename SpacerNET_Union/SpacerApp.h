@@ -114,6 +114,7 @@ namespace GOTHIC_ENGINE {
 			bool nextInsertionIsTempPfx;
 			bool showRespawnOnVobs;
 			bool bDebugSpacerLoadMesh;
+			bool showScreenInfo;
 
 			zCVob* floorVob;
 			zCVob*		pickedWaypoint2nd;
