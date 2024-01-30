@@ -42,6 +42,7 @@ The **Spacer.NET** contains also two additional files that can be only obtained 
 ## Download
 
 You can download the latest release of Spacer.NET from [worldofplayers.de](https://forum.worldofplayers.de/forum/threads/1557793-WORLD-EDITOR-Spacer-NET) forum.  
+Or you can use Google drive: [Link](https://drive.google.com/drive/folders/1shwV7oFBP2vQfxZkBCw9KjScDlx-Wueq)
 
 ## Usage requirements
 
@@ -62,8 +63,6 @@ In order to build this project, you'll need to install:
 - **Union SDK 1.0l**  
     Install it via [Union Resource Manager](https://worldofplayers.ru/threads/41415/).
 
- ## Download
-Last version: [Google drive](https://drive.google.com/drive/folders/1shwV7oFBP2vQfxZkBCw9KjScDlx-Wueq)
 
 ## Contributing
 
