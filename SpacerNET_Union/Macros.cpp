@@ -131,6 +131,8 @@ namespace GOTHIC_ENGINE {
 					
 				};
 			};
+
+			
 		}
 
 		Stack_PushString("[Macros FINISHED]\n");
@@ -139,6 +141,14 @@ namespace GOTHIC_ENGINE {
 
 		PlaySoundGame(ToStr "CS_IAI_ME_ME");
 		Macros_Clean();
+
+
+		if (ogame->GetGameWorld())
+		{
+			Stack_PushString(ogame->GetGameWorld()->GetWorldFilename().GetWord("\\", -1));
+
+			(callVoidFunc)GetProcAddress(theApp.module, "UpdateSpacerTitle")();
+		}
 	}
 
 
