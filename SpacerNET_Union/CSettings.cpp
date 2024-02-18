@@ -159,9 +159,10 @@ namespace GOTHIC_ENGINE {
 
 			int maxFps = GetIntVal("maxFPS");
 
-			if (maxFps > 0)
+			if (maxFps >= 0)
 			{
-				ztimer->LimitFPS(maxFps);
+				//ztimer->LimitFPS(maxFps);
+				Union.GetSysPackOption().Write(maxFps, "PARAMETERS", "FPS_Limit");
 			}
 
 			if (zmusic) zmusic->SetVolume((float)GetIntVal("musicVolume") / 100.0f);

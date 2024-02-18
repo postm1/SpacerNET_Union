@@ -91,6 +91,7 @@ namespace GOTHIC_ENGINE {
 
 		int limitFps = theApp.options.GetIntVal("maxFPS");
 
+		/*
 		if (limitFps > 0)
 		{
 			ztimer->LimitFPS(limitFps);
@@ -99,6 +100,7 @@ namespace GOTHIC_ENGINE {
 		{
 			ztimer->minFrameTime = 0;
 		}
+		*/
 
 		//cmd << "LoadMat" << endl;
 		debug.Init();
