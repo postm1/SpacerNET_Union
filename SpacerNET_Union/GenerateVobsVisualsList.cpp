@@ -176,7 +176,8 @@ namespace GOTHIC_ENGINE {
 
 		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title><style type=\"text/css\" media=\"screen\">html,body{font-family:serif;,sans-serif;\
 color:#222222;}p{font-size:20px}table{border-collapse:collapse;border:1px solid grey;font-size:14px;}th{font-size:bold;background-color:#E1E15D;}td,th{border:1px solid grey;padding:5px}\
-tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_orange{color:#FF9900;} .texture_word_red{color:#FF001E;}</style></head><body><p><b>There is a list of all vobs' visuals in the location.</b></p>";
+tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_orange{color:#FF9900;} .texture_word_red{color:#FF001E;} #table_report tr:nth-child(odd) { background-color: #E4E4E4; color: #222222;}</style></head><body><p>\
+<b>There is a list of all vobs' visuals in the location.</b></p>";
 
 		const CString endFile = "</body></html>";
 
@@ -314,7 +315,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 					{
 						foundAnyBadEntry = true;
 
-						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
+						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
 					}
 
 					outfile << "<tr class=\"error\">";
@@ -325,7 +326,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 					{
 						foundAnyBadEntry = true;
 
-						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
+						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
 					}
 
 					outfile << "<tr class=\"warning\">";
