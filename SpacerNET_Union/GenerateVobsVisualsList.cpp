@@ -88,6 +88,89 @@ namespace GOTHIC_ENGINE {
 		CreateHtmlReport(path);
 	}
 
+	void ExtractVisualInfo(zCVisual* visual, Common::MapPair<Common::CString, VisualReportEntry*>* pair)
+	{
+		if (!visual)
+		{
+			return;
+		}
+
+		// TGA Decal
+		if (auto pDecal = visual->CastTo<zCDecal>())
+		{
+			auto mat = pDecal->decalMaterial;
+
+			if (mat && mat->texture)
+			{
+				pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+			}
+		}
+
+		// 3DS
+		if (auto pProgMesh = visual->CastTo<zCProgMeshProto>())
+		{
+			//cmd << "mesh! " << curVob->GetVobName() << " visual: " << visual->GetVisualName() << endl;
+
+			for (int i = 0; i < pProgMesh->numSubMeshes; i++)
+			{
+				auto mat = pProgMesh->subMeshList[i].material;
+
+				if (mat && mat->texture)
+				{
+					//cmd << mat->texture->GetObjectName() << endl;
+					pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+				}
+			}
+
+			//cmd << "===========" << endl;
+		}
+
+		// MMS
+		if (auto pMorph = visual->CastTo<zCMorphMesh>())
+		{
+
+			for (int i = 0; i < pMorph->morphMesh->numSubMeshes; i++)
+			{
+				auto mat = pMorph->morphMesh->subMeshList[i].material;
+
+				if (mat && mat->texture)
+				{
+					pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+				}
+			}
+
+
+		}
+
+		// ASC/MDS
+		if (auto pModel = visual->CastTo<zCModel>())
+		{
+			for (int i = 0; i < pModel->meshSoftSkinList.GetNum(); i++)
+			{
+				for (int n = 0; n < pModel->meshSoftSkinList[i]->numSubMeshes; n++)
+				{
+					auto mat = pModel->meshSoftSkinList[i]->subMeshList[n].material;
+
+					if (mat && mat->texture)
+					{
+						pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+					}
+					//cmd << pModel->meshSoftSkinList[i]->subMeshList[n].material->GetObjectName() << endl;
+				}
+			}
+
+			// search in all the nodes
+			for (int i = 0; i < pModel->nodeList.GetNum(); i++)
+			{
+				// если нет визуала узла
+				if (!pModel->nodeList[i]->nodeVisual)
+					continue;
+
+				ExtractVisualInfo(pModel->nodeList[i]->nodeVisual, pair);
+			}
+		}
+	}
+
 	void CreateHtmlReport(CString path)
 	{
 
@@ -151,30 +234,12 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 				}
 
 				// adding information about textures from submeshes
-				if (pair->GetValue()->fileType == "3DS" && pair->GetValue()->pVob != NULL)
+				if (/*pair->GetValue()->fileType == "3DS" &&*/ pair->GetValue()->pVob != NULL)
 				{
 					auto curVob = pair->GetValue()->pVob;
 
-					if (auto visual = curVob->GetVisual())
-					{
-						if (auto mesh = visual->CastTo<zCProgMeshProto>())
-						{
-							//cmd << "mesh! " << curVob->GetVobName() << " visual: " << visual->GetVisualName() << endl;
 
-							for (int i = 0; i < mesh->numSubMeshes; i++)
-							{
-								auto mat = mesh->subMeshList[i].material;
-
-								if (mat && mat->texture)
-								{
-									//cmd << mat->texture->GetObjectName() << endl;
-									pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
-								}
-							}
-
-							//cmd << "===========" << endl;
-						}
-					}
+					ExtractVisualInfo(curVob->GetVisual(), pair);
 				}
 
 				// VDF NAME
@@ -380,7 +445,8 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 
 
 		//=====================================================================
-		outfile << "<p><b>Normal visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
+		outfile << "<p><b>Normal visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>\
+VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 
 		for (uint i = 0; i < arr.GetNum(); i++)
 		{
@@ -402,13 +468,52 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 				}
 
 
+
+
 				outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
 				outfile << "<td>" << pair->GetValue()->amount << "</td>";
 				outfile << "<td>" << pair->GetValue()->vdfOrWork << "</td>";
 				outfile << "<td>" << pair->GetValue()->vdfName << "</td>";
 				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
 
+				if (pair->GetValue()->pVob)
+				{
+					outfile << "<td>";
 
+					for (int k = 0; k < pair->GetValue()->texturesNames.GetNumInList(); k++)
+					{
+						auto nameTexture = pair->GetValue()->texturesNames.GetSafe(k);
+						auto originalName = nameTexture;
+
+						nameTexture = nameTexture.Replace(".TGA", "");
+						nameTexture += "-C";
+						nameTexture += ".TEX";
+
+						outfile << nameTexture << "<br>";
+
+
+					}
+
+					outfile  << "</td>";
+
+					outfile << "<td>";
+
+					for (int k = 0; k < pair->GetValue()->texturesNames.GetNumInList(); k++)
+					{
+						auto nameTexture = pair->GetValue()->texturesNames.GetSafe(k);
+						auto originalName = nameTexture;
+
+						outfile << nameTexture << "<br>";
+
+
+					}
+
+					outfile << "</td>";
+				}
+				else
+				{
+					outfile << "<td></td><td></td>";
+				}
 				
 
 				outfile << "</tr>";
