@@ -340,6 +340,8 @@ namespace GOTHIC_ENGINE {
 		
 		pickedVob->SetPositionWorld(pos);
 
+	
+
 
 		if (dynamic_cast<zCVobWaypoint*>(pickedVob))
 		{
@@ -1423,6 +1425,23 @@ namespace GOTHIC_ENGINE {
 			}
 			
 		}
+
+
+		if (keys.KeyPressed("CAMERA_SYNC_VOB_MOD", true))
+		{
+			theApp.cameraMoveWithVobActive = !theApp.cameraMoveWithVobActive;
+
+			if (theApp.cameraMoveWithVobActive)
+			{
+				print.PrintGreen(GetLang("MOD_CAMERA_SYNC_ON"));
+			}
+			else
+			{
+				print.PrintRed(GetLang("MOD_CAMERA_SYNC_OFF"));
+			}
+
+			
+		}
 		
 
 		if (pickMode == SWM_MATERIALS)
@@ -1806,6 +1825,13 @@ namespace GOTHIC_ENGINE {
 					{
 						pos.n[1] += speedTranslation * ztimer->frameTimeFloat;
 						HandleVobTranslation(pickedVob, pos);
+
+						if (theApp.cameraMoveWithVobActive)
+						{
+							auto camPos = ogame->GetCameraVob()->GetPositionWorld();
+							camPos.n[1] += speedTranslation * ztimer->frameTimeFloat;
+							ogame->GetCameraVob()->SetPositionWorld(camPos);
+						}
 					}
 					/*
 					else if (pickMode == SWM_MATERIALS)
@@ -1822,6 +1848,13 @@ namespace GOTHIC_ENGINE {
 					{
 						pos.n[1] -= speedTranslation * ztimer->frameTimeFloat;
 						HandleVobTranslation(pickedVob, pos);
+
+						if (theApp.cameraMoveWithVobActive)
+						{
+							auto camPos = ogame->GetCameraVob()->GetPositionWorld();
+							camPos.n[1] -= speedTranslation * ztimer->frameTimeFloat;
+							ogame->GetCameraVob()->SetPositionWorld(camPos);
+						}
 					}
 					/*
 					else if (pickMode == SWM_MATERIALS)
@@ -1878,6 +1911,15 @@ namespace GOTHIC_ENGINE {
 						pos += unit * speedTranslation * ztimer->frameTimeFloat;
 						//pos.n[1] = y;
 						HandleVobTranslation(pickedVob, pos);
+
+
+						if (theApp.cameraMoveWithVobActive)
+						{
+							auto camPos = ogame->GetCameraVob()->GetPositionWorld();
+							camPos += unit * speedTranslation * ztimer->frameTimeFloat;
+							ogame->GetCameraVob()->SetPositionWorld(camPos);
+						}
+					
 					}
 
 					if (keys.KeyPressed("VOB_TRANS_BACKWARD", false, true))
@@ -1885,6 +1927,16 @@ namespace GOTHIC_ENGINE {
 						pos -= unit * speedTranslation * ztimer->frameTimeFloat;
 						//pos.n[1] = y;
 						HandleVobTranslation(pickedVob, pos);
+
+
+						if (theApp.cameraMoveWithVobActive)
+						{
+							auto camPos = ogame->GetCameraVob()->GetPositionWorld();
+							camPos -= unit * speedTranslation * ztimer->frameTimeFloat;
+							ogame->GetCameraVob()->SetPositionWorld(camPos);
+						}
+
+						
 					}
 
 					if (keys.KeyPressed("VOB_TRANS_LEFT", false, true))
@@ -1893,6 +1945,15 @@ namespace GOTHIC_ENGINE {
 						pos += left * speedTranslation * ztimer->frameTimeFloat;
 						//pos.n[1] = y;
 						HandleVobTranslation(pickedVob, pos);
+
+						if (theApp.cameraMoveWithVobActive)
+						{
+							auto camPos = ogame->GetCameraVob()->GetPositionWorld();
+							camPos += left * speedTranslation * ztimer->frameTimeFloat;
+							ogame->GetCameraVob()->SetPositionWorld(camPos);
+						}
+
+						
 					}
 
 					if (keys.KeyPressed("VOB_TRANS_RIGHT", false, true))
@@ -1901,6 +1962,15 @@ namespace GOTHIC_ENGINE {
 						pos += right * speedTranslation * ztimer->frameTimeFloat;
 						//pos.n[1] = y;
 						HandleVobTranslation(pickedVob, pos);
+
+
+						if (theApp.cameraMoveWithVobActive)
+						{
+							auto camPos = ogame->GetCameraVob()->GetPositionWorld();
+							camPos += right * speedTranslation * ztimer->frameTimeFloat;
+							ogame->GetCameraVob()->SetPositionWorld(camPos);
+						}
+						
 					}
 
 

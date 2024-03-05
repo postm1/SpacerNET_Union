@@ -188,6 +188,10 @@ namespace GOTHIC_ENGINE {
 
 		defaultValues.Insert("VOB_RESTORE_POS", "2_19");
 		defaultValues.Insert("VOB_ADD_FAV", "8_34");
+		defaultValues.Insert("CAMERA_SYNC_VOB_MOD", "8_35");//SHIFT+H
+
+
+		
 		
 		auto arr = defaultValues.GetArray();
 

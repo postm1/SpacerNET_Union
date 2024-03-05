@@ -64,6 +64,7 @@ namespace GOTHIC_ENGINE {
 		this->spacerWasInit = false;
 		this->filterMatWindowActive = false;
 		this->showScreenInfo = true;
+		this->cameraMoveWithVobActive = false;
 
 		this->spcOpt.Init("spacer_net.ini", true);
 		

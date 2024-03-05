@@ -115,6 +115,7 @@ namespace GOTHIC_ENGINE {
 			bool showRespawnOnVobs;
 			bool bDebugSpacerLoadMesh;
 			bool showScreenInfo;
+			bool cameraMoveWithVobActive;
 
 			zCVob* floorVob;
 			zCVob*		pickedWaypoint2nd;
