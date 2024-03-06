@@ -1131,5 +1131,47 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
+
+	void SaveProgMeshToFile(zCVob* pVob)
+	{
+		/*
+		
+		if (pickedVob)
+			{
+				SaveProgMeshToFile(pickedVob);
+			}
+		*/
+		if (!pVob || !pVob->visual)
+			return;
+
+		// пытаемс€ преобразовать визуал в "прог меш прото"
+		zCProgMeshProto* pProgMesh = pVob->visual->CastTo<zCProgMeshProto>();
+
+		if (!pProgMesh)
+			return;
+
+		zCMesh* pMesh = pProgMesh->GetMesh(0);
+
+		if (!pMesh)
+			return;
+
+
+		zSTRING fileName = "SAVED_" + pProgMesh->GetObjectName();
+		fileName.Replace(".3DS", ".MSH");
+
+		zoptions->ChangeDir(DIR_MESHES);
+
+
+		zCFileBIN file;
+		file.BinCreate(fileName);
+		pMesh->CreateListsFromArrays();
+		pMesh->SaveMSH(file);
+		file.BinClose();
+
+
+		//zSTRING filePath = zoptions->GetDirString(zTOptionPaths::DIR_ROOT) + "\\_work\\data\\meshes\\" + fileName;
+
+
+	}
 }
 

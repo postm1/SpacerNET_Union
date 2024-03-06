@@ -1439,7 +1439,7 @@ namespace GOTHIC_ENGINE {
 			{
 				print.PrintRed(GetLang("MOD_CAMERA_SYNC_OFF"));
 			}
-
+			
 			
 		}
 		

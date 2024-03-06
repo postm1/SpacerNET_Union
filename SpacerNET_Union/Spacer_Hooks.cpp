@@ -658,4 +658,15 @@ namespace GOTHIC_ENGINE {
 		zCVertexTransform::s_MemMan.Restore(markedPos);
 		return TRUE;
 	}
+
+
+	/*
+	0x0056D940 public: static void __cdecl zCMesh::SaveMSH(class zCFileBIN &,class zCPolygon * *,int,class zCMesh *)
+	void __cdecl SaveMSH(zCFileBIN & file, zCPolygon * *polyList, int numPoly, zCMesh * mesh);
+	CInvoke <void(__cdecl*) (zCFileBIN& file, zCPolygon** polyList, int numPoly, zCMesh* mesh)> pSaveMSH(0x0056D940, SaveMSH, IVK_AUTO);
+	void __cdecl SaveMSH(zCFileBIN & file, zCPolygon * *polyList, int numPoly, zCMesh * mesh)
+	{
+		
+	}
+	*/
 }
