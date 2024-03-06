@@ -1396,6 +1396,21 @@ namespace GOTHIC_ENGINE {
 			(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
 		}
 
+		__declspec(dllexport) void Extern_SaveVobsVisualToFile(uint vob, bool includedChildren)
+		{
+
+			CString fileName = Stack_PeekString();
+
+			zCVob* pVob = (zCVob*)vob;
+
+			if (pVob)
+			{
+				SaveProgMeshToFile(pVob, includedChildren, fileName);
+			}
+		}
+
+
+		
 		
 	}
 

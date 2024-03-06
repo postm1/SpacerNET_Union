@@ -71,6 +71,11 @@ namespace GOTHIC_ENGINE {
 		CreateDirectory("_work\\tools", NULL);
 		CreateDirectory("_work\\tools\\data", NULL);
 
+		CreateDirectory("_work\\data", NULL);
+		CreateDirectory("_work\\data\\meshes\\", NULL);
+		CreateDirectory("_work\\data\\meshes\\_compiled\\", NULL);
+
+
 		if (!IsDx11Active())
 		{
 			//if (zrenderer) zrenderer->Vid_SetScreenMode(zRND_SCRMODE_HIDE);

@@ -1429,6 +1429,7 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("CAMERA_SYNC_VOB_MOD", true))
 		{
+
 			theApp.cameraMoveWithVobActive = !theApp.cameraMoveWithVobActive;
 
 			if (theApp.cameraMoveWithVobActive)

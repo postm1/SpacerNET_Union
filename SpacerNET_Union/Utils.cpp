@@ -1132,15 +1132,52 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void SaveProgMeshToFile(zCVob* pVob)
+
+	void GetChildrenVobMesh(zCTree<zCVob>* node, zCVob* pickedVob, zCMesh* pMesh)
 	{
-		/*
-		
-		if (pickedVob)
+		zCVob* vobChild = node->GetData();
+
+		if (vobChild)
+		{
+			if (vobChild->visual)
 			{
-				SaveProgMeshToFile(pickedVob);
+				
+
+				// пытаемс€ преобразовать визуал в "прог меш прото"
+				zCProgMeshProto* pProgMeshChild = vobChild->visual->CastTo<zCProgMeshProto>();
+				if (pProgMeshChild)
+				{
+					zCMesh* pMeshChild = pProgMeshChild->GetMesh(0);
+
+					if (pMeshChild)
+					{
+						cmd << "Merge: " << vobChild->GetObjectName() << endl;
+
+						pMesh->MergeMesh(pMeshChild, vobChild->trafoObjToWorld);
+					}
+
+				}
 			}
-		*/
+
+		}
+
+		node = node->GetFirstChild();
+
+		while (node != NULL)
+		{
+			GetChildrenVobMesh(node, pickedVob, pMesh);
+			node = node->GetNextChild();
+		}
+	}
+
+	void SaveProgMeshToFile(zCVob* pVob, bool includeChildren, CString name)
+	{
+
+		cmd << "SaveProgMeshToFile: " << pVob->GetVobName() 
+			<< " includeChildren: " << (int)includeChildren 
+			<< " name: " << name
+			<< endl;
+
 		if (!pVob || !pVob->visual)
 			return;
 
@@ -1148,28 +1185,59 @@ namespace GOTHIC_ENGINE {
 		zCProgMeshProto* pProgMesh = pVob->visual->CastTo<zCProgMeshProto>();
 
 		if (!pProgMesh)
+		{
+			print.PrintRed(GetLang("VOB_VISUAL_SAVE_FAIL"));
 			return;
+		}
+			
 
 		zCMesh* pMesh = pProgMesh->GetMesh(0);
 
 		if (!pMesh)
+		{
+			print.PrintRed(GetLang("VOB_VISUAL_SAVE_FAIL"));
 			return;
+		}
+			
 
 
-		zSTRING fileName = "SAVED_" + pProgMesh->GetObjectName();
-		fileName.Replace(".3DS", ".MSH");
+		
+		
+
+		pMesh->TransformAllVerts(pVob->trafoObjToWorld, FALSE);
+
+		if (includeChildren)
+		{
+			if (pVob->globalVobTreeNode)
+			{
+				GetChildrenVobMesh(pVob->globalVobTreeNode, pVob, pMesh);
+			}
+		}
 
 		zoptions->ChangeDir(DIR_MESHES);
 
-
-		zCFileBIN file;
-		file.BinCreate(fileName);
-		pMesh->CreateListsFromArrays();
-		pMesh->SaveMSH(file);
-		file.BinClose();
+		cmd << "try to save" << endl;
 
 
-		//zSTRING filePath = zoptions->GetDirString(zTOptionPaths::DIR_ROOT) + "\\_work\\data\\meshes\\" + fileName;
+		zSTRING fileName = name;
+
+		fileName.Replace(".3DS", ".MSH");
+
+		if (!fileName.contains(".MSH"))
+		{
+			fileName = fileName + ".MSH";
+		}
+
+
+		pMesh->SaveMSH(fileName);
+
+		print.PrintGreen(GetLang("VOB_VISUAL_SAVE_SUCCESS"));
+
+		cmd << "Try to remove..." << endl;
+
+		pMesh->DeleteAll();
+		zRELEASE(pMesh);
+
 
 
 	}
