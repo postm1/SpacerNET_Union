@@ -2012,7 +2012,10 @@ namespace GOTHIC_ENGINE {
 				//cmd << "ApplyProps for vob 3 " << AHEX32((uint)current_object) << endl;
 
 				//rx_name rx_rename
-				if (lastName != name)
+
+
+
+				if (lastName != name || vob->GetVobName().IsEmpty())
 				{
 					RecalcWPBBox(vob);
 
