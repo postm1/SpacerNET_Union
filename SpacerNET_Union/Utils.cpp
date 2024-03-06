@@ -1193,12 +1193,12 @@ namespace GOTHIC_ENGINE {
 
 		zCMesh* pMesh = pProgMesh->GetMesh(0);
 
-		if (!pMesh)
+		if (!pMesh || name.Length() == 0)
 		{
 			print.PrintRed(GetLang("VOB_VISUAL_SAVE_FAIL"));
 			return;
 		}
-			
+		
 
 
 		
