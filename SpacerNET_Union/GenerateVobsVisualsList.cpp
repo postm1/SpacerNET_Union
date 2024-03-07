@@ -113,6 +113,7 @@ namespace GOTHIC_ENGINE {
 
 			for (int i = 0; i < pProgMesh->numSubMeshes; i++)
 			{
+
 				auto mat = pProgMesh->subMeshList[i].material;
 
 				if (mat && mat->texture)
@@ -129,16 +130,20 @@ namespace GOTHIC_ENGINE {
 		if (auto pMorph = visual->CastTo<zCMorphMesh>())
 		{
 
-			for (int i = 0; i < pMorph->morphMesh->numSubMeshes; i++)
+			if (pMorph->morphMesh)
 			{
-				auto mat = pMorph->morphMesh->subMeshList[i].material;
-
-				if (mat && mat->texture)
+				for (int i = 0; i < pMorph->morphMesh->numSubMeshes; i++)
 				{
-					pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+
+
+					auto mat = pMorph->morphMesh->subMeshList[i].material;
+
+					if (mat && mat->texture)
+					{
+						pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+					}
 				}
 			}
-
 
 		}
 
@@ -149,6 +154,11 @@ namespace GOTHIC_ENGINE {
 			{
 				for (int n = 0; n < pModel->meshSoftSkinList[i]->numSubMeshes; n++)
 				{
+					if (!pModel->meshSoftSkinList[i]) 
+					{
+						continue;
+					}
+
 					auto mat = pModel->meshSoftSkinList[i]->subMeshList[n].material;
 
 					if (mat && mat->texture)
@@ -162,6 +172,11 @@ namespace GOTHIC_ENGINE {
 			// search in all the nodes
 			for (int i = 0; i < pModel->nodeList.GetNum(); i++)
 			{
+				if (!pModel->nodeList[i])
+				{
+					continue;
+				}
+
 				// если нет визуала узла
 				if (!pModel->nodeList[i]->nodeVisual)
 					continue;
