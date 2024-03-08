@@ -39,6 +39,16 @@ namespace GOTHIC_ENGINE {
 		zCArray<CString> textures;
 	};
 
+
+	struct VisualReportEntryItem
+	{
+		zSTRING name;
+		int count;
+		bool inContainer = false;
+		zVEC3 coords;
+		zSTRING contName;
+	};
+
 	void CreateHtmlReport(CString path);
 
 	Common::Map<CString, VisualReportEntry*> searchVisualUniqList;
@@ -539,6 +549,114 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 
 		outfile << "</table><br>";
 
+
+		zCArray<zCVob*> resultArray;
+
+
+		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, resultArray, 0);
+
+		zCArray<VisualReportEntryItem*> searchItems;
+
+		int num = resultArray.GetNumInList();
+
+		const zSTRING zSTR_SKIP = "\r\t ";
+
+		for (int i = 0; i < num; i++)
+		{
+			auto pVob = resultArray.GetSafe(i);
+
+			if (pVob)
+			{
+				if (auto pItem = pVob->CastTo<oCItem>())
+				{
+					auto pEntry = new VisualReportEntryItem();
+					pEntry->count = 1;
+					pEntry->name = pItem->GetInstanceName();
+					pEntry->inContainer = false;
+					pEntry->coords = pItem->GetPositionWorld();
+					searchItems.InsertEnd(pEntry);
+				}
+
+				if (auto pCont = pVob->CastTo<oCMobContainer>())
+				{
+					if (pCont->contains.Length() > 0)
+					{
+						zSTRING info;
+						zSTRING s = pCont->contains;
+
+						int wordnr = 1;
+						// Get Instance Name
+						do {
+							info = s.PickWord(wordnr, ",", zSTR_SKIP);
+							if (!info.IsEmpty()) {
+								// Create these Objects
+								zSTRING name = info.PickWord(1, ":", zSTR_SKIP);
+								int num = info.PickWord(3, ":", zSTR_SKIP).ToInt();
+								if (num <= 0) num = 1;
+								/*
+								zCPar_Symbol* sym		= parser.GetSymbol(name);
+								zCPar_Symbol* classSym	= sym?parser.GetSymbol(parser.GetBaseClass(sym)):0;
+								if (classSym && (classSym->name == oCItem::GetStaticClassDef()->GetScriptClassName()) )
+								*/
+								int index = parser->GetIndex(name);
+								if (index >= 0 && parser->MatchClass(index, oCItem::classDef->scriptClassName))
+								{
+									auto pEntry = new VisualReportEntryItem();
+									pEntry->count = 1;
+									pEntry->name = name;
+									pEntry->inContainer = true;
+									pEntry->contName = pCont->GetObjectName();
+									pEntry->coords = pCont->GetPositionWorld();
+									searchItems.InsertEnd(pEntry);
+								}
+							}
+							wordnr += 2;
+
+						} while (!info.IsEmpty());
+					}
+				}
+
+				
+			}
+		}
+
+		outfile << "<p><b>Items table</b></p><table id=\"table_report_items\"><tr><th>Item instance</th><th>Coords</th><th>In container</th></tr>";
+
+		for (uint i = 0; i < searchItems.GetNum(); i++)
+		{
+			auto entry = searchItems.GetSafe(i);
+
+			if (entry)
+			{
+				outfile << "<tr>";
+				outfile << "<td>" << entry->name << "</td>";
+				outfile << "<td>" << entry->coords.ToString() << "</td>";
+
+				if (entry->inContainer)
+				{
+					if (entry->contName.Length() > 0)
+					{
+						outfile << "<td>" << entry->contName << "</td>";
+					}
+					else
+					{
+						outfile << "<td>" << "yes" << "</td>";
+					}
+					
+				}
+				else
+				{
+					outfile << "<td>" << "-" << "</td>";
+				}
+				
+
+				outfile << "</tr>";
+			}
+		}
+
+		outfile << "</table><br>";
+
+		searchItems.DeleteListDatas();
 
 		outfile << endFile;
 
