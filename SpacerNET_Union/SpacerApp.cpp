@@ -66,6 +66,8 @@ namespace GOTHIC_ENGINE {
 		this->showScreenInfo = true;
 		this->cameraMoveWithVobActive = false;
 
+		this->rotMod = zMH_VIEW;
+
 		this->spcOpt.Init("spacer_net.ini", true);
 		
 		this->restorator.Init();

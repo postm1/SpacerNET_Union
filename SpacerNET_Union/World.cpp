@@ -731,6 +731,10 @@ namespace GOTHIC_ENGINE {
 		{
 			SetSelectedTool(TM_ONEMODE);
 		}
+
+		
+		theApp.rotMod = (zEVobMotionHeading)theApp.options.GetIntVal("rotModStart");
+		
 	}
 
 	// applied on the first frame when the level is loaded

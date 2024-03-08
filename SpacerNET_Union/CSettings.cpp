@@ -487,6 +487,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "CONTROLS", "checkBoxShowVobTraceFloor", "0");
 		list.Insert("checkBoxShowVobTraceFloor", set);
 
+		set = new CSetting(TYPE_INT, "CONTROLS", "rotModStart", "2");
+		list.Insert("rotModStart", set);
+
 		//========================================================================
 		set = new CSetting(TYPE_INT, "GRASS", "grassMinDist", "150");
 		list.Insert("grassMinDist", set);

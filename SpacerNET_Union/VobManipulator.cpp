@@ -261,20 +261,55 @@ namespace GOTHIC_ENGINE {
 
 		if (type == 1)
 		{
-			pickedVob->RotateWorld(camUnit.Cross(zVEC3(0, 1, 0)).Normalize(), angle);
+			if (theApp.rotMod == zMH_WORLD)
+			{
+				pickedVob->RotateWorld(zVEC3(1, 0, 0), angle);
+			}
+			else if (theApp.rotMod == zMH_LOCALE)
+			{
+				pickedVob->RotateLocal(zVEC3(1, 0, 0), angle);
+			}
+			else
+			{
+				pickedVob->RotateWorld(camUnit.Cross(zVEC3(0, 1, 0)).Normalize(), angle);
+			}
+			
 		}
 
 		if (type == 2)
 		{
-			zVEC3 newVec = camUnit;
-			newVec[1] = 0;
 
-			pickedVob->RotateWorld(newVec, -angle);
+			if (theApp.rotMod == zMH_WORLD)
+			{
+				pickedVob->RotateWorld(zVEC3(0, 0, 1), angle);
+			}
+			else if (theApp.rotMod == zMH_LOCALE)
+			{
+				pickedVob->RotateLocal(zVEC3(0, 0, 1), angle);
+			}
+			else
+			{
+				zVEC3 newVec = camUnit;
+				newVec[1] = 0;
+
+				pickedVob->RotateWorld(newVec, -angle);
+			}
+
+			
 		}
 
 		if (type == 3)
 		{
-			pickedVob->RotateWorldY(angle);
+
+			if (theApp.rotMod == zMH_LOCALE)
+			{
+				pickedVob->RotateLocalY(angle);
+			}
+			else
+			{
+				pickedVob->RotateWorldY(angle);
+			}
+			
 		}
 
 		if (type == 4)
@@ -1444,6 +1479,24 @@ namespace GOTHIC_ENGINE {
 			
 		}
 		
+		if (keys.KeyPressed("ROT_MOD_CHANGE", true))
+		{
+			int motion = (int)theApp.rotMod + 1;
+
+			if (motion > 2)
+			{
+				motion = 0;
+			}
+
+			switch (motion)
+			{
+			case 0: print.PrintRed("WORLD"); break;
+			case 1: print.PrintRed("LOCAL"); break;
+			case 2: print.PrintRed("CAMERA"); break;
+			}
+
+			theApp.rotMod = (zEVobMotionHeading)motion;
+		}
 
 		if (pickMode == SWM_MATERIALS)
 		{
@@ -1497,16 +1550,16 @@ namespace GOTHIC_ENGINE {
 		{
 			int motion = (int)ControllerEvents.MotionHeading + 1;
 
-			if (motion > 3)
+			if (motion > 2)
 			{
 				motion = 0;
 			}
 
 			switch (motion)
 			{
-				case 0: print.PrintRed("zMH_WORLD"); break;
-				case 1: print.PrintRed("zMH_LOCALE"); break;
-				case 2: print.PrintRed("zMH_VIEW"); break;
+				case 0: print.PrintRed("WORLD"); break;
+				case 1: print.PrintRed("LOCAL"); break;
+				case 2: print.PrintRed("CAMERA"); break;
 			}
 
 			ControllerEvents.MotionHeading = (zEVobMotionHeading)motion;
