@@ -191,20 +191,52 @@ namespace GOTHIC_ENGINE {
 
 		if (type == 1)
 		{
-			pickedVob->RotateWorld(camUnit.Cross(zVEC3(0, 1, 0)).Normalize(), angle);
+
+			if (theApp.rotMod == zMH_WORLD)
+			{
+				pickedVob->RotateWorld(zVEC3(1, 0, 0), angle);
+			}
+			else if (theApp.rotMod == zMH_LOCALE)
+			{
+				pickedVob->RotateLocal(zVEC3(1, 0, 0), angle);
+			}
+			else
+			{
+				pickedVob->RotateWorld(camUnit.Cross(zVEC3(0, 1, 0)).Normalize(), angle);
+			}
 		}
 
 		if (type == 2)
 		{
-			zVEC3 newVec = camUnit;
-			newVec[1] = 0;
 
-			pickedVob->RotateWorld(newVec, -angle);
+			if (theApp.rotMod == zMH_WORLD)
+			{
+				pickedVob->RotateWorld(zVEC3(0, 0, 1), angle);
+			}
+			else if (theApp.rotMod == zMH_LOCALE)
+			{
+				pickedVob->RotateLocal(zVEC3(0, 0, 1), angle);
+			}
+			else
+			{
+				zVEC3 newVec = camUnit;
+				newVec[1] = 0;
+
+				pickedVob->RotateWorld(newVec, -angle);
+			}
+
 		}
 
 		if (type == 3)
 		{
-			pickedVob->RotateWorldY(angle);
+			if (theApp.rotMod == zMH_LOCALE)
+			{
+				pickedVob->RotateLocalY(angle);
+			}
+			else
+			{
+				pickedVob->RotateWorldY(angle);
+			}
 		}
 
 		if (type == 4)
