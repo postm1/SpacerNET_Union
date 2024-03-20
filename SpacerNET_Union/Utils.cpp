@@ -1178,8 +1178,11 @@ namespace GOTHIC_ENGINE {
 			<< " name: " << name
 			<< endl;
 
-		if (!pVob || !pVob->visual)
+		if (!pVob || !pVob->visual || pVob->CastTo<zCVobLevelCompo>())
+		{
+			print.PrintRed(GetLang("ACTION_FORBIDDEN"));
 			return;
+		}
 
 		// пытаемс€ преобразовать визуал в "прог меш прото"
 		zCProgMeshProto* pProgMesh = pVob->visual->CastTo<zCProgMeshProto>();

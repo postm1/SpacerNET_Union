@@ -685,6 +685,11 @@ namespace GOTHIC_ENGINE {
 	{
 		if (pVob && pVob != ogame->GetCamera()->connectedVob)
 		{
+			if (auto pCombo = pVob->CastTo<zCVobLevelCompo>())
+			{
+				print.PrintRed(GetLang("ACTION_FORBIDDEN"));
+				return;
+			}
 
 			zCVob* parentSafe = pVob;
 
