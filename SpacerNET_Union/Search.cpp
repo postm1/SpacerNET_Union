@@ -355,6 +355,10 @@ namespace GOTHIC_ENGINE {
 			if (dynamic_cast<zCVobLevelCompo*>(pVobCur))	continue;
 			if (pVobCur == ogame->GetCamera()->GetVob())	continue;
 
+			if (pVobCur == currentVobRender || pVobCur == currenItemRender || pVobCur == floorVob || pVobCur == bboxMaxsVob || pVobCur == bboxMinsVob)
+			{
+				continue;
+			}
 
 			// поиск дублей имен
 			if (matchNames)
