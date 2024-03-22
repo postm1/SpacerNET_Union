@@ -426,24 +426,32 @@ namespace GOTHIC_ENGINE {
 		{
 			zCVobSound *vobSound = ((zCVobSound*)zoneList[i]);
 
-			if (vobSound->soundAllowedToRun)
+			if (vobSound)
 			{
-				if (vobSound->soundAutoStart)
+				if (vobSound->soundAllowedToRun)
 				{
-					vobSound->soundAutoStart = FALSE;
-					vobSound->StartSound(TRUE);
+					if (vobSound->soundAutoStart)
+					{
+						vobSound->soundAutoStart = FALSE;
+						vobSound->StartSound(TRUE);
+					};
+					vobSound->DoSoundUpdate(1.0f);
+				}
+				else {
+					if (vobSound->soundIsRunning)
+						vobSound->StopSound();
 				};
-				vobSound->DoSoundUpdate(1.0f);
 			}
-			else {
-				if (vobSound->soundIsRunning)
-					vobSound->StopSound();
-			};
+
 		};
 
 		for (int j = 0; j < zoneDeactivateList.GetNum(); j++) {
 			zCVobSound* vobSound = (zCVobSound*)zoneDeactivateList[j];
-			vobSound->StopSound();
+
+			if (vobSound)
+			{
+				vobSound->StopSound();
+			}
 		};
 	}
 
