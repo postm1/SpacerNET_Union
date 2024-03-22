@@ -508,7 +508,36 @@ namespace GOTHIC_ENGINE {
 			};
 		}
 
-		return pzCVob_Render(_this, renderContext);
+		auto saveOption = zCVob::GetAnimationsEnabled();
+
+		//cmd << saveOption << endl;
+
+		if (_this)
+		{
+			if (!_this->visual || _this->CastTo<zCVobSpot>() || _this->CastTo<zCVobStartpoint>() || _this->CastTo<zCVobWaypoint>())
+			{
+				//if (!_this->visual)
+				{
+					zCVob::SetAnimationsEnabled(FALSE);
+
+					renderContext.m_AniMode = zVISUAL_ANIMODE_NONE;
+
+					/*cmd << _this->GetObjectName() 
+						<< " " << zCVob::GetAnimationsEnabled() 
+						<< " " << (int)_this->visual
+						<< endl;*/
+				
+				}
+			}
+			
+		}
+
+		
+		auto result =  pzCVob_Render(_this, renderContext);
+
+
+		zCVob::SetAnimationsEnabled(saveOption);
+		return result;
 	}
 
 	//0x0052D0A0 private: void __thiscall zCBspTree::RenderVobList(void)
