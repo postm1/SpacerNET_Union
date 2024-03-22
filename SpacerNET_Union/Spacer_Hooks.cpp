@@ -421,6 +421,7 @@ namespace GOTHIC_ENGINE {
 	CInvoke <void(__thiscall*) (zCVobSound* _this, class zCArchiver & arc)> pProcessZoneList(0x0063E8D0, ProcessZoneList, IVK_AUTO);
 	void __fastcall ProcessZoneList(zCVobSound* _this, void*, class zCArraySort<class zCZone *> const & zoneList, class zCArraySort<class zCZone *> const & zoneDeactivateList, class zCWorld * homeWorld)
 	{
+		
 		for (int i = 0; i<zoneList.GetNum(); i++)
 		{
 			zCVobSound *vobSound = ((zCVobSound*)zoneList[i]);
@@ -438,6 +439,11 @@ namespace GOTHIC_ENGINE {
 				if (vobSound->soundIsRunning)
 					vobSound->StopSound();
 			};
+		};
+
+		for (int j = 0; j < zoneDeactivateList.GetNum(); j++) {
+			zCVobSound* vobSound = (zCVobSound*)zoneDeactivateList[j];
+			vobSound->StopSound();
 		};
 	}
 
