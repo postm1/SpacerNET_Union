@@ -1510,6 +1510,25 @@ namespace GOTHIC_ENGINE {
 			
 			
 		}
+
+		if (keys.KeyPressed("FAST_FILTER_IGNOREPFX", true))
+		{
+			print.PrintRed("KEY");
+
+			if (theApp.filterPickVobIndex == 0)
+			{
+				theApp.filterPickVobIndex = 10;
+			}
+			else
+			{
+				theApp.filterPickVobIndex = 0;
+			}
+
+			auto func = (callIntFunc)GetProcAddress(theApp.module, "SetSelectioFilterByIndex");
+
+			func(theApp.filterPickVobIndex);
+	
+		}
 		
 		if (keys.KeyPressed("ROT_MOD_CHANGE", true))
 		{

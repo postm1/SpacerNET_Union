@@ -190,7 +190,7 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("VOB_ADD_FAV", "8_34");
 		defaultValues.Insert("CAMERA_SYNC_VOB_MOD", "8_35");//SHIFT+H
 		defaultValues.Insert("ROT_MOD_CHANGE", "8_20");//SHIFT+T
-
+		defaultValues.Insert("FAST_FILTER_IGNOREPFX", "8_47");//SHIFT+V
 		
 		
 		auto arr = defaultValues.GetArray();
