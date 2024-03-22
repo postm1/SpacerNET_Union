@@ -565,6 +565,16 @@ namespace GOTHIC_ENGINE {
 		{
 			auto pVob = resVobList.GetSafe(i);
 
+			if (pVob == theApp.currentVobRender 
+				|| pVob == theApp.currenItemRender 
+				|| pVob == theApp.floorVob 
+				|| pVob == theApp.bboxMaxsVob
+				|| pVob == theApp.bboxMinsVob
+				)
+			{
+				continue;
+			}
+
 			if (type == 0)
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
