@@ -1513,7 +1513,6 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("FAST_FILTER_IGNOREPFX", true))
 		{
-			print.PrintRed("KEY");
 
 			if (theApp.filterPickVobIndex == 0)
 			{
