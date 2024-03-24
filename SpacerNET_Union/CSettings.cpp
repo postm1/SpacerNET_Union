@@ -280,8 +280,8 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "autoCompileWorldLightForUnc", "0");
 		list.Insert("autoCompileWorldLightForUnc", set);
 
-		set = new CSetting(TYPE_INT, "SPACER", "autoRemoveLevelCompo", "0");
-		list.Insert("autoRemoveLevelCompo", set);
+		set = new CSetting(TYPE_INT, "SPACER", "removeAllLevelCompos", "0");
+		list.Insert("removeAllLevelCompos", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "checkBoxAutoRemoveAllVisuals", "0");
 		list.Insert("checkBoxAutoRemoveAllVisuals", set);
