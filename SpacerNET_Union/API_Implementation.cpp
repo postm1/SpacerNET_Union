@@ -107,7 +107,7 @@ namespace GOTHIC_ENGINE {
 		static int KEY_EVENT_TABLE_SIZE = (JOY_BUTTON_32 + 1);
 
 
-		cmd << "SIze: " << KEY_EVENT_TABLE_SIZE << endl;
+		//cmd << "SIze: " << KEY_EVENT_TABLE_SIZE << endl;
 #endif
 
 		
