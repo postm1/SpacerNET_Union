@@ -58,13 +58,19 @@ namespace GOTHIC_ENGINE {
 
 	void ClearLMB()
 	{
+#if ENGINE == Engine_G1
+		
+	//FIXME_G1
+#elif ENGINE == Engine_G2A
 		*(int*)0x8D1668 = 0;
+#endif
 	}
 
 	void __cdecl PlaySoundGame(class zSTRING &)
 	{
 #if ENGINE == Engine_G1
 		
+		XCALL(0x00641350);
 
 #elif ENGINE == Engine_G2A
 		XCALL(0x006CBFD0);

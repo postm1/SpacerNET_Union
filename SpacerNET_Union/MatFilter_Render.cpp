@@ -49,11 +49,11 @@ namespace GOTHIC_ENGINE {
 	// рендер на экране по пикселям
 	void RenderOnScreen(int x, int y, D3DCOLOR COL)
 	{
-		static IDirect3DDevice7*& dev = *(IDirect3DDevice7**)0x009FC9F4;
+		//static IDirect3DDevice7*& dev = *(IDirect3DDevice7**)0x009FC9F4;
 
 		D3DRECT rec = { 500 + x, 400 + y, 500 + x + 1, 400 + y + 1 };
 
-		dev->Clear(1, &rec, D3DCLEAR_TARGET, COL, 1.0f, 0);
+		zCRnd_D3D::xd3d_pd3dDevice7->Clear(1, &rec, D3DCLEAR_TARGET, COL, 1.0f, 0);
 	}
 
 

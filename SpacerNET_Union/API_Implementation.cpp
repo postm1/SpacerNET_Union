@@ -70,19 +70,38 @@ namespace GOTHIC_ENGINE {
 
 	void zCInput::ClearLeftMouse()
 	{
+
+
+#if ENGINE == Engine_G1
+		
+		//FIXME_G1
+#else
 		static zTMouseState& mouseState = *(zTMouseState*)0x8D165C;
 
 		mouseState.buttonPressedLeft = 0;
+#endif
+
+		
 		this->ClearKey(MOUSE_BUTTONLEFT);
 	}
 
 	void zCInput::ClearKey(int key)
 	{
 		static int KEY_EVENT_TABLE_SIZE = (JOY_BUTTON_32 + 1);
+
+#if ENGINE == Engine_G1
+		static bool* keyevent = (bool*)0x0086CCC8;
+		static bool* keytoggle = (bool*)0x0086CED0;
+		static bool* keyRepeatEnabled = (bool*)0x0086D0D8;
+		static zCArray<int>& keybuffer = *(zCArray<int>*)0x0086D2DC;
+#else
 		static bool* keyevent = (bool*)0x008D1678;
 		static bool* keytoggle = (bool*)0x008D18B8;
 		static bool* keyRepeatEnabled = (bool*)0x008D1B10;
 		static zCArray<int>& keybuffer = *(zCArray<int>*)0x008D1D50;
+#endif
+
+		
 
 		if (key < 0 || key > KEY_EVENT_TABLE_SIZE)
 			return;

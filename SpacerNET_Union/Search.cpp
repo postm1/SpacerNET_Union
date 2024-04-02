@@ -705,13 +705,25 @@ namespace GOTHIC_ENGINE {
 
 	typedef zCParticleEmitter *(*fptr)(class zSTRING const &);
 
-	zCArraySort<zCParticleEmitter*>&s_emitterPresetList = *(zCArraySort<zCParticleEmitter*>*)0x008D8E0C;
+
+#if ENGINE == Engine_G1
+	zCArraySort<zCParticleEmitter*>& s_emitterPresetList = *(zCArraySort<zCParticleEmitter*>*)0x00873FA0;
+	oCParticleControl*& pfxcGlobal = *(oCParticleControl**)0x008DA6C0;
+
+	zCParser*& visualParser = *(zCParser**)0x00869E6C;
+	zCParser*& s_pfxParser = *(zCParser**)0x00874380;
+	fptr SearchParticleEmitter = (fptr)0x0058DEC0;
+#else
+	zCArraySort<zCParticleEmitter*>& s_emitterPresetList = *(zCArraySort<zCParticleEmitter*>*)0x008D8E0C;
 	oCParticleControl*& pfxcGlobal = *(oCParticleControl**)0x00AB088C;
 
-	zCArray<oCVisualFX*>&s_worldVisFXList = *(zCArray<oCVisualFX*>*)0x008CE634;
+
 	zCParser*& visualParser = *(zCParser**)0x008CE6EC;
 	zCParser*& s_pfxParser = *(zCParser**)0x008D9234;
 	fptr SearchParticleEmitter = (fptr)0x005ADDE0;
+#endif
+
+	
 
 
 	zCParticleFX* m_pPfx = NULL;
