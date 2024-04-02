@@ -310,7 +310,10 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SetHoldTime(int enabled)
 	{
-#if ENGINE == Engine_G2A
+		//FIXME_G1 corrent address?
+#if ENGINE == Engine_G1
+		int& holdTime = *(int*)0x8DA6C0;
+#else
 		int& holdTime = *(int*)0xAB0888;
 #endif
 		
