@@ -117,6 +117,8 @@ namespace GOTHIC_ENGINE {
 	}
 	void MatManager::SelectMaterial(zCMaterial* mat)
 	{
+		//cmd << "SelectMaterial" << endl;
+
 		matSelectedInTree = mat;
 
 		zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, FALSE, 0);
@@ -133,7 +135,7 @@ namespace GOTHIC_ENGINE {
 
 		ExtractTexture(mat);
 
-
+		//cmd << "SelectMaterial 2" << endl;
 		//OnSelectMaterial(mat);
 	}
 

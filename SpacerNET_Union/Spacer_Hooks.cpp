@@ -34,7 +34,6 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	//0x006C3140 public: void __thiscall oCGame::UpdatePlayerStatus(void)
 	HOOK Ivk_oCGame_UpdatePlayerStatus AS(&oCGame::UpdatePlayerStatus, &oCGame::UpdatePlayerStatus_Hook);
 	void oCGame::UpdatePlayerStatus_Hook()
 	{
@@ -132,7 +131,6 @@ namespace GOTHIC_ENGINE {
 		//THISCALL(ivk_oCGame_CloseSavescreen)();
 	}
 
-	//0x006C2250 public: virtual void __thiscall oCGame::OpenSavescreen(bool)
 	HOOK ivk_oCGame_OpenSavescreen AS(&oCGame::OpenSavescreen, &oCGame::OpenSavescreen_Hook);
 	//void OpenSavescreen_Hook(bool);
 	void oCGame::OpenSavescreen_Hook(bool a)
@@ -152,7 +150,6 @@ namespace GOTHIC_ENGINE {
 
 
 	// Hook the camera so that it flies through the frames in the camera tool
-	//0x004BFBC0 public: virtual void __thiscall zCCSCamera::Unarchive(class zCArchiver &)
 	HOOK ivk_zCCSCamera_Unarchive AS(&zCCSCamera::Unarchive, &zCCSCamera::Unarchive_Hook);
 	void Unarchive_Hook(zCArchiver &);
 	void zCCSCamera::Unarchive_Hook(zCArchiver & arc)
@@ -208,7 +205,6 @@ namespace GOTHIC_ENGINE {
 	}
 
 	//Enables adding zones to the world
-	//0x0061FA40 public: __thiscall zCWorld::zCWorld(void)
 	HOOK ivk_zCWorld_zCWorld AS(&zCWorld::zCWorld, &zCWorld::zCWorld_Hook);
 	//zCWorld* zCWorld_Hook();
 	zCWorld* zCWorld::zCWorld_Hook() {
@@ -223,7 +219,6 @@ namespace GOTHIC_ENGINE {
 
 
 	// Fix sound after saving sound vob
-	//0x0063E3D0 protected: virtual void __thiscall zCVobSound::Archive(class zCArchiver &)
 	HOOK ivk_zCVobSound_Archive AS(&zCVobSound::Archive, &zCVobSound::Archive_Hook);
 	//void Archive_Hook(zCArchiver &);
 	void zCVobSound::Archive_Hook(zCArchiver & arc) {
@@ -237,7 +232,6 @@ namespace GOTHIC_ENGINE {
 
 
 	// Fix sound after loading sound vob
-	//0x0063E540 protected: virtual void __thiscall zCVobSound::Unarchive(class zCArchiver &)
 	HOOK ivk_zCVobSound_Unarchive AS(&zCVobSound::Unarchive, &zCVobSound::Unarchive_Hook);
 	//void Unarchive_Hook(zCArchiver &);
 	void zCVobSound::Unarchive_Hook(zCArchiver & arc) {
@@ -249,10 +243,8 @@ namespace GOTHIC_ENGINE {
 		};
 	}
 
-	// 0x00643F20 private: int __thiscall zCRnd_D3D::XD3D_InitPerDX(long, int, int, int, int)
-	
+
 	HOOK ivk_zCRnd_D3D_XD3D_InitPerDX AS(&zCRnd_D3D::XD3D_InitPerDX, &zCRnd_D3D::XD3D_InitPerDX_Hook);
-	//int XD3D_InitPerDX_Hook(long,int,int,int,int);
 	int zCRnd_D3D::XD3D_InitPerDX_Hook(long flags, int x, int y, int bpp, int id) {
 		int result = THISCALL(ivk_zCRnd_D3D_XD3D_InitPerDX)(0, x, y, bpp, id);
 		return result;
@@ -305,46 +297,7 @@ namespace GOTHIC_ENGINE {
 	
 
 
-	//test hook
-	int __cdecl Wld_InsertNpc_Hook();
-	//CInvoke <int(__cdecl *) (void)> Wld_InsertNpc_Hooked(0x6DF1F0, Wld_InsertNpc_Hook, IVK_AUTO);
-	int __cdecl Wld_InsertNpc_Hook() {
-		int index;
-		zSTRING posPoint;
-
-		zCParser *p = zCParser::GetParser();
-		p->GetParameter(posPoint);
-		p->GetParameter(index);
-
-		posPoint = posPoint.Upper();
-
-
-		auto& foundPair = theApp.respawnShowList[posPoint];
-
-		auto sym = parser->GetSymbol(index);
-
-		if (!sym) { cmd << "not found: " << posPoint << endl;  return 0; }
-
-		CString monsterName = sym->name;
-
-		// найдено
-		if (!foundPair.IsNull())
-		{
-			foundPair.GetValue()->monsters.Insert(monsterName);
-		}
-		else
-		{
-			auto entry = new RespawnEntry();
-			entry->monsters.Insert(monsterName);
-			theApp.respawnShowList.Insert(posPoint, entry);
-		}
-		
-
-		
-
-		return FALSE;
-
-	}
+	
 
 
 	HOOK ivk_oCNpc_DoTakeVob AS(&oCNpc::DoTakeVob, &oCNpc::DoTakeVob_Union);
@@ -366,60 +319,56 @@ namespace GOTHIC_ENGINE {
 		return false;
 	}
 
-#if ENGINE > Engine_G1
-	//0x005FFC70 protected: virtual void __thiscall zCVob::Unarchive(class zCArchiver &)
-	void __fastcall Invk_zCVobUnarchive(zCVob* _this, void*, class zCArchiver &);
-	CInvoke<void(__thiscall*)(zCVob* _this, class zCArchiver &)> pInvk_zCVobUnarchive(0x005FFC70, Invk_zCVobUnarchive);
-	void __fastcall Invk_zCVobUnarchive(zCVob* _this, void*, class zCArchiver & arc)
-	{
-		_this->zCObject::Unarchive(arc);
 
-		_this->ResetOnTimer();
+	HOOK Invk_zCVobUnarchive AS(&zCVob::Unarchive, &zCVob::Unarchive_Union);
+	void zCVob::Unarchive_Union(zCArchiver& arc)
+	{
+		this->zCObject::Unarchive(arc);
+
+		this->ResetOnTimer();
 
 		{
 			int	pack = 0;
 			arc.ReadInt("pack", pack);
-			if (pack == 0)			_this->UnarchiveVerbose(arc);
-			else					_this->UnarchivePacked(arc, pack);
+			if (pack == 0)			this->UnarchiveVerbose(arc);
+			else					this->UnarchivePacked(arc, pack);
 		};
 
 		// SaveGame
 		if (arc.InSaveGame())
 		{
-			_this->SetSleepingMode(zTVobSleepingMode(arc.ReadByte("sleepMode")));
+			this->SetSleepingMode(zTVobSleepingMode(arc.ReadByte("sleepMode")));
 
-			zREAL nextOnTimerRel = _this->nextOnTimer;
+			zREAL nextOnTimerRel = this->nextOnTimer;
 			arc.ReadFloat("nextOnTimer", nextOnTimerRel);
-			_this->nextOnTimer = (nextOnTimerRel >= zREAL_MAX) ? nextOnTimerRel : (ztimer->totalTimeFloat + nextOnTimerRel);
-			if (_this->GetPhysicsEnabled()) {
-				_this->GetRigidBody()->Unarchive(arc);
+			this->nextOnTimer = (nextOnTimerRel >= zREAL_MAX) ? nextOnTimerRel : (ztimer->totalTimeFloat + nextOnTimerRel);
+			if (this->GetPhysicsEnabled()) {
+				this->GetRigidBody()->Unarchive(arc);
 			};
 		};
 
 		if (!arc.InProperties())
 		{
-			_this->RepairIllegalFloats(_this->trafoObjToWorld);
-			if (!_this->trafoObjToWorld.IsUpper3x3Orthonormal())
-				_this->trafoObjToWorld.MakeOrthonormal();
-			_this->CorrectTrafo();
+			this->RepairIllegalFloats(this->trafoObjToWorld);
+			if (!this->trafoObjToWorld.IsUpper3x3Orthonormal())
+				this->trafoObjToWorld.MakeOrthonormal();
+			this->CorrectTrafo();
 		};
 
 		//
 #if ENGINE == Engine_G1
-		_this->UpdateVisualDependencies();
+		this->UpdateVisualDependencies();
 #else
-		_this->UpdateVisualDependencies(TRUE);
+		this->UpdateVisualDependencies(TRUE);
 		const zREAL VOB_IGNORE_MIN_EXTEND = 10;
-		zREAL minExtend = _this->GetBBox3DWorld().GetMinExtent();
-		if (minExtend > VOB_IGNORE_MIN_EXTEND) _this->m_zBias = 0;
+		zREAL minExtend = this->GetBBox3DWorld().GetMinExtent();
+		if (minExtend > VOB_IGNORE_MIN_EXTEND) this->m_zBias = 0;
 
 
-		RecalcWPBBox(_this);
+		RecalcWPBBox(this);
 #endif
-
 	}
 
-#endif
 
 
 	HOOK ivk_zCVobSound_ProcessZoneList AS(&zCVobSound::ProcessZoneList, &zCVobSound::ProcessZoneList_Union);
@@ -458,29 +407,275 @@ namespace GOTHIC_ENGINE {
 		};
 	}
 
-	//// Removes unnecessary code in sound processing by zone, needed for a spacer
-	////0x0063E8D0 public: virtual void __thiscall zCVobSound::
-	////ProcessZoneList(class zCArraySort<class zCZone *> const &,class zCArraySort<class zCZone *> const &,class zCWorld *)
-	//void __fastcall ProcessZoneList(zCVobSound* _this, void*, class zCArraySort<class zCZone *> const &, class zCArraySort<class zCZone *> const &, class zCWorld *);
-	//CInvoke <void(__thiscall*) (zCVobSound* _this, class zCArchiver & arc)> pProcessZoneList(0x0063E8D0, ProcessZoneList, IVK_AUTO);
-	//void __fastcall ProcessZoneList(zCVobSound* _this, void*, class zCArraySort<class zCZone *> const & zoneList, class zCArraySort<class zCZone *> const & zoneDeactivateList, class zCWorld * homeWorld)
-	//{
-	//	
-	//	
-	//}
+
+	HOOK Ivk_zCVobLight_LoadLightPresets AS(&zCVobLight::LoadLightPresets, &zCVobLight::LoadLightPresets_Hook);
+	void zCVobLight::LoadLightPresets_Hook()
+	{
+		Ivk_zCVobLight_LoadLightPresets.Detach();
+
+		zCVobLight::LoadLightPresets();
+
+		for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
+		{
+			Stack_PushString(zCVobLight::lightPresetList[i]->presetName);
+			GetProcAddress(theApp.module, "AddLightPresetToList")();
+		}
+	}
 
 
-#if ENGINE > Engine_G1
+	// FIXME_G1 ???!
+	/*
+	HOOK Ivk_zCMesh_Render AS(&zCMesh::Render, &zCMesh::Render_Patch);
+	zBOOL zCMesh::Render_Patch(zTRenderContext& renderContext, zCOLOR* vertexColor)
+	{
+		const zPOINT3& camPos = zCCamera::activeCamPos;
+		zREAL texCacheInPrio = (renderContext.distVobToCam / renderContext.cam->farClipZ) * 0.5F + 0.25F;
 
-	//0x004BE400 public: static class zCVob * __cdecl zCCSCamera::GetPlayerVob(void)
+		if (renderContext.clipFlags == -1)
+		{
+			renderContext.clipFlags = zCCamera::CLIP_FLAGS_FULL;
+			zTCam_ClipType meshClip = zCCamera::activeCam->BBox3DInFrustum(bbox3D, renderContext.clipFlags);
+
+			if (meshClip == zCAM_CLIP_TRIV_OUT)
+				return FALSE;
+		};
+
+		size_t markedPos = zCVertexTransform::s_MemMan.Mark();
+
+		for (int polyCtr = 0; polyCtr < numPoly; ++polyCtr)
+		{
+			zCPolygon* actPoly = Poly(polyCtr);
+
+			// backface culling
+			if (zrenderer->GetPolyDrawMode() != zRND_DRAW_WIRE
+				&& zrenderer->GetPolyDrawMode() != zRND_DRAW_FLAT
+				&& camPos.Dot(actPoly->polyPlane.normal) <= actPoly->polyPlane.distance)
+				continue;
+
+
+			// 3D-Clipping im Frustum, in World Coordinates
+			if (renderContext.clipFlags > 0)
+			{
+				if (!actPoly->ClipToFrustum(renderContext.clipFlags))
+					continue;
+			}
+			else
+				actPoly->Unclip();
+
+			if (actPoly->GetMaterial())
+			{
+				actPoly->GetMaterial()->ApplyTexAniMapping(actPoly);
+				if (actPoly->GetMaterial()->texture)
+					actPoly->GetMaterial()->texture->CacheIn(texCacheInPrio);
+			}
+
+
+			int	vertCtr = actPoly->numClipVert - 1;
+			do
+			{
+				zCVertex* actVert = (actPoly->clipVert[vertCtr]);
+				if (!actVert->transformedIndex)
+				{
+					zCVertexTransform* trans = actVert->CreateVertexTransform();
+
+					trans->vertCamSpace = (zCCamera::activeCam->camMatrix) * (actVert->position);
+					trans->vertCamSpaceZInv = (zVALUE(1)) / trans->vertCamSpace.n[VZ];
+
+					zCCamera::activeCam->ProjectClamp(trans, trans->vertCamSpaceZInv);
+				}
+
+				if (vertexColor)
+					actPoly->clipFeat[vertCtr]->lightDyn = *vertexColor;
+			} while (vertCtr--);
+
+			actPoly->LightDynCamSpace(camPos, playerLightInt);
+			zrenderer->DrawPoly(actPoly);
+		}
+
+		zCVertexTransform::s_MemMan.Restore(markedPos);
+		return TRUE;
+	}
+	*/
+
+
+
+	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
+	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
+	{
+		// no sorting polys for saving ZEN, much less time
+		if (!theApp.useSortPolys)
+		{
+			cmd << "Saving no sort polys" << endl;
+			return;
+		}
+		else
+		{
+			THISCALL(Invk_SortPolysByList)(list, listLength);
+		}
+	}
+
+	HOOK ivk_zERROR_Report AS(&zERROR::Report, &zERROR::Report_Union);
+	int zERROR::Report_Union(zERROR_TYPE type, int id, zSTRING const& str_text, signed char levelPrio, unsigned int flag, int line, char* file, char* function) {
+
+
+		if (theApp.zSpyActive && theApp.spacerWasInit)
+		{
+			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddTextZSPY");
+
+
+			Stack_PushString(str_text + "\n");
+
+			if (type == zERR_TYPE_OK)
+			{
+				Stack_PushString("#000000");
+			}
+			else if (type == zERR_TYPE_INFO)
+			{
+				Stack_PushString("#000000");
+			}
+			else if (type == zERR_TYPE_WARN)
+			{
+				Stack_PushString("#009600");
+			}
+			else if (type == zERR_TYPE_FAULT)
+			{
+				Stack_PushString("#960000");
+			}
+			else if (type == zERR_TYPE_FATAL)
+			{
+				Stack_PushString("#C80000");
+			}
+
+
+			pointer();
+		}
+
+		return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
+	}
+
+	// globalWorldLoadType
+	int globalWorldLoadType = zCWorld::zWLD_LOAD_EDITOR_COMPILED;
+
+	auto Patch_oCGame_LoadGame = InvokeAuto_BySignature("&oCGame::LoadGame", &oCGame::LoadGame_Patch, IVK_REDEFINE);
+	void oCGame::LoadGame_Patch(int slotID, const struct zSTRING& wldName)
+	{
+
+		switch (globalWorldLoadType)
+		{
+		case 1: GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
+		case 2: GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
+		}
+	}
+
+
+	
+
+#if ENGINE == Engine_G1
+
+
+	zCVob* __cdecl zCCSCamera_GetPlayerVob(zCCSCamera*);
+	CInvoke <zCVob* (__cdecl*) (zCCSCamera*)> pzCCSCamera_GetPlayerVob(0x004B50C0, zCCSCamera_GetPlayerVob, IVK_AUTO);
+	zCVob* __cdecl zCCSCamera_GetPlayerVob(zCCSCamera* _this)
+	{
+		return NULL;
+	}
+
+	int  __fastcall zCVob_Render(zCVob*, struct zTRenderContext&);
+	CInvoke <int(__fastcall*) (zCVob*, struct zTRenderContext&)> pzCVob_Render(0x005D6090, zCVob_Render, IVK_AUTO);
+	int  __fastcall zCVob_Render(zCVob* _this, struct zTRenderContext& renderContext)
+	{
+
+		if (theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == _this && theApp.options.GetIntVal("showLightRadiusVob"))
+		{
+			if (theApp.vobLightSelected->lightData.range != 0.0f)
+			{
+				zREAL scaler = theApp.vobLightSelected->lightData.range / theApp.s_pLightSphereMesh->GetBBox3D().GetSphere3D().radius;
+				theApp.s_pLightSphereMesh->Scale(scaler, scaler, scaler);
+			}
+
+			zCCamera::activeCam->SetTransform(zCAM_TRAFO_WORLD, _this->trafoObjToWorld);
+			zTCam_ClipType	meshClip = zCCamera::activeCam->BBox3DInFrustum(theApp.s_pLightSphereMesh->GetBBox3D(), renderContext.clipFlags);
+			renderContext.distVobToCam = zCCamera::activeCam->camMatrix.GetTranslation().LengthApprox();
+			renderContext.hintLightingFullbright = TRUE;
+
+			if ((meshClip != zCAM_CLIP_TRIV_OUT) && (renderContext.distVobToCam < 5000.0F))		// 50m
+			{
+				//zTRnd_AlphaBlendSource oldBlendSrc = zrenderer->GetAlphaBlendSource();
+				//zTRnd_AlphaBlendFunc   oldBlendFunc= zrenderer->GetAlphaBlendFunc  ();
+				zTRnd_PolyDrawMode	   oldDrawMode = zrenderer->GetPolyDrawMode();
+				//zREAL				   oldBlendFac = zrenderer->GetAlphaBlendFactor();
+
+				zrenderer->SetPolyDrawMode(zRND_DRAW_WIRE);
+				//zrenderer->SetAlphaBlendSource(zRND_ALPHA_SOURCE_CONSTANT);
+				//zrenderer->SetAlphaBlendFunc  (zRND_ALPHA_FUNC_BLEND	 );
+				//zrenderer->SetAlphaBlendFactor(0.5F						 );
+
+				if (theApp.vobLightSelected->lightData.range != 0.0f)
+					theApp.s_pLightSphereMesh->Render(renderContext);
+
+				//zrenderer->SetAlphaBlendSource(oldBlendSrc);
+				//zrenderer->SetAlphaBlendFunc  (oldBlendFunc);
+				//zrenderer->SetAlphaBlendFactor(oldBlendFac);
+				zrenderer->SetPolyDrawMode(oldDrawMode);
+
+			};
+		}
+
+
+
+		auto result = pzCVob_Render(_this, renderContext);
+
+
+		return result;
+	}
+
+	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*);
+	CInvoke <void(__thiscall*) (zCBspTree* _this)> pzCBspTree_RenderVobList(0x0051A7E0, zCBspTree_RenderVobList, IVK_AUTO);
+	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*)
+	{
+
+		if (theApp.options.GetIntVal("showInvisibleVobs"))
+		{
+			for (int i = 0; i < _this->renderVobList.GetNum(); i++)
+			{
+				zCVob* vob = _this->renderVobList[i];
+
+				if (vob && !vob->GetShowVisual() && vob->GetVisual() && ogame->GetCamera())
+				{
+					int dist = ogame->GetCamera()->GetVob()->GetPositionWorld().Distance(vob->GetPositionWorld());
+
+					if (dist <= theApp.options.GetIntVal("rangeVobs") * 3)
+					{
+						vob->bbox3D.Draw(GFX_GREEN);
+					}
+				}
+
+			}
+		}
+
+		pzCBspTree_RenderVobList(_this);
+
+		
+	}
+
+	
+
+
+#endif
+
+
+	
+
+#if ENGINE == Engine_G2A
+
 	zCVob * __cdecl zCCSCamera_GetPlayerVob(zCCSCamera*);
 	CInvoke <zCVob *(__cdecl *) (zCCSCamera*)> pzCCSCamera_GetPlayerVob(0x004BE400, zCCSCamera_GetPlayerVob, IVK_AUTO);
 	zCVob * __cdecl zCCSCamera_GetPlayerVob(zCCSCamera* _this)
 	{
 		return NULL;
 	}
-	//rx_light
-	//0x006015D0 public: virtual int __fastcall zCVob::Render(struct zTRenderContext &)
+
+
 	int  __fastcall zCVob_Render(zCVob*, struct zTRenderContext &);
 	CInvoke <int(__fastcall *) (zCVob*, struct zTRenderContext &)> pzCVob_Render(0x006015D0, zCVob_Render, IVK_AUTO);
 	int  __fastcall zCVob_Render(zCVob* _this, struct zTRenderContext & renderContext)
@@ -554,7 +749,7 @@ namespace GOTHIC_ENGINE {
 		return result;
 	}
 
-	//0x0052D0A0 private: void __thiscall zCBspTree::RenderVobList(void)
+	
 	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*);
 	CInvoke <void(__thiscall *) (zCBspTree* _this)> pzCBspTree_RenderVobList(0x0052D0A0, zCBspTree_RenderVobList, IVK_AUTO);
 	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*)
@@ -575,211 +770,15 @@ namespace GOTHIC_ENGINE {
 						vob->bbox3D.Draw(GFX_GREEN);
 					}
 				}
-
-				/*
-
-				if (theApp.options.GetIntVal("showWPNames"))
-				{
-				if (vob && (dynamic_cast<zCVobWaypoint*>(vob) || dynamic_cast<zCVobSpot*>(vob)))
-				{
-				zPOINT3 pos = zCCamera::activeCam->Transform(vob->GetPositionWorld());
-				if (pos[VZ]>0)
-				if (pos[VZ]<700)
-				{
-				namesToDraw.Insert(vob);
-				};
-				}
-				}
-				*/
 			}
 		}
 
 		pzCBspTree_RenderVobList(_this);
-
-		/*
-		if (theApp.options.GetIntVal("showWPNames"))
-		{
-		for (int i = 0; i < namesToDraw.GetNumInList(); i++)
-		{
-		zCVob* vob = _this->renderVobList[i];
-		if (vob)
-		{
-		zSTRING				name = vob->GetVobName();
-
-		int xscr, yscr;
-		zPOINT3 pos = zCCamera::activeCam->Transform(vob->GetPositionWorld());
-
-		//if (pos[VZ]<200)	name = name + ":" + ((vob->GetVisual()) ? (vob->GetVisual()->GetVisualName()) : "%");
-		zCCamera::activeCam->Project(&pos, xscr, yscr);
-		screen->Print(screen->anx(xscr), screen->any(yscr), name);
-		}
-		}
-		}
-		*/
 	}
 
 #endif
 
-	HOOK Ivk_zCVobLight_LoadLightPresets AS(&zCVobLight::LoadLightPresets, &zCVobLight::LoadLightPresets_Hook);
-	void zCVobLight::LoadLightPresets_Hook()
-	{
-		Ivk_zCVobLight_LoadLightPresets.Detach();
 
-		zCVobLight::LoadLightPresets();
-
-		for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
-		{
-			Stack_PushString(zCVobLight::lightPresetList[i]->presetName);
-			GetProcAddress(theApp.module, "AddLightPresetToList")();
-		}
-	}
-
-	HOOK Ivk_zCMesh_Render AS(&zCMesh::Render, &zCMesh::Render_Patch);
-	zBOOL zCMesh::Render_Patch(zTRenderContext& renderContext, zCOLOR* vertexColor)
-	{
-		const zPOINT3& camPos = zCCamera::activeCamPos;
-		zREAL texCacheInPrio = (renderContext.distVobToCam / renderContext.cam->farClipZ) * 0.5F + 0.25F;
-
-		if (renderContext.clipFlags == -1)
-		{
-			renderContext.clipFlags = zCCamera::CLIP_FLAGS_FULL;
-			zTCam_ClipType meshClip = zCCamera::activeCam->BBox3DInFrustum(bbox3D, renderContext.clipFlags);
-
-			if (meshClip == zCAM_CLIP_TRIV_OUT)
-				return FALSE;
-		};
-
-		size_t markedPos = zCVertexTransform::s_MemMan.Mark();
-
-		for (int polyCtr = 0; polyCtr < numPoly; ++polyCtr)
-		{
-			zCPolygon* actPoly = Poly(polyCtr);
-
-			// backface culling
-			if (zrenderer->GetPolyDrawMode() != zRND_DRAW_WIRE
-			&&  zrenderer->GetPolyDrawMode() != zRND_DRAW_FLAT
-			&&  camPos.Dot(actPoly->polyPlane.normal) <= actPoly->polyPlane.distance)
-				continue;
-
-
-			// 3D-Clipping im Frustum, in World Coordinates
-			if (renderContext.clipFlags > 0)
-			{
-				if (!actPoly->ClipToFrustum(renderContext.clipFlags))
-					continue;
-			}
-			else
-				actPoly->Unclip();
-
-			if (actPoly->GetMaterial())
-			{
-				actPoly->GetMaterial()->ApplyTexAniMapping(actPoly);
-				if (actPoly->GetMaterial()->texture)
-					actPoly->GetMaterial()->texture->CacheIn(texCacheInPrio);
-			}
-
-
-			int	vertCtr = actPoly->numClipVert - 1;
-			do
-			{
-				zCVertex* actVert = (actPoly->clipVert[vertCtr]);
-				if (!actVert->transformedIndex)
-				{
-					zCVertexTransform* trans = actVert->CreateVertexTransform();
-
-					trans->vertCamSpace = (zCCamera::activeCam->camMatrix) * (actVert->position);
-					trans->vertCamSpaceZInv = (zVALUE(1)) / trans->vertCamSpace.n[VZ];
-
-					zCCamera::activeCam->ProjectClamp(trans, trans->vertCamSpaceZInv);
-				}
-
-				if (vertexColor)
-					actPoly->clipFeat[vertCtr]->lightDyn = *vertexColor;
-			} while (vertCtr--);
-
-			actPoly->LightDynCamSpace(camPos, playerLightInt);
-			zrenderer->DrawPoly(actPoly);
-		}
-
-		zCVertexTransform::s_MemMan.Restore(markedPos);
-		return TRUE;
-	}
-
-	int globalWorldLoadType = zCWorld::zWLD_LOAD_EDITOR_COMPILED;
-#if ENGINE > Engine_G1
-	// 006C65A0 ; void __thiscall oCGame::LoadGame(oCGame *this, int, const struct zSTRING *)
-	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName);
-
-	HOOK Hook_oCGame_LoadGame AS(0x006C65A0, &oCGame_LoadGame);
-
-
-
-	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName) {
-
-		switch (globalWorldLoadType)
-		{
-		case 1: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
-		case 2: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
-		}
-	}
-#endif
-	//0x00572DC0 public: void __thiscall zCMesh::SortPolysByList(class zCPolygon * *,int)
-	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
-	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
-	{
-		// no sorting polys for saving ZEN, much less time
-		if (!theApp.useSortPolys)
-		{
-			cmd << "Saving no sort polys" << endl;
-			return;
-		}
-		else
-		{
-			THISCALL(Invk_SortPolysByList)(list, listLength);
-		}
-	}
-
-	HOOK ivk_zERROR_Report AS(&zERROR::Report, &zERROR::Report_Union);
-	int zERROR::Report_Union(zERROR_TYPE type, int id, zSTRING const& str_text, signed char levelPrio, unsigned int flag, int line, char* file, char* function) {
-
-
-		if (theApp.zSpyActive && theApp.spacerWasInit)
-		{
-			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddTextZSPY");
-
-
-			Stack_PushString(str_text + "\n");
-
-			if (type == zERR_TYPE_OK)
-			{
-				Stack_PushString("#000000");
-			}
-			else if (type == zERR_TYPE_INFO)
-			{
-				Stack_PushString("#000000");
-			}
-			else if (type == zERR_TYPE_WARN)
-			{
-				Stack_PushString("#009600");
-			}
-			else if (type == zERR_TYPE_FAULT)
-			{
-				Stack_PushString("#960000");
-			}
-			else if (type == zERR_TYPE_FATAL)
-			{
-				Stack_PushString("#C80000");
-			}
-
-
-			pointer();
-		}
-
-		return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
-	}
-
-	//.text:00553CC0 ; void __cdecl insertionsort(void *Base, size_t NumOfElements, unsigned int, int (__cdecl *PtFuncCompare)(const void *, const void *), bool)
-	//0x00553CC0 void __cdecl insertionsort(void *,unsigned int,unsigned int,int (__cdecl*)(void const *,void const *),bool)
 #if ENGINE > Engine_G1
 	void __cdecl insertionsort_Hook(void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool);
 	CInvoke <void(__cdecl*) (void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool)> insertionsort_Hooked(0x00553CC0, insertionsort_Hook, IVK_AUTO);
@@ -825,8 +824,10 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 #endif
+
+	// =============================================== TEST HOOKS ===============================================
 	/*
-	0x0056D940 public: static void __cdecl zCMesh::SaveMSH(class zCFileBIN &,class zCPolygon * *,int,class zCMesh *)
+
 	void __cdecl SaveMSH(zCFileBIN & file, zCPolygon * *polyList, int numPoly, zCMesh * mesh);
 	CInvoke <void(__cdecl*) (zCFileBIN& file, zCPolygon** polyList, int numPoly, zCMesh* mesh)> pSaveMSH(0x0056D940, SaveMSH, IVK_AUTO);
 	void __cdecl SaveMSH(zCFileBIN & file, zCPolygon * *polyList, int numPoly, zCMesh * mesh)
@@ -834,4 +835,45 @@ namespace GOTHIC_ENGINE {
 		
 	}
 	*/
+
+	//test hook
+	int __cdecl Wld_InsertNpc_Hook();
+	//CInvoke <int(__cdecl *) (void)> Wld_InsertNpc_Hooked(0x6DF1F0, Wld_InsertNpc_Hook, IVK_AUTO);
+	int __cdecl Wld_InsertNpc_Hook() {
+		int index;
+		zSTRING posPoint;
+
+		zCParser* p = zCParser::GetParser();
+		p->GetParameter(posPoint);
+		p->GetParameter(index);
+
+		posPoint = posPoint.Upper();
+
+
+		auto& foundPair = theApp.respawnShowList[posPoint];
+
+		auto sym = parser->GetSymbol(index);
+
+		if (!sym) { cmd << "not found: " << posPoint << endl;  return 0; }
+
+		CString monsterName = sym->name;
+
+		// найдено
+		if (!foundPair.IsNull())
+		{
+			foundPair.GetValue()->monsters.Insert(monsterName);
+		}
+		else
+		{
+			auto entry = new RespawnEntry();
+			entry->monsters.Insert(monsterName);
+			theApp.respawnShowList.Insert(posPoint, entry);
+		}
+
+
+
+
+		return FALSE;
+
+	}
 }

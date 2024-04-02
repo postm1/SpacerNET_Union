@@ -281,7 +281,7 @@ namespace Gothic_I_Classic {
           }
         }
       }
-      return False;
+      return;
     }
 
     void DeleteListDatas() {
@@ -421,6 +421,19 @@ namespace Gothic_I_Classic {
 
     T& Get( const int nr ) const {
       return array[nr];
+    }
+
+    void RemoveDoubles() {
+        for (int i = 0; i < GetNumInList() - 1; i++) {
+            for (int j = i + 1; j < GetNumInList(); j++) {
+                if (array[i] == array[j]) {
+                    array[j] = array[numInArray - 1];
+                    numInArray--;
+                    j--;
+                }
+            }
+        }
+        return;
     }
 
     void InsertEnd( const T& ins ) {
@@ -1231,6 +1244,7 @@ namespace Gothic_I_Classic {
 
   template <class T>
   class zCList {
+  public:
     T *data;
     zCList *next;
   public:

@@ -50,6 +50,7 @@ zCEventManager*		GetEventManager(const zBOOL dontCreateIfNotPresent = FALSE) { r
 
 void SetVobPresetName_Hook(class zSTRING const &presetName);
 void Archive_Hook(zCArchiver&);
+void zCVob::Unarchive_Union(zCArchiver& arc);
 
 
 struct zTBBox3D zCVob::GetBBox3DLocal_Union(void);

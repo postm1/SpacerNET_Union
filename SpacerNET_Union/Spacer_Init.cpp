@@ -11,7 +11,6 @@ namespace GOTHIC_ENGINE {
 
 	void CGameManager::Init_Spacer(struct HWND__ *& hwnd)
 	{
-		//Gothic_II_Addon::hWndApp
 		cmd << "CGameManager::Init_Spacer()" << endl;
 
 
@@ -127,6 +126,14 @@ namespace GOTHIC_ENGINE {
 
 		
 		mf.Init();
+
+#if ENGINE == Engine_G1
+		// kill gLogStatistics
+		* (int*)0x0085EB00 = 0;
+#else
+		// kill gLogStatistics
+		* (int*)0x008C2B50 = 0;
+#endif
 
 		spacerWasInit = true;
 		

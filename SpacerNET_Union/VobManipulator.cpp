@@ -839,7 +839,12 @@ namespace GOTHIC_ENGINE {
 		for (int i = 0; i<bspTree.mesh->numPoly; i++) {
 			zCPolygon *poly = bspTree.mesh->Poly(i);
 			if (poly->flags.occluder || poly->flags.ghostOccluder) {
+
+#if ENGINE >= Engine_G2
 				poly->SetMaterial(mat);
+#else
+				poly->material = mat;
+#endif
 			};
 		};
 

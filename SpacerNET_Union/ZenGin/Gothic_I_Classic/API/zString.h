@@ -4,7 +4,7 @@
 #define __ZSTRING_H__VER0__
 
 #define USING_UNION_STRING_METHODS True
-#define UNPROTECT_ZSTRING_METHODS  False
+#define UNPROTECT_ZSTRING_METHODS  True
 
 namespace Gothic_I_Classic {
 
@@ -114,7 +114,10 @@ namespace Gothic_I_Classic {
     float ToFloat() const                                                         zCall( 0x0057E310 );
     int Search( char const*, unsigned int ) const                                 zCall( 0x0057E330 );
     void Init()                                                                   zCall( 0x00737C50 );
-
+    
+    INLINE bool_t Contains(const zSTRING& cmp) const {
+        return this->HasWord(cmp);
+    }
   public:
 #if USING_UNION_STRING_METHODS
 
@@ -187,6 +190,10 @@ namespace Gothic_I_Classic {
 
     INLINE bool_t HasWord( const zSTRING& cmp ) const {
       return ((CStringA&)*this).HasWord( cmp );
+    }
+
+    INLINE bool_t contains(const zSTRING& cmp) const {
+        return this->HasWord(cmp);
     }
 
     // case Insensitive

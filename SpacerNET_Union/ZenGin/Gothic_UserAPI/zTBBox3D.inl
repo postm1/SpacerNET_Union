@@ -6,3 +6,9 @@
 void Translate(const zVEC3& trans) { mins += trans; maxs += trans; };
 
 float GetMaxExtent();
+
+#if ENGINE == Engine_G1
+//FIXME_G1
+//zBOOL IsIntersecting(const zPOINT3& rayOrigin, const zVEC3& rayDirection, zREAL& scaleMin, zREAL& scaleMax);
+
+#endif

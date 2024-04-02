@@ -308,7 +308,11 @@ namespace GOTHIC_ENGINE {
 				pickedVob->BeginMovement();
 				pickedVob->SetPositionWorld(pickedVob->GetPositionWorld());
 
+#if ENGINE >= Engine_G2
 				pickedVob->EndMovement(FALSE);
+#else
+				pickedVob->EndMovement();
+#endif
 			}
 
 		}

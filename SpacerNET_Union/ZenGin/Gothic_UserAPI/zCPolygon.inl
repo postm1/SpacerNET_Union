@@ -19,11 +19,11 @@ void			__fastcall			SetVertexPtr(zCVertex& vert, int index)
 	vertex[index] = newVert;
 }
 
-
-zCMaterial*		GetMaterial() const { return material; };
-zCLightMap*		GetLightmap() const { return lightmap; };
+zCMaterial* GetMaterial() const { return material; };
+zCLightMap* GetLightmap() const { return lightmap; };
 zBOOL			GetPortal() const { return flags.portalPoly != zPORTAL_TYPE_NONE; };
 zBOOL			GetSectorFlag() const { return flags.sectorPoly; };
-const zVEC3&	GetNormal() const { return polyPlane.normal; };
+const zVEC3& GetNormal() const { return polyPlane.normal; };
 
-void			SetLightmap(zCLightMap* lm) { if (lightmap == lm) return; if (lightmap) lightmap->Release(); lightmap = lm; if (lm) lm->AddRef(); };
+
+//void			SetLightmap(zCLightMap* lm) { if (lightmap == lm) return; if (lightmap) lightmap->Release(); lightmap = lm; if (lm) lm->AddRef(); };

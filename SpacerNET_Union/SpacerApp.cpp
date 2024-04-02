@@ -180,7 +180,14 @@ namespace GOTHIC_ENGINE {
 		}
 
 		if (!s_pLightSphereMesh)
-				s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
+		{
+#if ENGINE >= Engine_G2
+			s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
+#else
+			s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS");
+#endif
+		}
+				
 
 		bool wasVobLightSelected = vobLightSelected != nullptr;
 		vobLightSelected = dynamic_cast<zCVobLight*>(pickedVob);
@@ -285,7 +292,9 @@ namespace GOTHIC_ENGINE {
 
 		SetMover();
 
+#if ENGINE != Engine_G1
 		CALL_OnSelectVob(vob);
+#endif
 
 	}
 
@@ -1132,6 +1141,12 @@ namespace GOTHIC_ENGINE {
 	{
 		//cmd << start.ToString() << " ; " << ray.ToString() << endl;
 
+		//FIXME_G1
+#if ENGINE == Engine_G1
+		print.PrintRed("NO G1 SUPPORT!");
+		return;
+
+#else
 		zCVob* pFoundVob = NULL;
 
 		zTBBox3D box;
@@ -1210,6 +1225,7 @@ namespace GOTHIC_ENGINE {
 
 		ogame->GetWorld()->traceRayReport.foundVob = pFoundVob;
 		ogame->GetWorld()->traceRayReport.foundHit = TRUE;
+#endif
 	}
 
 	void SpacerApp::PickVobFilter()
@@ -2077,8 +2093,9 @@ namespace GOTHIC_ENGINE {
 
 				//cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
 
-
+#if ENGINE != Engine_G1
 				CALL_OnApplyDataToVob(vob);
+#endif
 			}
 
 			//vob->SetPositionWorld(vob->GetPositionWorld());

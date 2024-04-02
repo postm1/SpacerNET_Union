@@ -206,4 +206,10 @@ namespace GOTHIC_ENGINE {
 
 }
 
+#if ENGINE == Engine_G1
+DllExport Gothic_I_Classic::zTWE_ControllerEvents ControllerEvents;
+#else
 DllExport Gothic_II_Addon::zTWE_ControllerEvents ControllerEvents;
+#endif
+
+

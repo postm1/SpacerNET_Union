@@ -73,8 +73,13 @@ namespace GOTHIC_ENGINE {
 
 
 #if ENGINE == Engine_G1
+		//FIXME_G1 Addr?
+		//int& leftMouseVal = *(int*)0x86CCB8;
+		//leftMouseVal = 0;
 		
-		//FIXME_G1
+		static zTMouseState& mouseState = *(zTMouseState*)0x0086CCAC;
+		mouseState.buttonPressedLeft = 0;
+
 #else
 		static zTMouseState& mouseState = *(zTMouseState*)0x8D165C;
 
@@ -87,18 +92,25 @@ namespace GOTHIC_ENGINE {
 
 	void zCInput::ClearKey(int key)
 	{
-		static int KEY_EVENT_TABLE_SIZE = (JOY_BUTTON_32 + 1);
+		
 
 #if ENGINE == Engine_G1
 		static bool* keyevent = (bool*)0x0086CCC8;
 		static bool* keytoggle = (bool*)0x0086CED0;
 		static bool* keyRepeatEnabled = (bool*)0x0086D0D8;
 		static zCArray<int>& keybuffer = *(zCArray<int>*)0x0086D2DC;
+
+		static int KEY_EVENT_TABLE_SIZE = 512 - 1;
 #else
 		static bool* keyevent = (bool*)0x008D1678;
 		static bool* keytoggle = (bool*)0x008D18B8;
 		static bool* keyRepeatEnabled = (bool*)0x008D1B10;
 		static zCArray<int>& keybuffer = *(zCArray<int>*)0x008D1D50;
+
+		static int KEY_EVENT_TABLE_SIZE = (JOY_BUTTON_32 + 1);
+
+
+		//cmd << "SIze: " << KEY_EVENT_TABLE_SIZE << endl;
 #endif
 
 		
@@ -110,6 +122,7 @@ namespace GOTHIC_ENGINE {
 		keytoggle[key] = 0;
 		keyRepeatEnabled[key] = 1;
 
+
 		for (int i = 0; i < keybuffer.GetNum(); i++) {
 			int keyB = keybuffer.GetSafe(i);
 			if (keyB == key) {
@@ -117,6 +130,7 @@ namespace GOTHIC_ENGINE {
 				return;
 			}
 		}
+
 	}
 
 	bool zCVob::IsPFX() 

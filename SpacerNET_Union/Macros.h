@@ -69,6 +69,11 @@ namespace GOTHIC_ENGINE {
 	inline float zFloor(const float a) { return float(floor(a)); }
 	inline float zCeil(const float a) { return float(ceil(a)); }
 
+
+#if ENGINE == Engine_G1
+#define zERR_NONE 0
+#endif
+
 	#pragma warning( disable : 4190)
 	#pragma warning( disable : 4244)
 
