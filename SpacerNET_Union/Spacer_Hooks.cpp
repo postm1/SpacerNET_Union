@@ -621,37 +621,10 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-#if engine == Engine_G2A
-		auto saveOption = zCVob::GetAnimationsEnabled();
-
-		//cmd << saveOption << endl;
-
-		if (_this)
-		{
-			if (!_this->visual || _this->CastTo<zCVobSpot>() || _this->CastTo<zCVobStartpoint>() || _this->CastTo<zCVobWaypoint>())
-			{
-				//if (!_this->visual)
-				{
-					zCVob::SetAnimationsEnabled(FALSE);
-
-					renderContext.m_AniMode = zVISUAL_ANIMODE_NONE;
-
-					/*cmd << _this->GetObjectName()
-						<< " " << zCVob::GetAnimationsEnabled()
-						<< " " << (int)_this->visual
-						<< endl;*/
-
-				}
-			}
-
-		}
-#endif
 
 		auto result = pzCVob_Render(_this, renderContext);
 
-#if engine == Engine_G2A
-		zCVob::SetAnimationsEnabled(saveOption);
-#endif
+
 		return result;
 	}
 
