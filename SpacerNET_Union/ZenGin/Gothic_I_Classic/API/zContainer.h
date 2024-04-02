@@ -423,6 +423,19 @@ namespace Gothic_I_Classic {
       return array[nr];
     }
 
+    void RemoveDoubles() {
+        for (int i = 0; i < GetNumInList() - 1; i++) {
+            for (int j = i + 1; j < GetNumInList(); j++) {
+                if (parray[i] == parray[j]) {
+                    parray[j] = parray[numInArray - 1];
+                    numInArray--;
+                    j--;
+                }
+            }
+        }
+        return False;
+    }
+
     void InsertEnd( const T& ins ) {
       if( numAlloc < numInArray + 1 ) {
         if( numAlloc < zARRAY_START_ALLOC ) {

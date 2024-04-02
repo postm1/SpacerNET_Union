@@ -424,6 +424,7 @@ namespace GOTHIC_ENGINE {
 
 
 	// FIXME_G1 ???!
+	/*
 	HOOK Ivk_zCMesh_Render AS(&zCMesh::Render, &zCMesh::Render_Patch);
 	zBOOL zCMesh::Render_Patch(zTRenderContext& renderContext, zCOLOR* vertexColor)
 	{
@@ -494,7 +495,7 @@ namespace GOTHIC_ENGINE {
 		zCVertexTransform::s_MemMan.Restore(markedPos);
 		return TRUE;
 	}
-
+	*/
 
 
 

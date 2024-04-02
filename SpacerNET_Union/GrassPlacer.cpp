@@ -289,6 +289,8 @@ namespace GOTHIC_ENGINE {
 
 							//apply some settings from sewer window
 
+
+#if ENGINE >= Engine_G2
 							if (isItem)
 							{
 								newVob->m_fVobFarClipZScale = 1;
@@ -297,7 +299,7 @@ namespace GOTHIC_ENGINE {
 							{
 								newVob->m_fVobFarClipZScale = grassToolVobFarClipZScaleValue;
 							}
-							
+#endif
 
 							if (!isItem)
 							{
@@ -322,9 +324,10 @@ namespace GOTHIC_ENGINE {
 								case 1: newVob->SetVisualCamAlign((zTVisualCamAlign)zVISUAL_CAMALIGN_YAW); break;
 								case 2: newVob->SetVisualCamAlign((zTVisualCamAlign)zVISUAL_CAMALIGN_FULL); break;
 								}
-								
+#if ENGINE >= Engine_G2
 								newVob->m_AniMode = (zTAnimationMode)grassToolcomboBoxVisualAniModeValue;
 								newVob->m_aniModeStrength = grassToolvisualAniModeStrengthValue;
+#endif
 
 								if (grassToolDynColl)
 								{

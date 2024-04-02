@@ -80,6 +80,25 @@ namespace GOTHIC_ENGINE {
 			if (!func)
 				return;
 
+
+#if ENGINE == Engine_G1
+			switch (evt)
+			{
+			case Gothic_I_Classic::SPC_EVT_OnCreateVob:
+				arr_OnCreateVob_RegFuncs.Insert(func);
+				break;
+			case Gothic_I_Classic::SPC_EVT_OnDeleteVob:
+				arr_OnDeleteVob_RegFuncs.Insert(func);
+				break;
+			case Gothic_I_Classic::SPC_EVT_OnApplyDataToVob:
+				arr_OnApplyDataToVob_RegFuncs.Insert(func);
+				break;
+			case Gothic_I_Classic::SPC_EVT_OnSelectVob:
+				arr_OnSelectVob_RegFuncs.Insert(func);
+				break;
+			default:
+				break;
+#else
 			switch (evt)
 			{
 			case Gothic_II_Addon::SPC_EVT_OnCreateVob:
@@ -96,6 +115,9 @@ namespace GOTHIC_ENGINE {
 				break;
 			default:
 				break;
+#endif
+
+			
 			}
 		}
 

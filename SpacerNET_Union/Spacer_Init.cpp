@@ -11,7 +11,6 @@ namespace GOTHIC_ENGINE {
 
 	void CGameManager::Init_Spacer(struct HWND__ *& hwnd)
 	{
-		//Gothic_II_Addon::hWndApp
 		cmd << "CGameManager::Init_Spacer()" << endl;
 
 
