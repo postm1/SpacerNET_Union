@@ -180,7 +180,14 @@ namespace GOTHIC_ENGINE {
 		}
 
 		if (!s_pLightSphereMesh)
-				s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
+		{
+#if ENGINE >= Engine_G2
+			s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS", TRUE);
+#else
+			s_pLightSphereMesh = zCMesh::Load("SPHERE.3DS");
+#endif
+		}
+				
 
 		bool wasVobLightSelected = vobLightSelected != nullptr;
 		vobLightSelected = dynamic_cast<zCVobLight*>(pickedVob);

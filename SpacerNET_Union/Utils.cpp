@@ -1149,7 +1149,10 @@ namespace GOTHIC_ENGINE {
 			if (vobChild->visual)
 			{
 				
+#if ENGINE < Engine_G2
 
+				//FIXME_G1 SUPPORT GetMesh
+#else
 				// пытаемс€ преобразовать визуал в "прог меш прото"
 				zCProgMeshProto* pProgMeshChild = vobChild->visual->CastTo<zCProgMeshProto>();
 				if (pProgMeshChild)
@@ -1164,6 +1167,7 @@ namespace GOTHIC_ENGINE {
 					}
 
 				}
+#endif
 			}
 
 		}
@@ -1191,6 +1195,13 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+#if ENGINE < Engine_G2
+
+		// FIXME_G1 SUPPORT GetMesh
+		print.PrintRed("NO G1 SUPPORT!");
+		return;
+#else
+
 		// пытаемс€ преобразовать визуал в "прог меш прото"
 		zCProgMeshProto* pProgMesh = pVob->visual->CastTo<zCProgMeshProto>();
 
@@ -1200,6 +1211,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 			
+
 
 		zCMesh* pMesh = pProgMesh->GetMesh(0);
 
@@ -1249,7 +1261,7 @@ namespace GOTHIC_ENGINE {
 		zRELEASE(pMesh);
 
 
-
+#endif
 	}
 }
 
