@@ -562,8 +562,9 @@ namespace GOTHIC_ENGINE {
 	{
 		if (vob)
 		{
-
+#if ENGINE != Engine_G1
 			CALL_OnCreateVob(vob);
+#endif
 
 			//OutFile("OnCreateVob: vob: " + Z AHEX32((uint)vob) + Z " select: " + Z select, true);
 
@@ -602,8 +603,9 @@ namespace GOTHIC_ENGINE {
 		if (vob)
 		{
 			
-
+#if ENGINE != Engine_G1
 			CALL_OnDeleteVob(vob);
+#endif
 			//OutFile("OnRemoveVob: vob: " + AHEX32((uint)vob), true);
 			static auto onRemove = (onVobRemove)GetProcAddress(theApp.module, "OnVobRemove");
 			onRemove((uint)vob);

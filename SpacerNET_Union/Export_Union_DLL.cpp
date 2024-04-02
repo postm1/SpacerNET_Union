@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-
+#if ENGINE != Engine_G1
 
 	typedef void(*ptr_EVENTFUNC)(zCVob*);
 
@@ -142,4 +142,5 @@ namespace GOTHIC_ENGINE {
 		}
 
 	}
+#endif
 }
