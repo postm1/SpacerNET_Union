@@ -1139,7 +1139,7 @@ namespace GOTHIC_ENGINE {
 	{
 		//cmd << start.ToString() << " ; " << ray.ToString() << endl;
 
-		//FIXME G1
+		//FIXME_G1
 #if ENGINE == Engine_G1
 		print.PrintRed("NO G1 SUPPORT!");
 		return;

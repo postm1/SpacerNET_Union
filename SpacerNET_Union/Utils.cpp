@@ -60,7 +60,7 @@ namespace GOTHIC_ENGINE {
 	{
 #if ENGINE == Engine_G1
 	//FIXME_G1	addr?
-	*(int*)0x86CCB2 = 0;
+	//*(int*)0x86CCB2 = 0;
 	
 #elif ENGINE == Engine_G2A
 		*(int*)0x8D1668 = 0;
