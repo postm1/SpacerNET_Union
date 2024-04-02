@@ -1095,50 +1095,12 @@ namespace GOTHIC_ENGINE {
 		merge_sort(data, 0, num, size, compare);
 	}
 
-	//.text:00553CC0 ; void __cdecl insertionsort(void *Base, size_t NumOfElements, unsigned int, int (__cdecl *PtFuncCompare)(const void *, const void *), bool)
-	//0x00553CC0 void __cdecl insertionsort(void *,unsigned int,unsigned int,int (__cdecl*)(void const *,void const *),bool)
+	void zCParser::SetScriptInt(zSTRING name, int value, int index) {
+		zCPar_Symbol* sym = GetSymbol(name);
 
-	void __cdecl insertionsort_Hook(void *, unsigned int, unsigned int, int(__cdecl*)(void const *, void const *), bool);
-	CInvoke <void(__cdecl *) (void *, unsigned int, unsigned int, int(__cdecl*)(void const *, void const *), bool)> insertionsort_Hooked(0x00553CC0, insertionsort_Hook, IVK_AUTO);
-	void __cdecl insertionsort_Hook(void *data, size_t num, size_t size, int(__cdecl *compare)(const void *, const void *), bool falltoqs)
-	{
-		if (num >= 200000 && theApp.options.GetVal("bSortMerge"))
-		{
-			cmd << "Sort merging... Elements: " << num << endl;
+		if (sym) {
 
-			sortData(data, num, size, compare);
-		}
-		else
-		{
-			const int MAXSIZE = 24;
-
-			char swapplace[MAXSIZE];
-
-			if (size>MAXSIZE) {
-				qsort(data, num, size, compare);
-				return;
-			}
-
-			int swaps = 0;
-			for (int i = 1; i<(int)num; i++) {
-				void *lower = d(i);
-				for (int j = i - 1; j >= 0; j--) {
-					void *upper = lower;
-					lower = d(j);
-					if ((*compare)(upper, lower) < 0) { // ok. Ist im Moment BubbleSort. Was solls...
-						swaps++;
-						memcpy(&swapplace, upper, size);
-						memcpy(upper, lower, size);
-						memcpy(lower, &swapplace, size);
-					}
-					else
-						j = 0; // hier kann man die innere Schleife schon abbrechen.
-				}
-				if (falltoqs && swaps > 5 * i + 5) {
-					qsort(data, num, size, compare);
-					return;
-				}
-			}
+			sym->SetValue(value, index);
 		}
 	}
 

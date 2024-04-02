@@ -302,17 +302,10 @@ namespace GOTHIC_ENGINE {
 		THISCALL(ivk_AddVob)(vob);
 	}
 	
-	void zCParser::SetScriptInt(zSTRING name, int value, int index) {
-		zCPar_Symbol* sym = GetSymbol(name);
-
-		if (sym) {
-
-			sym->SetValue(value, index);
-		}
-	}
-
-
 	
+
+
+	//test hook
 	int __cdecl Wld_InsertNpc_Hook();
 	//CInvoke <int(__cdecl *) (void)> Wld_InsertNpc_Hooked(0x6DF1F0, Wld_InsertNpc_Hook, IVK_AUTO);
 	int __cdecl Wld_InsertNpc_Hook() {
@@ -702,6 +695,124 @@ namespace GOTHIC_ENGINE {
 		return TRUE;
 	}
 
+	int globalWorldLoadType = zCWorld::zWLD_LOAD_EDITOR_COMPILED;
+	// 006C65A0 ; void __thiscall oCGame::LoadGame(oCGame *this, int, const struct zSTRING *)
+	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName);
+
+	HOOK Hook_oCGame_LoadGame AS(0x006C65A0, &oCGame_LoadGame);
+
+
+
+	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName) {
+
+		switch (globalWorldLoadType)
+		{
+		case 1: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
+		case 2: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
+		}
+	}
+
+	//0x00572DC0 public: void __thiscall zCMesh::SortPolysByList(class zCPolygon * *,int)
+	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
+	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
+	{
+		// no sorting polys for saving ZEN, much less time
+		if (!theApp.useSortPolys)
+		{
+			cmd << "Saving no sort polys" << endl;
+			return;
+		}
+		else
+		{
+			THISCALL(Invk_SortPolysByList)(list, listLength);
+		}
+	}
+
+	HOOK ivk_zERROR_Report AS(&zERROR::Report, &zERROR::Report_Union);
+	int zERROR::Report_Union(zERROR_TYPE type, int id, zSTRING const& str_text, signed char levelPrio, unsigned int flag, int line, char* file, char* function) {
+
+
+		if (theApp.zSpyActive && theApp.spacerWasInit)
+		{
+			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddTextZSPY");
+
+
+			Stack_PushString(str_text + "\n");
+
+			if (type == zERR_TYPE_OK)
+			{
+				Stack_PushString("#000000");
+			}
+			else if (type == zERR_TYPE_INFO)
+			{
+				Stack_PushString("#000000");
+			}
+			else if (type == zERR_TYPE_WARN)
+			{
+				Stack_PushString("#009600");
+			}
+			else if (type == zERR_TYPE_FAULT)
+			{
+				Stack_PushString("#960000");
+			}
+			else if (type == zERR_TYPE_FATAL)
+			{
+				Stack_PushString("#C80000");
+			}
+
+
+			pointer();
+		}
+
+		return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
+	}
+
+	//.text:00553CC0 ; void __cdecl insertionsort(void *Base, size_t NumOfElements, unsigned int, int (__cdecl *PtFuncCompare)(const void *, const void *), bool)
+	//0x00553CC0 void __cdecl insertionsort(void *,unsigned int,unsigned int,int (__cdecl*)(void const *,void const *),bool)
+
+	void __cdecl insertionsort_Hook(void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool);
+	CInvoke <void(__cdecl*) (void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool)> insertionsort_Hooked(0x00553CC0, insertionsort_Hook, IVK_AUTO);
+	void __cdecl insertionsort_Hook(void* data, size_t num, size_t size, int(__cdecl* compare)(const void*, const void*), bool falltoqs)
+	{
+		if (num >= 200000 && theApp.options.GetVal("bSortMerge"))
+		{
+			cmd << "Sort merging... Elements: " << num << endl;
+
+			sortData(data, num, size, compare);
+		}
+		else
+		{
+			const int MAXSIZE = 24;
+
+			char swapplace[MAXSIZE];
+
+			if (size > MAXSIZE) {
+				qsort(data, num, size, compare);
+				return;
+			}
+
+			int swaps = 0;
+			for (int i = 1; i < (int)num; i++) {
+				void* lower = d(i);
+				for (int j = i - 1; j >= 0; j--) {
+					void* upper = lower;
+					lower = d(j);
+					if ((*compare)(upper, lower) < 0) { // ok. Ist im Moment BubbleSort. Was solls...
+						swaps++;
+						memcpy(&swapplace, upper, size);
+						memcpy(upper, lower, size);
+						memcpy(lower, &swapplace, size);
+					}
+					else
+						j = 0; // hier kann man die innere Schleife schon abbrechen.
+				}
+				if (falltoqs && swaps > 5 * i + 5) {
+					qsort(data, num, size, compare);
+					return;
+				}
+			}
+		}
+	}
 
 	/*
 	0x0056D940 public: static void __cdecl zCMesh::SaveMSH(class zCFileBIN &,class zCPolygon * *,int,class zCMesh *)

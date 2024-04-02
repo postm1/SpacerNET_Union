@@ -38,44 +38,6 @@ namespace GOTHIC_ENGINE {
 	*/
 
 	
-	HOOK ivk_zERROR_Report AS(&zERROR::Report, &zERROR::Report_Union);
-	int zERROR::Report_Union(zERROR_TYPE type, int id, zSTRING const& str_text, signed char levelPrio, unsigned int flag, int line, char* file, char* function) {
-
-		
-		if (theApp.zSpyActive && theApp.spacerWasInit)
-		{
-			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddTextZSPY");
-
-
-			Stack_PushString(str_text + "\n");
-
-			if (type == zERR_TYPE_OK)
-			{
-				Stack_PushString("#000000");
-			}
-			else if (type == zERR_TYPE_INFO)
-			{
-				Stack_PushString("#000000");
-			}
-			else if (type == zERR_TYPE_WARN)
-			{
-				Stack_PushString("#009600");
-			}
-			else if (type == zERR_TYPE_FAULT)
-			{
-				Stack_PushString("#960000");
-			}
-			else if (type == zERR_TYPE_FATAL)
-			{
-				Stack_PushString("#C80000");
-			}
-
-			
-			pointer();
-		}
-
-		return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
-	}
 	
 
 
@@ -137,21 +99,7 @@ namespace GOTHIC_ENGINE {
 		return 0;
 	}
 
-	//0x00572DC0 public: void __thiscall zCMesh::SortPolysByList(class zCPolygon * *,int)
-	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
-	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
-	{
-		// no sorting polys for saving ZEN, much less time
-		if (!theApp.useSortPolys)
-		{
-			cmd << "Saving no sort polys" << endl;
-			return;
-		}
-		else
-		{
-			THISCALL(Invk_SortPolysByList)(list, listLength);
-		}
-	}
+	
 
 	void SpacerApp::RemoveBadLevelCompoVisual()
 	{
@@ -507,22 +455,7 @@ namespace GOTHIC_ENGINE {
 
 	
 
-	int globalWorldLoadType = zCWorld::zWLD_LOAD_EDITOR_COMPILED;
-	// 006C65A0 ; void __thiscall oCGame::LoadGame(oCGame *this, int, const struct zSTRING *)
-	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName);
-
-	HOOK Hook_oCGame_LoadGame AS(0x006C65A0, &oCGame_LoadGame);
-
 	
-
-	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName) {
-
-		switch (globalWorldLoadType)
-		{
-			case 1: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
-			case 2: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
-		}
-	}
 
 	void SpacerApp::LoadWorld(zSTRING worldName, int type, bool useMacros)
 	{

@@ -74,13 +74,6 @@ namespace GOTHIC_ENGINE {
 		ShowWindow(hWndApp, SW_SHOWNORMAL);							
 	}
 
-	//0x00503630 void __cdecl HandleFocusLoose(void)
-	void __cdecl HandleFocusLoose(void)
-	{
-		XCALL(0x00503630);
-	}
-	
-
 	HOOK Ivk_CGameManager_Run AS(&CGameManager::Run, &CGameManager::Run_Spacer);
 
 	void CGameManager::Run_Spacer()
