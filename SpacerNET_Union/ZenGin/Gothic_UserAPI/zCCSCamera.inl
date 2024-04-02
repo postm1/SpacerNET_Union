@@ -14,4 +14,4 @@ int				GetNumCamKeys() { return posKeys.GetNumInList(); };
 int				GetNumTargetKeys() { return targetKeys.GetNumInList(); };
 
 
-zCVob* GetPlayerVob_Patch();
+zCVob* __cdecl GetPlayerVob_Patch();
