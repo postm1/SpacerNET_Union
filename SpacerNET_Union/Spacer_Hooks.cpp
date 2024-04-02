@@ -671,8 +671,7 @@ namespace GOTHIC_ENGINE {
 		
 	}
 
-	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName);
-	HOOK Hook_oCGame_LoadGame AS(0x0063C070, &oCGame_LoadGame);
+
 	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName) {
 
 		switch (globalWorldLoadType)
@@ -681,6 +680,8 @@ namespace GOTHIC_ENGINE {
 		case 2: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
 		}
 	}
+
+	auto Hook_oCGame_LoadGame = InvokeAuto_BySignature("0x0063C070", &oCGame_LoadGame, IVK_REDEFINE);
 
 #endif
 
@@ -797,8 +798,8 @@ namespace GOTHIC_ENGINE {
 		pzCBspTree_RenderVobList(_this);
 	}
 
-	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName);
-	HOOK Hook_oCGame_LoadGame AS(0x006C65A0, &oCGame_LoadGame);
+	
+
 	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName) {
 
 		switch (globalWorldLoadType)
@@ -808,6 +809,7 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	auto Hook_oCGame_LoadGame = InvokeAuto_BySignature("0x006C65A0", &oCGame_LoadGame, IVK_REDEFINE);
 #endif
 
 
