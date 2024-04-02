@@ -74,9 +74,12 @@ namespace GOTHIC_ENGINE {
 
 #if ENGINE == Engine_G1
 		//FIXME_G1 Addr?
-		int& leftMouseVal = *(int*)0x86CCB8;
-		leftMouseVal = 0;
+		//int& leftMouseVal = *(int*)0x86CCB8;
+		//leftMouseVal = 0;
 		
+		static zTMouseState& mouseState = *(zTMouseState*)0x0086CCAC;
+		mouseState.buttonPressedLeft = 0;
+
 #else
 		static zTMouseState& mouseState = *(zTMouseState*)0x8D165C;
 
