@@ -17,10 +17,8 @@ zCOLOR					GetColor() const { return color; };
 zTRnd_AlphaBlendFunc	GetAlphaBlendFunc() const { return rndAlphaBlendFunc; };
 zBOOL					GetTexAniMapping() const { return texAniMap; };
 zVEC2					GetTexAniMappingDir() const { return texAniMapDelta; };
-zBOOL					GetEnvMapEnabled() const { return m_bEnvironmentalMapping; };
-void					SetEnvMapEnabled(const zBOOL a_bEnEnvMap) { m_bEnvironmentalMapping = a_bEnEnvMap; };
-void					SetEnvMapStrength(const zREAL a_bEnvMapStr) { m_bEnvironmentalMappingStrength = a_bEnvMapStr; };
-zREAL					GetEnvMapStrength()	const { return m_bEnvironmentalMappingStrength; };
+
+
 
 zTMat_Group				GetMatGroup() const { return matGroup; };
 void					SetMatGroup(const zTMat_Group group_) { matGroup = group_; };
@@ -28,3 +26,12 @@ void					SetMatGroup(const zTMat_Group group_) { matGroup = group_; };
 zCTexture*				GetDetailTexture() const { return detailTexture; }
 void					SetDetailTextureScale(const zREAL scale) { detailTextureScale = scale; }
 zREAL					GetDetailTextureScale() const { return detailTextureScale; }
+
+
+#if ENGINE >= Engine_G2
+zBOOL					GetEnvMapEnabled() const { return m_bEnvironmentalMapping; };
+void					SetEnvMapEnabled(const zBOOL a_bEnEnvMap) { m_bEnvironmentalMapping = a_bEnEnvMap; };
+void					SetEnvMapStrength(const zREAL a_bEnvMapStr) { m_bEnvironmentalMappingStrength = a_bEnvMapStr; };
+zREAL					GetEnvMapStrength()	const { return m_bEnvironmentalMappingStrength; };
+
+#endif
