@@ -1244,6 +1244,7 @@ namespace Gothic_I_Classic {
 
   template <class T>
   class zCList {
+  public:
     T *data;
     zCList *next;
   public:

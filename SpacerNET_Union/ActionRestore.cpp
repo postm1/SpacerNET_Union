@@ -45,7 +45,12 @@ namespace GOTHIC_ENGINE {
 				pVob->BeginMovement();
 				pVob->SetPositionWorld(pVob->GetPositionWorld());
 				
+
+#if ENGINE >= Engine_G2
 				pVob->EndMovement(FALSE);
+#else
+				pVob->EndMovement();
+#endif
 
 
 				HandleVobRotationMatrix(pVob, entry->rot);

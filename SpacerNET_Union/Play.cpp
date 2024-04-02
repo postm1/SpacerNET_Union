@@ -291,8 +291,9 @@ namespace GOTHIC_ENGINE {
 
 			zVEC3 camFuturePos = player->GetPositionWorld();
 
-			//SpacerIsActive = TRUE;
+#if ENGINE >= Engine_G2
 			ogame->m_bWorldEntered = false;
+#endif
 
 			parser->ResetGlobalVars();
 			parser->SetInstance("SELF", NULL);

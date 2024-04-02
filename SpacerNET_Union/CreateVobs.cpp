@@ -110,8 +110,9 @@ namespace GOTHIC_ENGINE {
 			vobLight->SetCollDet(FALSE);
 			vobLight->SetSleeping(TRUE);
 			vobLight->SetPhysicsEnabled(FALSE);
-
+#if ENGINE >= Engine_G2
 			vobLight->lightData.m_bCanMove = true;
+#endif
 			vobLight->SetPositionWorld(vobLight->GetPositionWorld());
 		}
 
@@ -384,8 +385,9 @@ namespace GOTHIC_ENGINE {
 				newvob->SetCollDet(FALSE);
 				newvob->SetSleeping(TRUE);
 				newvob->SetPhysicsEnabled(FALSE);
-
+#if ENGINE >= Engine_G2
 				vobLight->lightData.m_bCanMove = true;
+#endif
 				vobLight->SetPositionWorld(vobLight->GetPositionWorld());
 			}
 
@@ -541,7 +543,12 @@ namespace GOTHIC_ENGINE {
 		else
 			pVob->SetByPreset(presetName);
 
+
+#if ENGINE >= Engine_G2
 		pVob->lightData.m_bCanMove = true;
+#endif
+
+		
 		pVob->SetPositionWorld(pos);
 
 		InsertIntoWorld(pVob, parent);

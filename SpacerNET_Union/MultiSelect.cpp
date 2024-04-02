@@ -117,7 +117,12 @@ namespace GOTHIC_ENGINE {
 					zVEC3 direction = vobPosition - cameraPosition;
 
 					if (!ignoreCollisions) {
+
+#if ENGINE >= Engine_G2
 						int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE | zTRACERAY_VOB_IGNORE_PROJECTILES;
+#else
+						int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE;
+#endif
 						if (world->TraceRayFirstHit(cameraPosition, direction, (zCVob*)Null, flags))
 							continue;
 					}
@@ -154,7 +159,11 @@ namespace GOTHIC_ENGINE {
 					zVEC3 direction = vobPosition - cameraPosition;
 
 					if (!ignoreCollisions) {
+#if ENGINE >= Engine_G2
 						int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE | zTRACERAY_VOB_IGNORE_PROJECTILES;
+#else
+						int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE;
+#endif
 						if (world->TraceRayFirstHit(cameraPosition, direction, (zCVob*)Null, flags))
 							continue;
 					}
