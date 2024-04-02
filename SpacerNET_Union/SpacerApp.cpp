@@ -1139,6 +1139,12 @@ namespace GOTHIC_ENGINE {
 	{
 		//cmd << start.ToString() << " ; " << ray.ToString() << endl;
 
+		//FIXME G1
+#if ENGINE == Engine_G1
+		print.PrintRed("NO G1 SUPPORT!");
+		return;
+
+#else
 		zCVob* pFoundVob = NULL;
 
 		zTBBox3D box;
@@ -1217,6 +1223,7 @@ namespace GOTHIC_ENGINE {
 
 		ogame->GetWorld()->traceRayReport.foundVob = pFoundVob;
 		ogame->GetWorld()->traceRayReport.foundHit = TRUE;
+#endif
 	}
 
 	void SpacerApp::PickVobFilter()
