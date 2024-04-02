@@ -553,9 +553,22 @@ namespace GOTHIC_ENGINE {
 		return THISCALL(ivk_zERROR_Report)(type, id, str_text, levelPrio, flag, line, file, function);
 	}
 
-
 	// globalWorldLoadType
 	int globalWorldLoadType = zCWorld::zWLD_LOAD_EDITOR_COMPILED;
+
+	auto Patch_oCGame_LoadGame = InvokeAuto_BySignature("&oCGame::LoadGame", &oCGame::LoadGame_Patch, IVK_REDEFINE);
+	void oCGame::LoadGame_Patch(int slotID, const struct zSTRING& wldName)
+	{
+
+		switch (globalWorldLoadType)
+		{
+		case 1: GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
+		case 2: GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
+		}
+	}
+
+
+	
 
 #if ENGINE == Engine_G1
 
@@ -671,16 +684,7 @@ namespace GOTHIC_ENGINE {
 		
 	}
 
-	auto Patch_oCGame_LoadGame = InvokeAuto_BySignature("&oCGame::LoadGame", &oCGame::LoadGame_Patch, IVK_REDEFINE);
-	void oCGame::LoadGame_Patch(int slotID, const struct zSTRING& wldName)
-	{
-
-		switch (globalWorldLoadType)
-		{
-			case 1: GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
-			case 2: GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
-		}
-	}
+	
 
 
 #endif
