@@ -671,17 +671,17 @@ namespace GOTHIC_ENGINE {
 		
 	}
 
-
-	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName) {
+	auto Patch_oCGame_LoadGame = InvokeAuto_BySignature("&oCGame::LoadGame", &oCGame::LoadGame_Patch, IVK_REDEFINE);
+	void oCGame::LoadGame_Patch(int slotID, const struct zSTRING& wldName)
+	{
 
 		switch (globalWorldLoadType)
 		{
-		case 1: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
-		case 2: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
+			case 1: GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_COMPILED); break;
+			case 2: GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
 		}
 	}
 
-	auto Hook_oCGame_LoadGame = InvokeAuto_BySignature("0x0063C070", &oCGame_LoadGame, IVK_REDEFINE);
 
 #endif
 

@@ -8,3 +8,4 @@ void OpenSavescreen_Hook(bool);
 void ShowFreePoints_Union();
 int HandleEvent_Hook(int key);
 void UpdatePlayerStatus_Hook();
+void LoadGame_Patch(int slotID, const struct zSTRING& wldName);
