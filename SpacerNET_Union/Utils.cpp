@@ -56,20 +56,41 @@ namespace GOTHIC_ENGINE {
 
 	void __cdecl PlaySoundGame(class zSTRING &)
 	{
+#if ENGINE == Engine_G1
+		
+
+#elif ENGINE == Engine_G2A
 		XCALL(0x006CBFD0);
+#endif
+
+		
 	}
 
 
 
 	int GetFPS(void)
 	{
+#if ENGINE == Engine_G1
+
+		XCALL(0x004EF790);
+
+#elif ENGINE == Engine_G2A
 		XCALL(0x004FDCD0);
+#endif
+		
 	}
 
 
 	void __cdecl sysEvent()
 	{
-		XCALL(0x005053E0)
+#if ENGINE == Engine_G1
+
+		XCALL(0x004F6AC0);
+		
+#elif ENGINE == Engine_G2A
+		XCALL(0x005053E0);
+#endif
+
 	}
 
 	void SetTime(int hour, int min)
