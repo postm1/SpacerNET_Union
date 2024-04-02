@@ -12,3 +12,6 @@ int				SearchTargetKey(zCCamTrj_KeyFrame*key) { return targetKeys.Search(key); }
 
 int				GetNumCamKeys() { return posKeys.GetNumInList(); };
 int				GetNumTargetKeys() { return targetKeys.GetNumInList(); };
+
+
+zCVob* GetPlayerVob_Patch();
