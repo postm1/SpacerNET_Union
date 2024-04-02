@@ -74,7 +74,11 @@ namespace GOTHIC_ENGINE {
 
 #if ENGINE == Engine_G1
 		
-		//FIXME_G1
+		//FIXME_G1 address?
+		static zTMouseState & mouseState = *(zTMouseState*)0x86CCAC;
+
+		mouseState.buttonPressedLeft = 0;
+		
 #else
 		static zTMouseState& mouseState = *(zTMouseState*)0x8D165C;
 
