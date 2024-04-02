@@ -25,7 +25,14 @@ namespace GOTHIC_ENGINE {
 
 	// Add your code here . . .
 	//RX_FIX
+
+#if ENGINE == Engine_G1
+	int& playerLightInt = *(int*)0x0083AB90;
+#else
 	int& playerLightInt = *(int*)0x0089EBB4;
+#endif
+
+	
 
 
 	double GetAngleBetweenVobs(zCVob* vob, zCVob* target, zVEC3 realUnit)

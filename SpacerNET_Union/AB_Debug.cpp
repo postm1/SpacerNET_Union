@@ -3,7 +3,6 @@
 
 namespace GOTHIC_ENGINE {
 
-	zCCamera*& pCamera = *(zCCamera**)0x008D7F94;
 
 	zCView* standardView() {
 		zCView* pView = new zCView(0, 0, SCREEN_MAX, SCREEN_MAX);
@@ -36,6 +35,8 @@ namespace GOTHIC_ENGINE {
 	void AB_Debug::ManageLines()
 	{
 		viewText->ClrPrintwin();
+
+		zCCamera*& pCamera = zCCamera::activeCam;
 
 		for (int i = 0; i < pListPoints.GetNumInList(); i++)
 		{

@@ -366,7 +366,7 @@ namespace GOTHIC_ENGINE {
 		return false;
 	}
 
-
+#if ENGINE > Engine_G1
 	//0x005FFC70 protected: virtual void __thiscall zCVob::Unarchive(class zCArchiver &)
 	void __fastcall Invk_zCVobUnarchive(zCVob* _this, void*, class zCArchiver &);
 	CInvoke<void(__thiscall*)(zCVob* _this, class zCArchiver &)> pInvk_zCVobUnarchive(0x005FFC70, Invk_zCVobUnarchive);
@@ -419,6 +419,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+#endif
 
 
 	HOOK ivk_zCVobSound_ProcessZoneList AS(&zCVobSound::ProcessZoneList, &zCVobSound::ProcessZoneList_Union);
@@ -469,7 +470,7 @@ namespace GOTHIC_ENGINE {
 	//}
 
 
-
+#if ENGINE > Engine_G1
 
 	//0x004BE400 public: static class zCVob * __cdecl zCCSCamera::GetPlayerVob(void)
 	zCVob * __cdecl zCCSCamera_GetPlayerVob(zCCSCamera*);
@@ -617,7 +618,7 @@ namespace GOTHIC_ENGINE {
 		*/
 	}
 
-	
+#endif
 
 	HOOK Ivk_zCVobLight_LoadLightPresets AS(&zCVobLight::LoadLightPresets, &zCVobLight::LoadLightPresets_Hook);
 	void zCVobLight::LoadLightPresets_Hook()
@@ -705,6 +706,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 	int globalWorldLoadType = zCWorld::zWLD_LOAD_EDITOR_COMPILED;
+#if ENGINE > Engine_G1
 	// 006C65A0 ; void __thiscall oCGame::LoadGame(oCGame *this, int, const struct zSTRING *)
 	void __fastcall oCGame_LoadGame(oCGame* _this, void* vt, int slotID, const struct zSTRING& wldName);
 
@@ -720,7 +722,7 @@ namespace GOTHIC_ENGINE {
 		case 2: ogame->GetGameWorld()->LoadWorld(wldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED); break;
 		}
 	}
-
+#endif
 	//0x00572DC0 public: void __thiscall zCMesh::SortPolysByList(class zCPolygon * *,int)
 	HOOK Invk_SortPolysByList   AS(&zCMesh::SortPolysByList, &zCMesh::SortPolysByList_Hook);
 	void zCMesh::SortPolysByList_Hook(zCPolygon** list, int listLength)
@@ -778,7 +780,7 @@ namespace GOTHIC_ENGINE {
 
 	//.text:00553CC0 ; void __cdecl insertionsort(void *Base, size_t NumOfElements, unsigned int, int (__cdecl *PtFuncCompare)(const void *, const void *), bool)
 	//0x00553CC0 void __cdecl insertionsort(void *,unsigned int,unsigned int,int (__cdecl*)(void const *,void const *),bool)
-
+#if ENGINE > Engine_G1
 	void __cdecl insertionsort_Hook(void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool);
 	CInvoke <void(__cdecl*) (void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool)> insertionsort_Hooked(0x00553CC0, insertionsort_Hook, IVK_AUTO);
 	void __cdecl insertionsort_Hook(void* data, size_t num, size_t size, int(__cdecl* compare)(const void*, const void*), bool falltoqs)
@@ -822,7 +824,7 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
-
+#endif
 	/*
 	0x0056D940 public: static void __cdecl zCMesh::SaveMSH(class zCFileBIN &,class zCPolygon * *,int,class zCMesh *)
 	void __cdecl SaveMSH(zCFileBIN & file, zCPolygon * *polyList, int numPoly, zCMesh * mesh);

@@ -84,7 +84,7 @@ namespace GOTHIC_ENGINE {
 			{
 				static float noclipSpeed = 40;
 				static float maxNoclipSpeed = 50;
-				zCCamera*& pCamera = *(zCCamera**)0x008D7F94;
+				zCCamera*& pCamera = zCCamera::activeCam;
 
 
 				player->human_ai->PC_Turnings(TRUE);

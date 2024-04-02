@@ -588,9 +588,13 @@ namespace GOTHIC_ENGINE {
 		//ogame->InsertObjectRoutine(0, "FIREPLACE", 7, 0, 0);
 
 		levelReady = false;
-
+#if ENGINE == Engine_G1
 		// kill gLogStatistics
-		*(int*)0x008C2B50 = 0;
+		*(int*)0x0085EB00 = 0;
+#else
+		// kill gLogStatistics
+		* (int*)0x008C2B50 = 0;
+#endif
 
 
 		if (options.GetIntVal("musicZenOff"))

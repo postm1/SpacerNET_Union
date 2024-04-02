@@ -657,7 +657,6 @@ namespace GOTHIC_ENGINE {
 		if (keys.KeyPressed("TOGGLE_MUSIC", true))
 		{
 			int opt = zoptions->ReadInt("SOUND", "musicEnabled", 0);
-			int& musicAutoChange = *(int*)0x008AAF6C;
 
 			opt = !opt;
 
