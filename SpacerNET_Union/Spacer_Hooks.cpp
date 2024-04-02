@@ -357,7 +357,7 @@ namespace GOTHIC_ENGINE {
 
 		//
 #if ENGINE == Engine_G1
-		_this->UpdateVisualDependencies();
+		this->UpdateVisualDependencies();
 #else
 		this->UpdateVisualDependencies(TRUE);
 		const zREAL VOB_IGNORE_MIN_EXTEND = 10;
@@ -422,6 +422,8 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+
+	// FIXME_G1 ???!
 	HOOK Ivk_zCMesh_Render AS(&zCMesh::Render, &zCMesh::Render_Patch);
 	zBOOL zCMesh::Render_Patch(zTRenderContext& renderContext, zCOLOR* vertexColor)
 	{
@@ -604,6 +606,8 @@ namespace GOTHIC_ENGINE {
 			};
 		}
 
+
+#if engine == Engine_G2A
 		auto saveOption = zCVob::GetAnimationsEnabled();
 
 		//cmd << saveOption << endl;
@@ -627,12 +631,13 @@ namespace GOTHIC_ENGINE {
 			}
 
 		}
-
+#endif
 
 		auto result = pzCVob_Render(_this, renderContext);
 
-
+#if engine == Engine_G2A
 		zCVob::SetAnimationsEnabled(saveOption);
+#endif
 		return result;
 	}
 
