@@ -95,11 +95,6 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!mat) return;
 
-		//FIXME_G1
-#if ENGINE == Engine_G1
-		return;
-#endif
-
 		if (auto pTex = mat->texture)
 		{
 			
