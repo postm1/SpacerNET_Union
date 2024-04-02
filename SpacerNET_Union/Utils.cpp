@@ -59,8 +59,9 @@ namespace GOTHIC_ENGINE {
 	void ClearLMB()
 	{
 #if ENGINE == Engine_G1
-	//FIXME_G1	addr?
-	//*(int*)0x86CCB2 = 0;
+	//FIXME_G1	addr ClearLMB?
+		int& leftMouseVal = *(int*)0x86CCB8;
+		leftMouseVal = 0;
 	
 #elif ENGINE == Engine_G2A
 		*(int*)0x8D1668 = 0;

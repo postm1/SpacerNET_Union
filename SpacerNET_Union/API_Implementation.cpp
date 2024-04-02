@@ -73,9 +73,9 @@ namespace GOTHIC_ENGINE {
 
 
 #if ENGINE == Engine_G1
-		
-		//FIXME_G1 address?
-		//G1 DOES NOT HAVE zTMouseState, what to do?
+		//FIXME_G1 Addr?
+		int& leftMouseVal = *(int*)0x86CCB8;
+		leftMouseVal = 0;
 		
 #else
 		static zTMouseState& mouseState = *(zTMouseState*)0x8D165C;
