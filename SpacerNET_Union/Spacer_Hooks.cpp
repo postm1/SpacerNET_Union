@@ -353,6 +353,19 @@ namespace GOTHIC_ENGINE {
 		return FALSE;
 	}
 
+	// This hook prevents the game from modifying the window style on lower resolutions.
+	// Without this, the main window in C# will have additional border that will prevent
+	// from interacting with C# UI while using mouse.
+	// NOTE! this fix works only during game startup, changing the game resolution
+	// while Spacer.NET is running might still not work properly.
+	int vidSetMode_Union(VIDMODE*);
+	HOOK ivk_vidSetMode AS(&vidSetMode, &vidSetMode_Union);
+	int vidSetMode_Union(VIDMODE*)
+	{
+		ivk_vidSetMode.Detach();
+		return false;
+	}
+
 
 	//0x005FFC70 protected: virtual void __thiscall zCVob::Unarchive(class zCArchiver &)
 	void __fastcall Invk_zCVobUnarchive(zCVob* _this, void*, class zCArchiver &);
@@ -407,17 +420,13 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	// Removes unnecessary code in sound processing by zone, needed for a spacer
-	//0x0063E8D0 public: virtual void __thiscall zCVobSound::
-	//ProcessZoneList(class zCArraySort<class zCZone *> const &,class zCArraySort<class zCZone *> const &,class zCWorld *)
-	void __fastcall ProcessZoneList(zCVobSound* _this, void*, class zCArraySort<class zCZone *> const &, class zCArraySort<class zCZone *> const &, class zCWorld *);
-	CInvoke <void(__thiscall*) (zCVobSound* _this, class zCArchiver & arc)> pProcessZoneList(0x0063E8D0, ProcessZoneList, IVK_AUTO);
-	void __fastcall ProcessZoneList(zCVobSound* _this, void*, class zCArraySort<class zCZone *> const & zoneList, class zCArraySort<class zCZone *> const & zoneDeactivateList, class zCWorld * homeWorld)
+
+	HOOK ivk_zCVobSound_ProcessZoneList AS(&zCVobSound::ProcessZoneList, &zCVobSound::ProcessZoneList_Union);
+	void zCVobSound::ProcessZoneList_Union(zCArraySort<zCZone*> const& zoneList, zCArraySort<zCZone*> const& zoneDeactivateList, zCWorld* homeWorld)
 	{
-		
-		for (int i = 0; i<zoneList.GetNum(); i++)
+		for (int i = 0; i < zoneList.GetNum(); i++)
 		{
-			zCVobSound *vobSound = ((zCVobSound*)zoneList[i]);
+			zCVobSound* vobSound = ((zCVobSound*)zoneList[i]);
 
 			if (vobSound)
 			{
@@ -447,6 +456,17 @@ namespace GOTHIC_ENGINE {
 			}
 		};
 	}
+
+	//// Removes unnecessary code in sound processing by zone, needed for a spacer
+	////0x0063E8D0 public: virtual void __thiscall zCVobSound::
+	////ProcessZoneList(class zCArraySort<class zCZone *> const &,class zCArraySort<class zCZone *> const &,class zCWorld *)
+	//void __fastcall ProcessZoneList(zCVobSound* _this, void*, class zCArraySort<class zCZone *> const &, class zCArraySort<class zCZone *> const &, class zCWorld *);
+	//CInvoke <void(__thiscall*) (zCVobSound* _this, class zCArchiver & arc)> pProcessZoneList(0x0063E8D0, ProcessZoneList, IVK_AUTO);
+	//void __fastcall ProcessZoneList(zCVobSound* _this, void*, class zCArraySort<class zCZone *> const & zoneList, class zCArraySort<class zCZone *> const & zoneDeactivateList, class zCWorld * homeWorld)
+	//{
+	//	
+	//	
+	//}
 
 
 
@@ -597,18 +617,7 @@ namespace GOTHIC_ENGINE {
 		*/
 	}
 
-	// This hook prevents the game from modifying the window style on lower resolutions.
-	// Without this, the main window in C# will have additional border that will prevent
-	// from interacting with C# UI while using mouse.
-	// NOTE! this fix works only during game startup, changing the game resolution
-	// while Spacer.NET is running might still not work properly.
-	int vidSetMode_Union(VIDMODE*);
-	HOOK ivk_vidSetMode AS(&vidSetMode, &vidSetMode_Union);
-	int vidSetMode_Union(VIDMODE*)
-	{
-		ivk_vidSetMode.Detach();
-		return false;
-	}
+	
 
 	HOOK Ivk_zCVobLight_LoadLightPresets AS(&zCVobLight::LoadLightPresets, &zCVobLight::LoadLightPresets_Hook);
 	void zCVobLight::LoadLightPresets_Hook()

@@ -5,3 +5,4 @@
 
 void Archive_Hook(zCArchiver &);
 void Unarchive_Hook(zCArchiver &);
+void ProcessZoneList_Union(zCArraySort<zCZone*> const& zoneList, zCArraySort<zCZone*> const& zoneDeactivateList, zCWorld* homeWorld);
