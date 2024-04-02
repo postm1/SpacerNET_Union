@@ -568,15 +568,17 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	auto Patch_zCCSCamera_GetPlayerVob = InvokeAuto_BySignature("&zCCSCamera::GetPlayerVob", &zCCSCamera::GetPlayerVob_Patch, IVK_REDEFINE);
-	zCVob* zCCSCamera::GetPlayerVob_Patch()
-	{
-		return NULL;
-	}
 	
 
 #if ENGINE == Engine_G1
 
+
+	zCVob* __cdecl zCCSCamera_GetPlayerVob(zCCSCamera*);
+	CInvoke <zCVob* (__cdecl*) (zCCSCamera*)> pzCCSCamera_GetPlayerVob(0x004B50C0, zCCSCamera_GetPlayerVob, IVK_AUTO);
+	zCVob* __cdecl zCCSCamera_GetPlayerVob(zCCSCamera* _this)
+	{
+		return NULL;
+	}
 
 	int  __fastcall zCVob_Render(zCVob*, struct zTRenderContext&);
 	CInvoke <int(__fastcall*) (zCVob*, struct zTRenderContext&)> pzCVob_Render(0x005D6090, zCVob_Render, IVK_AUTO);
