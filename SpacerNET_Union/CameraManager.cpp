@@ -57,8 +57,18 @@ namespace GOTHIC_ENGINE {
 			zCVob* v = NULL;
 
 			if(cur_cam->camKeysFOR == zCCSCamera::zCAMTRJ_KEY_FOR_OBJECT) {
+#if ENGINE >= Engine_G2
 				zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE);
+#else
 
+				zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate();
+
+				msg_c->referenceName = "";
+				msg_c->referenceVob = NULL;
+				msg_c->isDeleted = FALSE;
+				msg_c->subType = zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE;
+
+#endif
 				if (!v) msg_c->MD_SetVobParam(cur_cam);
 				else	msg_c->MD_SetVobParam(v);
 
@@ -66,7 +76,23 @@ namespace GOTHIC_ENGINE {
 			}
 
 			if (cur_cam->targetKeysFOR == zCCSCamera::zCAMTRJ_KEY_FOR_OBJECT) {
+
+
+#if ENGINE >= Engine_G2
 				zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE);
+#else
+
+				zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate();
+
+				msg_t->referenceName = "";
+				msg_t->referenceVob = NULL;
+				msg_t->isDeleted = FALSE;
+				msg_t->subType = zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE;
+
+#endif
+
+
+
 				if (!v) msg_t->MD_SetVobParam(cur_cam);
 				else	msg_t->MD_SetVobParam(v);
 
@@ -113,7 +139,20 @@ namespace GOTHIC_ENGINE {
 		if (cur_cam->camKeysFOR == zCCSCamera::zCAMTRJ_KEY_FOR_OBJECT)
 		{
 
+#if ENGINE >= Engine_G2
 			zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE);
+#else
+
+			zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate();
+
+			msg_c->referenceName = "";
+			msg_c->referenceVob = NULL;
+			msg_c->isDeleted = FALSE;
+			msg_c->subType = zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE;
+
+#endif
+
+			
 
 			if (!v) msg_c->MD_SetVobParam(cur_cam);
 			else	msg_c->MD_SetVobParam(v);
@@ -123,7 +162,21 @@ namespace GOTHIC_ENGINE {
 
 		if (cur_cam->targetKeysFOR == zCCSCamera::zCAMTRJ_KEY_FOR_OBJECT)
 		{
+			
+
+#if ENGINE >= Engine_G2
 			zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE);
+#else
+
+			zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate();
+
+			msg_t->referenceName = "";
+			msg_t->referenceVob = NULL;
+			msg_t->isDeleted = FALSE;
+			msg_t->subType = zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE;
+
+#endif
+
 			if (!v) msg_t->MD_SetVobParam(cur_cam);
 			else	msg_t->MD_SetVobParam(v);
 
@@ -223,8 +276,30 @@ namespace GOTHIC_ENGINE {
 
 		if (cur_cam == 0) return;
 
+
+#if ENGINE >= Engine_G2
 		zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE);
 		zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE);
+#else
+
+		zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate();
+
+		msg_t->referenceName = "";
+		msg_t->referenceVob = NULL;
+		msg_t->isDeleted = FALSE;
+		msg_t->subType = zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE;
+
+
+		zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate();
+
+		msg_c->referenceName = "";
+		msg_c->referenceVob = NULL;
+		msg_c->isDeleted = FALSE;
+		msg_c->subType = zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE;
+
+#endif
+
+		
 
 		if (lastPresetAutoAddKF) msg_t->MD_SetVobParam(0);
 		else					 msg_t->MD_SetVobParam(cur_cam);
@@ -1114,8 +1189,31 @@ namespace GOTHIC_ENGINE {
 		newcam->targetKeysFOR = zCCSCamera::zTCamTrj_FOR::zCAMTRJ_KEY_FOR_WORLD;
 		newcam->camKeysFOR = zCCSCamera::zTCamTrj_FOR::zCAMTRJ_KEY_FOR_WORLD;
 
-		zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE);
+
+
+
+#if ENGINE >= Engine_G2
 		zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE);
+		zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate(zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE);
+#else
+
+		zCCSCamera_EventMsgActivate* msg_t = new zCCSCamera_EventMsgActivate();
+
+		msg_t->referenceName = "";
+		msg_t->referenceVob = NULL;
+		msg_t->isDeleted = FALSE;
+		msg_t->subType = zCCSCamera_EventMsgActivate::EV_SETTARGETREFERENCE;
+
+
+		zCCSCamera_EventMsgActivate* msg_c = new zCCSCamera_EventMsgActivate();
+
+		msg_c->referenceName = "";
+		msg_c->referenceVob = NULL;
+		msg_c->isDeleted = FALSE;
+		msg_c->subType = zCCSCamera_EventMsgActivate::EV_SETCAMREFERENCE;
+
+#endif
+
 
 		msg_c->referenceVob = newcam;
 		msg_t->referenceVob = newcam;
