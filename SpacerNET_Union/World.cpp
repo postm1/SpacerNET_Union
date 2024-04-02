@@ -43,7 +43,16 @@ namespace GOTHIC_ENGINE {
 
 	#define MAXSIZE 24
 	#define d(i) (((char *)data)+(i)*size)
-	static zCSparseArray<const void *, int>& s_polyVertIndex = *(zCSparseArray<const void *, int>*)(0x8D8798);
+
+
+//not need?
+#if ENGINE == Engine_G1
+	//static zCSparseArray<const void*, int>& s_polyVertIndex = *(zCSparseArray<const void*, int>*)(0x8D8798);
+#else
+	//static zCSparseArray<const void*, int>& s_polyVertIndex = *(zCSparseArray<const void*, int>*)(0x8D8798);
+#endif
+
+	
 
 	void insertionsort(void *data, size_t num, size_t size, int(__cdecl *compare)(const void *, const void *), bool falltoqs) {
 		char swapplace[MAXSIZE];
@@ -78,26 +87,6 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	static int S_ComparePolyVerts(const void *A_, const void *B) {
-		void *a = *((void **)A_);
-		void *b = *((void **)B);
-
-		int *AI = s_polyVertIndex[a];
-		int *BI = s_polyVertIndex[b];
-
-		if (!AI || !BI)
-			return 0;
-
-		int ai = *AI;
-		int bi = *BI;
-
-		if (ai < bi)
-			return -1;
-		if (ai > bi)
-			return 1;
-
-		return 0;
-	}
 
 	
 
