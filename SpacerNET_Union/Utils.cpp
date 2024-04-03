@@ -61,6 +61,9 @@ namespace GOTHIC_ENGINE {
 #if ENGINE == Engine_G1
 	//FIXME_G1	addr ClearLMB?
 		int& leftMouseVal = *(int*)0x86CCB8;
+
+		//print.PrintRed(Z leftMouseVal);
+
 		leftMouseVal = 0;
 	
 #elif ENGINE == Engine_G2A
