@@ -622,7 +622,7 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 
 		outfile << "<p><b>Items table</b></p><table id=\"table_report_items\"><tr><th>Item instance</th><th>Coords</th><th>In container</th></tr>";
 
-		for (uint i = 0; i < searchItems.GetNum(); i++)
+		for (int i = 0; i < searchItems.GetNum(); i++)
 		{
 			auto entry = searchItems.GetSafe(i);
 

@@ -292,9 +292,9 @@ namespace GOTHIC_ENGINE {
 
 		SetMover();
 
-#if ENGINE != Engine_G1
+
 		CALL_OnSelectVob(vob);
-#endif
+
 
 	}
 
@@ -2093,9 +2093,9 @@ namespace GOTHIC_ENGINE {
 
 				//cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
 
-#if ENGINE != Engine_G1
+
 				CALL_OnApplyDataToVob(vob);
-#endif
+
 			}
 
 			//vob->SetPositionWorld(vob->GetPositionWorld());
