@@ -549,6 +549,17 @@ namespace GOTHIC_ENGINE {
 			
 			screen->SetFontColor(zCOLOR(255, 255, 255));
 			
+			if (theApp.pickedVob)
+			{
+				if (auto pMob = theApp.pickedVob->CastTo<oCMOB>())
+				{
+					screen->SetFontColor(zCOLOR(229, 182, 52));
+
+					PrintMobName(pMob);
+
+					screen->SetFontColor(zCOLOR(255, 255, 255));
+				}
+			}
 			/*
 
 			if (leakPolyList)

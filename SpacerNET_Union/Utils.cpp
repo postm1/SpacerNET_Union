@@ -1143,6 +1143,18 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	zSTRING zCParser::GetScriptString(zSTRING const& str, int index) {
+		zSTRING string;
+		zCPar_Symbol* ps = GetSymbol(str);
+		if (ps)
+			ps->GetValue(string, index);
+		if (string.Length())
+			return string;
+		else
+			return " ";
+		return " ";
+	};
+
 
 	void GetChildrenVobMesh(zCTree<zCVob>* node, zCVob* pickedVob, zCMesh* pMesh)
 	{
@@ -1268,6 +1280,48 @@ namespace GOTHIC_ENGINE {
 #endif
 	}
 
+
+	void PrintMobName(oCMOB* pMob)
+	{
+		if (!pMob) return;
+
+		if (pMob->name.Length() == 0)
+		{
+			return;
+		}
+
+		if (auto visual = pMob->GetVisual())
+		{
+			zPOINT3 focusNamePosWS;
+
+			focusNamePosWS = pMob->GetBBox3DWorld().GetCenter();
+			focusNamePosWS.n[VY] += (pMob->GetBBox3DWorld().maxs.n[VY] - pMob->GetBBox3DWorld().mins.n[VY]) * 0.82F;
+
+			zCCamera::activeCam->Activate();
+			zPOINT3	  ProjPoint1 = zCCamera::activeCam->Transform(focusNamePosWS);
+			if (ProjPoint1[VZ] > 0.0f)
+			{
+				auto text = parser->GetScriptString(pMob->name);
+
+				zPOINT2	  ProjPoint2;
+				zCCamera::activeCam->Project(&ProjPoint1, ProjPoint2[VX], ProjPoint2[VY]);
+				ProjPoint2[VX] = ProjPoint2[VX] - screen->nax(screen->FontSize(text) / 2);
+
+				// CLAMP
+				int nX = screen->anx(ProjPoint2[VX]);
+				int nY = screen->any(ProjPoint2[VY]);
+
+				if (nY < screen->FontY()) nY = screen->FontY();
+				if (nY > 8192 - screen->FontY()) nY = 8192 - screen->FontY();
+
+				// [Ulf] Clampen auch in X-Richtung
+				zClamp(nX, 0, 8191 - screen->FontSize(text));
+
+				screen->Print(nX, nY, text);
+
+			};
+		}
+	}
 
 
 }
