@@ -1412,6 +1412,8 @@ namespace GOTHIC_ENGINE {
 		
 		if (theApp.camMan.cameraRun || GetSelectedTool() == TM_BBOXEDIT) return;
 
+		theApp.wasCopiedPressed = false;
+
 		theApp.TestLoop();
 
 		auto pickMode = theApp.GetPickMode();
@@ -1625,7 +1627,7 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("VOB_COPY", true))
 		{
-
+			theApp.wasCopiedPressed = true;
 
 			if (pickMode == SWM_VOBS)
 			{
@@ -1641,6 +1643,7 @@ namespace GOTHIC_ENGINE {
 						print.PrintRed(GetLang("VOB_COPY_OK"));
 						theApp.vobToCopy = theApp.pickedVob;
 						theApp.isVobParentChange = false;
+						
 					}
 					
 				}

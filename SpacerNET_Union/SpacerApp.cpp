@@ -65,6 +65,8 @@ namespace GOTHIC_ENGINE {
 		this->filterMatWindowActive = false;
 		this->showScreenInfo = true;
 		this->cameraMoveWithVobActive = false;
+		this->wasCopiedPressed = false;
+		this->showVobVisualInfo = false;
 
 		this->rotMod = zMH_VIEW;
 

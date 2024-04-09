@@ -290,6 +290,207 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
+	void SpacerApp::ExtractVisualInfoShow(zCVisual* visual, int& start, int& longestLine, zSTRING& textToCopy)
+	{
+		if (!visual)
+		{
+			return;
+		}
+
+
+		// 3DS
+		if (auto pProgMesh = visual->CastTo<zCProgMeshProto>())
+		{
+
+			for (int i = 0; i < pProgMesh->numSubMeshes; i++)
+			{
+
+				auto mat = pProgMesh->subMeshList[i].material;
+
+				if (mat && mat->texture)
+				{
+					zSTRING text = "\nMat: " + mat->GetName() + " | Texture: " + mat->texture->GetObjectName();
+
+					int curLineSize = pViewVobInfo->FontSize(text);
+
+					if (curLineSize > longestLine)
+					{
+						longestLine = curLineSize;
+					}
+
+					pViewVobInfo->Print(100, F(start), text);
+
+					textToCopy += text;
+
+					start += 2;
+				}
+			}
+
+			//cmd << "===========" << endl;
+		}
+
+		// MMS
+		if (auto pMorph = visual->CastTo<zCMorphMesh>())
+		{
+
+			if (pMorph->morphMesh)
+			{
+				for (int i = 0; i < pMorph->morphMesh->numSubMeshes; i++)
+				{
+
+
+					auto mat = pMorph->morphMesh->subMeshList[i].material;
+
+					if (mat && mat->texture)
+					{
+						zSTRING text = "Mat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName();
+
+						int curLineSize = pViewVobInfo->FontSize(text);
+
+						if (curLineSize > longestLine)
+						{
+							longestLine = curLineSize;
+						}
+
+						pViewVobInfo->Print(100, F(start), text);
+
+						textToCopy += " " + mat->texture->GetObjectName();
+
+						start += 2;
+					}
+				}
+			}
+
+		}
+
+		// ASC/MDS
+		if (auto pModel = visual->CastTo<zCModel>())
+		{
+			for (int i = 0; i < pModel->meshSoftSkinList.GetNum(); i++)
+			{
+				for (int n = 0; n < pModel->meshSoftSkinList[i]->numSubMeshes; n++)
+				{
+					if (!pModel->meshSoftSkinList[i])
+					{
+						continue;
+					}
+
+					auto mat = pModel->meshSoftSkinList[i]->subMeshList[n].material;
+
+					if (mat && mat->texture)
+					{
+						zSTRING text = "Mat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName();
+
+						int curLineSize = pViewVobInfo->FontSize(text);
+
+						if (curLineSize > longestLine)
+						{
+							longestLine = curLineSize;
+						}
+
+						pViewVobInfo->Print(100, F(start), text);
+
+						textToCopy += " " + mat->texture->GetObjectName();
+
+						start += 2;
+					}
+					//cmd << pModel->meshSoftSkinList[i]->subMeshList[n].material->GetObjectName() << endl;
+				}
+			}
+
+			// search in all the nodes
+			for (int i = 0; i < pModel->nodeList.GetNum(); i++)
+			{
+				if (!pModel->nodeList[i])
+				{
+					continue;
+				}
+
+				// если нет визуала узла
+				if (!pModel->nodeList[i]->nodeVisual)
+					continue;
+
+				ExtractVisualInfoShow(pModel->nodeList[i]->nodeVisual, start, longestLine, textToCopy);
+
+			}
+		}
+	}
+	void SpacerApp::ShowVobInfo()
+	{
+		if (!pViewVobInfo)
+		{
+			pViewVobInfo = new zCView(0, 0, SCREEN_MAX, SCREEN_MAX);
+			pViewVobInfo->SetFont("FONT_OLD_10_WHITE.TGA");
+			pViewVobInfo->SetFontColor(zCOLOR(255, 255, 255, 255));
+			pViewVobInfoBack = new zCView(0, 0, SCREEN_MAX, SCREEN_MAX);
+			pViewVobInfoBack->SetAlphaBlendFunc(zTRnd_AlphaBlendFunc::zRND_ALPHA_FUNC_BLEND);
+			screen->InsertItem(pViewVobInfoBack);
+			screen->InsertItem(pViewVobInfo);
+		}
+
+		pViewVobInfo->ClrPrintwin();
+
+
+		if (!showVobVisualInfo)
+		{
+			pViewVobInfoBack->InsertBack("");
+			return;
+		}
+
+		if (auto pVob = GetSelectedVob())
+		{
+			pViewVobInfo->SetFontColor(zCOLOR(209, 162, 32));
+
+			pViewVobInfo->SetFontColor(zCOLOR(255, 255, 255, 255));
+
+			zSTRING textToCopy;
+
+			int start = 26;
+			int longestLine = 0;
+
+			if (auto visual = pVob->visual)
+			{
+				textToCopy = "VisualName: " + visual->GetVisualName();
+
+				longestLine = pViewVobInfo->FontSize(textToCopy);
+
+				pViewVobInfo->Print(100, F(start), textToCopy);
+				start += 2;
+				ExtractVisualInfoShow(visual, start, longestLine, textToCopy);
+			}
+			
+
+
+			int padding = 50;
+			int posX = 100;
+			int posY = F(26) - padding;
+			int linesCount = textToCopy.Search('\n', 0);
+
+			pViewVobInfoBack->InsertBack("BLACK.TGA");
+			pViewVobInfoBack->SetPos(50, posY);
+			pViewVobInfoBack->SetSize(longestLine + padding * 2, F(start) - F(26) + padding * 2);
+			pViewVobInfoBack->alpha = 125;
+
+			if (wasCopiedPressed)
+			{
+				textToCopy.TrimLeft(' ');
+
+				print.PrintRed(GetLang("VOB_INFO_VISUAL_COPIED"));
+
+				cmd << textToCopy << endl << endl;
+
+				const char* output = textToCopy.ToChar();
+
+				Clipboard(output);
+
+				wasCopiedPressed = false;
+			}
+		}
+		else
+		{
+			pViewVobInfoBack->InsertBack("");
+		}
+	}
 
 	void SpacerApp::PluginLoop()
 	{
@@ -577,6 +778,8 @@ namespace GOTHIC_ENGINE {
 			*/
 			
 		}
+
+		ShowVobInfo();
 	}
 
 	void SpacerApp::KeysLoop()

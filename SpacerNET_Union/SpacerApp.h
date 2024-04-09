@@ -90,6 +90,8 @@ namespace GOTHIC_ENGINE {
 			bool pickedVobBBoxMode;
 			bool isVobParentChange;
 			bool dynLightCompile;
+			bool wasCopiedPressed;
+			bool showVobVisualInfo;
 
 			bool levelReady;
 			bool treeIsReady;
@@ -97,7 +99,7 @@ namespace GOTHIC_ENGINE {
 			bool selectNextVobForce;
 			bool nextInsertBlocked;
 			bool pickUnshareShow;
-
+			
 			bool spacerWasInit;
 
 			bool useSortPolys;
@@ -123,6 +125,9 @@ namespace GOTHIC_ENGINE {
 			zCVob*		pickedWaypoint2nd;
 			zCVob*		pickedWaypoint;
 			zCVob*		selectedWaypointForNet;
+
+			zCView* pViewVobInfo = NULL;
+			zCView* pViewVobInfoBack = NULL;
 
 
 			zCObject* current_object;
@@ -196,6 +201,8 @@ namespace GOTHIC_ENGINE {
 		void PrepareBboxVobs(zCVob * vob);
 		void SetToKeyPos();
 		void TriggerLoop();
+		void ShowVobInfo();
+		void ExtractVisualInfoShow(zCVisual* visual, int& start, int& longestLine, zSTRING& textToCopy);
 		void Trigger_DrawKey(int key, zVEC3 pos);
 		void OnKeyRemove();
 		void RemoveAllMoverKeysWithSavePosition();
