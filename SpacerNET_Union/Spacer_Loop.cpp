@@ -343,7 +343,7 @@ namespace GOTHIC_ENGINE {
 
 					if (mat && mat->texture)
 					{
-						zSTRING text = "Mat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName();
+						zSTRING text = "\nMat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName();
 
 						int curLineSize = pViewVobInfo->FontSize(text);
 
@@ -354,7 +354,7 @@ namespace GOTHIC_ENGINE {
 
 						pViewVobInfo->Print(100, F(start), text);
 
-						textToCopy += " " + mat->texture->GetObjectName();
+						textToCopy += text;
 
 						start += 2;
 					}
@@ -379,7 +379,7 @@ namespace GOTHIC_ENGINE {
 
 					if (mat && mat->texture)
 					{
-						zSTRING text = "Mat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName();
+						zSTRING text = "\nMat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName();
 
 						int curLineSize = pViewVobInfo->FontSize(text);
 
@@ -390,7 +390,7 @@ namespace GOTHIC_ENGINE {
 
 						pViewVobInfo->Print(100, F(start), text);
 
-						textToCopy += " " + mat->texture->GetObjectName();
+						textToCopy += text;
 
 						start += 2;
 					}
@@ -445,7 +445,7 @@ namespace GOTHIC_ENGINE {
 
 			zSTRING textToCopy;
 
-			int start = 26;
+			int start = 28;
 			int longestLine = 0;
 
 			if (auto visual = pVob->visual)
@@ -463,12 +463,12 @@ namespace GOTHIC_ENGINE {
 
 			int padding = 50;
 			int posX = 100;
-			int posY = F(26) - padding;
+			int posY = F(28) - padding;
 			int linesCount = textToCopy.Search('\n', 0);
 
 			pViewVobInfoBack->InsertBack("BLACK.TGA");
 			pViewVobInfoBack->SetPos(50, posY);
-			pViewVobInfoBack->SetSize(longestLine + padding * 2, F(start) - F(26) + padding * 2);
+			pViewVobInfoBack->SetSize(longestLine + padding * 2, F(start) - F(28) + padding * 3);
 			pViewVobInfoBack->alpha = 125;
 
 			if (wasCopiedPressed)
