@@ -717,7 +717,7 @@ namespace GOTHIC_ENGINE {
 				{
 					if (auto pLight = resultList.GetSafe(i))
 					{
-						cmd << pLight->GetVobName() << endl;
+						//cmd << pLight->GetVobName() << endl;
 
 						pLight->SetVisual(NULL);
 					}
