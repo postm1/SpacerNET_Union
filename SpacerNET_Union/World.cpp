@@ -664,6 +664,8 @@ namespace GOTHIC_ENGINE {
 
 		
 		theApp.rotMod = (zEVobMotionHeading)theApp.options.GetIntVal("rotModStart");
+
+
 		
 	}
 
@@ -702,7 +704,25 @@ namespace GOTHIC_ENGINE {
 
 			PlaySoundGame(ToStr "CS_IAI_ME_ME");
 
-			
+
+			// This fixes rendering of zCVobLights help vobs on DX11 after level loading
+			if (IsDx11Active())
+			{
+				zCArray<zCVob*> resultList;
+				zCWorld* world = ogame->GetWorld();
+
+				world->SearchVobListByClass(zCVobLight::classDef, resultList, 0);
+
+				for (int i = 0; i < resultList.GetNumInList(); i++)
+				{
+					if (auto pLight = resultList.GetSafe(i))
+					{
+						cmd << pLight->GetVobName() << endl;
+
+						pLight->SetVisual(NULL);
+					}
+				}
+			}
 		}
 	}
 
