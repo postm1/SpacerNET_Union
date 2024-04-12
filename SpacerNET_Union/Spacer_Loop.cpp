@@ -301,11 +301,19 @@ namespace GOTHIC_ENGINE {
 		// 3DS
 		if (auto pProgMesh = visual->CastTo<zCProgMeshProto>())
 		{
+			auto trisCount = pProgMesh->GetNumTri();
+
+			zSTRING text = "\nTrisCount: " + Z trisCount;
+			textToCopy += text;
+			pViewVobInfo->Print(100, F(start), text);
+			start += 2;
 
 			for (int i = 0; i < pProgMesh->numSubMeshes; i++)
 			{
 
 				auto mat = pProgMesh->subMeshList[i].material;
+
+				
 
 				if (mat && mat->texture)
 				{
@@ -332,6 +340,9 @@ namespace GOTHIC_ENGINE {
 		// MMS
 		if (auto pMorph = visual->CastTo<zCMorphMesh>())
 		{
+
+
+
 
 			if (pMorph->morphMesh)
 			{
