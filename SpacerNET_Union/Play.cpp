@@ -374,11 +374,16 @@ namespace GOTHIC_ENGINE {
 				parser->SetScriptInt("RX_IsSpacetNet", 1);
 			}
 
-			oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
 
-			oCNpc::player->GetModel();
-			player->dontWriteIntoArchive = true;
-			player->showVisual = 0;
+			if (theApp.options.GetIntVal("bAddPlayerForPlugins"))
+			{
+				oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
+
+				oCNpc::player->GetModel();
+				player->dontWriteIntoArchive = true;
+				player->showVisual = 0;
+			}
+			
 			if (originalCam)
 			{
 				//ogame->GetCamera()->SetVob(originalCam);
