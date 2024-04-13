@@ -1334,6 +1334,43 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void PrintItemName(oCItem* pItem)
+	{
+		if (!pItem) return;
 
+
+
+		if (auto visual = pItem->GetVisual())
+		{
+			zPOINT3 focusNamePosWS;
+
+			focusNamePosWS = pItem->GetBBox3DWorld().GetCenter();
+			focusNamePosWS.n[VY] += (pItem->GetBBox3DWorld().maxs.n[VY] - pItem->GetBBox3DWorld().mins.n[VY]) * 1.75F;
+
+			zCCamera::activeCam->Activate();
+			zPOINT3	  ProjPoint1 = zCCamera::activeCam->Transform(focusNamePosWS);
+			if (ProjPoint1[VZ] > 0.0f)
+			{
+				auto text = pItem->GetName(0);
+
+				zPOINT2	  ProjPoint2;
+				zCCamera::activeCam->Project(&ProjPoint1, ProjPoint2[VX], ProjPoint2[VY]);
+				ProjPoint2[VX] = ProjPoint2[VX] - screen->nax(screen->FontSize(text) / 2);
+
+				// CLAMP
+				int nX = screen->anx(ProjPoint2[VX]);
+				int nY = screen->any(ProjPoint2[VY]);
+
+				if (nY < screen->FontY()) nY = screen->FontY();
+				if (nY > 8192 - screen->FontY()) nY = 8192 - screen->FontY();
+
+				// [Ulf] Clampen auch in X-Richtung
+				zClamp(nX, 0, 8191 - screen->FontSize(text));
+
+				screen->Print(nX, nY, text);
+
+			};
+		}
+	}
 }
 

@@ -496,6 +496,11 @@ namespace GOTHIC_ENGINE {
 
 				wasCopiedPressed = false;
 			}
+
+			if (auto pItem = pVob->CastTo <oCItem>())
+			{
+				PrintItemName(pItem);
+			}
 		}
 		else
 		{
