@@ -151,6 +151,15 @@ namespace GOTHIC_ENGINE {
 				bool g_bInsertNPCs;
 			};
 
+
+			struct
+			{
+				int type;
+				int startNumber;
+				zSTRING allName;
+				zSTRING prefixName;
+			} renameOptions;
+
 			SpacerPickTry pickTryEntry;
 			
 

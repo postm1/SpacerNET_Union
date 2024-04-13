@@ -1414,6 +1414,19 @@ namespace GOTHIC_ENGINE {
 			theApp.showVobVisualInfo = toggle;
 		}
 		
+
+		__declspec(dllexport) void Extern_SetRenameOptions(int optType, int startNumber)
+		{
+			theApp.renameOptions.prefixName = Stack_PeekString().ToChar();
+			theApp.renameOptions.allName = Stack_PeekString().ToChar();
+
+			theApp.renameOptions.type = optType;
+			theApp.renameOptions.startNumber = startNumber;
+
+			//cmd << "optType: " << optType << " startNum: " << startNumber << endl;
+		}
+
+		
 	}
 
 }

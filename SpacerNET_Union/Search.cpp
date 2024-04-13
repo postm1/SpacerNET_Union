@@ -696,6 +696,104 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		if (searchType == SearchVobType::Rename)
+		{
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
+
+			int type = theApp.renameOptions.type;
+			int startNum = theApp.renameOptions.startNumber;
+
+
+			for (int i = 0; i < resultFound.GetNum(); i++)
+			{
+				if (auto vob = resultFound.GetSafe(i))
+				{
+
+					if (vob->CastTo<oCItem>())
+					{
+						continue;
+					}
+
+					zSTRING lastName = vob->GetObjectName();
+
+					zSTRING name = "";
+					
+					// empty name
+					if (type == 1)
+					{
+						//do nothing
+
+					}
+					else if (type == 2)
+					{
+						name = theApp.renameOptions.allName;
+					}
+					else if (type == 3)
+					{
+						name = theApp.renameOptions.prefixName + Z (startNum++);
+					}
+					
+					
+					vob->SetVobName(name);
+					resultCount += 1;
+
+					RecalcWPBBox(vob);
+
+					if (auto wp = dynamic_cast<zCVobWaypoint*>(vob))
+					{
+						wp->SetVobName(name);
+						auto wpObj = ogame->GetWorld()->wayNet->GetWaypoint(lastName);
+
+						if (wpObj)
+						{
+							wpObj->SetName(name);
+						}
+					}
+
+					if (auto pKey = dynamic_cast<zCCamTrj_KeyFrame*>(vob))
+					{
+						if (pKey->cscam)
+						{
+							int index = -1;
+
+							if (pKey->type == KF_CAM)
+							{
+								index = pKey->cscam->SearchCamKey(pKey);
+
+								//cmd << "Rename: " << index << " all: " << pKey->cscam->GetNumCamKeys() << endl;
+								if (index != -1)
+								{
+									camMan.OnRenameSplineKey(index, name);
+								}
+
+							}
+							else
+							{
+								index = pKey->cscam->SearchTargetKey(pKey);
+
+								if (index != -1)
+								{
+									camMan.OnRenameTargetKey(index, name);
+								}
+							}
+
+
+						}
+					}
+
+					auto updateName = (onUpdateVobName)GetProcAddress(theApp.module, "UpdateVobName");
+					Stack_PushString(GetVobName(vob));
+					updateName((uint)vob);
+				}
+
+			}
+
+			
+
+
+
+			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+		}
 
 		exports.toggleUIElement(UIElementType::UI_LIST_SEARCH_RESULT, TRUE);
 

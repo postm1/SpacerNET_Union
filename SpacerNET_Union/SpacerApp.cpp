@@ -77,7 +77,8 @@ namespace GOTHIC_ENGINE {
 
 
 		
-
+		this->renameOptions.startNumber = 0;
+		this->renameOptions.type = 1;
 		
 	}
 
