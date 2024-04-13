@@ -732,6 +732,15 @@ namespace GOTHIC_ENGINE {
 					{
 						name = theApp.renameOptions.prefixName + Z (startNum++);
 					}
+
+					//protect waypoints when name is empty
+					if (auto wp = dynamic_cast<zCVobWaypoint*>(vob))
+					{
+						if (type == 1)
+						{
+							continue;
+						}
+					}
 					
 					
 					vob->SetVobName(name);
