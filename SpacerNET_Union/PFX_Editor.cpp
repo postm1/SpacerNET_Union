@@ -66,7 +66,7 @@ namespace GOTHIC_ENGINE {
 
 			if (cooldDownShowTimer == 0)
 			{
-				Reload_PFX();
+				
 			}
 		}
 
@@ -76,8 +76,12 @@ namespace GOTHIC_ENGINE {
 			{
 				if (!showDead)
 				{
-					showDead = true;
-					cooldDownShowTimer = PFX_EDITOR_CD_SHOW_TIME_MS;
+					
+					if (theApp.options.GetIntVal("pfxRepeatAutoplay"))
+					{
+						showDead = true;
+						Reload_PFX();
+					}
 				}
 				
 			}

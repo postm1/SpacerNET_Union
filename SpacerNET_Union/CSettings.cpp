@@ -430,6 +430,13 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "oneModeToggle", "0");
 		list.Insert("oneModeToggle", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "pfxRepeatAutoplay", "1");
+		list.Insert("pfxRepeatAutoplay", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "pfxSaveFullFields", "1");
+		list.Insert("pfxSaveFullFields", set);
+
+
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");
