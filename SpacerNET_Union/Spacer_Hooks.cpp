@@ -86,7 +86,10 @@ namespace GOTHIC_ENGINE {
 	{
 #if ENGINE > Engine_G1
 		if (zDYNAMIC_CAST<zCParticleFX>(this->GetVisual()))
+		{
 			zDYNAMIC_CAST<zCParticleFX>(this->GetVisual())->m_bVisualNeverDies = TRUE;
+		}
+			
 #endif
 		THISCALL(Invk_zCVobArchive)(arc);
 	}

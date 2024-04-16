@@ -1433,6 +1433,10 @@ namespace GOTHIC_ENGINE {
 			print.PrintRed(GetLang("PFX_EDITOR_SET_NEAR_CAMERA_DONE"));
 		}
 
+		__declspec(dllexport) void Extern_PfxEditorStopEffect()
+		{
+			PfxEditorStopEffect();
+		}
 		
 		
 	}

@@ -35,7 +35,6 @@ namespace GOTHIC_ENGINE {
 	int cooldDownShowTimer = 0;
 	const int PFX_EDITOR_CD_SHOW_TIME_MS = 30;
 
-
 	//show current pfx again
 	void Reload_PFX()
 	{
@@ -43,6 +42,7 @@ namespace GOTHIC_ENGINE {
 		if (m_pPfx)
 		{
 			m_pPfx->StopEmitterOutput();
+
 			m_pPfx->SetAndStartEmitter(SearchParticleEmitter(currentPFXName.Upper()), FALSE);
 			m_pPfx->dontKillPFXWhenDone = true;
 		}
@@ -65,6 +65,24 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void PfxEditorStopEffect()
+	{
+		if (m_pPfx)
+		{
+			m_pPfx->StopEmitterOutput();
+			m_pPfx->dontKillPFXWhenDone = true;
+			zRELEASE(m_pPfx);
+		}
+
+		if (pfxEditorVob)
+		{
+			pfxEditorVob->RemoveVobFromWorld();
+			zRELEASE(pfxEditorVob);
+		}
+
+		Clear_PFXEditor();
+	}
+
 	void CreateNewPFX()
 	{
 		m_pWorld = ogame->GetGameWorld();
@@ -81,32 +99,36 @@ namespace GOTHIC_ENGINE {
 
 		m_pPfx = new zCParticleFX();
 		m_pPfx->dontKillPFXWhenDone = TRUE;
-		
 		pfxEditorVob->SetVisual(m_pPfx);
 
 		PlaceNearCamera_PFXEditor();
+
 	}
 
 	
 
 	void Loop_PFXEditor()
 	{
+		bool repeat = theApp.options.GetIntVal("pfxRepeatAutoplay");
+
 
 		if (m_pPfx)
 		{
-			/*cmd << "Dead: " << m_pPfx->CalcIsDead() << endl;
-			cmd << "dontKillPFXWhenDone: " << m_pPfx->dontKillPFXWhenDone << endl;
-			cmd << "dead: " << m_pPfx->dead << endl;
-			cmd << "isOneShotFX: " << m_pPfx->isOneShotFX << endl;*/
 
+			//fixes the code in Invk_zCVobArchive. WTF?! 
+			if (theApp.GetSelectedVob() == pfxEditorVob)
+			{
+				m_pPfx->m_bVisualNeverDies = FALSE;
+			}
 			if (m_pPfx->CalcIsDead())
 			{
-				if (theApp.options.GetIntVal("pfxRepeatAutoplay"))
+				if (repeat)
 				{
 					Reload_PFX();
 				}
 			}
 		}
+
 	}
 
 	void SpacerApp::GetAllPfx()
