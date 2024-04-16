@@ -30,6 +30,7 @@
 #include "ActionRestore.cpp"
 #include "Search.cpp"
 #include "SpacerApp.cpp"
+#include "PFX_Editor.cpp"
 #include "Spacer_Loop.cpp"
 #include "GrassPlacer.cpp"
 #include "Export.cpp"

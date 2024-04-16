@@ -563,7 +563,7 @@ namespace GOTHIC_ENGINE {
 		pfxManager.Loop();
 
 		itemsLocator.Loop();
-		
+		Loop_PFXEditor();
 
 
 		

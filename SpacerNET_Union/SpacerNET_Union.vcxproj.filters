@@ -3026,6 +3026,9 @@
     <ClInclude Include="Utils.h">
       <Filter>Plugin\Workspace\Plugin\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="PFX_Editor.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">
