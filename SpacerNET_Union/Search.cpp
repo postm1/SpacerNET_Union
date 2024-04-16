@@ -894,6 +894,11 @@ namespace GOTHIC_ENGINE {
 		bool found = false;
 
 
+
+		//cmd << "FieldName: " << pfxFieldName << endl;
+
+		pfxFieldName = "C_PARTICLEFX." + pfxFieldName;
+
 		instanceFieldSize = base->ele;
 		//Message::Box("FieldsSize: " + ToStr instanceFieldSize);
 
@@ -910,6 +915,8 @@ namespace GOTHIC_ENGINE {
 
 			zSTRING sName = param->name.Upper();
 
+			//cmd << "sName: " << sName << endl;
+
 			int pos = sName.Search(".", 1);
 			//RX_FIX
 			//if (pos > 0)
@@ -919,23 +926,25 @@ namespace GOTHIC_ENGINE {
 
 			if (CString(sName) == pfxFieldName)
 			{
+				BYTE* finalAddr = (BYTE*)addr + param->GetOffset();
+
 				if (type == zPAR_TYPE_FLOAT)
 				{
 					float val = Stack_PeekFloat();
-					*((float*)addr + param->GetOffset()) = val;
-					cmd << "UpdateField: " << sName << " " << type << " " << zSTRING(val, 20) << endl;
+					*((float*)finalAddr) = val;
+					cmd << "UpdateFieldFloat: " << sName << " " << type << " " << zSTRING(val, 20) << " Addr: " << (int)finalAddr << endl;
 				}
 				else if (type == zPAR_TYPE_INT)
 				{
 					int val = Stack_PeekInt();
-					*((int*)addr + param->GetOffset()) = val;
-					cmd << "UpdateField: " << sName << " " << type << " " << zSTRING(val) << endl;
+					*((int*)finalAddr) = val;
+					cmd << "UpdateFieldInbt: " << sName << " " << type << " " << zSTRING(val) << " Addr: " << (int)finalAddr << endl;
 				}
 				else if (type == zPAR_TYPE_STRING)
 				{
 					CString val = Stack_PeekString();
-					*(zSTRING*)((BYTE*)addr + param->GetOffset()) = val.ToChar();
-					cmd << "UpdateField: " << sName << " " << type << " " << val << endl;
+					*(zSTRING*)(finalAddr) = val.ToChar();
+					cmd << "UpdateFieldString: " << sName << " " << type << " " << val << " Addr: " << (int)finalAddr << endl;
 				}
 
 				
@@ -978,8 +987,8 @@ namespace GOTHIC_ENGINE {
 		testVob->SetVobName("Vob_PFX_Editor");
 		m_pWorld->AddVob(testVob);
 		testVob->SetCollDet(FALSE);
-		zVEC3 pos = ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 250 + ogame->GetCamera()->connectedVob->GetPositionWorld();
-		testVob->Move(pos[0], pos[1], pos[2]);
+		zVEC3 pos = ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 350 + ogame->GetCamera()->connectedVob->GetPositionWorld();
+		testVob->Move(pos[0], pos[1] + 100, pos[2]);
 
 
 		
