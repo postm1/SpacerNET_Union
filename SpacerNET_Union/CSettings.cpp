@@ -444,6 +444,10 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_STRING, "PATH", "pfxTexturesPath", "");
 		list.Insert("pfxTexturesPath", set);
 
+
+		set = new CSetting(TYPE_STRING, "PATH", "pfxSavesPath", "");
+		list.Insert("pfxSavesPath", set);
+
 		set = new CSetting(TYPE_STRING, "PATH", "savedVobsVisualPath", "");
 		list.Insert("savedVobsVisualPath", set);
 
