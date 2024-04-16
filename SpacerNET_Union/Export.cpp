@@ -201,6 +201,7 @@ namespace GOTHIC_ENGINE {
 					
 					|| theApp.currentVobRender == pVob
 					|| pfxManager.testVob == pVob
+					|| pfxEditorVob == pVob
 					|| pVob->IsPFX()
 
 					)
@@ -1426,6 +1427,13 @@ namespace GOTHIC_ENGINE {
 			//cmd << "optType: " << optType << " startNum: " << startNumber << endl;
 		}
 
+		__declspec(dllexport) void Extern_PlacePfxNearCam()
+		{
+			PlaceNearCamera_PFXEditor();
+			print.PrintRed(GetLang("PFX_EDITOR_SET_NEAR_CAMERA_DONE"));
+		}
+
+		
 		
 	}
 

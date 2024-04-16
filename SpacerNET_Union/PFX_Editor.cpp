@@ -29,18 +29,16 @@ namespace GOTHIC_ENGINE {
 
 	zCParticleFX* m_pPfx = NULL;
 	int instanceFieldSize = 0;
-	zCVob* testVob = NULL;
+	zCVob* pfxEditorVob = NULL;
 	zCWorld* m_pWorld;
 	CString currentPFXName;
 	int cooldDownShowTimer = 0;
 	const int PFX_EDITOR_CD_SHOW_TIME_MS = 30;
-	bool showDead = false;
 
 
 	//show current pfx again
 	void Reload_PFX()
 	{
-		showDead = false;
 
 		if (m_pPfx)
 		{
@@ -50,40 +48,63 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void StopReload_PFX()
+	void Clear_PFXEditor()
 	{
-		showDead = false;
-		cooldDownShowTimer = 0;
+		pfxEditorVob = NULL;
+		m_pPfx = NULL;
+		m_pWorld = NULL;
 	}
+
+	void PlaceNearCamera_PFXEditor()
+	{
+		if (m_pPfx && pfxEditorVob)
+		{
+			zVEC3 pos = ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 350 + ogame->GetCamera()->connectedVob->GetPositionWorld();
+			pfxEditorVob->SetPositionWorld(pos + zVEC3(0, 100, 0));
+			m_pPfx->dontKillPFXWhenDone = TRUE;
+		}
+	}
+
+	void CreateNewPFX()
+	{
+		m_pWorld = ogame->GetGameWorld();
+
+		pfxEditorVob = new zCVob();
+
+		pfxEditorVob->SetVobName("Vob_PFX_EditorPanel");
+
+		pfxEditorVob->SetCollDet(FALSE);
+		pfxEditorVob->dontWriteIntoArchive = TRUE;
+		pfxEditorVob->ignoredByTraceRay = TRUE;
+
+		m_pWorld->AddVob(pfxEditorVob);
+
+		m_pPfx = new zCParticleFX();
+		m_pPfx->dontKillPFXWhenDone = TRUE;
+		
+		pfxEditorVob->SetVisual(m_pPfx);
+
+		PlaceNearCamera_PFXEditor();
+	}
+
+	
 
 	void Loop_PFXEditor()
 	{
-		if (showDead && cooldDownShowTimer > 0)
-		{
-			cooldDownShowTimer -= ztimer->frameTimeFloat;
-
-			if (cooldDownShowTimer < 0) cooldDownShowTimer = 0;
-
-			if (cooldDownShowTimer == 0)
-			{
-				
-			}
-		}
 
 		if (m_pPfx)
 		{
+			/*cmd << "Dead: " << m_pPfx->CalcIsDead() << endl;
+			cmd << "dontKillPFXWhenDone: " << m_pPfx->dontKillPFXWhenDone << endl;
+			cmd << "dead: " << m_pPfx->dead << endl;
+			cmd << "isOneShotFX: " << m_pPfx->isOneShotFX << endl;*/
+
 			if (m_pPfx->CalcIsDead())
 			{
-				if (!showDead)
+				if (theApp.options.GetIntVal("pfxRepeatAutoplay"))
 				{
-					
-					if (theApp.options.GetIntVal("pfxRepeatAutoplay"))
-					{
-						showDead = true;
-						Reload_PFX();
-					}
+					Reload_PFX();
 				}
-				
 			}
 		}
 	}
@@ -208,7 +229,6 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		StopReload_PFX();
 
 		if (!found)
 		{
@@ -217,6 +237,8 @@ namespace GOTHIC_ENGINE {
 	}
 
 
+	
+
 	void SpacerApp::GetPFXInstanceProps(CString name)
 	{
 		//auto addPFXAddr = (callVoidFunc)GetProcAddress(this->module, "AddPfxAddr");
@@ -224,33 +246,17 @@ namespace GOTHIC_ENGINE {
 		if (m_pPfx)
 		{
 			m_pPfx->StopEmitterOutput();
-			RELEASE_OBJECT(m_pPfx);
 		}
 
-		if (testVob)
+		if (!m_pPfx) 
 		{
-			testVob->RemoveVobFromWorld();
+			CreateNewPFX();
 		}
 
-		testVob = new zCVob();
-		m_pWorld = ogame->GetGameWorld();
-		testVob->SetVobName("Vob_PFX_Editor");
-		m_pWorld->AddVob(testVob);
-		testVob->SetCollDet(FALSE);
-		zVEC3 pos = ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 350 + ogame->GetCamera()->connectedVob->GetPositionWorld();
-		testVob->Move(pos[0], pos[1] + 100, pos[2]);
+	
+		m_pPfx->SetAndStartEmitter(SearchParticleEmitter(name), FALSE);
 
 
-
-		m_pPfx = new zCParticleFX();
-		m_pPfx->SetEmitter(SearchParticleEmitter(name), FALSE);
-		testVob->SetVisual(m_pPfx);
-
-		if (testVob && m_pPfx && m_pPfx->emitter)
-		{
-			m_pPfx->SetAndStartEmitter(SearchParticleEmitter(name.Upper()), FALSE);
-			m_pPfx->dontKillPFXWhenDone = true;
-		}
 
 		zCPar_Symbol* ps = s_pfxParser->GetSymbol(s_pfxParser->GetIndex(name));
 		currentPFXName = name;
@@ -343,7 +349,7 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		StopReload_PFX();
+		
 		//Stack_PushInt(instanceFieldSize);
 	}
 }

@@ -523,6 +523,7 @@ namespace GOTHIC_ENGINE {
 		mm.CleanSelection();
 		theApp.ClearRespList();
 
+		Clear_PFXEditor();
 
 		Reset();
 

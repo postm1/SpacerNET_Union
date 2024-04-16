@@ -126,6 +126,7 @@ namespace GOTHIC_ENGINE {
 									&& vob->GetVisual()->GetVisualName() == modelName
 									&& vob != theApp.currentVobRender
 									&& vob != pfxManager.testVob
+									&& vob != pfxEditorVob
 									)
 								{
 
@@ -149,6 +150,7 @@ namespace GOTHIC_ENGINE {
 									&& vob->GetVisual()
 									&& vob != theApp.currentVobRender
 									&& vob != pfxManager.testVob
+									&& vob != pfxEditorVob
 									)
 								{
 									auto item = vob->CastTo<oCItem>();

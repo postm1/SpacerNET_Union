@@ -726,6 +726,7 @@ namespace GOTHIC_ENGINE {
 						&& !dynamic_cast<zCZone*>(vob)
 						&& vob != theApp.currentVobRender
 						&& vob != pfxManager.testVob
+
 						)
 					)
 				{
@@ -1602,8 +1603,10 @@ namespace GOTHIC_ENGINE {
 				auto wp = pFoundVob->CastTo<zCVobWaypoint>();
 				auto fp = pFoundVob->CastTo<zCVobSpot>();
 
-				// ňĺőíč÷ĺńęčĺ âîáű čăíîđčđóĺě
-				if (pFoundVob == pfxManager.testVob || pFoundVob == currentVobRender || pFoundVob == currenItemRender 
+				// ignore there vobs
+				if (pFoundVob == pfxManager.testVob 
+					|| pFoundVob == currentVobRender 
+					|| pFoundVob == currenItemRender
 					|| pFoundVob == bboxMaxsVob || pFoundVob == bboxMinsVob || pFoundVob == floorVob || pFoundVob == ogame->GetCameraVob())
 				{
 					/*

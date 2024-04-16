@@ -271,7 +271,7 @@ namespace GOTHIC_ENGINE {
 
 				//oCVisualFX* pVisualVob = dynamic_cast<oCVisualFX*>(vob);
 
-				bool flag = (vobLight) && (vob->GetParent() == 0) || (vob->GetVobName() == "Vob_PFX_Editor");
+				bool flag = (vobLight) && (vob->GetParent() == 0) || (vob->GetVobName() == "Vob_PFX_Editor") || (vob->GetVobName() == "Vob_PFX_EditorPanel");
 
 				if (!flag)
 				{
