@@ -1443,6 +1443,10 @@ namespace GOTHIC_ENGINE {
 			PfxEditorApplyOnMesh();
 		}
 
+		__declspec(dllexport) int Extern_IsGothic_1()
+		{
+			return (int)(Union.GetEngineVersion() == Engine_G1);
+		}
 		
 	}
 
