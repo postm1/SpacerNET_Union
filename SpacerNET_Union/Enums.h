@@ -41,7 +41,8 @@ namespace GOTHIC_ENGINE {
 	enum TurnWpMode {
 		NONE = 0,
 		AGAINST_CAMERA,
-		ON_CAMERA
+		ON_CAMERA,
+		RANDOM
 	};
 
 	enum SpacerWorkMode 

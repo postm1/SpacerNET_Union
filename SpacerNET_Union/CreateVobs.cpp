@@ -168,14 +168,16 @@ namespace GOTHIC_ENGINE {
 
 			InsertIntoWorld(newvob, parent);
 
-
-			if (theApp.turnWpMode == TurnWpMode::AGAINST_CAMERA)
+			if (theApp.turnWpMode == TurnWpMode::RANDOM)
+			{
+				newvob->RotateLocalY(GetRandVal(0, 360));
+			}
+			else if (theApp.turnWpMode == TurnWpMode::AGAINST_CAMERA)
 			{
 				newvob->SetHeadingWorld(pos);
 				newvob->RotateLocalY(180);
 			}
-
-			if (theApp.turnWpMode == TurnWpMode::ON_CAMERA)
+			else if (theApp.turnWpMode == TurnWpMode::ON_CAMERA)
 			{
 				newvob->SetHeadingWorld(pos);
 			}

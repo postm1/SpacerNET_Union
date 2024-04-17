@@ -505,19 +505,23 @@ namespace GOTHIC_ENGINE {
 				{
 					//cmd << "========================RESET====================" << endl;
 					
-
-					if (theApp.turnWpMode == TurnWpMode::AGAINST_CAMERA)
+					if (theApp.turnWpMode == TurnWpMode::RANDOM)
+					{
+						newVob->RotateLocalY(GetRandVal(0, 360));
+					}
+					else if (theApp.turnWpMode == TurnWpMode::AGAINST_CAMERA)
 					{
 						newVob->SetHeadingWorld(pos);
 						newVob->RotateLocalY(180);
+						newVob->ResetXZRotationsWorld();
 					}
-
-					if (theApp.turnWpMode == TurnWpMode::ON_CAMERA)
+					else if (theApp.turnWpMode == TurnWpMode::ON_CAMERA)
 					{
 						newVob->SetHeadingWorld(pos);
+						newVob->ResetXZRotationsWorld();
 					}
 
-					newVob->ResetXZRotationsWorld();
+					
 				}
 				else if (theApp.options.GetIntVal("vobInsertVobRotRand"))
 				{
