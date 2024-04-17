@@ -87,6 +87,8 @@ namespace GOTHIC_ENGINE {
 	{
 		return;
 
+#if ENGINE > Engine_G1
+
 		if (m_pPfx && pfxEditorVob)
 		{
 			if (auto pVob = theApp.GetSelectedVob()) 
@@ -128,6 +130,7 @@ namespace GOTHIC_ENGINE {
 			}
 			
 		}
+#endif
 	}
 
 	void CreateNewPFX()
@@ -165,7 +168,9 @@ namespace GOTHIC_ENGINE {
 			//fixes the code in Invk_zCVobArchive. WTF?! 
 			if (theApp.GetSelectedVob() == pfxEditorVob)
 			{
+#if ENGINE > Engine_G1
 				m_pPfx->m_bVisualNeverDies = FALSE;
+#endif
 			}
 			if (m_pPfx->CalcIsDead())
 			{
