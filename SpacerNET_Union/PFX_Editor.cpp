@@ -83,6 +83,53 @@ namespace GOTHIC_ENGINE {
 		Clear_PFXEditor();
 	}
 
+	void PfxEditorApplyOnMesh()
+	{
+		return;
+
+		if (m_pPfx && pfxEditorVob)
+		{
+			if (auto pVob = theApp.GetSelectedVob()) 
+			{
+				if (auto pVisual = pVob->GetVisual())
+				{
+					zCParticleEmitter* emitter = m_pPfx->emitter;
+
+
+					print.PrintRed("Visual#1");
+
+					zCMesh* orgMesh = zDYNAMIC_CAST<zCMesh>(pVisual);
+					zCProgMeshProto* orgProgMesh = zDYNAMIC_CAST<zCProgMeshProto>(pVisual);
+					zCModel* orgModel = zDYNAMIC_CAST<zCModel>(pVisual);
+					zCMorphMesh* orgMorph = zDYNAMIC_CAST<zCMorphMesh>(pVisual);
+
+					if (orgMesh)
+					{
+						static_cast<zCParticleFX*>(m_pPfx)->emitter->shpMesh = orgMesh;
+						orgMesh->AddRef();
+					}
+					else if (orgProgMesh)
+					{
+						static_cast<zCParticleFX*>(m_pPfx)->emitter->shpProgMesh = orgProgMesh;
+						orgProgMesh->AddRef();
+					}
+					else if (orgModel)
+					{
+						static_cast<zCParticleFX*>(m_pPfx)->emitter->shpModel = orgModel;
+						orgModel->AddRef();
+					}
+					else if (orgMorph)
+					{
+						static_cast<zCParticleFX*>(m_pPfx)->emitter->shpProgMesh = orgMorph->morphMesh;
+						if (orgMorph->morphMesh) orgMorph->morphMesh->AddRef();
+					}
+				}
+				
+			}
+			
+		}
+	}
+
 	void CreateNewPFX()
 	{
 		m_pWorld = ogame->GetGameWorld();

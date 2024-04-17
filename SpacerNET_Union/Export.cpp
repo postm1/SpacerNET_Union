@@ -1438,6 +1438,11 @@ namespace GOTHIC_ENGINE {
 			PfxEditorStopEffect();
 		}
 		
+		__declspec(dllexport) void Extern_PfxEditorApplyOnMesh()
+		{
+			PfxEditorApplyOnMesh();
+		}
+
 		
 	}
 
