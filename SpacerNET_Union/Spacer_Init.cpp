@@ -13,7 +13,7 @@ namespace GOTHIC_ENGINE {
 	{
 		cmd << "CGameManager::Init_Spacer()" << endl;
 
-#if ENGINE == Engine_G1
+
 
 		enum { GOTHIC1_EXECUTABLE = 0, GOTHIC1A_EXECUTABLE = 1, GOTHIC2_EXECUTABLE = 2, GOTHIC2A_EXECUTABLE = 3, INVALID_EXECUTABLE = -1 };
 
@@ -22,17 +22,34 @@ namespace GOTHIC_ENGINE {
 		DWORD baseAddr = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
 
 		if (*reinterpret_cast<DWORD*>(baseAddr + 0x160) == 0x37A8D8 && *reinterpret_cast<DWORD*>(baseAddr + 0x37A960) == 0x7D01E4
-			&& *reinterpret_cast<DWORD*>(baseAddr + 0x37A98B) == 0x7D01E8) {
+			&& *reinterpret_cast<DWORD*>(baseAddr + 0x37A98B) == 0x7D01E8)
+		{
 			foundExecutable = GOTHIC1_EXECUTABLE;
 		}
+		else if (*reinterpret_cast<DWORD*>(baseAddr + 0x168) == 0x3D4318 && *reinterpret_cast<DWORD*>(baseAddr + 0x3D43A0) == 0x82E108
+			&& *reinterpret_cast<DWORD*>(baseAddr + 0x3D43CB) == 0x82E10C) 
+		{
+			foundExecutable = GOTHIC2A_EXECUTABLE;
+		}
+		//cmd << foundExecutable << endl;
+
+#if ENGINE == Engine_G1
+
+		
 
 		if (foundExecutable != GOTHIC1_EXECUTABLE)
 		{
-			MessageBox(0, "Bad Gothic 1 EXE version! Only 1.08k (mod) supported!", 0, 0);
+			MessageBox(0, "Bad Gothic 1 EXE version! Use only 1.08k (mod)!", 0, 0);
 			exit(0);
 		}
 
-		cmd << foundExecutable << endl;
+#elif ENGINE == Engine_G2A
+
+		if (foundExecutable != GOTHIC2A_EXECUTABLE)
+		{
+			MessageBox(0, "Bad Gothic 2 NR EXE version! Use only 2.6.0.0 version!", 0, 0);
+			exit(0);
+		}
 #endif
 
 		//cmd << "FindModule ok" << endl;
