@@ -13,6 +13,27 @@ namespace GOTHIC_ENGINE {
 	{
 		cmd << "CGameManager::Init_Spacer()" << endl;
 
+#if ENGINE == Engine_G1
+
+		enum { GOTHIC1_EXECUTABLE = 0, GOTHIC1A_EXECUTABLE = 1, GOTHIC2_EXECUTABLE = 2, GOTHIC2A_EXECUTABLE = 3, INVALID_EXECUTABLE = -1 };
+
+		int foundExecutable = INVALID_EXECUTABLE;
+
+		DWORD baseAddr = reinterpret_cast<DWORD>(GetModuleHandleA(nullptr));
+
+		if (*reinterpret_cast<DWORD*>(baseAddr + 0x160) == 0x37A8D8 && *reinterpret_cast<DWORD*>(baseAddr + 0x37A960) == 0x7D01E4
+			&& *reinterpret_cast<DWORD*>(baseAddr + 0x37A98B) == 0x7D01E8) {
+			foundExecutable = GOTHIC1_EXECUTABLE;
+		}
+
+		if (foundExecutable != GOTHIC1_EXECUTABLE)
+		{
+			MessageBox(0, "Bad Gothic 1 EXE version! Only 1.08k (mod) supported!", 0, 0);
+			exit(0);
+		}
+
+		cmd << foundExecutable << endl;
+#endif
 
 		//cmd << "FindModule ok" << endl;
 
