@@ -276,6 +276,21 @@ namespace GOTHIC_ENGINE {
 
 				bool flag = (vobLight) && (vob->GetParent() == 0) || (vob->GetVobName() == "Vob_PFX_Editor") || (vob->GetVobName() == "Vob_PFX_EditorPanel");
 
+
+				// don't add PFX child vobs into spacer list, don't save them
+				if (auto pVisual = vob->GetVisual())
+				{
+					if (auto pPFX = pVisual->CastTo<zCParticleFX>())
+					{
+						if (vob->GetParentVob() == pfxManager.testVob || vob->GetParentVob() == pfxEditorVob)
+						{
+							//print.PrintRed("PFX child is not added");
+							flag = true;
+							vob->dontWriteIntoArchive = true;
+						}
+					}
+				}
+
 				if (!flag)
 				{
 					//OutFile("zCBspTree::AddVob: (" + AHEX32((uint)vob) + ") Parent: " + AHEX32(vob->GetParent()) + " NodesCount: " + A(ogame->GetWorld()->globalVobTree.CountNodes() - 1), false);

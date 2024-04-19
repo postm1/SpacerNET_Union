@@ -112,6 +112,6 @@ namespace GOTHIC_ENGINE {
 	typedef void(*sendKey)(int);
 	typedef void(*addClassNode)(int);
 
-
+	extern zCVob* pfxEditorVob;
 
 }
