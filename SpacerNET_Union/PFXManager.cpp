@@ -23,6 +23,8 @@ namespace GOTHIC_ENGINE {
 
 	void PFXManager::RemovePFX()
 	{
+		//print.PrintRed("RemovePFX");
+
 		if (m_pPfx)
 		{
 			m_pPfx->StopEmitterOutput();
@@ -51,7 +53,6 @@ namespace GOTHIC_ENGINE {
 		if (m_pPfx)
 		{
 			m_pPfx->StopEmitterOutput();
-			m_pPfx->emitter->ppsIsLooping = FALSE;
 			m_pPfx->dontKillPFXWhenDone = false;
 			zRELEASE(m_pPfx);
 			testVob->SetVisual(0);
