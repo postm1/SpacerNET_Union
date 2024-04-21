@@ -22,6 +22,7 @@
 #include "zCObjPresetLib.h"
 #include "SpacerApp.h"
 #include "zCSelPoly.h"
+#include "ErrorReport.h"
 #include "MatManager.h"
 #include "Externals.h"
 #include "Structures.h"

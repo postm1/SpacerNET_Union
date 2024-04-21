@@ -4,4 +4,6 @@
 
 namespace GOTHIC_ENGINE {
   // Add your code here . . .
+
+	ErrorReport report;
 }

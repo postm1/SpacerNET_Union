@@ -277,6 +277,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Debug">
       <UniqueIdentifier>{f4af5d43-46ec-4cba-a4a7-5598ddc1f34e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\ErrorReport">
+      <UniqueIdentifier>{2710eb64-b15d-490c-a5ec-c648f48710ac}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -3028,6 +3031,15 @@
     </ClInclude>
     <ClInclude Include="PFX_Editor.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorReport.h">
+      <Filter>Plugin\Workspace\Plugin\Main\ErrorReport</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorReport.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\ErrorReport</Filter>
+    </ClInclude>
+    <ClInclude Include="ErrorReport_Materials.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\ErrorReport</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

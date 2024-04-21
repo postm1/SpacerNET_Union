@@ -43,6 +43,8 @@
 #include "AB_NoGrass.cpp"
 #include "MatFilter.cpp"
 #include "MatFilter_LoadSave.cpp"
+#include "ErrorReport.cpp"
+#include "ErrorReport_Materials.cpp"
 #include "AB_Debug.cpp"
 #include "MatFilter_Render.cpp"
 #include "TestLoop.cpp"

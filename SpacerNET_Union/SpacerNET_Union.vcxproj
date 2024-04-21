@@ -908,6 +908,18 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="ErrorReport.h">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ErrorReport.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="ErrorReport_Materials.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="PFX_Editor.cpp">
       <SubType>
       </SubType>

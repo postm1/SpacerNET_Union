@@ -11,6 +11,7 @@ namespace GOTHIC_ENGINE {
 	MatFilter mf;
 
 
+
   void Game_Entry() {
 	 // cmd << "Game_Entry" << endl;
 	  theApp.module = CPlugin::FindModule(INTERFACE_DLL_NAME);
@@ -22,6 +23,7 @@ namespace GOTHIC_ENGINE {
   void Game_Init() {
 	  //cmd << "Game_Init" << endl;
 	  theApp.Init();
+      report.Init();
   }
 
   void Game_Exit() {
