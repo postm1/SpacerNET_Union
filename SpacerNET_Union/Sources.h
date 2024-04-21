@@ -46,6 +46,7 @@
 #include "ErrorReport.cpp"
 #include "ErrorReport_Materials.cpp"
 #include "AB_Debug.cpp"
+#include "ErrorReport_Vobs.cpp"
 #include "MatFilter_Render.cpp"
 #include "TestLoop.cpp"
 #include "Plugin.cpp"

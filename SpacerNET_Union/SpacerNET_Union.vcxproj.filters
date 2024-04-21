@@ -3041,6 +3041,9 @@
     <ClInclude Include="ErrorReport_Materials.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\ErrorReport</Filter>
     </ClInclude>
+    <ClInclude Include="ErrorReport_Vobs.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\ErrorReport</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

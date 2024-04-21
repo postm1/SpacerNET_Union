@@ -22,6 +22,8 @@ namespace GOTHIC_ENGINE {
         ERROR_REPORT_PROBLEM_TYPE_TRIGGER_NO_NAME,
         ERROR_REPORT_PROBLEM_TYPE_PFX_CANT_BE_PARENT,
         ERROR_REPORT_PROBLEM_TYPE_ITEM_CANT_BE_PARENT,
+        ERROR_REPORT_PROBLEM_TYPE_ITEM_NO_VISUAL,
+        ERROR_REPORT_PROBLEM_TYPE_ZCVOB_EMPTY_VISUAL
     };
 
     class ErrorReportEntry
@@ -85,6 +87,7 @@ namespace GOTHIC_ENGINE {
         void SearchAll();
         void ClearAll();
         void CheckPolygons();
+        void CheckVobs();
         void PrintReport();
         void SendAll();
 

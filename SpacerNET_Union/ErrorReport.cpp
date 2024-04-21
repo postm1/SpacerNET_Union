@@ -27,6 +27,7 @@ namespace GOTHIC_ENGINE {
 	{
 		ClearAll();
 		CheckPolygons();
+		CheckVobs();
 
 		PrintReport();
 		SendAll();
@@ -63,6 +64,8 @@ namespace GOTHIC_ENGINE {
 	void ErrorReport::PrintReport()
 	{
 		cmd << "\nErrors report. Found: " << pList.GetNumInList() << endl;
+
+		return;
 
 		for (int i = 0; i < pList.GetNumInList(); i++)
 		{
