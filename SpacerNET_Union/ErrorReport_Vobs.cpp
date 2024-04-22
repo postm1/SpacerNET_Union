@@ -155,5 +155,41 @@ namespace GOTHIC_ENGINE {
 
 		resultList.DeleteList();
 		
+
+		ogame->GetWorld()->SearchVobListByClass(oCZoneMusicDefault::classDef, resultList, 0);
+
+		if (resultList.GetNumInList() != 1)
+		{
+			auto entry = new ErrorReportEntry();
+
+			entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+			entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_MUSIC_ZONES);
+			entry->SetObject((uint)0);
+			entry->SetVobName("");
+			entry->SetMaterialName("");
+			entry->SetTextureName("");
+
+			AddEntry(entry);
+		}
+
+		resultList.DeleteList();
+
+		ogame->GetWorld()->SearchVobListByClass(zCVobStartpoint::classDef, resultList, 0);
+
+		if (resultList.GetNumInList() != 1)
+		{
+			auto entry = new ErrorReportEntry();
+
+			entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+			entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_STARTPOINT);
+			entry->SetObject((uint)0);
+			entry->SetVobName("");
+			entry->SetMaterialName("");
+			entry->SetTextureName("");
+
+			AddEntry(entry);
+		}
+
+		resultList.DeleteList();
 	}
 }
