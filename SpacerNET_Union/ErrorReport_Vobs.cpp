@@ -176,7 +176,7 @@ namespace GOTHIC_ENGINE {
 
 		ogame->GetWorld()->SearchVobListByClass(zCVobStartpoint::classDef, resultList, 0);
 
-		if (resultList.GetNumInList() != 1)
+		if (resultList.GetNumInList() > 1)
 		{
 			auto entry = new ErrorReportEntry();
 
