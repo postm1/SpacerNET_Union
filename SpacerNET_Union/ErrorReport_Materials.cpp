@@ -27,9 +27,15 @@ namespace GOTHIC_ENGINE {
 
 					auto searchName = mat->texture->GetObjectName();
 
+					zSTRING  originalName = searchName.Cut(searchName.Length() - 4, 4);
+
+					originalName += "-C.TEX";
+
+					cmd << originalName << endl;
+
 					bool foundVirtual = false;
 
-					auto result = vdf_fexists(searchName.ToChar(), VDF_VIRTUAL);
+					auto result = vdf_fexists(originalName.ToChar(), VDF_VIRTUAL);
 
 					if ((result & VDF_VIRTUAL) == VDF_VIRTUAL)
 					{
@@ -37,7 +43,7 @@ namespace GOTHIC_ENGINE {
 					}
 
 
-					result = vdf_fexists(searchName.ToChar(), VDF_PHYSICAL);
+					result = vdf_fexists(originalName.ToChar(), VDF_PHYSICAL);
 
 					if ((result & VDF_PHYSICAL) == VDF_PHYSICAL)
 					{
