@@ -281,7 +281,7 @@ namespace GOTHIC_ENGINE {
 							{
 								newVob->RotateLocalY(GetRandVal(0, 360));
 							}
-							else
+							else if (!grassToolSetNormal)
 							{
 								newVob->SetHeadingWorld(camVob->GetPositionWorld());
 								newVob->RotateLocalY(90);
