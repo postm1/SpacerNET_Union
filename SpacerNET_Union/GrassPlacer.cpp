@@ -273,12 +273,13 @@ namespace GOTHIC_ENGINE {
 							if (grassToolSetNormal)
 							{
 								newVob->SetHeadingAtWorld(newDir);
+								newVob->RotateLocalX(90);
 							}
 
 							//newVob->SetHeadingYLocal(newDir);
 
 
-							newVob->RotateLocalX(90);
+							//
 
 							//newVob->ResetXZRotationsWorld();
 
@@ -288,6 +289,7 @@ namespace GOTHIC_ENGINE {
 							}
 							else if (!grassToolSetNormal)
 							{
+
 								newVob->SetHeadingWorld(camVob->GetPositionWorld());
 								newVob->RotateLocalY(90);
 								newVob->ResetXZRotationsWorld();
