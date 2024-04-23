@@ -118,15 +118,26 @@ namespace GOTHIC_ENGINE {
 
 
 		zCArray<zCVob*> resultList;
+		zCVob* vob = NULL;
+
 		ogame->GetWorld()->SearchVobListByClass(zCZoneZFogDefault::classDef, resultList, 0);
 
 		if (resultList.GetNumInList() != 1)
 		{
+			if (resultList.GetNumInList() > 0)
+			{
+				vob = resultList.GetSafe(0);
+			}
+			else
+			{
+				vob = NULL;
+			}
+
 			auto entry = new ErrorReportEntry();
 
 			entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 			entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_FOG_ZONES);
-			entry->SetObject((uint)0);
+			entry->SetObject((uint)vob);
 			entry->SetVobName("");
 			entry->SetMaterialName("");
 			entry->SetTextureName("");
@@ -141,11 +152,20 @@ namespace GOTHIC_ENGINE {
 
 		if (resultList.GetNumInList() != 1)
 		{
+			if (resultList.GetNumInList() > 0)
+			{
+				vob = resultList.GetSafe(0);
+			}
+			else
+			{
+				vob = NULL;
+			}
+
 			auto entry = new ErrorReportEntry();
 
 			entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 			entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_VOB_ZONES);
-			entry->SetObject((uint)0);
+			entry->SetObject((uint)vob);
 			entry->SetVobName("");
 			entry->SetMaterialName("");
 			entry->SetTextureName("");
@@ -160,11 +180,21 @@ namespace GOTHIC_ENGINE {
 
 		if (resultList.GetNumInList() != 1)
 		{
+
+			if (resultList.GetNumInList() > 0)
+			{
+				vob = resultList.GetSafe(0);
+			}
+			else
+			{
+				vob = NULL;
+			}
+
 			auto entry = new ErrorReportEntry();
 
 			entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 			entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_MUSIC_ZONES);
-			entry->SetObject((uint)0);
+			entry->SetObject((uint)vob);
 			entry->SetVobName("");
 			entry->SetMaterialName("");
 			entry->SetTextureName("");
@@ -178,11 +208,20 @@ namespace GOTHIC_ENGINE {
 
 		if (resultList.GetNumInList() > 1)
 		{
+			if (resultList.GetNumInList() > 0)
+			{
+				vob = resultList.GetSafe(0);
+			}
+			else
+			{
+				vob = NULL;
+			}
+
 			auto entry = new ErrorReportEntry();
 
 			entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 			entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_STARTPOINT);
-			entry->SetObject((uint)0);
+			entry->SetObject((uint)vob);
 			entry->SetVobName("");
 			entry->SetMaterialName("");
 			entry->SetTextureName("");
