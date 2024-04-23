@@ -113,6 +113,22 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 				
+				if (vob->CastTo<zCTrigger>() || vob->CastTo<zCVobWaypoint>() || vob->CastTo<zCVobSpot>())
+				{
+					if (vob->GetVobName().IsEmpty())
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_EMPTY_NAME);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(vob->_GetClassDef()->className);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
 			}
 		}
 
