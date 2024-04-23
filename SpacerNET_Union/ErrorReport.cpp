@@ -63,7 +63,7 @@ namespace GOTHIC_ENGINE {
 
 	void ErrorReport::PrintReport()
 	{
-		cmd << "\nErrors report. Found: " << pList.GetNumInList() << endl;
+		//cmd << "\nErrors report. Found: " << pList.GetNumInList() << endl;
 
 		return;
 

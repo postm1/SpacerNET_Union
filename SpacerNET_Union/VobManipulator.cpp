@@ -631,7 +631,16 @@ namespace GOTHIC_ENGINE {
 
 			auto parent = theApp.GetSelectedVob();
 
-			if (theApp.globalParent) parent = theApp.globalParent;
+			if (pickedVob != theApp.globalParent)
+			{
+				parent = theApp.globalParent;
+			}
+
+			// dont' insert global parent inside itself
+			if (theApp.vobToCopy == theApp.globalParent)
+			{
+				parent = NULL;
+			}
 
 			if (parent && parent->IsPFX())
 			{
@@ -718,6 +727,13 @@ namespace GOTHIC_ENGINE {
 	void HandleParentChange(zCVob* vob, zCVob* newParent)
 	{
 		zCWorld* pWorld = ogame->GetWorld();
+
+
+		if (vob == newParent)
+		{
+			print.PrintRed(GetLang("CANT_CHANGE_PARENT_INTO_INSELF"));
+			return;
+		}
 
 
 		if (newParent && newParent->IsPFX())
@@ -1702,9 +1718,10 @@ namespace GOTHIC_ENGINE {
 				{
 
 
-					if (theApp.vobToCopy == theApp.globalParent && theApp.globalParent != NULL)
+					if (theApp.vobToCopy == theApp.globalParent && theApp.globalParent != NULL && pickedVob == theApp.globalParent)
 					{
 						print.PrintRed(GetLang("CANT_COPY_INITSELF"));
+						theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 						return;
 					}
 
