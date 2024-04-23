@@ -89,7 +89,7 @@ namespace GOTHIC_ENGINE {
 							int grassToolDynColl = theApp.options.GetIntVal("grassToolDynColl");
 							int grassToolRotRandAngle = theApp.options.GetIntVal("grassToolRotRandAngle");
 							int grassToolSetNormal = theApp.options.GetIntVal("grassToolSetNormal");
-
+							int grassToolSetGlobalParent = theApp.options.GetIntVal("grassToolGlobalParent");
 
 							int grassToolcomboBoxVisualCamAlignValue = theApp.options.GetIntVal("grassToolcomboBoxVisualCamAlignValue");
 							int grassToolcomboBoxVisualAniModeValue = theApp.options.GetIntVal("grassToolcomboBoxVisualAniModeValue");
@@ -254,8 +254,13 @@ namespace GOTHIC_ENGINE {
 
 							newVob->SetPositionWorld(posToPlace + zVEC3(0, offsetVert, 0) + point);
 
-							if (!isItem)
+							if (grassToolSetGlobalParent && theApp.globalParent)
 							{
+								InsertIntoWorld(newVob, theApp.globalParent, false);
+							}
+							else if (!isItem)
+							{
+								
 								InsertIntoWorld(newVob, NULL, false);
 							}
 

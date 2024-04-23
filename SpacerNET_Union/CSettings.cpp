@@ -537,6 +537,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "GRASS", "grassToolSetNormal", "0");
 		list.Insert("grassToolSetNormal", set);
 
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolGlobalParent", "0");
+		list.Insert("grassToolGlobalParent", set);
+
 
 		set = new CSetting(TYPE_INT, "GRASS", "grassToolcomboBoxVisualCamAlignValue", "0");
 		list.Insert("grassToolcomboBoxVisualCamAlignValue", set);
