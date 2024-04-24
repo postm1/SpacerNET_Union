@@ -67,7 +67,7 @@ namespace GOTHIC_ENGINE {
 						auto poly = ogame->GetWorld()->traceRayReport.foundPoly;
 						auto posToPlace = ogame->GetWorld()->traceRayReport.foundIntersection;
 
-						cmd << posToPlace.ToString() << endl;
+						//cmd << posToPlace.ToString() << endl;
 
 						if (poly)
 						{

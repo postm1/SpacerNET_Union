@@ -418,6 +418,25 @@ namespace GOTHIC_ENGINE {
 		//theApp.SetSelectedVob(NULL, "SetBBoxValue");
 	}
 
+	bool IsSpacerVob(zCVob* pVob)
+	{
+		if (theApp.bboxMaxsVob == pVob
+			|| theApp.bboxMinsVob == pVob
+			|| ogame->GetCameraVob() == pVob
+			|| theApp.currenItemRender == pVob
+			|| theApp.currentVobRender == pVob
+
+			|| pfxManager.testVob == pVob
+			|| pfxEditorVob == pVob
+			|| theApp.floorVob == pVob
+			)
+		{
+			return true;
+		}
+
+		return false;
+	}
+
 	float GetBboxValue(int coord)
 	{
 		zCVob* vob = theApp.GetSelectedVob();
@@ -600,6 +619,9 @@ namespace GOTHIC_ENGINE {
 
 		ogame->GetWorld()->CollectVobsInBBox3D(resVobList, box);
 
+
+		
+
 		for (int i = 0; i < resVobList.GetNumInList(); i++)
 		{
 			auto pVob = resVobList.GetSafe(i);
@@ -677,6 +699,27 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		//zCVobLight
+		if (type == 0 || type == 11)
+		{
+			auto pos = camVob->GetPositionWorld();
+			zCArray<zCVob*> lightList;
+
+			ogame->GetWorld()->SearchVobListByClass(zCVobLight::classDef, lightList, 0);
+
+			for (int i = 0; i < lightList.GetNumInList(); i++)
+			{
+				if (auto pLight = lightList.GetSafe(i))
+				{
+					if (pLight->GetPositionWorld().Distance(pos) <= radius)
+					{
+						finalResultList.Insert(pLight);
+					}
+				}
+			}
+		}
+
+
 		//ogame->GetWorld()->SearchVobListByBaseClass(lightClassdef, resVobList, 0);
 
 		for (int i = 0; i < finalResultList.GetNumInList(); i++)
@@ -684,8 +727,11 @@ namespace GOTHIC_ENGINE {
 			zCVob* nextVob = finalResultList.GetSafe(i);
 
 
-			if (nextVob && (nextVob->GetDistanceToVob(*ogame->GetCamera()->connectedVob) <= radius * 2) && nextVob != ogame->GetCamera()->connectedVob
-				&& nextVob != theApp.currentVobRender && nextVob != theApp.currenItemRender
+			if (nextVob && (nextVob->GetDistanceToVob(*ogame->GetCamera()->connectedVob) <= radius * 2) 
+				&& nextVob != ogame->GetCamera()->connectedVob
+				&& nextVob != theApp.currentVobRender 
+				&& nextVob != theApp.currenItemRender
+				&& !IsSpacerVob(nextVob)
 				)
 			{
 				static addToVobList addEntry = (addToVobList)GetProcAddress(theApp.module, "AddToVobList");

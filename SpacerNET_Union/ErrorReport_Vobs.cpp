@@ -5,24 +5,7 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 
-	bool IsSpacerVob(zCVob* pVob)
-	{
-		if (theApp.bboxMaxsVob == pVob
-			|| theApp.bboxMinsVob == pVob
-			|| ogame->GetCameraVob() == pVob
-			|| theApp.currenItemRender == pVob
-			|| theApp.currentVobRender == pVob
-			
-			|| pfxManager.testVob == pVob
-			|| pfxEditorVob == pVob
-			|| theApp.floorVob == pVob
-		)
-		{
-			return true;
-		}
-
-		return false;
-	}
+	
 	void ErrorReport::CheckVobs()
 	{
 		zCArray<zCVob*> activeVobList;
