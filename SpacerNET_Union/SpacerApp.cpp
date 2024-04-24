@@ -1428,6 +1428,43 @@ namespace GOTHIC_ENGINE {
 						break;
 					}
 				}
+				else if (filterPickVobIndex == 12)
+				{
+					if (zCVisual* visual = pFoundVob->GetVisual())
+					{
+						if (visual->CastTo<zCDecal>())
+						{
+							ignoreList.InsertEnd(pFoundVob);
+						}
+						else
+						{
+							break;
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
+				else if (filterPickVobIndex == 13)
+				{
+
+					if (zCVisual* visual = pFoundVob->GetVisual())
+					{
+						if (visual->CastTo<zCDecal>() || visual->GetVisualName().Search(".PFX", 1) != -1 || visual->GetVisualName().Search(".pfx", 1) != -1)
+						{
+							ignoreList.InsertEnd(pFoundVob);
+						}
+						else
+						{
+							break;
+						}
+					}
+					else
+					{
+						break;
+					}
+				}
 			}
 
 		}

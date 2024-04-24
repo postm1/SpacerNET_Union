@@ -1543,7 +1543,7 @@ namespace GOTHIC_ENGINE {
 
 			if (theApp.filterPickVobIndex == 0)
 			{
-				theApp.filterPickVobIndex = 10;
+				theApp.filterPickVobIndex = 13;
 			}
 			else
 			{
