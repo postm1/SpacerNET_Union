@@ -36,7 +36,10 @@ namespace GOTHIC_ENGINE {
 				return;
 			}
 
-			if (mainTimer[0u].Await(30))
+
+			int grassToolClearMouse = theApp.options.GetIntVal("grassToolClearMouse");
+
+			if (mainTimer[TIMER_ID_OBJECTS_SEWER].Await(150) || grassToolClearMouse)
 			{
 				zCCamera* cam = ogame->GetCamera();
 				zCVob* camVob = ogame->GetCamera()->connectedVob;
@@ -64,6 +67,7 @@ namespace GOTHIC_ENGINE {
 						auto poly = ogame->GetWorld()->traceRayReport.foundPoly;
 						auto posToPlace = ogame->GetWorld()->traceRayReport.foundIntersection;
 
+						cmd << posToPlace.ToString() << endl;
 
 						if (poly)
 						{
@@ -85,7 +89,7 @@ namespace GOTHIC_ENGINE {
 							int grassToolRemove = theApp.options.GetIntVal("grassToolRemove");
 							int isItem = theApp.options.GetIntVal("grassToolIsItem");
 
-							int grassToolClearMouse = theApp.options.GetIntVal("grassToolClearMouse");
+							
 							int grassToolDynColl = theApp.options.GetIntVal("grassToolDynColl");
 							int grassToolRotRandAngle = theApp.options.GetIntVal("grassToolRotRandAngle");
 							int grassToolSetNormal = theApp.options.GetIntVal("grassToolSetNormal");
@@ -103,12 +107,17 @@ namespace GOTHIC_ENGINE {
 
 
 
-
 							if (modelName.Length() == 0) {
 								return;
 							}
 
-							if (grassToolClearMouse) zinput->ClearLeftMouse();
+							if (grassToolClearMouse)
+							{
+								zinput->ClearLeftMouse();
+								zinput->ClearKeyBuffer();
+							}
+								
+
 
 							for (int i = 0; i < baseVobList.GetNumInList(); i++) {
 
@@ -193,7 +202,7 @@ namespace GOTHIC_ENGINE {
 
 								if (dist <= minDist)
 								{
-									print.PrintRed("No place to put vob");
+									print.PrintRed(GetLang("SEWER_NO_PLACE_TO_PUT_VOB"));
 									return;
 								}
 							}
@@ -219,6 +228,8 @@ namespace GOTHIC_ENGINE {
 
 							}
 							*/
+
+
 
 							zCVob* newVob = NULL;
 
@@ -254,7 +265,10 @@ namespace GOTHIC_ENGINE {
 
 							newVob->SetPositionWorld(posToPlace + zVEC3(0, offsetVert, 0) + point);
 
-							if (grassToolSetGlobalParent && theApp.globalParent)
+
+				
+
+							if (grassToolSetGlobalParent && theApp.globalParent && !isItem)
 							{
 								InsertIntoWorld(newVob, theApp.globalParent, false);
 							}
@@ -282,6 +296,8 @@ namespace GOTHIC_ENGINE {
 							//
 
 							//newVob->ResetXZRotationsWorld();
+
+							
 
 							if (grassToolRotRandAngle)
 							{

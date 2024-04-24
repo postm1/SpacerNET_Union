@@ -523,7 +523,7 @@ namespace GOTHIC_ENGINE {
 		ResetPrintDebug();
 		print.Loop();
 
-		if (mainTimer[1u].Await(150))
+		if (mainTimer[TIMER_ID_SHUTDOWN_SOUNDS].Await(150))
 		{
 			if (options.GetIntVal("alwaysShutSounds"))
 			{

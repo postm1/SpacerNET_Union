@@ -69,6 +69,8 @@ namespace GOTHIC_ENGINE {
 	inline float zFloor(const float a) { return float(floor(a)); }
 	inline float zCeil(const float a) { return float(ceil(a)); }
 
+	const uint TIMER_ID_OBJECTS_SEWER = 0;
+	const uint TIMER_ID_SHUTDOWN_SOUNDS = 1;
 
 #if ENGINE == Engine_G1
 #define zERR_NONE 0
