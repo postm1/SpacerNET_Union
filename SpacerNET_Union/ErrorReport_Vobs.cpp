@@ -112,6 +112,40 @@ namespace GOTHIC_ENGINE {
 						AddEntry(entry);
 					}
 				}
+
+				if (auto pMob = vob->CastTo<oCMobContainer>())
+				{
+					if (pMob->focusNameIndex == 0 || pMob->focusNameIndex == -1 || pMob->name.IsEmpty())
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_EMPTY_NAME_MOB_FOCUS);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(vob->_GetClassDef()->className);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
+
+				if (auto pMob = vob->CastTo<oCMobBed>())
+				{
+					if (pMob->focusNameIndex == 0 || pMob->focusNameIndex == -1 || pMob->name.IsEmpty())
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_EMPTY_NAME_MOB_FOCUS);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(vob->_GetClassDef()->className);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
 			}
 		}
 
