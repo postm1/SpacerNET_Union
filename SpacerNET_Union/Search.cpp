@@ -298,7 +298,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames, int searchOCItem)
+	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames, int searchOCItem, int radius)
 	{
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
 		int resultCount = 0;
@@ -341,7 +341,9 @@ namespace GOTHIC_ENGINE {
 		result.RemoveDoubles();
 		int num = result.GetNumInList();
 
+		auto camPos = ogame->GetCameraVob()->GetPositionWorld();
 
+		//cmd << "SearchWithRadius: " << radius << endl;
 		
 		Common::Map<CString, zCVob*> vobsNamesMap;
 		zCArraySort<zCVob*> resultSorted;
@@ -409,12 +411,17 @@ namespace GOTHIC_ENGINE {
 				{
 					if (result[i]->HasChildren())
 					{
+						
 						resultFound.Insert(result[i]);
+						
 					}
 				}
 				else
 				{
+					
 					resultFound.Insert(result[i]);
+					
+					
 				}
 				
 			}
@@ -443,6 +450,7 @@ namespace GOTHIC_ENGINE {
 							if (pCont && pCont->contains.Upper().contains(itemNameSearch))
 							{
 								resultFound.Insert(pVob);
+
 							}
 						}
 					}
@@ -493,6 +501,12 @@ namespace GOTHIC_ENGINE {
 
 				if (vob && arr.SearchEqual((uint)vob) == Invalid)
 				{
+
+					if (radius != -1 && camPos.Distance(vob->GetPositionWorld()) > radius)
+					{
+						continue;
+					}
+
 					Stack_PushString(GetVobName(vob));
 
 					arr.Insert((uint)vob);
@@ -519,6 +533,11 @@ namespace GOTHIC_ENGINE {
 
 					if (vob)
 					{
+						if (radius != -1 && camPos.Distance(vob->GetPositionWorld()) > radius)
+						{
+							continue;
+						}
+
 						if (auto curWp = vob->CastTo<zCVobWaypoint>())
 						{
 							if (auto realWp = waynet->GetWaypoint(curWp->GetVobName()))
@@ -557,6 +576,11 @@ namespace GOTHIC_ENGINE {
 
 				if (vob && arr.SearchEqual((uint)vob) == Invalid)
 				{
+					if (radius != -1 && camPos.Distance(vob->GetPositionWorld()) > radius)
+					{
+						continue;
+					}
+
 					//cmd << "Replace vob: " << GetVobName(vob) << endl;
 
 					if (SearchHandleConvert(resultFound[i]))
@@ -590,6 +614,12 @@ namespace GOTHIC_ENGINE {
 
 				if (vob && !isZone && arr.SearchEqual((uint)vob) == Invalid)
 				{
+
+					if (radius != -1 && camPos.Distance(vob->GetPositionWorld()) > radius)
+					{
+						continue;
+					}
+
 					zMAT4 trafo = vob->trafoObjToWorld;
 
 					zCVob* parentVob = 0;
@@ -648,12 +678,20 @@ namespace GOTHIC_ENGINE {
 
 			for (int i = 0; i < resultFound.GetNum(); i++)
 			{
+				
+
 				vob = resultFound[i];
 
 				isZone = dynamic_cast<zCZone*>(vob);
 
 				if (vob && !isZone && !arr.HasEqual((uint)vob) && IsValidZObject(vob))
 				{
+
+					if (radius != -1 && camPos.Distance(vob->GetPositionWorld()) > radius)
+					{
+						continue;
+					}
+
 					//vob->SetDrawBBox3D(FALSE);
 					arr.Insert((uint)vob);
 
@@ -685,6 +723,10 @@ namespace GOTHIC_ENGINE {
 
 				if (vob && !isZone && !arr.HasEqual((uint)vob) && IsValidZObject(vob))
 				{
+					if (radius != -1 && camPos.Distance(vob->GetPositionWorld()) > radius)
+					{
+						continue;
+					}
 					
 					arr.Insert((uint)vob);
 					vob->SetCollDetDyn(!vob->GetCollDetDyn());
@@ -710,6 +752,11 @@ namespace GOTHIC_ENGINE {
 				{
 
 					if (vob->CastTo<oCItem>())
+					{
+						continue;
+					}
+
+					if (radius != -1 && camPos.Distance(vob->GetPositionWorld()) > radius)
 					{
 						continue;
 					}

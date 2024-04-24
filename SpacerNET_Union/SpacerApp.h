@@ -378,7 +378,7 @@ namespace GOTHIC_ENGINE {
 
 		bool SearchHandleConvert(zCVob *& vob);
 
-		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames, int searchOCItem);
+		int SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames, int searchOCItem, int radius);
 
 		void GetAllPfx();
 

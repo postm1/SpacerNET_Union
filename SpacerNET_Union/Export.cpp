@@ -740,12 +740,12 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) int Extern_SearchVobs(bool derived, bool hasChildren, int type, int onlyVisualOrName) {
 
-			
+			int radius = Stack_PeekInt();
 			int matchNames = Stack_PeekInt();
 			int searchOCItem = Stack_PeekInt();
 			int selectedCount = Stack_PeekInt();
 
-			return theApp.SearchFillVobClass(derived, hasChildren, type, selectedCount, onlyVisualOrName, matchNames, searchOCItem);
+			return theApp.SearchFillVobClass(derived, hasChildren, type, selectedCount, onlyVisualOrName, matchNames, searchOCItem, radius);
 
 		}
 
