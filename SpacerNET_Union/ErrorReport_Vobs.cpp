@@ -146,6 +146,20 @@ namespace GOTHIC_ENGINE {
 						AddEntry(entry);
 					}
 				}
+
+				if (vob->GetVobName().contains(' '))
+				{
+					auto entry = new ErrorReportEntry();
+
+					entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+					entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NAME_SPACE);
+					entry->SetObject((uint)vob);
+					entry->SetVobName(vob->GetVobName());
+					entry->SetMaterialName("");
+					entry->SetTextureName("");
+
+					AddEntry(entry);
+				}
 			}
 		}
 
