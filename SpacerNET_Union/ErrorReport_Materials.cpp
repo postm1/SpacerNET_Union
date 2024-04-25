@@ -10,6 +10,8 @@ namespace GOTHIC_ENGINE {
 		zCArray<zCMaterial*> mats;
 		zCArray<zCMaterial*> matsChecked;
 
+		zCArray<zSTRING> matsNames;
+
 		int numPolys = ogame->GetWorld()->bspTree.numPolys;
 
 		for (int i = 0; i < numPolys; i++)
@@ -25,13 +27,22 @@ namespace GOTHIC_ENGINE {
 				{
 					matsChecked.InsertEnd(mat);
 
+					if (!matsNames.IsInList(mat->GetName()))
+					{
+						matsNames.InsertEnd(mat->GetName());
+					}
+					else
+					{
+						cmd << "MatCollision: " << mat->GetName() << endl;
+					}
+
 					auto searchName = mat->texture->GetObjectName();
 
 					zSTRING  originalName = searchName.Cut(searchName.Length() - 4, 4);
 
 					originalName += "-C.TEX";
 
-					cmd << originalName << endl;
+					//cmd << originalName << endl;
 
 					bool foundVirtual = false;
 
