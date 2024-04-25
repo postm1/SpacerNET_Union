@@ -15,6 +15,11 @@ namespace GOTHIC_ENGINE {
 		int count = activeVobList.GetNumInList();
 
 
+		zCArray<zSTRING> moversNames;
+		zCArray<zSTRING> wpNames;
+		zCArray<zSTRING> fpNames;
+		zCArray<zSTRING> containerNames;
+
 		for (int i = 0; i < count; i++) 
 		{
 			zCVob* vob = activeVobList.GetSafe(i);
@@ -159,6 +164,100 @@ namespace GOTHIC_ENGINE {
 					entry->SetTextureName("");
 
 					AddEntry(entry);
+				}
+
+				if (auto fp = vob->CastTo<zCVobSpot>())
+				{
+					auto fpName = fp->GetVobName();
+
+					if (!fpNames.IsInList(fpName))
+					{
+						fpNames.InsertEnd(fpName);
+					}
+					else
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(fpName);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
+				else if (auto wp = vob->CastTo<zCVobWaypoint>())
+				{
+					auto wpName = wp->GetVobName();
+
+					if (!wpNames.IsInList(wpName))
+					{
+						wpNames.InsertEnd(wpName);
+					}
+					else
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(wpName);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
+				else if (auto mover = vob->CastTo<zCMover>())
+				{
+					auto moverName = mover->GetVobName();
+
+					if (!moversNames.IsInList(moverName))
+					{
+						moversNames.InsertEnd(moverName);
+					}
+					else
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(moverName);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
+				else if (auto mobCont = vob->CastTo<oCMobContainer>())
+				{
+					auto mobName = mobCont->GetVobName();
+
+					if (mobName.Length() == 0)
+					{
+						continue;
+					}
+
+					if (!containerNames.IsInList(mobName))
+					{
+						containerNames.InsertEnd(mobName);
+					}
+					else
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(mobName);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
 				}
 			}
 		}
