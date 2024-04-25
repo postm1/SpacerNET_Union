@@ -631,7 +631,7 @@ namespace GOTHIC_ENGINE {
 
 			auto parent = theApp.GetSelectedVob();
 
-			if (pickedVob != theApp.globalParent)
+			if (theApp.globalParent)
 			{
 				parent = theApp.globalParent;
 			}
