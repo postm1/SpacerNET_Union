@@ -166,6 +166,30 @@ namespace GOTHIC_ENGINE {
 					AddEntry(entry);
 				}
 
+				if (vob->GetVobName().Length() > 0)
+				{
+					Stack_PushString(vob->GetVobName());
+
+					static auto callFunc = (intFuncPointer)GetProcAddress(theApp.module, "Utils_IsOnlyLatin");
+
+					if (callFunc() == FALSE)
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_NAME_SYMBOLS);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(vob->GetVobName());
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
+
+
+				
+
 				if (auto fp = vob->CastTo<zCVobSpot>())
 				{
 					auto fpName = fp->GetVobName();
