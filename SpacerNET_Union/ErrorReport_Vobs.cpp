@@ -210,28 +210,6 @@ namespace GOTHIC_ENGINE {
 						AddEntry(entry);
 					}
 				}
-				else if (auto mover = vob->CastTo<zCMover>())
-				{
-					auto moverName = mover->GetVobName();
-
-					if (!moversNames.IsInList(moverName))
-					{
-						moversNames.InsertEnd(moverName);
-					}
-					else
-					{
-						auto entry = new ErrorReportEntry();
-
-						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
-						entry->SetObject((uint)vob);
-						entry->SetVobName(moverName);
-						entry->SetMaterialName("");
-						entry->SetTextureName("");
-
-						AddEntry(entry);
-					}
-				}
 				else if (auto mobCont = vob->CastTo<oCMobContainer>())
 				{
 					auto mobName = mobCont->GetVobName();
