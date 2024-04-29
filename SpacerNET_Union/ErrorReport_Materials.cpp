@@ -33,7 +33,7 @@ namespace GOTHIC_ENGINE {
 					}
 					else
 					{
-						cmd << "MatCollision: " << mat->GetName() << endl;
+						//cmd << "MatCollision: " << mat->GetName() << endl;
 					}
 
 					auto searchName = mat->texture->GetObjectName();

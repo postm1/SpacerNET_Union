@@ -152,7 +152,7 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 
-				if (vob->GetVobName().contains(' '))
+				if (vob->GetVobName().contains(' ') && !vob->GetVobName().contains("SPELLFX"))
 				{
 					auto entry = new ErrorReportEntry();
 
