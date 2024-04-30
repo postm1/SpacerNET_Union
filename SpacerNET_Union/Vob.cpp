@@ -117,6 +117,19 @@ namespace GOTHIC_ENGINE {
 
 	extern bool GetFloorPositionForVobHelper(zCVob* vob, zVEC3& centerPos, zCPolygon*& polyIntersect, bool& foundVob);
 
+	void HideFloorVob()
+	{
+		zCVob* floorVob = theApp.floorVob;
+
+		if (floorVob)
+		{
+			floorVob->showVisual = 0;
+			floorVob->SetVisual(0);
+			floorVob->SetPositionWorld(zVEC3(0, 0, 0));
+		}
+		
+	}
+
 	void RenderVobsLoop()
 	{
 
@@ -240,23 +253,17 @@ namespace GOTHIC_ENGINE {
 					}
 					else
 					{
-						floorVob->showVisual = 0;
-						floorVob->SetVisual(0);
+						HideFloorVob();
 					}
 				}
 				else
 				{
-					floorVob->showVisual = 0;
-					floorVob->SetVisual(0);
+					HideFloorVob();
 				}
 			}
 			else
 			{
-				if (floorVob)
-				{
-					floorVob->showVisual = 0;
-					floorVob->SetVisual(0);
-				}
+				HideFloorVob();
 			}
 
 			
