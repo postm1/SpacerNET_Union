@@ -14,10 +14,12 @@ namespace GOTHIC_ENGINE {
 			{
 				bboxMinsVob = new zCVob();
 				bboxMinsVob->SetVobName("SPACER_VOB_BBOX_MINS");
+				bboxMinsVob->SetShowVisual(TRUE);
 				bboxMinsVob->dontWriteIntoArchive = true;
 				bboxMinsVob->SetCollDet(FALSE);
 				bboxMinsVob->ignoredByTraceRay = true;
-				bboxMinsVob->SetShowVisual(FALSE);
+				
+				bboxMinsVob->SetVisual("INVISIBLE_DRAGVOB.3DS");
 
 				theApp.nextInsertBlocked = true;
 				ogame->GetWorld()->AddVob(bboxMinsVob);
@@ -28,12 +30,12 @@ namespace GOTHIC_ENGINE {
 			{
 				bboxMaxsVob = new zCVob();
 				bboxMaxsVob->SetVobName("SPACER_VOB_BBOX_MAXS");
+				bboxMaxsVob->SetShowVisual(TRUE);
 				bboxMaxsVob->dontWriteIntoArchive = true;
 				bboxMaxsVob->SetCollDet(FALSE);
-				
+				bboxMaxsVob->SetVisual("INVISIBLE_DRAGVOB.3DS");
 				bboxMaxsVob->ignoredByTraceRay = true;
 
-				bboxMaxsVob->SetShowVisual(FALSE);
 
 				theApp.nextInsertBlocked = true;
 				ogame->GetWorld()->AddVob(bboxMaxsVob);
