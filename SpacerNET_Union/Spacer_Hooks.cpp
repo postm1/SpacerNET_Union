@@ -23,7 +23,18 @@ namespace GOTHIC_ENGINE {
 	{
 		static auto keySender = (sendKey)GetProcAddress(theApp.module, "AcceptKey");
 
+		//cmd << key << endl;
+
 		keySender(key);
+
+// Mouse wheel on G1...
+#if engine == ENGINE_G1
+		if (key == zMOUSE_SCROLL_UP || key == zMOUSE_SCROLL_DOWN)
+		{
+			theApp.mouseWheelKeyCodeG1 = key;
+		}
+
+#endif
 
 		if (key == KEY_ESCAPE)
 			return FALSE;

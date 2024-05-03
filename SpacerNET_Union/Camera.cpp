@@ -199,16 +199,38 @@ namespace GOTHIC_ENGINE {
 			newVec *= 0.2;
 		}
 
-		// very fast movement on the map in the direction of view
-		if (KeyClick(MOUSE_WHEELUP))
+
+#if ENGINE == Engine_G1
+
+
+
+		if (theApp.mouseWheelKeyCodeG1 == zMOUSE_SCROLL_UP)
 		{
 			newVec = unit * 2000;
 		}
 
-		if (KeyClick(MOUSE_WHEELDOWN))
+		if (theApp.mouseWheelKeyCodeG1 == zMOUSE_SCROLL_DOWN)
 		{
 			newVec = unit.Minus() * 2000;
 		}
+
+
+		theApp.mouseWheelKeyCodeG1 = 0;
+
+#else
+
+// very fast movement on the map in the direction of view
+if (KeyClick(MOUSE_WHEELUP))
+{
+	newVec = unit * 2000;
+}
+
+if (KeyClick(MOUSE_WHEELDOWN))
+{
+	newVec = unit.Minus() * 2000;
+}
+#endif
+		
 
 		movvob->SetPositionWorld(pos + newVec);
 

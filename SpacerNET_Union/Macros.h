@@ -59,6 +59,10 @@ namespace GOTHIC_ENGINE {
 	#define NOINLINE __declspec(noinline)
 	#define UAPI EXTERN_C NOINLINE DLLEXPORT
 
+// G1 wheel
+#define zMOUSE_SCROLL_UP		0x809
+#define zMOUSE_SCROLL_DOWN		0x80A
+
 	#define M_PI			3.14159265358979323846
 	#define Alg_Rad2Deg(rad) (zREAL(zREAL(rad)*zREAL(180.0f)/zREAL(M_PI)))
 #define MulColor( /*zCOLOR*/ vertColor, /*int[3]*/ matColor ) \

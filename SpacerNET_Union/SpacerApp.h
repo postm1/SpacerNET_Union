@@ -142,6 +142,7 @@ namespace GOTHIC_ENGINE {
 			zCArray<zSTRING> modelsStrVDF;
 			zCArray<zSTRING> modelsStrWORK;
 			int mouseClicksBlockedTime;
+			int mouseWheelKeyCodeG1;
 			zCView* viewInfo;
 			//spcCObjPropertyList	propList;
 
