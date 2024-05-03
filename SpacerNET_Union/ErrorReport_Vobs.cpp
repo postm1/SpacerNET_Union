@@ -71,7 +71,7 @@ namespace GOTHIC_ENGINE {
 					{
 						auto entry = new ErrorReportEntry();
 
-						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
 						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_ZCVOB_EMPTY_VISUAL);
 						entry->SetObject((uint)vob);
 						entry->SetVobName(vob->GetVobName());
@@ -124,7 +124,7 @@ namespace GOTHIC_ENGINE {
 					{
 						auto entry = new ErrorReportEntry();
 
-						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
 						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_EMPTY_NAME_MOB_FOCUS);
 						entry->SetObject((uint)vob);
 						entry->SetVobName(vob->_GetClassDef()->className);
@@ -141,7 +141,7 @@ namespace GOTHIC_ENGINE {
 					{
 						auto entry = new ErrorReportEntry();
 
-						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
 						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_EMPTY_NAME_MOB_FOCUS);
 						entry->SetObject((uint)vob);
 						entry->SetVobName(vob->_GetClassDef()->className);
@@ -251,7 +251,7 @@ namespace GOTHIC_ENGINE {
 					{
 						auto entry = new ErrorReportEntry();
 
-						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
 						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
 						entry->SetObject((uint)vob);
 						entry->SetVobName(mobName);
