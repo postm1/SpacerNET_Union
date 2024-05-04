@@ -796,6 +796,76 @@ namespace GOTHIC_ENGINE {
 		}
 
 		ShowVobInfo();
+
+
+		if (mobInterSlotsVobs.GetNumInList() == 0)
+		{
+			for (int i = 0; i < 10; i++)
+			{
+				auto pVobNew = new zCVob();
+				pVobNew->SetVobName("SPACER_VOB_MOBINTER_SLOT_" + Z i);
+				pVobNew->SetShowVisual(TRUE);
+				pVobNew->dontWriteIntoArchive = true;
+				pVobNew->SetCollDet(FALSE);
+				pVobNew->ignoredByTraceRay = true;
+
+				pVobNew->SetVisual("SPACERNET_MODEL_SLOT_ANI.3DS");
+
+				theApp.nextInsertBlocked = true;
+				ogame->GetWorld()->AddVob(pVobNew);
+				theApp.nextInsertBlocked = false;
+
+				mobInterSlotsVobs.InsertEnd(pVobNew);
+			}
+		}
+
+
+		HideMobInterHelpVobs();
+
+
+		auto vob = GetSelectedVob();
+
+
+		if (vob)
+		{
+
+			if (auto mob = vob->CastTo<oCMobInter>())
+			{
+				auto savePos = mob->GetPositionWorld();
+				
+				//reset startpos for ScanIdealPositions
+				mob->startPos = zVEC3(0, 0, 0);
+				mob->ScanIdealPositions();
+	
+
+				zCList<TMobOptPos>* data = mob->optimalPosList.GetNextInList();
+
+				int counter = 0;
+
+				while (data)
+				{
+					if (auto entry = data->GetData())
+					{
+
+						auto startPos = entry->trafo.GetTranslation();
+
+						auto pVob = mobInterSlotsVobs.GetSafe(counter);
+
+						if (pVob)
+						{
+							//print.PrintRed(entry->trafo.GetAtVector().ToString());
+							pVob->SetPositionWorld(startPos);
+							pVob->SetHeadingAtWorld(entry->trafo.GetAtVector());
+							pVob->SetShowVisual(TRUE);
+						}
+					}
+
+					counter += 1;
+					data = data->GetNextInList();
+				}
+
+			}
+		}
 	}
 
 	void SpacerApp::KeysLoop()

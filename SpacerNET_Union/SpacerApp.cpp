@@ -147,6 +147,11 @@ namespace GOTHIC_ENGINE {
 
 		pickedVob = vob;
 
+		if (vob == NULL)
+		{
+			HideMobInterHelpVobs();
+		}
+
 
 		if (viewInfo) viewInfo->ClrPrintwin();
 
@@ -373,7 +378,8 @@ namespace GOTHIC_ENGINE {
 
 		current_object = NULL;
 		treeToCopy = NULL;
-	
+		
+		RemoveMobInterHelpVobs();
 
 		if (GetSelectedTool() == TM_BBOXEDIT)
 		{
@@ -681,7 +687,7 @@ namespace GOTHIC_ENGINE {
 
 		RenderDx11_Bbox(vob);
 		RenderDx11_Pivot(vob);
-		
+
 
 		if (pickedWaypoint2nd)
 		{
@@ -838,6 +844,37 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void SpacerApp::RemoveMobInterHelpVobs()
+	{
+		
+		for (int i = 0; i < mobInterSlotsVobs.GetNumInList(); i++)
+		{
+			auto pVob = mobInterSlotsVobs.GetSafe(i);
+
+			if (pVob)
+			{
+				pVob->RemoveVobFromWorld();
+				zRELEASE(pVob);
+			}
+		}
+		
+
+		mobInterSlotsVobs.DeleteList();
+	}
+
+	void SpacerApp::HideMobInterHelpVobs()
+	{
+		for (int i = 0; i < mobInterSlotsVobs.GetNumInList(); i++)
+		{
+			auto pVob = mobInterSlotsVobs.GetSafe(i);
+
+			if (pVob)
+			{
+				pVob->SetPositionWorld(zVEC3(0, 0, 0));
+				pVob->SetShowVisual(FALSE);
+			}
+		}
+	}
 	void SpacerApp::PreRender()
 	{
 		if (g_bIsPlayingGame)
@@ -872,6 +909,14 @@ namespace GOTHIC_ENGINE {
 				pickedVob->SetDrawBBox3D(TRUE);
 			}
 		}
+
+
+		
+
+		
+
+
+
 
 		RenderSelectedVobBbox();
 
@@ -1194,6 +1239,7 @@ namespace GOTHIC_ENGINE {
 				&& !dynamic_cast<zCVobLight*>(vob)
 				&& !dynamic_cast<zCVobLevelCompo*>(vob)
 				&& !dynamic_cast<zCZone*>(vob)
+				&& !IsSpacerVob(vob)
 				)
 			{
 				float m1, m2;
@@ -1530,6 +1576,7 @@ namespace GOTHIC_ENGINE {
 				&& vob != bboxMaxsVob
 				&& vob != bboxMinsVob
 				&& vob != floorVob
+				&& !IsSpacerVob(vob)
 				)
 			{
 				zVEC3 sphInt = IsSphIntersect(camVob->GetPositionWorld(), vob->GetPositionWorld(), ray, radius_sp);
@@ -1645,7 +1692,7 @@ namespace GOTHIC_ENGINE {
 				if (pFoundVob == pfxManager.testVob 
 					|| pFoundVob == currentVobRender 
 					|| pFoundVob == currenItemRender
-					|| pFoundVob == bboxMaxsVob || pFoundVob == bboxMinsVob || pFoundVob == floorVob || pFoundVob == ogame->GetCameraVob())
+					|| pFoundVob == bboxMaxsVob || pFoundVob == bboxMinsVob || pFoundVob == floorVob || pFoundVob == ogame->GetCameraVob() || IsSpacerVob(pFoundVob))
 				{
 					/*
 					cmd << "protect vob" << endl;

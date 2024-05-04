@@ -137,6 +137,7 @@ namespace GOTHIC_ENGINE {
 			zCList<zCVob> targetVobList;
 
 			zCTree<zCVob>* treeToCopy;
+			zCArray<zCVob*> mobInterSlotsVobs;
 
 
 			zCArray<zSTRING> modelsStrVDF;
@@ -202,6 +203,8 @@ namespace GOTHIC_ENGINE {
 		void PluginLoop();
 		void KeysLoop();
 		void RenderPortals();
+		void RemoveMobInterHelpVobs();
+		void HideMobInterHelpVobs();
 		void CheckForBadPlugins();
 		void RenderStartScreen();
 		SpacerApp();

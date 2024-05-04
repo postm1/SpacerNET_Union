@@ -429,6 +429,7 @@ namespace GOTHIC_ENGINE {
 			|| pfxManager.testVob == pVob
 			|| pfxEditorVob == pVob
 			|| theApp.floorVob == pVob
+			|| theApp.mobInterSlotsVobs.IsInList(pVob)
 			)
 		{
 			return true;
@@ -631,6 +632,7 @@ namespace GOTHIC_ENGINE {
 				|| pVob == theApp.floorVob 
 				|| pVob == theApp.bboxMaxsVob
 				|| pVob == theApp.bboxMinsVob
+				|| IsSpacerVob(pVob)
 				)
 			{
 				continue;
