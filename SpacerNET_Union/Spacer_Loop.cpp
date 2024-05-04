@@ -820,7 +820,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		HideMobInterHelpVobs();
+		
 
 
 		auto vob = GetSelectedVob();
@@ -828,42 +828,47 @@ namespace GOTHIC_ENGINE {
 
 		if (vob)
 		{
-
-			if (auto mob = vob->CastTo<oCMobInter>())
+			if (theApp.options.GetIntVal("bShowMobInterSlots"))
 			{
-				auto savePos = mob->GetPositionWorld();
-				
-				//reset startpos for ScanIdealPositions
-				mob->startPos = zVEC3(0, 0, 0);
-				mob->ScanIdealPositions();
-	
 
-				zCList<TMobOptPos>* data = mob->optimalPosList.GetNextInList();
+				HideMobInterHelpVobs();
 
-				int counter = 0;
-
-				while (data)
+				if (auto mob = vob->CastTo<oCMobInter>())
 				{
-					if (auto entry = data->GetData())
+					auto savePos = mob->GetPositionWorld();
+
+					//reset startpos for ScanIdealPositions
+					mob->startPos = zVEC3(0, 0, 0);
+					mob->ScanIdealPositions();
+
+
+					zCList<TMobOptPos>* data = mob->optimalPosList.GetNextInList();
+
+					int counter = 0;
+
+					while (data)
 					{
-
-						auto startPos = entry->trafo.GetTranslation();
-
-						auto pVob = mobInterSlotsVobs.GetSafe(counter);
-
-						if (pVob)
+						if (auto entry = data->GetData())
 						{
-							//print.PrintRed(entry->trafo.GetAtVector().ToString());
-							pVob->SetPositionWorld(startPos);
-							pVob->SetHeadingAtWorld(entry->trafo.GetAtVector());
-							pVob->SetShowVisual(TRUE);
+
+							auto startPos = entry->trafo.GetTranslation();
+
+							auto pVob = mobInterSlotsVobs.GetSafe(counter);
+
+							if (pVob)
+							{
+								//print.PrintRed(entry->trafo.GetAtVector().ToString());
+								pVob->SetPositionWorld(startPos);
+								pVob->SetHeadingAtWorld(entry->trafo.GetAtVector());
+								pVob->SetShowVisual(TRUE);
+							}
 						}
+
+						counter += 1;
+						data = data->GetNextInList();
 					}
 
-					counter += 1;
-					data = data->GetNextInList();
 				}
-
 			}
 		}
 	}
