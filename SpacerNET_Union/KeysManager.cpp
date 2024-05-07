@@ -135,6 +135,7 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("VOB_COPY", "2_46");
 		defaultValues.Insert("VOB_INSERT", "2_47");
 		defaultValues.Insert("VOB_CUT", "2_44");
+		defaultValues.Insert("VOB_SET_ZERO_PARENT", "8_44");
 		defaultValues.Insert("VOB_NEAR_CAM", "0_6");
 		defaultValues.Insert("VOB_TRANSLATE", "0_2");
 		defaultValues.Insert("VOB_ROTATE", "0_3");

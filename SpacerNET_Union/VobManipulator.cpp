@@ -1696,6 +1696,22 @@ namespace GOTHIC_ENGINE {
 
 
 
+		if (keys.KeyPressed("VOB_SET_ZERO_PARENT", true))
+		{
+			if (pickedVob)
+			{
+				if (auto parentVob = pickedVob->GetParentVob())
+				{
+					print.PrintRed(GetLang("SET_VOB_SET_ZERO_PARENT"));
+
+					auto pos = parentVob->GetPositionWorld();
+
+					HandleVobTranslation(pickedVob, pos);
+				}
+			}
+
+		}
+
 		if (keys.KeyPressed("VOB_CUT", true))
 		{
 			print.PrintRed(GetLang("VOB_CUT_OK"));
