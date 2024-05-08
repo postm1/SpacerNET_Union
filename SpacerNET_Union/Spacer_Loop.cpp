@@ -804,7 +804,6 @@ namespace GOTHIC_ENGINE {
 			{
 				auto pVobNew = new zCVob();
 				pVobNew->SetVobName("SPACER_VOB_MOBINTER_SLOT_" + Z i);
-				pVobNew->SetShowVisual(TRUE);
 				pVobNew->dontWriteIntoArchive = true;
 				pVobNew->SetCollDet(FALSE);
 				pVobNew->ignoredByTraceRay = true;
@@ -814,6 +813,9 @@ namespace GOTHIC_ENGINE {
 				theApp.nextInsertBlocked = true;
 				ogame->GetWorld()->AddVob(pVobNew);
 				theApp.nextInsertBlocked = false;
+
+				pVobNew->SetShowVisual(FALSE);
+				pVobNew->SetPositionWorld(zVEC3(0, 0, 0));
 
 				mobInterSlotsVobs.InsertEnd(pVobNew);
 			}

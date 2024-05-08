@@ -1702,11 +1702,19 @@ namespace GOTHIC_ENGINE {
 			{
 				if (auto parentVob = pickedVob->GetParentVob())
 				{
-					print.PrintRed(GetLang("SET_VOB_SET_ZERO_PARENT"));
+					if (!parentVob->CastTo<zCVobLevelCompo>())
+					{
+						print.PrintRed(GetLang("SET_VOB_SET_ZERO_PARENT"));
 
-					auto pos = parentVob->GetPositionWorld();
+						auto pos = parentVob->GetPositionWorld();
 
-					HandleVobTranslation(pickedVob, pos);
+						HandleVobTranslation(pickedVob, pos);
+					}
+					else
+					{
+						print.PrintRed(GetLang("SET_VOB_SET_ZERO_PARENT_CANT"));
+					}
+					
 				}
 			}
 
