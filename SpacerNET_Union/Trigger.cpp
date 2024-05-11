@@ -351,6 +351,8 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SetMover()
 	{
 
+		cmd << "SetMover" << endl;
+
 		CollectTargetListTrigger();
 
 		if (options.GetIntVal("selectVobTab") && (dynamic_cast<zCTriggerBase*>(pickedVob) || dynamic_cast<zCPFXControler*>(pickedVob)))

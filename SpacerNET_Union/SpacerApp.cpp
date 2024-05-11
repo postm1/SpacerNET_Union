@@ -2180,6 +2180,18 @@ namespace GOTHIC_ENGINE {
 					Stack_PushString(GetVobName(vob));
 					updateName((uint)vob);
 				}
+
+				// update triggerTarget
+				if (vob)
+				{
+					auto cleanTriggerForm = (voidFuncPointer)GetProcAddress(theApp.module, "CleanTriggerForm");
+					cleanTriggerForm();
+
+					//cmd << "Update TriggerTarget" << endl;
+
+					SetMover();
+				}
+				
 				//Message::Box("Apply 4");
 
 				//cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
