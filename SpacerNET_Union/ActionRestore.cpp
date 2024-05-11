@@ -121,8 +121,11 @@ namespace GOTHIC_ENGINE {
 			auto entry = list->data;
 			if (entry && entry->pVob == pVob)
 			{
-				delete entry;
+				//cmd << "ActionRestore::RemoveByVob" << endl;
+
 				pList.Remove(entry);
+				delete entry;
+				
 				break;
 			}
 
