@@ -940,14 +940,22 @@ namespace GOTHIC_ENGINE {
 		refVob = pickedVob;
 		if (vobList && refVob)
 		{
-			for (int i = 0; i<vobList->GetNumInList(); i++) DrawLine(ogame->GetCamera(), refVob, vobList->Get(i), GFX_BLUE);
+			for (int i = 0; i < vobList->GetNumInList(); i++)
+			{
+				//DrawLine(ogame->GetCamera(), refVob, vobList->Get(i), GFX_BLUE);
+				zlineCache->Line3D(refVob->GetPositionWorld(), vobList->Get(i)->GetPositionWorld(), GFX_BLUE, FALSE);
+			}
 		}
 		// Sources
 		vobList = &sourceVobList;
 		refVob = pickedVob;
 		if (vobList && refVob)
 		{
-			for (int i = 0; i<vobList->GetNumInList(); i++) DrawLine(ogame->GetCamera(), refVob, vobList->Get(i), GFX_RED);
+			for (int i = 0; i < vobList->GetNumInList(); i++)
+			{
+				//DrawLine(ogame->GetCamera(), refVob, vobList->Get(i), GFX_RED);
+				zlineCache->Line3D(refVob->GetPositionWorld(), vobList->Get(i)->GetPositionWorld(), GFX_RED, FALSE);
+			}
 		}
 
 	}
