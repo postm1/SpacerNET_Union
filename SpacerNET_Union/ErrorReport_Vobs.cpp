@@ -98,9 +98,46 @@ namespace GOTHIC_ENGINE {
 								AddEntry(entry);
 							}
 						}
+
+
 					}
 				}
 				
+				if (vob->visual)
+				{
+					zSTRING visName = vob->visual->GetVisualName();
+					zSTRING name = vob->GetVobName();
+					
+					
+
+					if (name.Length() > 0)
+					{
+						size_t lastindex = visName.SearchReverse(".");
+						zSTRING visNameWork = visName;
+
+						zSTRING rawname = visNameWork.Cut(lastindex, visNameWork.Length() - lastindex);
+
+						//cmd << visName << ";" << name << ";" << rawname << endl;
+
+						if (visName == name || name == rawname)
+						{
+							
+
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NAME_IS_VISUAL);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(name);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+					
+				}
+
 				if (vob->CastTo<zCTrigger>() || vob->CastTo<zCVobWaypoint>() || vob->CastTo<zCVobSpot>())
 				{
 					if (vob->GetVobName().IsEmpty())
