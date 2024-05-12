@@ -351,7 +351,7 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SetMover()
 	{
 
-		cmd << "SetMover" << endl;
+		//cmd << "SetMover" << endl;
 
 		CollectTargetListTrigger();
 
