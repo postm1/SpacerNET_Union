@@ -108,9 +108,11 @@ namespace GOTHIC_ENGINE {
 					zSTRING visName = vob->visual->GetVisualName();
 					zSTRING name = vob->GetVobName();
 					
+
+					auto pItem = vob->CastTo<oCItem>();
 					
 
-					if (name.Length() > 0)
+					if (!pItem && name.Length() > 0)
 					{
 						size_t lastindex = visName.SearchReverse(".");
 						zSTRING visNameWork = visName;
