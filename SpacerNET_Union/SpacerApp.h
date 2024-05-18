@@ -301,7 +301,7 @@ namespace GOTHIC_ENGINE {
 
 		void CreateNewFreepoint(CString classNameChar, CString nameVob, bool autoName, bool ground);
 
-		void CreateNewVob(CString classNamePtr, CString vobNamePtr, CString visual, int dyn, int stat);
+		void CreateNewVob(CString classNamePtr, CString vobNamePtr, CString visual, int dyn, int stat, int isStaticVob = 0);
 
 		void CreatePFX(CString name);
 

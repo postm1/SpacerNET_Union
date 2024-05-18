@@ -251,7 +251,7 @@ namespace GOTHIC_ENGINE {
 		return foundUniqVob;
 	}
 
-	void SpacerApp::CreateNewVob(CString classNamePtr, CString vobNamePtr, CString visual, int dyn, int stat)
+	void SpacerApp::CreateNewVob(CString classNamePtr, CString vobNamePtr, CString visual, int dyn, int stat, int isStaticVob)
 	{
 		zSTRING className = zSTRING(classNamePtr);
 		zSTRING vobName = zSTRING(vobNamePtr);
@@ -396,7 +396,7 @@ namespace GOTHIC_ENGINE {
 			newvob->ResetXZRotationsWorld();
 			newvob->SetCollDetDyn(dyn);
 			newvob->SetCollDetStat(stat);
-			
+			newvob->SetStaticVob(isStaticVob);
 		
 
 			theApp.selectNextVobForce = true;

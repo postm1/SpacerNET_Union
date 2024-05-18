@@ -341,12 +341,13 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_CreateNewVobVisual(int dyn, int stat) {
 
+			int isStaticVob = Stack_PeekInt();
 			CString name = Stack_PeekString();
 			CString vobName = Stack_PeekString();
 			CString visual = Stack_PeekString();
 
 			OutFile("Extern_CreateNewVobVisual: vob " + A vobName, true);
-			theApp.CreateNewVob(name, vobName, visual, dyn, stat);
+			theApp.CreateNewVob(name, vobName, visual, dyn, stat, isStaticVob);
 		}
 
 
