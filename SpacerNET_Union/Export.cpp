@@ -1453,6 +1453,25 @@ namespace GOTHIC_ENGINE {
 		{
 			report.SearchAll();
 		}
+
+
+		__declspec(dllexport) void Extern_CallFindSuchVisualsDebug(int mode)
+		{
+			if (mode == 0)
+			{
+				report.DebugClearVisualsList();
+			}
+			else
+			{
+				report.DebugRemoveVisuals();
+			}
+		}
+
+		__declspec(dllexport) void Extern_CallFindSuchVisualsDebugAdd()
+		{
+			CString visualName = Stack_PeekString();
+			report.DebugAddVisualInList(visualName);
+		}
 	}
 
 }

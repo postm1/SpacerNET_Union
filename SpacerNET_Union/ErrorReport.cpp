@@ -78,7 +78,61 @@ namespace GOTHIC_ENGINE {
 
 	
 
-	
+	void ErrorReport::DebugClearVisualsList()
+	{
+		pDebugList.DeleteList();
+	}
+
+	void ErrorReport::DebugAddVisualInList(zSTRING visual)
+	{
+		if (!pDebugList.IsInList(visual))
+		{
+			pDebugList.InsertEnd(visual);
+		}
+	}
 
 
+	void ErrorReport::DebugRemoveVisuals()
+	{
+		cmd << "DebugRemoveVisuals: " << pDebugList.GetNumInList() << endl;
+
+		zCArray<zCVob*> activeVobList;
+
+		ogame->GetWorld()->SearchVobListByClass(zCVob::classDef, activeVobList, 0);
+
+		int count = activeVobList.GetNumInList();
+
+
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
+
+		for (int i = 0; i < count; i++)
+		{
+			zCVob* vob = activeVobList.GetSafe(i);
+
+			if (vob)
+			{
+				if (IsSpacerVob(vob))
+				{
+					continue;
+				}
+
+				if (auto visual = vob->GetVisual())
+				{
+					if (visual->GetVisualName().Length() > 0)
+					{
+						if (pDebugList.IsInList(visual->GetVisualName()))
+						{
+							//cmd << "Remove: " << visual->GetVisualName() << endl;
+
+							theApp.RemoveVob(vob);
+						}
+					}
+					
+				}
+			}
+		}
+
+
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+	}
 }

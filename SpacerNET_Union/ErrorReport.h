@@ -91,6 +91,7 @@ namespace GOTHIC_ENGINE {
     class ErrorReport
     {
         zCArray<ErrorReportEntry*> pList;
+        zCArray<zSTRING> pDebugList;
 
     public:
         void Init();
@@ -104,5 +105,8 @@ namespace GOTHIC_ENGINE {
 
         void AddEntry(ErrorReportEntry* pEntry);
 
+        void DebugClearVisualsList();
+        void DebugRemoveVisuals();
+        void DebugAddVisualInList(zSTRING visual);
     };
 }
