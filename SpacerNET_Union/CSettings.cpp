@@ -439,6 +439,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "bShowMobInterSlots", "1");
 		list.Insert("bShowMobInterSlots", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "bHidePreviewOnVobCatalogHide", "0");
+		list.Insert("bHidePreviewOnVobCatalogHide", set);
+
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");
