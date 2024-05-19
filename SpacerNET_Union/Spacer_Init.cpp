@@ -107,6 +107,7 @@ namespace GOTHIC_ENGINE {
 		// create directories for spacer_net
 		CreateDirectory("_work\\tools", NULL);
 		CreateDirectory("_work\\tools\\data", NULL);
+		CreateDirectory("_work\\tools\\vobcatalog_backups", NULL);
 
 		CreateDirectory("_work\\data", NULL);
 		CreateDirectory("_work\\data\\meshes\\", NULL);
