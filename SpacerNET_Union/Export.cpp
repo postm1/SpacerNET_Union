@@ -1472,6 +1472,15 @@ namespace GOTHIC_ENGINE {
 			CString visualName = Stack_PeekString();
 			report.DebugAddVisualInList(visualName);
 		}
+
+		__declspec(dllexport) int Extern_Union_FileExists()
+		{
+			CString visualName = Stack_PeekString();
+
+			return (int)(Union_FileExists(visualName));
+		}
+
+		
 	}
 
 }
