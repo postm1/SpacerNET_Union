@@ -430,6 +430,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "oneModeToggle", "0");
 		list.Insert("oneModeToggle", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "bSortMerge", "1");
+		list.Insert("bSortMerge", set);
+		
 		set = new CSetting(TYPE_INT, "SPACER", "pfxRepeatAutoplay", "1");
 		list.Insert("pfxRepeatAutoplay", set);
 
@@ -441,6 +444,8 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "bHidePreviewOnVobCatalogHide", "0");
 		list.Insert("bHidePreviewOnVobCatalogHide", set);
+
+
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "showVisualInfoX", "200");
