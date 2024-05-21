@@ -838,14 +838,14 @@ namespace GOTHIC_ENGINE {
 				for (int j = i - 1; j >= 0; j--) {
 					void* upper = lower;
 					lower = d(j);
-					if ((*compare)(upper, lower) < 0) { // ok. Ist im Moment BubbleSort. Was solls...
+					if ((*compare)(upper, lower) < 0) { 
 						swaps++;
 						memcpy(&swapplace, upper, size);
 						memcpy(upper, lower, size);
 						memcpy(lower, &swapplace, size);
 					}
 					else
-						j = 0; // hier kann man die innere Schleife schon abbrechen.
+						j = 0;
 				}
 				if (falltoqs && swaps > 5 * i + 5) {
 					qsort(data, num, size, compare);
@@ -889,7 +889,7 @@ namespace GOTHIC_ENGINE {
 
 		CString monsterName = sym->name;
 
-		// найдено
+		// found
 		if (!foundPair.IsNull())
 		{
 			foundPair.GetValue()->monsters.Insert(monsterName);
