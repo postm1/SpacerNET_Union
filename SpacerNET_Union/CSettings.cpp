@@ -442,6 +442,13 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "bHidePreviewOnVobCatalogHide", "0");
 		list.Insert("bHidePreviewOnVobCatalogHide", set);
 
+
+		set = new CSetting(TYPE_INT, "SPACER", "showVisualInfoX", "100");
+		list.Insert("showVisualInfoX", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "showVisualInfoY", "28");
+		list.Insert("showVisualInfoY", set);
+
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");

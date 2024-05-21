@@ -215,7 +215,7 @@ namespace GOTHIC_ENGINE {
 		void SetToKeyPos();
 		void TriggerLoop();
 		void ShowVobInfo();
-		void ExtractVisualInfoShow(zCVisual* visual, int& start, int& longestLine, zSTRING& textToCopy);
+		void ExtractVisualInfoShow(zCVisual* visual, int& start, int startX, int& longestLine, zSTRING& textToCopy);
 		void Trigger_DrawKey(int key, zVEC3 pos);
 		void OnKeyRemove();
 		void RemoveAllMoverKeysWithSavePosition();

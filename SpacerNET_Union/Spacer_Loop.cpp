@@ -290,7 +290,7 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
-	void SpacerApp::ExtractVisualInfoShow(zCVisual* visual, int& start, int& longestLine, zSTRING& textToCopy)
+	void SpacerApp::ExtractVisualInfoShow(zCVisual* visual, int& start, int startX, int& longestLine, zSTRING& textToCopy)
 	{
 		if (!visual)
 		{
@@ -305,8 +305,8 @@ namespace GOTHIC_ENGINE {
 
 			zSTRING text = "\nTrisCount: " + Z trisCount;
 			textToCopy += text;
-			pViewVobInfo->Print(100, F(start), text);
-			start += 2;
+			pViewVobInfo->Print(startX, start, text);
+			start += 220;
 
 			for (int i = 0; i < pProgMesh->numSubMeshes; i++)
 			{
@@ -326,11 +326,11 @@ namespace GOTHIC_ENGINE {
 						longestLine = curLineSize;
 					}
 
-					pViewVobInfo->Print(100, F(start), text);
+					pViewVobInfo->Print(startX, start, text);
 
 					textToCopy += text;
 
-					start += 2;
+					start += 220;
 				}
 			}
 
@@ -363,11 +363,11 @@ namespace GOTHIC_ENGINE {
 							longestLine = curLineSize;
 						}
 
-						pViewVobInfo->Print(100, F(start), text);
+						pViewVobInfo->Print(startX, start, text);
 
 						textToCopy += text;
 
-						start += 2;
+						start += 220;
 					}
 				}
 			}
@@ -399,11 +399,11 @@ namespace GOTHIC_ENGINE {
 							longestLine = curLineSize;
 						}
 
-						pViewVobInfo->Print(100, F(start), text);
+						pViewVobInfo->Print(startX, start, text);
 
 						textToCopy += text;
 
-						start += 2;
+						start += 220;
 					}
 					//cmd << pModel->meshSoftSkinList[i]->subMeshList[n].material->GetObjectName() << endl;
 				}
@@ -421,7 +421,7 @@ namespace GOTHIC_ENGINE {
 				if (!pModel->nodeList[i]->nodeVisual)
 					continue;
 
-				ExtractVisualInfoShow(pModel->nodeList[i]->nodeVisual, start, longestLine, textToCopy);
+				ExtractVisualInfoShow(pModel->nodeList[i]->nodeVisual, start, startX, longestLine, textToCopy);
 
 			}
 		}
@@ -448,7 +448,19 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		if (auto pVob = GetSelectedVob())
+		auto pVob = GetSelectedVob();
+
+		if (!pVob)
+		{
+			pVob = currentVobRender;
+		}
+
+		if (!pVob)
+		{
+			pVob = currenItemRender;
+		}
+
+		if (pVob)
 		{
 			pViewVobInfo->SetFontColor(zCOLOR(209, 162, 32));
 
@@ -456,7 +468,10 @@ namespace GOTHIC_ENGINE {
 
 			zSTRING textToCopy;
 
-			int start = 28;
+			
+			int startX = options.GetIntVal("showVisualInfoX");
+			int startY = options.GetIntVal("showVisualInfoY");
+			int saveStartY = startY;
 			int longestLine = 0;
 
 			if (auto visual = pVob->visual)
@@ -465,22 +480,22 @@ namespace GOTHIC_ENGINE {
 
 				longestLine = pViewVobInfo->FontSize(textToCopy);
 
-				pViewVobInfo->Print(100, F(start), textToCopy);
-				start += 2;
-				ExtractVisualInfoShow(visual, start, longestLine, textToCopy);
+				pViewVobInfo->Print(startX, startY, textToCopy);
+				startY += 220;
+				ExtractVisualInfoShow(visual, startY, startX, longestLine, textToCopy);
 			}
 			
 
 
 			int padding = 50;
-			int posX = 100;
-			int posY = F(28) - padding;
+			
+			int posY = saveStartY - padding;
 			int linesCount = textToCopy.Search('\n', 0);
 
 			pViewVobInfoBack->InsertBack("BLACK.TGA");
-			pViewVobInfoBack->SetPos(50, posY);
-			pViewVobInfoBack->SetSize(longestLine + padding * 2, F(start) - F(28) + padding * 3);
-			pViewVobInfoBack->alpha = 125;
+			pViewVobInfoBack->SetPos(startX - padding, posY);
+			pViewVobInfoBack->SetSize(longestLine + padding * 2, startY - saveStartY + padding * 3);
+			pViewVobInfoBack->alpha = 165;
 
 			if (wasCopiedPressed)
 			{
