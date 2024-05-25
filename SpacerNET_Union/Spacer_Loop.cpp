@@ -290,6 +290,9 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
+
+	zCArray<zSTRING> visualNotFound;
+
 	void SpacerApp::ExtractVisualInfoShow(zCVisual* visual, int& start, int startX, int& longestLine, zSTRING& textToCopy)
 	{
 		if (!visual)
@@ -318,6 +321,23 @@ namespace GOTHIC_ENGINE {
 				if (mat && mat->texture)
 				{
 					zSTRING text = "\nMat: " + mat->GetName() + " | Texture: " + mat->texture->GetObjectName();
+
+					auto textureName = mat->texture->GetObjectName();
+
+					auto checkName = textureName;
+
+					checkName.Replace(".TGA", "-C.TEX");
+
+					if (!Union_FileExists(checkName))
+					{
+						if (!visualNotFound.IsInList(textureName))
+						{
+							visualNotFound.InsertEnd(textureName);
+
+							cmd << "NoTexture: " << textureName << endl;
+						}
+					}
+					
 
 					int curLineSize = pViewVobInfo->FontSize(text);
 
