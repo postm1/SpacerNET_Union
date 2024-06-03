@@ -29,30 +29,35 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		CString visualFileCheckName = visual;
 
-		if (visualFileCheckName.EndWith(".ASC"))
+		if (!isItem)
 		{
-			visualFileCheckName = visualFileCheckName.Replace(".ASC", ".MDL");
-		}
-		else if (visualFileCheckName.EndWith(".MDS"))
-		{
-			visualFileCheckName = visualFileCheckName.Replace(".MDS", ".MSB");
-		}
-		else if (visualFileCheckName.EndWith(".MMS"))
-		{
-			visualFileCheckName = visualFileCheckName.Replace(".MMS", ".MMB");
-		}
-		else
-		{
-			visualFileCheckName = visualFileCheckName.Replace(".3DS", ".MRM");
-		}
+			CString visualFileCheckName = visual;
 
-		//prevent spacer crash if no file exists
-		if (!Union_FileExists(visualFileCheckName))
-		{
-			return;
+			if (visualFileCheckName.EndWith(".ASC"))
+			{
+				visualFileCheckName = visualFileCheckName.Replace(".ASC", ".MDL");
+			}
+			else if (visualFileCheckName.EndWith(".MDS"))
+			{
+				visualFileCheckName = visualFileCheckName.Replace(".MDS", ".MSB");
+			}
+			else if (visualFileCheckName.EndWith(".MMS"))
+			{
+				visualFileCheckName = visualFileCheckName.Replace(".MMS", ".MMB");
+			}
+			else
+			{
+				visualFileCheckName = visualFileCheckName.Replace(".3DS", ".MRM");
+			}
+
+			//prevent spacer crash if no file exists
+			if (!Union_FileExists(visualFileCheckName))
+			{
+				return;
+			}
 		}
+		
 
 		zCVob *pVob = NULL;
 
