@@ -75,9 +75,16 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		zSTRING textureName = "RED.TGA";
+
+		if (IsDx11Active())
+		{
+			textureName = "SPACER_RED_DX11.TGA";
+		}
+
 		decalMat = new zCMaterial();
 		decalMat->SetName("MAT_SPACER_HELPER_RED");
-		decalMat->SetTexture(Z "RED.TGA");
+		decalMat->SetTexture(textureName);
 		decalMat->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
 		decalMat->color.alpha = 50;
 		decalMat->AddRef();
@@ -87,7 +94,7 @@ namespace GOTHIC_ENGINE {
 		for (int i = 0; i < 6; i++)
 		{
 			auto side = new zCVob();
-			side->SetVisual("RED.TGA");
+			side->SetVisual(textureName);
 
 			if (auto decal = side->visual->CastTo<zCDecal>())
 			{
