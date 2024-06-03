@@ -445,7 +445,8 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "bHidePreviewOnVobCatalogHide", "0");
 		list.Insert("bHidePreviewOnVobCatalogHide", set);
 
-
+		set = new CSetting(TYPE_INT, "SPACER", "bShowBboxModel", "1");
+		list.Insert("bShowBboxModel", set);
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "showVisualInfoX", "200");

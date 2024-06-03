@@ -80,6 +80,12 @@ namespace GOTHIC_ENGINE {
 		this->renameOptions.startNumber = 0;
 		this->renameOptions.type = 1;
 		this->mouseWheelKeyCodeG1 = 0;
+
+		//help vobs
+		for (int i = 0; i < 6; i++)
+		{
+			sides[i] = NULL;
+		}
 		
 	}
 
@@ -380,6 +386,7 @@ namespace GOTHIC_ENGINE {
 		treeToCopy = NULL;
 		
 		RemoveMobInterHelpVobs();
+		ClearBboxDecalReset();
 
 		if (GetSelectedTool() == TM_BBOXEDIT)
 		{
@@ -875,6 +882,10 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
+
+
+	
+
 	void SpacerApp::PreRender()
 	{
 		if (g_bIsPlayingGame)
@@ -908,15 +919,12 @@ namespace GOTHIC_ENGINE {
 			{
 				pickedVob->SetDrawBBox3D(TRUE);
 			}
+
 		}
 
 
-		
-
-		
-
-
-
+		ClearBboxDecal();
+		BBoxDecal_Render();
 
 		RenderSelectedVobBbox();
 

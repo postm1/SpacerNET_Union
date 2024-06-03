@@ -32,6 +32,8 @@ namespace Gothic_II_Addon {
       unsigned char hintLightingHighlight  : 1; // sizeof 01h    offset bit
     };
 
+    void		Clear() { memset(this, 0, sizeof(*this)); clipFlags = -1; };
+
     zTRenderContext() {}
 
     // user API

@@ -400,6 +400,19 @@ namespace GOTHIC_ENGINE {
 		void Macros_Clean();
 		void Macros_Run();
 		void Macros_Add(CString command, CString raw, MacrosType type);
+
+
+		//bbox decals for areas
+		void ClearBboxDecal();
+		void ClearBboxDecalReset();
+		void BBoxDecal_OnLevelLoaded();
+		void SetBBoxDecalPosAndSize(zCVob* sides[6], zVEC3 points[8], int index, int a, int b, int c, int d);
+		void BBoxDecal_Render();
+
+		bool addBboxDecals = false;
+		zCVob* sides[6];
+		zVEC3 points[8];
+		zCMaterial* decalMat = NULL;
 	};
 
 }

@@ -37,6 +37,7 @@
 #include "Export_Union_DLL.cpp"
 #include "MatTree.cpp"
 #include "MatManager.cpp"
+#include "BboxDecalArea.cpp"
 #include "AB_NoGrass_Init.cpp"
 #include "GenerateVobsVisualsList.cpp"
 #include "Macros.cpp"

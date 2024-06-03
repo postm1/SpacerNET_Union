@@ -706,6 +706,8 @@ namespace GOTHIC_ENGINE {
 			PlaySoundGame(ToStr "CS_IAI_ME_ME");
 
 
+			BBoxDecal_OnLevelLoaded();
+
 			// This fixes rendering of zCVobLights help vobs on DX11 after level loading
 			if (IsDx11Active())
 			{
