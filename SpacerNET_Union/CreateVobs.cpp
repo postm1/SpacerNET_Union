@@ -306,6 +306,8 @@ namespace GOTHIC_ENGINE {
 		if (newvob)
 		{
 
+			
+
 			OutFile("CreateNewVob: created a new vob with addr: " + AHEX32((uint)newvob), true);
 
 
@@ -353,9 +355,21 @@ namespace GOTHIC_ENGINE {
 
 
 
+			if (className == "zCVobSound")
+			{
+				auto soundVob = newvob->CastTo<zCVobSound>();
 
+				if (soundVob)
+				{
+					soundVob->soundName = vobName;
+				}
+			}
+			else
+			{
+				newvob->SetVobName(vobName);
+			}
 
-			newvob->SetVobName(vobName);
+			
 
 			zVEC3 pos = ogame->GetCamera()->connectedVob->GetPositionWorld();
 			zVEC3 dir = ogame->GetCamera()->connectedVob->GetAtVectorWorld().Normalize();
