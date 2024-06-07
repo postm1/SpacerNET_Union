@@ -84,6 +84,7 @@ namespace GOTHIC_ENGINE {
 
 		zSTRING textureName = "RED.TGA";
 
+		// dx11 has its own texture due to no supporting vob material transparency (alpha)
 		if (IsDx11Active())
 		{
 			textureName = "SPACER_RED_DX11.TGA";
