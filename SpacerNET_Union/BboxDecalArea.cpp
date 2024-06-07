@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-
+	//set decal for bbox position and direction
 	void SpacerApp::SetBBoxDecalPosAndSize(zCVob* sides[6], zVEC3 points[8], int index, int a, int b, int c, int d)
 	{
 		sides[index]->SetPositionWorld((points[a] + points[b] + points[c] + points[d]) / 4);
@@ -39,6 +39,13 @@ namespace GOTHIC_ENGINE {
 			if (auto pVob = sides[i])
 			{
 				pVob->SetShowVisual(FALSE);
+
+				zCDecal* dec = ((zCDecal*)pVob->GetVisual());
+
+				if (dec)
+				{
+					dec->SetDecalDim(0, 0);
+				}
 			}
 		}
 	}
@@ -98,7 +105,7 @@ namespace GOTHIC_ENGINE {
 
 			if (auto decal = side->visual->CastTo<zCDecal>())
 			{
-				decal->SetDecalDim(500, 500);
+				decal->SetDecalDim(0, 0);
 				decal->decal2Sided = true;
 				decal->decalMaterial = decalMat;
 
