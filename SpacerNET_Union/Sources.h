@@ -50,6 +50,7 @@
 #include "ErrorReport_Vobs.cpp"
 #include "MatFilter_Render.cpp"
 #include "TestLoop.cpp"
+#include "zCObjPresetLib.cpp"
 #include "Plugin.cpp"
 #pragma endregion
 

@@ -2969,9 +2969,6 @@
     <ClInclude Include="CameraManager.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="zCObjPresetLib.h">
-      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
-    </ClInclude>
     <ClInclude Include="GenerateVobsVisualsList.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
     </ClInclude>
@@ -3046,6 +3043,12 @@
     </ClInclude>
     <ClInclude Include="BboxDecalArea.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="zCObjPresetLib.h">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="zCObjPresetLib.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

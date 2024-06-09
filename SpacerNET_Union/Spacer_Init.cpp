@@ -166,6 +166,8 @@ namespace GOTHIC_ENGINE {
 		
 		mf.Init();
 
+		presetsLib.Load();
+
 #if ENGINE == Engine_G1
 		// kill gLogStatistics
 		* (int*)0x0085EB00 = 0;
@@ -173,6 +175,7 @@ namespace GOTHIC_ENGINE {
 		// kill gLogStatistics
 		* (int*)0x008C2B50 = 0;
 #endif
+
 
 		spacerWasInit = true;
 		

@@ -4,6 +4,10 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+	const zSTRING PRESET_SUBDIR = "objpresets\\";
+
+
+
 	class zCObjPreset : public zCObject
 	{
 		zCLASS_DECLARATION(zCObjPreset)
@@ -47,5 +51,7 @@ namespace GOTHIC_ENGINE {
 		zBOOL AddPreset(zCObject* obj, zSTRING& name);
 		zBOOL RemovePreset(int lib_index);
 	};
+
+
 
 }

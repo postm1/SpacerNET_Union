@@ -170,7 +170,7 @@ namespace GOTHIC_ENGINE {
 			ActionRestore restorator;
 			CameraManager camMan;
 
-			zCObjPresetLib* presetsLib;
+			zCObjPresetLib presetsLib;
 		};
 
 		struct
