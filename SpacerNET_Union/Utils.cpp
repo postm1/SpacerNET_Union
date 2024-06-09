@@ -1420,5 +1420,42 @@ namespace GOTHIC_ENGINE {
 			};
 		}
 	}
+
+	zCArray<zSTRING> Split(zSTRING str, char t) {
+		CString cstr = str;
+		zCArray<zSTRING> carr;
+		Array<CStringA> arr = cstr.Split(t);
+		for (int i = 0; i < arr.GetNum(); i++) {
+			CStringA* node = arr.GetSafe(i);
+			if (node) {
+				zSTRING snode = *node;
+				carr.Insert(snode);
+			}
+		}
+
+		return carr;
+	}
+
+	bool IsItemExistsInScript(zSTRING keyName)
+	{
+		auto itemSymbol = parser->GetSymbol(keyName);
+
+		if (!itemSymbol)
+		{
+			return false;
+		}
+
+		int item = parser->GetIndex(zSTRING("C_Item"));
+		int base = parser->GetBase(parser->GetIndex(keyName));
+
+		if (base != item)
+		{
+			return false;
+		}
+
+		return true;
+	}
+
+
 }
 

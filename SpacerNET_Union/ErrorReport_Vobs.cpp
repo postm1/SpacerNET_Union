@@ -174,6 +174,101 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 
+				if (auto pMobCommon = vob->CastTo<oCMOB>())
+				{
+					auto focusName = pMobCommon->name;
+
+					if (!focusName.IsEmpty())
+					{
+						if (!parser->GetSymbol(focusName))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_FOCUS_NAME);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(focusName);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+				}
+
+				if (auto pLock = vob->CastTo<oCMobLockable>())
+				{
+					auto keyName = pLock->keyInstance;
+
+					if (keyName.Length() > 0)
+					{
+						bool flagNotItem = false;
+						auto itemSymbol = parser->GetSymbol(keyName);
+
+						if (itemSymbol)
+						{
+							int base = parser->GetBase(parser->GetIndex(keyName));
+							int item = parser->GetIndex(zSTRING("C_Item"));
+
+							if (base != item)
+							{
+								flagNotItem = true;
+							}
+						}
+
+						if (!itemSymbol || flagNotItem)
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_KEY_INSTANCE);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(keyName);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+
+					
+				}
+
+
+
+				if (auto pSound = vob->CastTo<zCVobSound>())
+				{
+					if (pSound->soundName.IsEmpty())
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SOUNDNAME);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(pSound->GetVobName());
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+					else
+					{
+						if (!parserSoundFX->GetSymbol(pSound->soundName))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SOUNDNAME_NOINST);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(pSound->soundName);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+				}
+
 				if (auto pMob = vob->CastTo<oCMobBed>())
 				{
 					if (pMob->focusNameIndex == 0 || pMob->focusNameIndex == -1 || pMob->name.IsEmpty())
@@ -298,6 +393,164 @@ namespace GOTHIC_ENGINE {
 						entry->SetTextureName("");
 
 						AddEntry(entry);
+					}
+
+					auto contains = mobCont->contains;
+
+					if (contains.Length() > 0)
+					{
+						if (contains.HasWord(" "))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SPACES_CONTAINER);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(mobName);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+
+
+						if (contains.HasWord(",,"))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINER_BAD_SYMBOLS);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(",,");
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+						else if (contains.HasWord(";"))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINER_BAD_SYMBOLS);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(";");
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+						else if (contains.HasWord("."))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINER_BAD_SYMBOLS);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(".");
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+
+
+						if (!contains.HasWord(','))
+						{
+							if (!contains.HasWord(':'))
+							{
+								if (!IsItemExistsInScript(contains))
+								{
+									auto entry = new ErrorReportEntry();
+
+									entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+									entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINTER_ITEM);
+									entry->SetObject((uint)vob);
+									entry->SetVobName(contains);
+									entry->SetMaterialName("");
+									entry->SetTextureName("");
+
+									AddEntry(entry);
+								}
+							}
+							else
+							{
+								auto innerSplit = Split(contains, ':');
+
+								if (innerSplit.GetNum() == 2)
+								{
+									auto word = innerSplit[0];
+
+									if (!IsItemExistsInScript(word))
+									{
+										auto entry = new ErrorReportEntry();
+
+										entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+										entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINTER_ITEM);
+										entry->SetObject((uint)vob);
+										entry->SetVobName(word);
+										entry->SetMaterialName("");
+										entry->SetTextureName("");
+
+										AddEntry(entry);
+									}
+								}
+							}
+							
+						}
+						else
+						{
+							auto split = Split(contains, ',');
+							
+							for (int j = 0; j < split.GetNumInList(); j++)
+							{
+								auto str = split[j];
+
+								str.TrimLeft(' ');
+								str.TrimRight(' ');
+
+								if (str.HasWord(':'))
+								{
+									auto innerSplit = Split(str, ':');
+
+									if (innerSplit.GetNum() == 2)
+									{
+										auto word = innerSplit[0];
+
+										if (!IsItemExistsInScript(word))
+										{
+											auto entry = new ErrorReportEntry();
+
+											entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+											entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINTER_ITEM);
+											entry->SetObject((uint)vob);
+											entry->SetVobName(word);
+											entry->SetMaterialName("");
+											entry->SetTextureName("");
+
+											AddEntry(entry);
+										}
+									}
+
+								}
+								else
+								{
+									if (!IsItemExistsInScript(str))
+									{
+										auto entry = new ErrorReportEntry();
+
+										entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+										entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINTER_ITEM);
+										entry->SetObject((uint)vob);
+										entry->SetVobName(str);
+										entry->SetMaterialName("");
+										entry->SetTextureName("");
+
+										AddEntry(entry);
+									}
+								}
+							}					
+						}
 					}
 				}
 			}
