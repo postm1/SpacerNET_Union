@@ -4,8 +4,28 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	//zCLASS_DEFINITION(zCObjPreset, zCObject, 0, 1)
 
+
+	void zCObjPreset::Archive(zCArchiver& arc)
+	{
+		zCObject::Archive(arc);
+		arc.WriteString("presetName", presetName);
+		arc.WriteObject("preset", obj);
+	}
+	void zCObjPreset::Unarchive(zCArchiver& arc)
+	{
+		zCObject::Unarchive(arc);
+		presetName = arc.ReadString("presetName");
+		obj = arc.ReadObject("preset", 0);
+	}
+
+	zCObjPreset::~zCObjPreset()
+	{
+		obj = NULL;
+	}
+
+
+	//=============================================================
 	zCObject* zCObjPresetLib::GetObjectByName(zSTRING& pName)
 	{
 		for (int i = 0; i < this->GetNumInList(); i++)
@@ -51,21 +71,19 @@ namespace GOTHIC_ENGINE {
 
 	int zCObjPresetLib::Load(zSTRING& filename)
 	{
-		//DeleteList();
 		zoptions->ChangeDir(DIR_TOOLS_DATA);
 		zFILE_FILE subdir(PRESET_SUBDIR);
 		subdir.ChangeDir(false);
 
-		zCObjPreset* preset;
+		zCObjPreset* preset = NULL;
+
 		zCArchiver* arch = zarcFactory->CreateArchiverRead(filename, 0);
 		if (!arch) return 1;
 
 		cmd << "Read ObjectPresets \"" + filename + "\"" << endl;
 
-		//zERR_MESSAGE(4, zERR_BEGIN, "B: SPC: Read ObjectPresets \"" + filename + "\"");
 		while (!arch->EndOfArchive())
 		{
-			// preset = new zCObjPreset();		
 			preset = dynamic_cast<zCObjPreset*>(arch->ReadObject(0));
 			if (preset)
 			{
@@ -83,6 +101,10 @@ namespace GOTHIC_ENGINE {
 					zRELEASE(preset);
 				};
 			}
+			else
+			{
+				cmd << "Can't dynamic_cast<zCObjPreset*>" << endl;
+			}
 		}
 
 
@@ -93,18 +115,7 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	void zCObjPreset::Archive(zCArchiver& arc)
-	{
-		zCObject::Archive(arc);
-		arc.WriteString("presetName", presetName);
-		arc.WriteObject("preset", obj);
-	}
-	void zCObjPreset::Unarchive(zCArchiver& arc)
-	{
-		zCObject::Unarchive(arc);
-		presetName = arc.ReadString("presetName");
-		obj = arc.ReadObject("preset", 0);
-	}
+	
 
 	void zCObjPresetLib::Dispose()
 	{

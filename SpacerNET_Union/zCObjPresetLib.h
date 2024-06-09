@@ -7,10 +7,11 @@ namespace GOTHIC_ENGINE {
 	const zSTRING PRESET_SUBDIR = "objpresets\\";
 
 
-
 	class zCObjPreset : public zCObject
 	{
-		zCLASS_DECLARATION(zCObjPreset)
+		//zCLASS_UNION_DEFINITION(zCObjPreset, zCObject, 0, 1)
+		//zCLASS_UNION_DECLARATION(zCObjPreset)
+		//zCLASS_DECLARATION(zCObjPreset, zCObject, 0, 1)
 	public:
 		zCObject* obj;
 		zSTRING presetName;

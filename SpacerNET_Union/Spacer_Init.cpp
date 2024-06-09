@@ -166,7 +166,7 @@ namespace GOTHIC_ENGINE {
 		
 		mf.Init();
 
-		presetsLib.Load();
+		//presetsLib.Load();
 
 #if ENGINE == Engine_G1
 		// kill gLogStatistics
