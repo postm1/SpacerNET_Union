@@ -1438,22 +1438,10 @@ namespace GOTHIC_ENGINE {
 
 	bool IsItemExistsInScript(zSTRING keyName)
 	{
-		auto itemSymbol = parser->GetSymbol(keyName);
+		static int oCItemIndex = parser->GetIndex(oCItem::classDef->scriptClassName);
 
-		if (!itemSymbol)
-		{
-			return false;
-		}
+		return parser->GetBaseClass(parser->GetIndex(keyName)) == oCItemIndex;
 
-		int item = parser->GetIndex(zSTRING("C_Item"));
-		int base = parser->GetBase(parser->GetIndex(keyName));
-
-		if (base != item)
-		{
-			return false;
-		}
-
-		return true;
 	}
 
 

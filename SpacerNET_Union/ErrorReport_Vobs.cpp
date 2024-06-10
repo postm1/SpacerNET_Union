@@ -481,8 +481,12 @@ namespace GOTHIC_ENGINE {
 								{
 									auto word = innerSplit[0];
 
+									cmd << "Check item: '" << word << "'" << endl;
+
 									if (!IsItemExistsInScript(word))
 									{
+										cmd << "\tNOT FOUND" << endl;
+
 										auto entry = new ErrorReportEntry();
 
 										entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
