@@ -9,20 +9,21 @@ namespace GOTHIC_ENGINE {
 
 	class zCObjPreset : public zCObject
 	{
-		//zCLASS_UNION_DEFINITION(zCObjPreset, zCObject, 0, 1)
-		//zCLASS_UNION_DECLARATION(zCObjPreset)
-		//zCLASS_DECLARATION(zCObjPreset, zCObject, 0, 1)
 	public:
+		zCLASS_UNION_DECLARATION(zCObjPreset)
+
 		zCObject* obj;
 		zSTRING presetName;
 
 		zCObjPreset() : obj(0), presetName("") {};
 		zCObjPreset(zCObject* _obj, zSTRING& name) : obj(_obj), presetName(name) {};
-		virtual ~zCObjPreset();
+		virtual ~zCObjPreset() override {};
 
 		void	Archive(zCArchiver &arc);
 		void	Unarchive(zCArchiver &arc);
 	};
+
+	zCLASS_UNION_DEFINITION(zCObjPreset, zCObject, 0, 0);
 
 	class zCPresetView;
 

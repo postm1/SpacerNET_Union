@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-
+	
 
 	void zCObjPreset::Archive(zCArchiver& arc)
 	{
@@ -19,11 +19,7 @@ namespace GOTHIC_ENGINE {
 		obj = arc.ReadObject("preset", 0);
 	}
 
-	zCObjPreset::~zCObjPreset()
-	{
-		obj = NULL;
-	}
-
+	
 
 	//=============================================================
 	zCObject* zCObjPresetLib::GetObjectByName(zSTRING& pName)
@@ -84,7 +80,10 @@ namespace GOTHIC_ENGINE {
 
 		while (!arch->EndOfArchive())
 		{
-			preset = dynamic_cast<zCObjPreset*>(arch->ReadObject(0));
+			zCObject* object = arch->ReadObject(0);
+
+			preset = object->CastTo<zCObjPreset>();
+
 			if (preset)
 			{
 				if (!GetObjectByName(preset->presetName))
