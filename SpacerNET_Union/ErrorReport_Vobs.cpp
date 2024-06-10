@@ -481,7 +481,7 @@ namespace GOTHIC_ENGINE {
 								{
 									auto word = innerSplit[0];
 
-									cmd << "Check item: '" << word << "'" << endl;
+									//cmd << "Check item: '" << word << "'" << endl;
 
 									if (!IsItemExistsInScript(word))
 									{
