@@ -372,28 +372,28 @@ namespace GOTHIC_ENGINE {
 				{
 					auto mobName = mobCont->GetVobName();
 
-					if (mobName.Length() == 0)
+					if (mobName.Length() > 0)
 					{
-						continue;
+						if (!containerNames.IsInList(mobName))
+						{
+							containerNames.InsertEnd(mobName);
+						}
+						else
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(mobName);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
 					}
 
-					if (!containerNames.IsInList(mobName))
-					{
-						containerNames.InsertEnd(mobName);
-					}
-					else
-					{
-						auto entry = new ErrorReportEntry();
-
-						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
-						entry->SetObject((uint)vob);
-						entry->SetVobName(mobName);
-						entry->SetMaterialName("");
-						entry->SetTextureName("");
-
-						AddEntry(entry);
-					}
+					
 
 					auto contains = mobCont->contains;
 
@@ -403,7 +403,7 @@ namespace GOTHIC_ENGINE {
 						{
 							auto entry = new ErrorReportEntry();
 
-							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SPACES_CONTAINER);
 							entry->SetObject((uint)vob);
 							entry->SetVobName(mobName);
@@ -418,7 +418,7 @@ namespace GOTHIC_ENGINE {
 						{
 							auto entry = new ErrorReportEntry();
 
-							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINER_BAD_SYMBOLS);
 							entry->SetObject((uint)vob);
 							entry->SetVobName(",,");
@@ -431,7 +431,7 @@ namespace GOTHIC_ENGINE {
 						{
 							auto entry = new ErrorReportEntry();
 
-							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINER_BAD_SYMBOLS);
 							entry->SetObject((uint)vob);
 							entry->SetVobName(";");
@@ -444,7 +444,7 @@ namespace GOTHIC_ENGINE {
 						{
 							auto entry = new ErrorReportEntry();
 
-							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINER_BAD_SYMBOLS);
 							entry->SetObject((uint)vob);
 							entry->SetVobName(".");
@@ -463,7 +463,7 @@ namespace GOTHIC_ENGINE {
 								{
 									auto entry = new ErrorReportEntry();
 
-									entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+									entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 									entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINTER_ITEM);
 									entry->SetObject((uint)vob);
 									entry->SetVobName(contains);
@@ -485,7 +485,7 @@ namespace GOTHIC_ENGINE {
 									{
 										auto entry = new ErrorReportEntry();
 
-										entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+										entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 										entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINTER_ITEM);
 										entry->SetObject((uint)vob);
 										entry->SetVobName(word);
@@ -521,7 +521,7 @@ namespace GOTHIC_ENGINE {
 										{
 											auto entry = new ErrorReportEntry();
 
-											entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+											entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 											entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINTER_ITEM);
 											entry->SetObject((uint)vob);
 											entry->SetVobName(word);
@@ -539,7 +539,7 @@ namespace GOTHIC_ENGINE {
 									{
 										auto entry = new ErrorReportEntry();
 
-										entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+										entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 										entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CONTAINTER_ITEM);
 										entry->SetObject((uint)vob);
 										entry->SetVobName(str);
