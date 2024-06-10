@@ -117,6 +117,32 @@ namespace GOTHIC_ENGINE {
 		exports.toggleUIElement(UIElementType::UI_LIST_PFX, TRUE);
 	}
 
+	void SpacerApp::CreateCameraPresetsList()
+	{
+		return;// for now
+		auto addCamPreset = (callVoidFunc)GetProcAddress(theApp.module, "AddCameraPresetToList");
+
+		exports.toggleUIElement(UIElementType::UI_CAM_PRESETS, FALSE);
+
+
+
+		for (int i = 0; i < presetsLib.GetNumInList(); i++)
+		{
+			if (auto pEntry = presetsLib.GetSafe(i))
+			{
+				zCCSCamera* camera = dynamic_cast<zCCSCamera*>(pEntry->obj);
+
+				if (camera)
+				{
+					Stack_PushString(pEntry->presetName.Upper());
+					addCamPreset();
+				}
+			}
+		}
+
+		exports.toggleUIElement(UIElementType::UI_CAM_PRESETS, TRUE);
+	}
+
 	// list of Sounds
 	void SpacerApp::CreateSoundList()
 	{

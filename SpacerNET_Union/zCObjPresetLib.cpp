@@ -113,7 +113,21 @@ namespace GOTHIC_ENGINE {
 		return 0;
 	}
 
+	void zCObjPresetLib::InsertIntoWorld(zSTRING name)
+	{
+		for (int z = 0; z < GetNumInList(); z++)
+		{
+			if (auto pEntry = this->GetSafe(z))
+			{
+				if (pEntry->obj && pEntry->presetName == name)
+				{
 
+					break;
+				}
+			}
+
+		}
+	}
 	
 
 	void zCObjPresetLib::Dispose()

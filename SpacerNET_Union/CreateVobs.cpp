@@ -564,7 +564,7 @@ namespace GOTHIC_ENGINE {
 		pVob->lightData.m_bCanMove = true;
 #endif
 
-		
+
 		pVob->SetPositionWorld(pos);
 
 		InsertIntoWorld(pVob, parent);

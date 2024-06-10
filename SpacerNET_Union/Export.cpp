@@ -1481,6 +1481,14 @@ namespace GOTHIC_ENGINE {
 		}
 
 		
+		__declspec(dllexport) void Extern_Camera_CreateVobFromPreset()
+		{
+			CString camPresetName = Stack_PeekString();
+
+			theApp.presetsLib.InsertIntoWorld(camPresetName);
+		}
+
+		
 	}
 
 }

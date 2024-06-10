@@ -611,6 +611,7 @@ namespace GOTHIC_ENGINE {
 			CreateSoundList();
 			CreateVisualsList();
 			CreateMobNameList();
+			CreateCameraPresetsList();
 
 		}
 

@@ -293,6 +293,7 @@ namespace GOTHIC_ENGINE {
 
 
 		void CreateNewWaypoint(zCVob * newvob, bool addToNet);
+		void CreateCameraPresetsList();
 
 		void CreateNewWaypointFromButtonClick();
 

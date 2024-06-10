@@ -41,6 +41,7 @@ namespace GOTHIC_ENGINE {
 		int Load();
 		int Load(zSTRING& filename);
 		int Save();
+		void InsertIntoWorld(zSTRING name);
 
 		void SetDirty(zBOOL dirt = TRUE) { isDirty = dirt; };
 		zBOOL IsDirty() { return isDirty; };
