@@ -485,7 +485,7 @@ namespace GOTHIC_ENGINE {
 
 									if (!IsItemExistsInScript(word))
 									{
-										cmd << "\tNOT FOUND" << endl;
+										//cmd << "\tNOT FOUND" << endl;
 
 										auto entry = new ErrorReportEntry();
 
