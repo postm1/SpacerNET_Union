@@ -32,10 +32,40 @@ namespace GOTHIC_ENGINE {
 		zCArray<zCPolygon*>* leakPolyList;
 
 		Common::Map<CString, RespawnEntry*> respawnShowList;
-
+		zCArray<zSTRING> respFuncList;
 		void ClearRespList()
 		{
+			showRespawnOnVobs = false;
+			ClearSpawnFuncList();
 			DeleteAndClearMap(respawnShowList);
+		}
+
+		void AddRespListFunc(zSTRING func)
+		{
+			if (!respFuncList.IsInList(func))
+			{
+				respFuncList.InsertEnd(func);
+			}
+		}
+
+		void ClearSpawnFuncList()
+		{
+			respFuncList.DeleteList();
+		}
+
+		void CollectRestList()
+		{
+			for (int i = 0; i < respFuncList.GetNumInList(); i++)
+			{
+				auto func = respFuncList.GetSafe(i);
+
+				if (parser->GetSymbol(func))
+				{
+					parser->CallFunc(func.Upper());
+				}
+			}
+
+			showRespawnOnVobs = TRUE;
 		}
 
 
@@ -115,6 +145,7 @@ namespace GOTHIC_ENGINE {
 			bool isNextCopyVobInsertNear;
 			bool nextInsertionIsTempPfx;
 			bool showRespawnOnVobs;
+			int showRespawnOnVobsRadius;
 			bool bDebugSpacerLoadMesh;
 			bool showScreenInfo;
 			bool cameraMoveWithVobActive;

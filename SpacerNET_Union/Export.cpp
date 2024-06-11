@@ -1489,6 +1489,28 @@ namespace GOTHIC_ENGINE {
 		}
 
 		
+
+
+		__declspec(dllexport) void Extern_Spawn_ClearList()
+		{
+			theApp.ClearRespList();
+		}
+
+		__declspec(dllexport) void Extern_Spawn_AddInList()
+		{
+			CString funcName = Stack_PeekString();
+			theApp.AddRespListFunc(funcName);
+		}
+
+		__declspec(dllexport) void Extern_Spawn_Collect()
+		{
+			theApp.CollectRestList();
+		}
+
+		__declspec(dllexport) void Extern_Spawn_ClearFuncList()
+		{
+			theApp.ClearSpawnFuncList();
+		}
 	}
 
 }

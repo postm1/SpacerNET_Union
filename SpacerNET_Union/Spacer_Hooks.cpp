@@ -867,9 +867,9 @@ namespace GOTHIC_ENGINE {
 	}
 	*/
 
-	//test hook
+#if ENGINE == Engine_G2A
 	int __cdecl Wld_InsertNpc_Hook();
-	//CInvoke <int(__cdecl *) (void)> Wld_InsertNpc_Hooked(0x6DF1F0, Wld_InsertNpc_Hook, IVK_AUTO);
+	CInvoke <int(__cdecl *) (void)> Wld_InsertNpc_Hooked(0x6DF1F0, Wld_InsertNpc_Hook, IVK_AUTO);
 	int __cdecl Wld_InsertNpc_Hook() {
 		int index;
 		zSTRING posPoint;
@@ -900,11 +900,47 @@ namespace GOTHIC_ENGINE {
 			entry->monsters.Insert(monsterName);
 			theApp.respawnShowList.Insert(posPoint, entry);
 		}
-
-
-
-
 		return FALSE;
 
 	}
+#endif
+
+#if ENGINE == Engine_G1
+	int __cdecl Wld_InsertNpc_Hook();
+	CInvoke <int(__cdecl*) (void)> Wld_InsertNpc_Hooked(0x650980, Wld_InsertNpc_Hook, IVK_AUTO);
+	int __cdecl Wld_InsertNpc_Hook() {
+		int index;
+		zSTRING posPoint;
+
+		zCParser* p = zCParser::GetParser();
+		p->GetParameter(posPoint);
+		p->GetParameter(index);
+
+		posPoint = posPoint.Upper();
+
+
+		auto& foundPair = theApp.respawnShowList[posPoint];
+
+		auto sym = parser->GetSymbol(index);
+
+		if (!sym) { cmd << "not found: " << posPoint << endl;  return 0; }
+
+		CString monsterName = sym->name;
+
+		// found
+		if (!foundPair.IsNull())
+		{
+			foundPair.GetValue()->monsters.Insert(monsterName);
+		}
+		else
+		{
+			auto entry = new RespawnEntry();
+			entry->monsters.Insert(monsterName);
+			theApp.respawnShowList.Insert(posPoint, entry);
+		}
+		return FALSE;
+
+	}
+
+#endif
 }

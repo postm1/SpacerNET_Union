@@ -521,7 +521,6 @@ namespace GOTHIC_ENGINE {
 
 		theApp.pickedWaypoint2nd = NULL;
 		mm.CleanSelection();
-		theApp.ClearRespList();
 
 		Clear_PFXEditor();
 

@@ -735,7 +735,7 @@ namespace GOTHIC_ENGINE {
 
 				zTBBox3D bbox;
 				zCArray<zCVob*> found;
-				zREAL distance = 4500;
+				zREAL distance = theApp.showRespawnOnVobsRadius;
 
 				bbox.maxs = bbox.mins = ogame->GetCamera()->GetVob()->GetPositionWorld();
 				bbox.maxs[0] += distance; bbox.maxs[1] += distance; bbox.maxs[2] += distance;
@@ -752,46 +752,55 @@ namespace GOTHIC_ENGINE {
 
 				screen->SetFontColor(zCOLOR(255, 255, 255));
 
-				int distDraw = 4000;
+				int distDraw = distance - 500;
 				for (int i = 0; i<found.GetNumInList(); i++)
 				{
 					auto vob = found.GetSafe(i);
 
 					if (vob)
 					{
-						auto& foundPair = theApp.respawnShowList[vob->GetVobName()];
+						spot = dynamic_cast<zCVobSpot*>(found[i]);
+						wp = dynamic_cast<zCVobWaypoint*>(found[i]);
 
-						if (!foundPair.IsNull())
+
+						if (spot || wp)
 						{
-							CString info = "";
+							auto& foundPair = theApp.respawnShowList[vob->GetVobName()];
 
-							for (int j = 0; j < foundPair.GetValue()->monsters.GetNumInList(); j++)
+							if (!foundPair.IsNull())
 							{
-								info += foundPair.GetValue()->monsters.GetSafe(j) + " | ";
+								CString info = "";
+
+								for (int j = 0; j < foundPair.GetValue()->monsters.GetNumInList(); j++)
+								{
+									info += foundPair.GetValue()->monsters.GetSafe(j) + " | ";
+								}
+
+								info = info.Cut(info.Length() - 3, 3);
+
+								if (spot)
+								{
+
+									wsPoint1 = spot->GetPositionWorld() + zVEC3(0, 350, 0);
+									csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
+									if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
+									if ((csPoint1[VZ] < distDraw) && (csPoint1[VZ] > 0))
+										screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
+								};
+
+								if (wp)
+								{
+
+									wsPoint1 = wp->GetPositionWorld() + zVEC3(0, 150, 0);
+									csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
+									if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
+									if ((csPoint1[VZ] < distDraw) && (csPoint1[VZ] > 0))
+										screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
+								};
 							}
-
-							info = info.Cut(info.Length() - 3, 3);
-
-							if (spot = dynamic_cast<zCVobSpot*>(found[i]))
-							{
-
-								wsPoint1 = spot->GetPositionWorld() + zVEC3(0, 350, 0);
-								csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
-								if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
-								if ((csPoint1[VZ]<distDraw) && (csPoint1[VZ]>0))
-									screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
-							};
-
-							if (wp = dynamic_cast<zCVobWaypoint*>(found[i]))
-							{
-
-								wsPoint1 = wp->GetPositionWorld() + zVEC3(0, 150, 0);
-								csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
-								if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
-								if ((csPoint1[VZ]<distDraw) && (csPoint1[VZ]>0))
-									screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
-							};
 						}
+
+						
 					}
 					
 					

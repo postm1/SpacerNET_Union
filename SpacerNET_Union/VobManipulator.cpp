@@ -1433,38 +1433,6 @@ namespace GOTHIC_ENGINE {
 
 			}
 		}
-
-		//rx_respawn
-		/*
-		if (zinput->KeyPressed(KEY_G))
-		{
-			zinput->ClearKeyBuffer();
-			
-
-			theApp.showRespawnOnVobs = !theApp.showRespawnOnVobs;
-
-			print.PrintRed("ShowRespawnPoints: " + Z theApp.showRespawnOnVobs);
-
-			if (theApp.showRespawnOnVobs)
-			{
-				theApp.ClearRespList();
-
-
-				parser->SetScriptInt("kapitel", 1);
-				parser->SetScriptInt("RX_NewMonsterSpawn", 1);
-				parser->SetScriptInt("RX_IsInterUpdate", 1);
-				
-				parser->CallFunc(parser->GetIndex("startup_newworld"));
-				parser->CallFunc(parser->GetIndex("init_newworld"));
-				parser->CallFunc(parser->GetIndex("b_enter_newworld"));
-				parser->CallFunc(parser->GetIndex("RX_NewLegSpawn"));
-				parser->CallFunc(parser->GetIndex("xardas_firstlock"));
-				
-			}
-
-		}
-		*/
-		
 		
 
 		if (theApp.isGrattControlActive && keys.KeyPressed("VOB_RESET_AXIS", true, true))
