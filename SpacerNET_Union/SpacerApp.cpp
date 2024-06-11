@@ -1911,7 +1911,7 @@ namespace GOTHIC_ENGINE {
 
 		OutFile("SetProperties: " + A classNameVob, false);
 
-		auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
+		static auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
 
 		Stack_PushString(className);
 		Stack_PushString(str);
@@ -1969,7 +1969,7 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
-			auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
+			static auto AddProps = (callVoidFunc)GetProcAddress(theApp.module, "AddProps");
 
 			Stack_PushString("");
 			Stack_PushString("");
