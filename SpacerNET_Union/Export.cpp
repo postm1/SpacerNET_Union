@@ -1511,6 +1511,15 @@ namespace GOTHIC_ENGINE {
 		{
 			theApp.ClearSpawnFuncList();
 		}
+
+		__declspec(dllexport) void Extern_Spawn_SetRadius(int radius)
+		{
+			zClamp(radius, 2000, 25000);
+
+			theApp.showRespawnOnVobsRadius = radius;
+
+		}
+		
 	}
 
 }
