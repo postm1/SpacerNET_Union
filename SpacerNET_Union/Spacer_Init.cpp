@@ -124,15 +124,15 @@ namespace GOTHIC_ENGINE {
 		SetExportsFuncs();
 
 		//cmd << "options" << endl;
-		theApp.options.Init();
-		theApp.options.Load();
-		theApp.visualEditorActive = false;
+		options.Init();
+		options.Load();
+		visualEditorActive = false;
 
 		//cmd << "InitValues" << endl;
 		keys.InitValues();
 		//zoptions->AddParameters("-MERGEVOBSWITHLEVEL");
 
-		int limitFps = theApp.options.GetIntVal("maxFPS");
+		int limitFps = options.GetIntVal("maxFPS");
 
 		/*
 		if (limitFps > 0)
@@ -176,7 +176,14 @@ namespace GOTHIC_ENGINE {
 		* (int*)0x008C2B50 = 0;
 #endif
 
-		theApp.showRespawnOnVobsRadius = theApp.options.GetIntVal("showRespawnOnVobsRadius");;
+		showRespawnOnVobsRadius = options.GetIntVal("showSpawnListRadius");
+
+
+		if (showRespawnOnVobsRadius < 2000 || showRespawnOnVobsRadius > 25000)
+		{
+			showRespawnOnVobsRadius = 7500;
+		}
+
 		spacerWasInit = true;
 		
 	}
