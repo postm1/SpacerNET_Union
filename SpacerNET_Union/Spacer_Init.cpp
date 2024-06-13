@@ -176,7 +176,7 @@ namespace GOTHIC_ENGINE {
 		* (int*)0x008C2B50 = 0;
 #endif
 
-
+		theApp.showRespawnOnVobsRadius = theApp.options.GetIntVal("showRespawnOnVobsRadius");;
 		spacerWasInit = true;
 		
 	}

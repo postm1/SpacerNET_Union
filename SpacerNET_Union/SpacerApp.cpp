@@ -47,7 +47,7 @@ namespace GOTHIC_ENGINE {
 		this->isGrattControlActive = false;
 		this->isNextCopyVobInsertNear = false;
 		this->showRespawnOnVobs = false;
-		this->showRespawnOnVobsRadius = 4500;
+		this->showRespawnOnVobsRadius = 7500;
 		this->nextInsertionIsTempPfx = false;
 		this->bDebugSpacerLoadMesh = false;
 		this->globalParent = NULL;
