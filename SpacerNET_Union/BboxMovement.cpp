@@ -90,7 +90,7 @@ namespace GOTHIC_ENGINE {
 
 			if (GetSelectedTool() != TM_BBOXEDIT)
 			{
-				
+				print.PrintRed(GetLang("TOOL_BBOX_CHANGE"));
 				SetSelectedTool(TM_BBOXEDIT);
 				theApp.isBboxChangeMod = 1;
 
@@ -129,6 +129,9 @@ namespace GOTHIC_ENGINE {
 			print.PrintRed(GetLang("TOOL_BBOX_MINS"));
 			theApp.isBboxChangeMod = 2;
 		}
+
+
+
 
 		if (pickedVob && theApp.isBboxChangeMod != 0)
 		{
@@ -197,7 +200,7 @@ namespace GOTHIC_ENGINE {
 				rotSpeed /= 20;
 			}
 
-
+			
 
 			// general manipulations, regardless of the selected tool
 			if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
@@ -209,7 +212,30 @@ namespace GOTHIC_ENGINE {
 				int y = pos.n[1];
 
 
+				auto scaleValue = ztimer->frameTimeFloat / 1000.0f;
 
+				// BBOX SCALE MOD
+				if (zKeyPressed(KEY_3)) {
+
+					box.Scale(1.00f - scaleValue);
+
+					theApp.bboxMinsVob->SetPositionWorld(box.mins);
+					theApp.bboxMaxsVob->SetPositionWorld(box.maxs);
+					pickedVob->SetBBox3DWorld(box);
+					
+					
+					return;
+				}
+
+				if (zKeyPressed(KEY_4)) {
+
+					box.Scale(1.00F + scaleValue);
+
+					theApp.bboxMinsVob->SetPositionWorld(box.mins);
+					theApp.bboxMaxsVob->SetPositionWorld(box.maxs);
+					pickedVob->SetBBox3DWorld(box);
+					return;
+				}
 
 				y = pos.n[1];
 				zVEC3 unit = camUnit;
@@ -288,7 +314,7 @@ namespace GOTHIC_ENGINE {
 				bbox.mins = theApp.bboxMinsVob->GetPositionWorld();
 				bbox.maxs = theApp.bboxMaxsVob->GetPositionWorld();
 
-				for (int d = 0; d<3; d++)
+				for (int d = 0; d < 3; d++)
 				{
 					if (bbox.mins[d]>bbox.maxs[d])
 					{
