@@ -145,6 +145,13 @@ namespace GOTHIC_ENGINE {
 			auto pZone = pickedVob->CastTo<zCZone>();
 			auto pTrigger = pickedVob->CastTo<zCTriggerBase>();
 
+			auto pFog = pickedVob->CastTo<zCZoneZFog>();
+
+			if (pFog)
+			{
+				return;
+			}
+
 			if (pTrigger || pZone)
 			{
 				//check bbox size
