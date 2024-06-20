@@ -30,7 +30,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		if (!isItem)
+		if (!isItem && !visual.HasWord(".TGA"))
 		{
 			CString visualFileCheckName = visual;
 
