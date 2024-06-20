@@ -257,16 +257,16 @@ namespace GOTHIC_ENGINE {
 							auto bboxCenter = newVob->bbox3D.GetCenter();
 							auto point = newVob->trafoObjToWorld.GetTranslation() - newVob->bbox3D.GetCenterFloor();
 
-							if (!isItem)
-							{
-								newVob->SetCollDetStat(FALSE);
-								newVob->SetCollDetDyn(FALSE);
-							}
+							bool collDetDyn = newVob->GetCollDetDyn();
+							bool collDetStat = newVob->GetCollDetStat();
+
+							newVob->SetCollDet(FALSE);
 
 							newVob->SetPositionWorld(posToPlace + zVEC3(0, offsetVert, 0) + point);
 
-
-				
+							newVob->SetCollDetDyn(collDetDyn);
+							newVob->SetCollDetStat(collDetStat);
+							
 
 							if (grassToolSetGlobalParent && theApp.globalParent && !isItem)
 							{
