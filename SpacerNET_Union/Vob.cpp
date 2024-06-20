@@ -120,6 +120,11 @@ namespace GOTHIC_ENGINE {
 
 		zMAT4& trafo = pVob->GetNewTrafoObjToWorld();
 
+		if (auto pDecal = pVob->GetVisual()->CastTo<zCDecal>())
+		{
+			pDecal->decal2Sided = TRUE;
+		}
+
 		//print.PrintRed(zSTRING(vobSizeMult));
 
 		if (!theApp.currenItemRender)
