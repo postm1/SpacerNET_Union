@@ -155,6 +155,30 @@ namespace GOTHIC_ENGINE {
 
 						AddEntry(entry);
 					}
+
+
+					if (auto zTrigger = vob->CastTo<zCTrigger>())
+					{
+						auto triggerTarget = zTrigger->triggerTarget;
+
+						if (triggerTarget.Length() > 0)
+						{
+							if (!FindTriggerByName(triggerTarget))
+							{
+								auto entry = new ErrorReportEntry();
+
+								entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_TRIGGER);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(triggerTarget);
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
+						}
+					}
+					
 				}
 
 				if (auto pMob = vob->CastTo<oCMobContainer>())

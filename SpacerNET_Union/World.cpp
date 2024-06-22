@@ -197,16 +197,62 @@ namespace GOTHIC_ENGINE {
 
 
 
+		// UPPER CASE for some fields
+		zCArray<zCVob*> activeVobList;
 
+		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, activeVobList, 0);
 
-		/*
-		zCTree<zCVob>* tree = ogame->GetWorld()->globalVobTree.GetFirstChild();
-		while (tree)
+		int count = activeVobList.GetNumInList();
+
+		for (int i = 0; i < count; i++)
 		{
-			GetTreeChild(tree, callBackVob);
-			tree = tree->GetNextChild();
+			zCVob* vob = activeVobList.GetSafe(i);
+
+			if (vob)
+			{
+				if (IsSpacerVob(vob))
+				{
+					continue;
+				}
+
+				if (auto pBadVob = vob->CastTo<zCVobLevelCompo>())
+				{
+					continue;
+				}
+
+				vob->objectName = vob->objectName.Upper();
+
+
+
+				if (auto pMobInter = vob->CastTo<oCMobInter>())
+				{
+					pMobInter->useWithItem = pMobInter->useWithItem.Upper();
+					pMobInter->onStateFuncName = pMobInter->onStateFuncName.Upper();
+					pMobInter->conditionFunc = pMobInter->conditionFunc.Upper();
+					pMobInter->triggerTarget = pMobInter->triggerTarget.Upper();
+				}
+
+				if (auto pMobContainer = vob->CastTo<oCMobContainer>())
+				{
+					pMobContainer->contains = pMobContainer->contains.Upper();
+					pMobContainer->pickLockStr = pMobContainer->pickLockStr.Upper();
+					pMobContainer->keyInstance = pMobContainer->keyInstance.Upper();
+				}
+
+				if (auto pTrigger = vob->CastTo<zCTrigger>())
+				{
+					pTrigger->triggerTarget = pTrigger->triggerTarget.Upper();
+				}
+
+
+				if (auto pTriggerScript = vob->CastTo<oCTriggerScript>())
+				{
+					pTriggerScript->scriptFunc = pTriggerScript->scriptFunc.Upper();
+				}
+			}
 		}
-		*/
+		//// UPPER CASE END
+	
 
 		if (theApp.options.GetIntVal("checkBoxAutoRemoveAllVisuals"))
 		{
