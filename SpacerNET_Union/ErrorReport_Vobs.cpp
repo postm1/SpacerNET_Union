@@ -174,6 +174,93 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 
+				if (auto pMobInter = vob->CastTo<oCMobInter>())
+				{
+					auto useWithItem = pMobInter->useWithItem;
+
+
+					if (useWithItem.Length() > 0)
+					{
+						if (!IsItemExistsInScript(useWithItem))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_USE_WITHITEM);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(useWithItem);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+					
+
+					auto triggerName = pMobInter->triggerTarget;
+
+					if (triggerName.Length() > 0)
+					{
+						if (!FindTriggerByName(triggerName))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_TRIGGER);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(triggerName);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+
+					auto condFunc = pMobInter->conditionFunc;
+
+					if (condFunc.Length() > 0)
+					{
+						if (!parser->GetSymbol(condFunc))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_COND_FUNC);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(condFunc);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+					
+
+					auto onStateFunc = pMobInter->onStateFuncName;
+
+					if (onStateFunc.Length() > 0)
+					{
+						if (!parser->GetSymbol(onStateFunc + "_S0")
+							&& !parser->GetSymbol(onStateFunc + "_S1")
+							&& !parser->GetSymbol(onStateFunc + "_S2")
+							&& !parser->GetSymbol(onStateFunc + "_S3")
+							&& !parser->GetSymbol(onStateFunc + "_S4")
+						)
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_ON_STATE_FUNC);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(onStateFunc);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+				}
+
 				if (auto pMobCommon = vob->CastTo<oCMOB>())
 				{
 					auto focusName = pMobCommon->name;

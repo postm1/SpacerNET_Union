@@ -1436,14 +1436,38 @@ namespace GOTHIC_ENGINE {
 		return carr;
 	}
 
-	bool IsItemExistsInScript(zSTRING keyName)
+	bool IsItemExistsInScript(zSTRING itemInstName)
 	{
 		static int oCItemIndex = parser->GetIndex(oCItem::classDef->scriptClassName);
 
-		return parser->GetBaseClass(parser->GetIndex(keyName)) == oCItemIndex;
+		int itemIndex = parser->GetIndex(itemInstName);
+
+		return parser->GetBaseClass(itemIndex) == oCItemIndex;
 
 	}
 
+	bool FindTriggerByName(zSTRING triggerName)
+	{
+		zCArray<zCVob*> activeVobList;
+
+		ogame->GetWorld()->SearchVobListByBaseClass(zCTriggerBase::classDef, activeVobList, 0);
+
+
+		for (int i = 0; i < activeVobList.GetNumInList(); i++)
+		{
+			if (auto pVob = activeVobList.GetSafe(i))
+			{
+				if (pVob->GetObjectName() == triggerName)
+				{
+					return true;
+				}
+			}
+		}
+
+
+		return false;
+
+	}
 
 }
 
