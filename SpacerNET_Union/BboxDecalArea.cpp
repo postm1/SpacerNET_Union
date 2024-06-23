@@ -44,7 +44,7 @@ namespace GOTHIC_ENGINE {
 
 				if (dec)
 				{
-					dec->SetDecalDim(0, 0);
+					dec->SetDecalDim(10, 10);
 				}
 			}
 		}
@@ -57,6 +57,8 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		cmd << "ClearBboxDecalReset #1 " << endl;
+
 		for (int i = 0; i < 6; i++)
 		{
 			if (auto pVob = sides[i])
@@ -67,12 +69,14 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		cmd << "ClearBboxDecalReset #2 " << endl;
+
 		if (decalMat)
 		{
 			zRELEASE(decalMat);
-			decalMat = NULL;
 		}
-		
+
+		cmd << "ClearBboxDecalReset #3 " << endl;
 	}
 
 	void SpacerApp::BBoxDecal_OnLevelLoaded()

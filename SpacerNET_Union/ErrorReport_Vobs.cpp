@@ -157,29 +157,32 @@ namespace GOTHIC_ENGINE {
 					}
 
 
-					if (auto zTrigger = vob->CastTo<zCTrigger>())
-					{
-						auto triggerTarget = zTrigger->triggerTarget;
-
-						if (triggerTarget.Length() > 0)
-						{
-							if (!FindTriggerByName(triggerTarget))
-							{
-								auto entry = new ErrorReportEntry();
-
-								entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
-								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_TRIGGER);
-								entry->SetObject((uint)vob);
-								entry->SetVobName(triggerTarget);
-								entry->SetMaterialName("");
-								entry->SetTextureName("");
-
-								AddEntry(entry);
-							}
-						}
-					}
 					
 				}
+
+				if (auto zTriggerBase = vob->CastTo<zCTriggerBase>())
+				{
+					auto triggerTarget = zTriggerBase->triggerTarget;
+
+					if (triggerTarget.Length() > 0)
+					{
+						if (!FindVobByName(triggerTarget))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_TRIGGER);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(triggerTarget);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+				}
+
+
 
 				if (auto pMob = vob->CastTo<oCMobContainer>())
 				{
@@ -225,7 +228,7 @@ namespace GOTHIC_ENGINE {
 
 					if (triggerName.Length() > 0)
 					{
-						if (!FindTriggerByName(triggerName))
+						if (!FindVobByName(triggerName))
 						{
 							auto entry = new ErrorReportEntry();
 

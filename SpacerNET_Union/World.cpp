@@ -189,14 +189,9 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void SpacerApp::HandleWorldBeforeSave()
+
+	void SpacerApp::HandleUpperCase()
 	{
-		mm.CleanSelection();
-		if (ogame->GetCamera()->connectedVob && ogame->GetCamera()->connectedVob->GetHomeWorld())
-			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
-
-
-
 		// UPPER CASE for some fields
 		zCArray<zCVob*> activeVobList;
 
@@ -251,7 +246,21 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 		}
+
+		activeVobList.DeleteList();
 		//// UPPER CASE END
+	}
+
+
+	void SpacerApp::HandleWorldBeforeSave()
+	{
+		mm.CleanSelection();
+		if (ogame->GetCamera()->connectedVob && ogame->GetCamera()->connectedVob->GetHomeWorld())
+			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
+
+
+
+		
 	
 
 		if (theApp.options.GetIntVal("checkBoxAutoRemoveAllVisuals"))

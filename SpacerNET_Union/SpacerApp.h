@@ -374,8 +374,10 @@ namespace GOTHIC_ENGINE {
 		void SaveFile(zSTRING worldName, int type);
 
 		void HandleWorldBeforeSave();
-
+		
 		void HandleWorldAfterSave();
+
+		void HandleUpperCase();
 
 		void RemoveBadLevelCompoVisual();
 

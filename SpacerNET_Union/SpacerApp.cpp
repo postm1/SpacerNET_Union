@@ -854,7 +854,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::RemoveMobInterHelpVobs()
 	{
-		
+		cmd << "RemoveMobInterHelpVobs #1 " << endl;
+
 		for (int i = 0; i < mobInterSlotsVobs.GetNumInList(); i++)
 		{
 			auto pVob = mobInterSlotsVobs.GetSafe(i);
@@ -868,6 +869,8 @@ namespace GOTHIC_ENGINE {
 		
 
 		mobInterSlotsVobs.DeleteList();
+
+		cmd << "RemoveMobInterHelpVobs #2 " << endl;
 	}
 
 	void SpacerApp::HideMobInterHelpVobs()

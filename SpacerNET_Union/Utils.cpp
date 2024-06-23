@@ -1446,27 +1446,13 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	bool FindTriggerByName(zSTRING triggerName)
+	bool FindVobByName(zSTRING triggerName)
 	{
 		zCArray<zCVob*> activeVobList;
 
-		ogame->GetWorld()->SearchVobListByBaseClass(zCTriggerBase::classDef, activeVobList, 0);
+		auto pVob = ogame->GetWorld()->SearchVobByName(triggerName);
 
-
-		for (int i = 0; i < activeVobList.GetNumInList(); i++)
-		{
-			if (auto pVob = activeVobList.GetSafe(i))
-			{
-				if (pVob->GetObjectName() == triggerName)
-				{
-					return true;
-				}
-			}
-		}
-
-
-		return false;
-
+		return pVob != NULL;
 	}
 
 }
