@@ -879,6 +879,8 @@ namespace GOTHIC_ENGINE {
 
 				HideMobInterHelpVobs();
 
+				if (mobInterSlotsVobs.GetNumInList() == 0) return;
+
 				if (auto mob = vob->CastTo<oCMobInter>())
 				{
 					auto savePos = mob->GetPositionWorld();
