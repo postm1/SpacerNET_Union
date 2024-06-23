@@ -364,7 +364,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::Reset()
 	{
-		
+		sidesInit = false;
+
 		if (g_bIsPlayingGame)
 		{
 			theApp.ToggleGame();

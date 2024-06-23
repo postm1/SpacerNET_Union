@@ -29,16 +29,27 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::ClearBboxDecal()
 	{
+
+		if (!sidesInit)
+		{
+			return;
+		}
+
 		if (!options.GetIntVal("bShowBboxModel"))
 		{
 			return;
 		}
+
+
+		//cmd << "ClearBboxDecal" << endl;
 
 		for (int i = 0; i < 6; i++)
 		{
 			if (auto pVob = sides[i])
 			{
 				pVob->SetShowVisual(FALSE);
+
+				//cmd << "ClearBboxDecal: " << GetVobNameSafe(pVob) << endl;
 
 				zCDecal* dec = ((zCDecal*)pVob->GetVisual());
 
@@ -57,7 +68,12 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		cmd << "ClearBboxDecalReset #1 " << endl;
+		if (!sidesInit)
+		{
+			return;
+		}
+
+		//cmd << "ClearBboxDecalReset" << endl;
 
 		for (int i = 0; i < 6; i++)
 		{
@@ -69,14 +85,11 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		cmd << "ClearBboxDecalReset #2 " << endl;
-
 		if (decalMat)
 		{
 			zRELEASE(decalMat);
 		}
 
-		cmd << "ClearBboxDecalReset #3 " << endl;
 	}
 
 	void SpacerApp::BBoxDecal_OnLevelLoaded()
@@ -85,6 +98,8 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+
+		//cmd << "BBoxDecal_OnLevelLoaded" << endl;
 
 		zSTRING textureName = "RED.TGA";
 
@@ -107,6 +122,7 @@ namespace GOTHIC_ENGINE {
 		{
 			auto side = new zCVob();
 			side->SetVisual(textureName);
+			side->SetVobName("HELPER_SIDE_" + Z i);
 
 			if (auto decal = side->visual->CastTo<zCDecal>())
 			{
@@ -129,11 +145,18 @@ namespace GOTHIC_ENGINE {
 #endif
 			sides[i] = side;
 		}
+
+		sidesInit = TRUE;
 	}
 
 
 	void SpacerApp::BBoxDecal_Render()
 	{
+		if (!sidesInit)
+		{
+			return;
+		}
+
 		if (pickedVob)
 		{
 			if (pickedVob->visual)

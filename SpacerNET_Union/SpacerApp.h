@@ -443,9 +443,9 @@ namespace GOTHIC_ENGINE {
 		void SetBBoxDecalPosAndSize(zCVob* sides[6], zVEC3 points[8], int index, int a, int b, int c, int d);
 		void BBoxDecal_Render();
 
-		bool addBboxDecals = false;
 		zCVob* sides[6];
 		zVEC3 points[8];
+		bool sidesInit = false;
 		zCMaterial* decalMat = NULL;
 	};
 
