@@ -171,6 +171,7 @@ namespace GOTHIC_ENGINE {
 
 			auto pZone = pickedVob->CastTo<zCZone>();
 			auto pTrigger = pickedVob->CastTo<zCTriggerBase>();
+			auto pDamage = pickedVob->CastTo<zCTouchDamage>();
 
 			auto pFog = pickedVob->CastTo<zCZoneZFog>();
 
@@ -179,7 +180,7 @@ namespace GOTHIC_ENGINE {
 				return;
 			}
 
-			if (pTrigger || pZone)
+			if (pTrigger || pZone || pDamage)
 			{
 				//check bbox size
 				if (pickedVob->bbox3D.maxs.Distance(pickedVob->bbox3D.mins) >= 10)
