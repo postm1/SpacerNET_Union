@@ -694,19 +694,20 @@ namespace GOTHIC_ENGINE {
 			if (pVob)
 			{
 				ogame->GetCameraVob()->SetPositionWorld(pVob->GetPositionWorld() + zVEC3(0, 100, 0));
-				return;
 			}
-
-
-			zCArray<zCVob*> resultList;
-			zCWorld* world = ogame->GetWorld();
-
-			world->SearchVobListByClass(zCVobStartpoint::classDef, resultList, 0);
-
-			if (resultList.GetNumInList() > 0)
+			else
 			{
-				ogame->GetCameraVob()->SetPositionWorld(resultList.GetSafe(0)->GetPositionWorld() + zVEC3(0, 75, 0));
+				zCArray<zCVob*> resultList;
+				zCWorld* world = ogame->GetWorld();
+
+				world->SearchVobListByClass(zCVobStartpoint::classDef, resultList, 0);
+
+				if (resultList.GetNumInList() > 0)
+				{
+					ogame->GetCameraVob()->SetPositionWorld(resultList.GetSafe(0)->GetPositionWorld() + zVEC3(0, 75, 0));
+				}
 			}
+			
 		}
 
 
