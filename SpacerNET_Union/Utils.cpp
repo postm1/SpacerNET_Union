@@ -435,6 +435,17 @@ namespace GOTHIC_ENGINE {
 			return true;
 		}
 
+		if (theApp.sidesInit)
+		{
+			for (int i = 0; i < 6; i++)
+			{
+				if (theApp.sides[i] == pVob)
+				{
+					return true;
+				}
+			}
+		}
+
 		return false;
 	}
 

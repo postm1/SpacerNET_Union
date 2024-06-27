@@ -47,6 +47,9 @@ namespace GOTHIC_ENGINE {
 		{
 			if (auto pVob = sides[i])
 			{
+
+				pVob->SetPositionWorld(zVEC3(0, 0, 0));
+
 				pVob->SetShowVisual(FALSE);
 
 				//cmd << "ClearBboxDecal: " << GetVobNameSafe(pVob) << endl;

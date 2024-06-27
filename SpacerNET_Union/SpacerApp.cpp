@@ -1355,6 +1355,12 @@ namespace GOTHIC_ENGINE {
 		
 			if (pFoundVob)
 			{
+				if (IsSpacerVob(pFoundVob))
+				{
+					ignoreList.InsertEnd(pFoundVob);
+					continue;
+				}
+
 				//oCItem
 				if (filterPickVobIndex == 1)
 				{
