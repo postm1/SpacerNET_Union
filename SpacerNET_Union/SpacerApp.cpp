@@ -1613,7 +1613,7 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		cmd << "Intersect count: " << resVobList.GetNumInList() << endl;
+		//cmd << "Intersect count: " << resVobList.GetNumInList() << endl;
 
 		int i_num = 0;
 

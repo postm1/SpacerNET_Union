@@ -192,6 +192,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::HandleUpperCase()
 	{
+		cmd << "Handle vobs UPPER case..." << endl;
+
 		// UPPER CASE for some fields
 		zCArray<zCVob*> activeVobList;
 
@@ -216,8 +218,6 @@ namespace GOTHIC_ENGINE {
 				}
 
 				vob->objectName = vob->objectName.Upper();
-
-
 
 				if (auto pMobInter = vob->CastTo<oCMobInter>())
 				{
@@ -258,15 +258,17 @@ namespace GOTHIC_ENGINE {
 		if (ogame->GetCamera()->connectedVob && ogame->GetCamera()->connectedVob->GetHomeWorld())
 			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
 
-
-
 		
-	
+		if (theApp.options.GetIntVal("bHandleNamesUpperCase"))
+		{
+			this->HandleUpperCase();
+		}
 
 		if (theApp.options.GetIntVal("checkBoxAutoRemoveAllVisuals"))
 		{
 			this->RemoveBadLevelCompoVisual();
 		}
+
 		
 		treeIsReady = false;
 
