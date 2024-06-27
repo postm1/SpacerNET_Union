@@ -137,6 +137,40 @@ namespace GOTHIC_ENGINE {
 							AddEntry(entry);
 						}
 					}
+
+					if (!pItem && visName.Length() > 0)
+					{
+
+						int lastIndexOf = visName.SearchReverse(".");
+						int length = visName.Length();
+
+						//cmd << "Visual: " << visName << " Index: " << lastIndexOf << " Length: " << length << endl;
+
+						Stack_PushString(visName);
+
+						static auto callFunc = (intFuncPointer)GetProcAddress(theApp.module, "Utils_IsOnlyLatin");
+						
+						if (callFunc() == FALSE 
+							|| !visName.HasWord(".") 
+							|| (length - 1 - lastIndexOf) != 3 
+							|| visName.HasWord(";") 
+							|| visName.HasWord(",")
+							|| visName.HasWord("!")
+							|| visName.HasWord("=")
+							)
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_VISUAL_SYMBOLS);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(visName);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);	
+						}
+					}
 					
 				}
 
