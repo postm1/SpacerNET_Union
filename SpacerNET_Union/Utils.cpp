@@ -1466,5 +1466,14 @@ namespace GOTHIC_ENGINE {
 		return pVob != NULL;
 	}
 
+
+	bool ContainsSymbolsOtherThanRL(const std::string& str) {
+		for (const char& c : str) {
+			if (c != 'R' && c != 'L') {
+				return true;
+			}
+		}
+		return false;
+	}
 }
 

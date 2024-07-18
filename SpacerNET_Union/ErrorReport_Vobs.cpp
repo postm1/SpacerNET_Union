@@ -233,6 +233,26 @@ namespace GOTHIC_ENGINE {
 
 						AddEntry(entry);
 					}
+
+					if (pMob->pickLockStr.Length() > 0)
+					{
+						std::string strCheck = pMob->pickLockStr.Upper();
+
+						if (ContainsSymbolsOtherThanRL(strCheck))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_MOBCONT_BAD_LOCKSTRING);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(vob->_GetClassDef()->className);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+						
+					}
 				}
 
 				if (auto pMobInter = vob->CastTo<oCMobInter>())
