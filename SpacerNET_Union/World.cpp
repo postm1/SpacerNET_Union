@@ -11,7 +11,7 @@ namespace GOTHIC_ENGINE {
 	void zERROR::Init_Union(zSTRING cmd) {
 		THISCALL(ivk_zERROR_Init)(cmd);
 		int target = 0;
-		this->SetTarget(target | zERR_TARGET_SPY); //Г§Е•Г¤Е•Е€Гј Г¶ДєГ«Гј ГўЕ±ГўГ®Г¤Е• zSpy, ДЌГ«ДЌ ГґЕ•Г©Г« Гў Д™Г®Д‘Г­Дє Г¤ДЌЕ„Д™Е• C: zERR_TARGET_FILE/zERR_TARGET_SPY
+		this->SetTarget(target | zERR_TARGET_SPY); //задать цель вывода zSpy, или файл в корне диска C: zERR_TARGET_FILE/zERR_TARGET_SPY
 		
 	}
 
@@ -892,20 +892,7 @@ namespace GOTHIC_ENGINE {
 
 		zCWorld* world = ogame->GetWorld();
 		treeIsReady = false;
-
 		world->DisposeStaticWorld();
-
-		// Remove old sector materials, so that they can be recreated properly
-		for (int i = zCMaterial::classDef->numLivingObjects - 1; i >= 0; --i)
-		{
-			zCMaterial* material = static_cast<zCMaterial*>(zCMaterial::classDef->objectList[i]);
-
-			if (material->GetName().StartWith("S:"))
-			{
-				zCMaterial::classDef->objectList.RemoveIndex(i);
-				zRELEASE(material);
-			}
-		}
 
 		if (type == 0)
 		{
@@ -1070,8 +1057,8 @@ namespace GOTHIC_ENGINE {
 
 		if (vobWaypoint || pItem)
 		{
-			//print.PrintRed("VobTree ГўЕ„Е€Е•ГўГ«ДєГ­ ДѓГ«Г®ГЎЕ•Г«ГјГ­Г®!");
-			//print.PrintRed("ДЋГ®Е€Г®Д›Гі Г·Е€Г® Г­ДєГ«ГјГ§Л™ ГўЕ„Е€Е•ГўГ«Л™Е€Гј Гў oCItem ДЌГ«ДЌ zCVobWaypoint!");
+			//print.PrintRed("VobTree вставлен глобально!");
+			//print.PrintRed("Потому что нельзя вставлять в oCItem или zCVobWaypoint!");
 		}
 		else
 		{
