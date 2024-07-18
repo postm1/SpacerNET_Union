@@ -11,7 +11,7 @@ namespace GOTHIC_ENGINE {
 	void zERROR::Init_Union(zSTRING cmd) {
 		THISCALL(ivk_zERROR_Init)(cmd);
 		int target = 0;
-		this->SetTarget(target | zERR_TARGET_SPY); //задать цель вывода zSpy, или файл в корне диска C: zERR_TARGET_FILE/zERR_TARGET_SPY
+		this->SetTarget(target | zERR_TARGET_SPY);
 		
 	}
 
@@ -1057,8 +1057,7 @@ namespace GOTHIC_ENGINE {
 
 		if (vobWaypoint || pItem)
 		{
-			//print.PrintRed("VobTree вставлен глобально!");
-			//print.PrintRed("ѕотому что нельз€ вставл€ть в oCItem или zCVobWaypoint!");
+			
 		}
 		else
 		{
