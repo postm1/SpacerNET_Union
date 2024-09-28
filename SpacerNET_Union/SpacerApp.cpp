@@ -463,6 +463,11 @@ namespace GOTHIC_ENGINE {
 			//ogame->GetWorld()->GetBspTree()->m_bRenderedFirstTime = TRUE;
 			//MessageBox(0, "First", 0, 0);
 		}
+
+		if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
+		{
+			parser->SetScriptInt("RX_IsSpacetNet", 1);
+		}
 	}
 
 

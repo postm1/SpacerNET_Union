@@ -588,10 +588,6 @@ namespace GOTHIC_ENGINE {
 			ogame->GetWorld()->addZonesToWorld = TRUE;
 		}
 
-		if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
-		{
-			parser->SetScriptInt("RX_IsSpacetNet", 1);
-		}
 
 	}
 
