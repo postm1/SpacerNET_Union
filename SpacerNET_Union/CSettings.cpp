@@ -463,6 +463,10 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "showSpawnListRadius", "4500");
 		list.Insert("showSpawnListRadius", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "bFastLoad3DSLocation", "0");
+		list.Insert("bFastLoad3DSLocation", set);
+
+		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
 		set = new CSetting(TYPE_STRING, "PATH", "meshPath", "");

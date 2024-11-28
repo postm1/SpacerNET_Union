@@ -4,6 +4,8 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+
+#if engine == ENGINE_G2A
 	// This code allows to skip creating OBBOX tree for 3ds LOCATION file, it saves about ~30% of 3ds load time
 	// don't use for vobs! 3DS mesh location only!
 	bool dontCreateOBBOXOnLocationLoad = false;
@@ -18,12 +20,12 @@ namespace GOTHIC_ENGINE {
 		if (debugInfo) cmd << "Load3DS_Union: " << fileName;
 
 
-		dontCreateOBBOXOnLocationLoad = theApp.isMergingMeshNow || theApp.isLoadingMeshNow;
+		dontCreateOBBOXOnLocationLoad = theApp.options.GetIntVal("bFastLoad3DSLocation") && (theApp.isMergingMeshNow || theApp.isLoadingMeshNow);
 		
 
 		if (debugInfo && dontCreateOBBOXOnLocationLoad)
 		{
-			cmd << " (Skip OBBOX tree creating...)";
+			cmd << " (--- Skip OBBOX )";
 		}
 
 		if (debugInfo) cmd << endl;
@@ -63,5 +65,5 @@ namespace GOTHIC_ENGINE {
 			bbox3D.maxs = zVEC3(D, D, D);
 		};
 	};
-
+#endif
 }
