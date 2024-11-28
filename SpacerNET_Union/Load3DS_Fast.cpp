@@ -13,16 +13,20 @@ namespace GOTHIC_ENGINE {
 
 	void zCFile3DS::Load3DS_Union(zSTRING const& fileName, zCMesh* tMesh)
 	{
+		bool debugInfo = true;
 
-		cmd << "Load3DS_Union: " << fileName << endl;
+		if (debugInfo) cmd << "Load3DS_Union: " << fileName;
 
-		if (theApp.isMergingMeshNow || theApp.isLoadingMeshNow)
-		{
-			cmd << "This 3ds has no OBBX: " << fileName << endl;
 
-			dontCreateOBBOXOnLocationLoad = true;
-		}
+		dontCreateOBBOXOnLocationLoad = theApp.isMergingMeshNow || theApp.isLoadingMeshNow;
 		
+
+		if (debugInfo && dontCreateOBBOXOnLocationLoad)
+		{
+			cmd << " (Skip OBBOX tree creating...)";
+		}
+
+		if (debugInfo) cmd << endl;
 
 		THISCALL(ivk_zCFile3DS_Load3DS)(fileName, tMesh);
 
