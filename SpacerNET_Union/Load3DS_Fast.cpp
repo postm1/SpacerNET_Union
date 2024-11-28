@@ -23,10 +23,19 @@ namespace GOTHIC_ENGINE {
 		dontCreateOBBOXOnLocationLoad = theApp.options.GetIntVal("bFastLoad3DSLocation") && (theApp.isMergingMeshNow || theApp.isLoadingMeshNow);
 		
 
-		if (debugInfo && dontCreateOBBOXOnLocationLoad)
+		if (dontCreateOBBOXOnLocationLoad)
 		{
-			cmd << " (--- Skip OBBOX )";
+			(callVoidFunc)GetProcAddress(theApp.module, "ShowSkip3DSWarning")();
+
+			if (debugInfo)
+			{
+				cmd << " (--- Skip OBBOX )";
+
+
+
+			}
 		}
+		
 
 		if (debugInfo) cmd << endl;
 
