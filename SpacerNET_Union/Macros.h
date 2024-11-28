@@ -59,9 +59,6 @@ namespace GOTHIC_ENGINE {
 	#define NOINLINE __declspec(noinline)
 	#define UAPI EXTERN_C NOINLINE DLLEXPORT
 
-#define zERR_MESSAGE(level, flag, text)		((level)<=zerr->GetFilterLevel()) ? zerr->Report(zERR_TYPE_INFO,  0, text, level, flag, __LINE__,  __FILE__, 0 ) : zERR_NONE
-#define zERR_WARNING(text)					zerr->Report(zERR_TYPE_WARN,  0, text, 0, 0, __LINE__,  __FILE__, 0 )
-
 // G1 wheel
 #define zMOUSE_SCROLL_UP		0x809
 #define zMOUSE_SCROLL_DOWN		0x80A

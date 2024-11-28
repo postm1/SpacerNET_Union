@@ -280,9 +280,6 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\ErrorReport">
       <UniqueIdentifier>{2710eb64-b15d-490c-a5ec-c648f48710ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Plugin\Workspace\Plugin\Main\SpacerApp\ImprovesEngine">
-      <UniqueIdentifier>{e9d9b891-c985-40cb-b310-2a74a8a4a6f7}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -3052,9 +3049,6 @@
     </ClInclude>
     <ClInclude Include="zCObjPresetLib.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="LoadMesh_Improves.cpp">
-      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\ImprovesEngine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

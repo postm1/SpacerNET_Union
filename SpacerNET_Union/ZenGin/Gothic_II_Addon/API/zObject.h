@@ -119,8 +119,7 @@ namespace Gothic_II_Addon {
     virtual void Archive( zCArchiver& )                                 zCall( 0x00401ED0 );
     virtual void Unarchive( zCArchiver& )                               zCall( 0x00401EE0 );
     virtual ~zCObject( void )                                           zCall( 0x005A8C50 );
-    zCObject* AddRef() { refCtr++;  return this;
-    }
+    void AddRef() { refCtr++; }
     
     template<class T>
     T* CastTo() {
