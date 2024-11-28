@@ -280,6 +280,9 @@
     <Filter Include="Plugin\Workspace\Plugin\Main\ErrorReport">
       <UniqueIdentifier>{2710eb64-b15d-490c-a5ec-c648f48710ac}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Plugin\Workspace\Plugin\Main\SpacerApp\Optimizations">
+      <UniqueIdentifier>{6a3e8f57-7305-4b7a-b5ad-92acf718562c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Interface.cpp">
@@ -3049,6 +3052,9 @@
     </ClInclude>
     <ClInclude Include="zCObjPresetLib.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Load3DS_Fast.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Optimizations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
