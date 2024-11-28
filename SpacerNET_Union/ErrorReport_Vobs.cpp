@@ -194,6 +194,25 @@ namespace GOTHIC_ENGINE {
 					
 				}
 
+
+				if (vob->_GetClassDef() == oCZoneMusic::classDef 
+					|| vob->_GetClassDef() == zCVobSound::classDef 
+					|| vob->_GetClassDef() == zCZoneZFog::classDef)
+				{
+					if (vob->bbox3D.GetMinExtent() < 1)
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BBOX_AREA_WRONG_SIZE);
+						entry->SetObject((uint)vob);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
+
 				if (auto zTriggerBase = vob->CastTo<zCTriggerBase>())
 				{
 					auto triggerTarget = zTriggerBase->triggerTarget;
