@@ -5,7 +5,7 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 
-#if ENGINE == ENGINE_G2A
+#if ENGINE == Engine_G2A
 	// This code allows to skip creating OBBOX tree for 3ds LOCATION file, it saves about ~30% of 3ds load time
 	// don't use for vobs! 3DS mesh location only!
 	bool dontCreateOBBOXOnLocationLoad = false;
