@@ -100,6 +100,8 @@ namespace GOTHIC_ENGINE {
 
 			bool isMesh;
 			bool isMerged;
+			bool isMergingMeshNow;
+			bool isLoadingMeshNow;
 			int filterPickVobIndex;
 			// selected current vob
 			zCVob* pickedVob;

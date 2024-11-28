@@ -16,7 +16,7 @@ namespace GOTHIC_ENGINE {
 
 		cmd << "Load3DS_Union: " << fileName << endl;
 
-		if (!theApp.IsAWorldLoaded() && (theApp.isMesh || theApp.isMerged))
+		if (theApp.isMergingMeshNow || theApp.isLoadingMeshNow)
 		{
 			cmd << "This 3ds has no OBBX: " << fileName << endl;
 

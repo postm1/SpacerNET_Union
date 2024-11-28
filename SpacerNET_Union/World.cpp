@@ -365,8 +365,10 @@ namespace GOTHIC_ENGINE {
 	
 	void SpacerApp::MergeMesh(CString worldName)
 	{
+		isMergingMeshNow = true;
 		zoptions->ChangeDir(DIR_MESHES);
 		ogame->GetWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED);
+		isMergingMeshNow = false;
 
 		oCNpc::SetNpcAIDisabled(TRUE);
 		dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
@@ -384,10 +386,11 @@ namespace GOTHIC_ENGINE {
 
 		isMesh = true;
 		bDebugSpacerLoadMesh = true;
+		isLoadingMeshNow = true;
 
 		zoptions->ChangeDir(DIR_MESHES);
 		ogame->GetGameWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED);
-
+		isLoadingMeshNow = false;
 		oCNpc::SetNpcAIDisabled(TRUE);
 		dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
 

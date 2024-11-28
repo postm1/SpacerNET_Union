@@ -19,6 +19,8 @@ namespace GOTHIC_ENGINE {
 		this->selectedWaypointForNet = NULL;
 		this->mouseClicksBlockedTime = 0;
 		this->isMerged = false;
+		this->isMergingMeshNow = false;
+		this->isLoadingMeshNow = false;
 		this->isMesh = false;
 		this->hideWindows = false;
 		this->hideWindowsForce = false;
