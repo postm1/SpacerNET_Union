@@ -29,10 +29,7 @@ namespace GOTHIC_ENGINE {
 
 			if (debugInfo)
 			{
-				cmd << " (--- Skip OBBOX )";
-
-
-
+				cmd << " (--- Skip OBBOX)";
 			}
 		}
 		
