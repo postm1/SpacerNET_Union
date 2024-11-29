@@ -354,14 +354,40 @@ namespace GOTHIC_ENGINE {
 			}
 
 
-
 			if (className == "zCVobSound")
 			{
 				auto soundVob = newvob->CastTo<zCVobSound>();
 
 				if (soundVob)
 				{
-					soundVob->soundName = vobName;
+					vobSound->SetVobName(vobName);
+					vobSound->SetSound(vobName);
+					vobSound->soundRadius = 1500;
+					vobSound->soundVolume = 100;
+					vobSound->m_zBias = 0;
+					vobSound->soundVolType = zCVobSound::zTSoundVolType::SV_SPHERE;
+					vobSound->showVisual = true;
+					vobSound->soundMode = zCVobSound::zTSoundMode::SM_RANDOM;
+					vobSound->soundRandDelay = 30;
+					vobSound->soundRandDelayVar = 15;
+					
+					
+					/*vobSound->SetSoundVolume(vobSound->soundVolume);
+
+					if (vobSound->soundVolType == zCVobSound::zTSoundVolType::SV_SPHERE)
+					{
+						vobSound->SetSoundRadius(vobSound->soundRadius);
+					}
+					else if (vobSound->soundVolType == zCVobSound::zTSoundVolType::SV_ELLIPSOID)
+					{
+						zTBBox3D bbox = vobSound->GetBBox3DWorld();
+						bbox.Scale(zVEC3(1, 1, 1));
+						vobSound->SetBBox3DWorld(bbox);
+					}*/
+
+					//vobSound->StopSound();
+					//vobSound->StartSound(FALSE);
+					//vobSound->DoSoundUpdate(1.0f);
 				}
 			}
 			else
