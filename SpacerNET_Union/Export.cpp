@@ -190,7 +190,7 @@ namespace GOTHIC_ENGINE {
 
 					|| dynamic_cast<zCVobWaypoint*>(pVob)
 					|| dynamic_cast<oCWaypoint*>(pVob)
-					|| dynamic_cast<zCVobSpot*>(pVob)
+					//|| dynamic_cast<zCVobSpot*>(pVob)
 					|| dynamic_cast<zCVobStartpoint*>(pVob)
 					|| dynamic_cast<oCItem*>(pVob)
 					|| dynamic_cast<zCVobLight*>(pVob)
