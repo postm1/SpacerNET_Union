@@ -15,7 +15,7 @@ namespace GOTHIC_ENGINE {
 
 	void zCFile3DS::Load3DS_Union(zSTRING const& fileName, zCMesh* tMesh)
 	{
-		bool debugInfo = true;
+		bool debugInfo = false;
 
 		if (debugInfo) cmd << "Load3DS_Union: " << fileName;
 
