@@ -5,7 +5,7 @@ namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
 
-#if ENGINE == Engine_G2A
+
 	// This code allows to skip creating OBBOX tree for 3ds LOCATION file, it saves about ~30% of 3ds load time
 	// don't use for vobs! 3DS mesh location only!
 	bool dontCreateOBBOXOnLocationLoad = false;
@@ -41,6 +41,7 @@ namespace GOTHIC_ENGINE {
 		dontCreateOBBOXOnLocationLoad = false;
 	}
 
+#if ENGINE == Engine_G2A
 
 	HOOK ivk_zCMesh_CalcBBox3D AS(&zCMesh::CalcBBox3D, &zCMesh::CalcBBox3D_Union);
 	void zCMesh::CalcBBox3D_Union(const zBOOL fastApprox) 
@@ -81,21 +82,21 @@ namespace GOTHIC_ENGINE {
 		UnshareFeatures();
 		if (bGreat || dontCreateOBBOXOnLocationLoad)
 		{
-			m_bbAxisAligned.Init();
-			for (int i = 0; i < m_nSizeVertex; i++)
-				m_bbAxisAligned.AddPoint(m_ppVertex[i]->m_vPosition);
+			bbox3D.Init();
+			for (int i = 0; i < numVert; i++)
+				bbox3D.AddPoint(vertList[i]->position);
 		}
 		else
 		{
-			m_bbOriented.BuildOBBTree(this, 3);
-			m_bbAxisAligned = m_bbOriented.GetBBox3D();
+			obbox3D.BuildOBBTree(this, 3);
+			bbox3D = obbox3D.GetBBox3D();
 		}
-		if (m_nSizeVertex && m_nSizePolygon)
+		if (numVert && numPoly)
 			return;
-		m_bbAxisAligned.vMin = -0.1f;
-		m_bbAxisAligned.vMax = 0.1f;
 
-		};
+		zREAL D = 0.1F;
+		bbox3D.mins = -zVEC3(D, D, D);
+		bbox3D.maxs = zVEC3(D, D, D);
 	};
 
 #endif

@@ -364,7 +364,9 @@ namespace GOTHIC_ENGINE {
 					vobSound->SetSound(vobName);
 					vobSound->soundRadius = 1500;
 					vobSound->soundVolume = 100;
+#if ENGINE == Engine_G2A
 					vobSound->m_zBias = 0;
+#endif
 					vobSound->soundVolType = zCVobSound::zTSoundVolType::SV_SPHERE;
 					vobSound->showVisual = true;
 					vobSound->soundMode = zCVobSound::zTSoundMode::SM_RANDOM;
