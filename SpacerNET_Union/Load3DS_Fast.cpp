@@ -72,4 +72,31 @@ namespace GOTHIC_ENGINE {
 		};
 	};
 #endif
+
+#if ENGINE == Engine_G1
+	HOOK ivk_zCMesh_CalcBBox3D AS(&zCMesh::CalcBBox3D, &zCMesh::CalcBBox3D_Union);
+	void zCMesh::CalcBBox3D_Union(const zBOOL bGreat)
+	{
+
+		UnshareFeatures();
+		if (bGreat || dontCreateOBBOXOnLocationLoad)
+		{
+			m_bbAxisAligned.Init();
+			for (int i = 0; i < m_nSizeVertex; i++)
+				m_bbAxisAligned.AddPoint(m_ppVertex[i]->m_vPosition);
+		}
+		else
+		{
+			m_bbOriented.BuildOBBTree(this, 3);
+			m_bbAxisAligned = m_bbOriented.GetBBox3D();
+		}
+		if (m_nSizeVertex && m_nSizePolygon)
+			return;
+		m_bbAxisAligned.vMin = -0.1f;
+		m_bbAxisAligned.vMax = 0.1f;
+
+		};
+	};
+
+#endif
 }
