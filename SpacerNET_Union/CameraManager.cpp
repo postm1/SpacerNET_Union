@@ -257,7 +257,7 @@ namespace GOTHIC_ENGINE {
 			cur_cam->SetShowVisual(FALSE);
 
 			hideHelpVisualsTemp = zCVob::s_showHelperVisuals;
-			zCVob::SetShowHelperVisuals(FALSE);
+			zCVob::s_showHelperVisuals = FALSE;
 		}
 
 
@@ -320,12 +320,9 @@ namespace GOTHIC_ENGINE {
 
 		cameraRun = false;
 
-		if (hideVisualWhileActive)
+		if (hideVisualWhileActive && hideHelpVisualsTemp)
 		{
-			if (hideHelpVisualsTemp)
-			{
-				zCVob::SetShowHelperVisuals(TRUE);
-			}
+			zCVob::s_showHelperVisuals = TRUE;
 		}
 
 		theApp.SetSelectedVob(cur_cam, "CamStop");

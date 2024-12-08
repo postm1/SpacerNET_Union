@@ -143,7 +143,7 @@ namespace GOTHIC_ENGINE {
 			ogame->GetWorld()->AddVob(side);
 			side->SetCollDet(FALSE);
 			side->ignoredByTraceRay = true;
-#if ENGINE != Engine_G1
+#if ENGINE >= Engine_G2
 			side->m_fVobFarClipZScale = 2.0f;
 #endif
 			sides[i] = side;

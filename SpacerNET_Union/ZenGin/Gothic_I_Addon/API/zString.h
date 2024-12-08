@@ -4,7 +4,7 @@
 #define __ZSTRING_H__VER1__
 
 #define USING_UNION_STRING_METHODS True
-#define UNPROTECT_ZSTRING_METHODS  False
+#define UNPROTECT_ZSTRING_METHODS  True
 
 namespace Gothic_I_Addon {
 
@@ -183,6 +183,10 @@ namespace Gothic_I_Addon {
 
     INLINE bool_t CompareMaskedI( const CStringA& str ) const {
       return ((CStringA&)*this).CompareMaskedI( (CStringA&)str );
+    }
+
+    INLINE bool_t Contains(const zSTRING& cmp) const {
+        return this->HasWord(cmp);
     }
 
     INLINE bool_t HasWord( const zSTRING& cmp ) const {

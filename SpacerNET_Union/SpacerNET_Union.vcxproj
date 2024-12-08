@@ -374,7 +374,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G1 Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <OutDir>$(SolutionDir)\G1\Bin\</OutDir>
+    <OutDir>$(SolutionDir)Bin\</OutDir>
     <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
     <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>

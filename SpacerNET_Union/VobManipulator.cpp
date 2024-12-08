@@ -665,7 +665,7 @@ namespace GOTHIC_ENGINE {
 
 			if (useHierarchy && (theApp.vobToCopy == theApp.pickedVob || checkCopyVobSelf) && !pItem && !pickedVobWaypont)
 			{
-				//print.PrintRed("Не могу вставить воб самого в себя!");
+				//print.PrintRed("ГЌДє Д›Г®ДѓГі ГўЕ„Е€Е•ГўДЌЕ€Гј ГўГ®ГЎ Е„Е•Д›Г®ДѓГ® Гў Е„ДєГЎЛ™!");
 				//return;
 				useHierarchy = false;
 			}
@@ -860,11 +860,7 @@ namespace GOTHIC_ENGINE {
 			zCPolygon *poly = bspTree.mesh->Poly(i);
 			if (poly->flags.occluder || poly->flags.ghostOccluder) {
 
-#if ENGINE >= Engine_G2
 				poly->SetMaterial(mat);
-#else
-				poly->material = mat;
-#endif
 			};
 		};
 
@@ -876,7 +872,7 @@ namespace GOTHIC_ENGINE {
 
 	zCTexture* GetScreenTex(zSTRING name)
 	{
-		zCTextureConvert* texCon = zrenderer->CreateTextureConvert();
+		zCTexConGeneric* texCon = reinterpret_cast<zCTexConGeneric*>(zrenderer->CreateTextureConvert());
 		zrenderer->Vid_GetFrontBufferCopy(*texCon);
 		zCTextureInfo texInfo = texCon->GetTextureInfo();
 
@@ -1175,7 +1171,7 @@ namespace GOTHIC_ENGINE {
 					}
 
 					cmd << pEntry->name << ", [" << pEntry->countLoc << "/" << pEntry->countCont 
-						<< "]. Всего: " << pEntry->amoutLoc << "/"
+						<< "]. Г‚Е„ДєДѓГ®: " << pEntry->amoutLoc << "/"
 						<< pEntry->amountCont
 						<< " (" << pEntry->amountAll << ")"
 						<< endl;
@@ -1487,7 +1483,7 @@ namespace GOTHIC_ENGINE {
 				{
 					mm.CopyTextureName();
 					//mm.copyMat = mm.selPolyList->Get(0)->GetPolygon()->material;
-					//print.PrintRed("Материал скопирован");
+					//print.PrintRed("ДљЕ•Е€ДєД‘ДЌЕ•Г« Е„Д™Г®ДЏДЌД‘Г®ГўЕ•Г­");
 				}
 
 			}

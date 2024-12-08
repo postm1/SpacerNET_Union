@@ -21,7 +21,7 @@ namespace GOTHIC_ENGINE {
 
 
 		dontCreateOBBOXOnLocationLoad = theApp.options.GetIntVal("bFastLoad3DSLocation") && (theApp.isMergingMeshNow || theApp.isLoadingMeshNow);
-		
+
 
 		if (dontCreateOBBOXOnLocationLoad)
 		{
@@ -32,7 +32,7 @@ namespace GOTHIC_ENGINE {
 				cmd << " (--- Skip OBBOX)";
 			}
 		}
-		
+
 
 		if (debugInfo) cmd << endl;
 
@@ -41,44 +41,10 @@ namespace GOTHIC_ENGINE {
 		dontCreateOBBOXOnLocationLoad = false;
 	}
 
-#if ENGINE == Engine_G2A
-
-	HOOK ivk_zCMesh_CalcBBox3D AS(&zCMesh::CalcBBox3D, &zCMesh::CalcBBox3D_Union);
-	void zCMesh::CalcBBox3D_Union(const zBOOL fastApprox) 
-	{
-		ArraysToLists();
-		UnshareFeatures();
-
-		// if dontCreateOBBOXOnLocationLoad => use usual AABB for fast loading a location
-		if (fastApprox || dontCreateOBBOXOnLocationLoad)
-		{
-			bbox3D.Init();
-			for (int vertCtr = 0; vertCtr < numVert; vertCtr++) {
-				zCVertex* vert = vertList[vertCtr];
-				for (int j = 0; j < 3; j++) {
-					bbox3D.mins[j] = zMin(bbox3D.mins[j], vert->position.n[j]);
-					bbox3D.maxs[j] = zMax(bbox3D.maxs[j], vert->position.n[j]);
-				};
-			};
-		}
-		else {
-			obbox3D.BuildOBBTree(this, 3);
-			bbox3D = obbox3D.GetBBox3D();
-		};
-		//
-		if ((numVert == 0) || (numPoly == 0)) {
-			zREAL D = 0.1F;
-			bbox3D.mins = -zVEC3(D, D, D);
-			bbox3D.maxs = zVEC3(D, D, D);
-		};
-	};
-#endif
-
-#if ENGINE == Engine_G1
 	HOOK ivk_zCMesh_CalcBBox3D AS(&zCMesh::CalcBBox3D, &zCMesh::CalcBBox3D_Union);
 	void zCMesh::CalcBBox3D_Union(const zBOOL bGreat)
 	{
-
+		ArraysToLists();
 		UnshareFeatures();
 		if (bGreat || dontCreateOBBOXOnLocationLoad)
 		{
@@ -91,13 +57,12 @@ namespace GOTHIC_ENGINE {
 			obbox3D.BuildOBBTree(this, 3);
 			bbox3D = obbox3D.GetBBox3D();
 		}
-		if (numVert && numPoly)
-			return;
 
-		zREAL D = 0.1F;
-		bbox3D.mins = -zVEC3(D, D, D);
-		bbox3D.maxs = zVEC3(D, D, D);
+		if ((numVert == 0) || (numPoly == 0))
+		{
+			zREAL D = 0.1F;
+			bbox3D.mins = -zVEC3(D, D, D);
+			bbox3D.maxs = zVEC3(D, D, D);
+		};
 	};
-
-#endif
 }

@@ -28,7 +28,11 @@ namespace GOTHIC_ENGINE {
 
 #if ENGINE == Engine_G1
 	int& playerLightInt = *(int*)0x0083AB90;
-#else
+#elif ENGINE == Engine_G1A
+	int& playerLightInt = *(int*)0x0088079C;
+#elif ENGINE == Engine_G2
+	int& playerLightInt = *(int*)0x00890970;
+#elif ENGINE == Engine_G2A
 	int& playerLightInt = *(int*)0x0089EBB4;
 #endif
 
@@ -59,24 +63,24 @@ namespace GOTHIC_ENGINE {
 	void ClearLMB()
 	{
 #if ENGINE == Engine_G1
-	//FIXME_G1	addr ClearLMB?
-		int& leftMouseVal = *(int*)0x86CCB8;
-
-		//print.PrintRed(Z leftMouseVal);
-
-		leftMouseVal = 0;
-	
+		*(int*)0x0086CCB8 = 0;
+#elif ENGINE == Engine_G1A
+		* (int*)0x008B27B4 = 0;
+#elif ENGINE == Engine_G2
+		* (int*)0x008C3010 = 0;
 #elif ENGINE == Engine_G2A
-		*(int*)0x8D1668 = 0;
+		*(int*)0x008D1668 = 0;
 #endif
 	}
 
 	void __cdecl PlaySoundGame(class zSTRING &)
 	{
 #if ENGINE == Engine_G1
-		
 		XCALL(0x00641350);
-
+#elif ENGINE == Engine_G1A
+		XCALL(0x006684F0);
+#elif ENGINE == Engine_G2
+		XCALL(0x0066F250);
 #elif ENGINE == Engine_G2A
 		XCALL(0x006CBFD0);
 #endif
@@ -89,9 +93,11 @@ namespace GOTHIC_ENGINE {
 	int GetFPS(void)
 	{
 #if ENGINE == Engine_G1
-
 		XCALL(0x004EF790);
-
+#elif ENGINE == Engine_G1A
+		XCALL(0x00502030);
+#elif ENGINE == Engine_G2
+		XCALL(0x004FB050);
 #elif ENGINE == Engine_G2A
 		XCALL(0x004FDCD0);
 #endif
@@ -102,9 +108,11 @@ namespace GOTHIC_ENGINE {
 	void __cdecl sysEvent()
 	{
 #if ENGINE == Engine_G1
-
 		XCALL(0x004F6AC0);
-		
+#elif ENGINE == Engine_G1A
+		XCALL(0x00509530);
+#elif ENGINE == Engine_G2
+		XCALL(0x005026F0);
 #elif ENGINE == Engine_G2A
 		XCALL(0x005053E0);
 #endif
@@ -383,7 +391,7 @@ namespace GOTHIC_ENGINE {
 
 		delete fileListWork;
 
-		//MessageBox(0, zSTRING("Ñïèñîê ñîçäàí!").ToChar(), 0, 0);
+		//MessageBox(0, zSTRING("ÅƒÄÄÅ„Ã®Ä™ Å„Ã®Ã§Ã¤Å•Ã­!").ToChar(), 0, 0);
 	}
 
 
@@ -1228,7 +1236,7 @@ namespace GOTHIC_ENGINE {
 
 				//FIXME_G1 SUPPORT GetMesh
 #else
-				// ïûòàåìñÿ ïðåîáðàçîâàòü âèçóàë â "ïðîã ìåø ïðîòî"
+				// ÄÅ±ÅˆÅ•ÄºÄ›Å„Ë™ ÄÄ‘ÄºÃ®Ã¡Ä‘Å•Ã§Ã®Ã¢Å•ÅˆÃ¼ Ã¢ÄÃ§Ã³Å•Ã« Ã¢ "ÄÄ‘Ã®Äƒ Ä›ÄºÅ™ ÄÄ‘Ã®ÅˆÃ®"
 				zCProgMeshProto* pProgMeshChild = vobChild->visual->CastTo<zCProgMeshProto>();
 				if (pProgMeshChild)
 				{
@@ -1277,7 +1285,7 @@ namespace GOTHIC_ENGINE {
 		return;
 #else
 
-		// ïûòàåìñÿ ïðåîáðàçîâàòü âèçóàë â "ïðîã ìåø ïðîòî"
+		// ÄÅ±ÅˆÅ•ÄºÄ›Å„Ë™ ÄÄ‘ÄºÃ®Ã¡Ä‘Å•Ã§Ã®Ã¢Å•ÅˆÃ¼ Ã¢ÄÃ§Ã³Å•Ã« Ã¢ "ÄÄ‘Ã®Äƒ Ä›ÄºÅ™ ÄÄ‘Ã®ÅˆÃ®"
 		zCProgMeshProto* pProgMesh = pVob->visual->CastTo<zCProgMeshProto>();
 
 		if (!pProgMesh)
@@ -1320,7 +1328,7 @@ namespace GOTHIC_ENGINE {
 
 		fileName.Replace(".3DS", ".MSH");
 
-		if (!fileName.contains(".MSH"))
+		if (!fileName.Contains(".MSH"))
 		{
 			fileName = fileName + ".MSH";
 		}
@@ -1436,7 +1444,7 @@ namespace GOTHIC_ENGINE {
 		CString cstr = str;
 		zCArray<zSTRING> carr;
 		Array<CStringA> arr = cstr.Split(t);
-		for (int i = 0; i < arr.GetNum(); i++) {
+		for (uint i = 0; i < arr.GetNum(); i++) {
 			CStringA* node = arr.GetSafe(i);
 			if (node) {
 				zSTRING snode = *node;

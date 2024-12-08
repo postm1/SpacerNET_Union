@@ -4,29 +4,6 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	typedef zCParticleEmitter* (*fptr)(class zSTRING const&);
-
-
-#if ENGINE == Engine_G1
-	zCArraySort<zCParticleEmitter*>& s_emitterPresetList = *(zCArraySort<zCParticleEmitter*>*)0x00873FA0;
-	oCParticleControl*& pfxcGlobal = *(oCParticleControl**)0x008DA6C0;
-
-	zCParser*& visualParser = *(zCParser**)0x00869E6C;
-	zCParser*& s_pfxParser = *(zCParser**)0x00874380;
-	fptr SearchParticleEmitter = (fptr)0x0058DEC0;
-#else
-	zCArraySort<zCParticleEmitter*>& s_emitterPresetList = *(zCArraySort<zCParticleEmitter*>*)0x008D8E0C;
-	oCParticleControl*& pfxcGlobal = *(oCParticleControl**)0x00AB088C;
-
-
-	zCParser*& visualParser = *(zCParser**)0x008CE6EC;
-	zCParser*& s_pfxParser = *(zCParser**)0x008D9234;
-	fptr SearchParticleEmitter = (fptr)0x005ADDE0;
-#endif
-
-
-
-
 	zCParticleFX* m_pPfx = NULL;
 	int instanceFieldSize = 0;
 	zCVob* pfxEditorVob = NULL;
@@ -43,7 +20,7 @@ namespace GOTHIC_ENGINE {
 		{
 			m_pPfx->StopEmitterOutput();
 
-			m_pPfx->SetAndStartEmitter(SearchParticleEmitter(currentPFXName.Upper()), FALSE);
+			m_pPfx->SetAndStartEmitter(zCParticleFX::SearchParticleEmitter(currentPFXName.Upper()), FALSE);
 			m_pPfx->dontKillPFXWhenDone = true;
 		}
 	}
@@ -87,7 +64,7 @@ namespace GOTHIC_ENGINE {
 	{
 		return;
 
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2A
 
 		if (m_pPfx && pfxEditorVob)
 		{
@@ -168,7 +145,7 @@ namespace GOTHIC_ENGINE {
 			//fixes the code in Invk_zCVobArchive. WTF?! 
 			if (theApp.GetSelectedVob() == pfxEditorVob)
 			{
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2
 				m_pPfx->m_bVisualNeverDies = FALSE;
 #endif
 			}
@@ -185,7 +162,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::GetAllPfx()
 	{
-		int size = s_emitterPresetList.GetNumInList();
+		int size = zCParticleFX::s_emitterPresetList.GetNumInList();
 
 		auto addPFX = (callVoidFunc)GetProcAddress(this->module, "AddPfxInstancemName");
 
@@ -193,7 +170,7 @@ namespace GOTHIC_ENGINE {
 
 		for (int i = 0; i < size; i++)
 		{
-			Stack_PushString(s_emitterPresetList.GetSafe(i)->particleFXName);
+			Stack_PushString(zCParticleFX::s_emitterPresetList.GetSafe(i)->particleFXName);
 			addPFX();
 		}
 	}
@@ -210,7 +187,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		zCPar_Symbol* ps = s_pfxParser->GetSymbol(s_pfxParser->GetIndex(name));
+		zCPar_Symbol* ps = zCParticleFX::s_pfxParser->GetSymbol(zCParticleFX::s_pfxParser->GetIndex(name));
 
 		if (!ps)
 		{
@@ -218,13 +195,13 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		int index = s_pfxParser->GetIndex(name);
+		int index = zCParticleFX::s_pfxParser->GetIndex(name);
 
-		int baseClassIndex = s_pfxParser->GetBaseClass(index);
-		int indClass = s_pfxParser->GetIndex(name);
+		int baseClassIndex = zCParticleFX::s_pfxParser->GetBaseClass(index);
+		int indClass = zCParticleFX::s_pfxParser->GetIndex(name);
 
-		zCPar_Symbol* base = s_pfxParser->GetSymbol(baseClassIndex);
-		zCPar_Symbol* pfx = s_pfxParser->GetSymbol(indClass);
+		zCPar_Symbol* base = zCParticleFX::s_pfxParser->GetSymbol(baseClassIndex);
+		zCPar_Symbol* pfx = zCParticleFX::s_pfxParser->GetSymbol(indClass);
 
 		void* addr = m_pPfx->emitter;
 		int type = 0;
@@ -249,7 +226,7 @@ namespace GOTHIC_ENGINE {
 		for (int i = 0; i < instanceFieldSize; i++)
 		{
 			// take the following base->f.tNumber characters, they are the instance fields
-			zCPar_Symbol* param = s_pfxParser->GetSymbol(baseClassIndex + i + 1);
+			zCPar_Symbol* param = zCParticleFX::s_pfxParser->GetSymbol(baseClassIndex + i + 1);
 
 			if (!param)
 			{
@@ -328,11 +305,11 @@ namespace GOTHIC_ENGINE {
 		}
 
 	
-		m_pPfx->SetAndStartEmitter(SearchParticleEmitter(name), FALSE);
+		m_pPfx->SetAndStartEmitter(zCParticleFX::SearchParticleEmitter(name), FALSE);
 
 
 
-		zCPar_Symbol* ps = s_pfxParser->GetSymbol(s_pfxParser->GetIndex(name));
+		zCPar_Symbol* ps = zCParticleFX::s_pfxParser->GetSymbol(zCParticleFX::s_pfxParser->GetIndex(name));
 		currentPFXName = name;
 
 		if (!ps)
@@ -343,13 +320,13 @@ namespace GOTHIC_ENGINE {
 
 
 
-		int index = s_pfxParser->GetIndex(name);
+		int index = zCParticleFX::s_pfxParser->GetIndex(name);
 
-		int baseClassIndex = s_pfxParser->GetBaseClass(index);
-		int indClass = s_pfxParser->GetIndex(name);
+		int baseClassIndex = zCParticleFX::s_pfxParser->GetBaseClass(index);
+		int indClass = zCParticleFX::s_pfxParser->GetIndex(name);
 
-		zCPar_Symbol* base = s_pfxParser->GetSymbol(baseClassIndex);
-		zCPar_Symbol* pfx = s_pfxParser->GetSymbol(indClass);
+		zCPar_Symbol* base = zCParticleFX::s_pfxParser->GetSymbol(baseClassIndex);
+		zCPar_Symbol* pfx = zCParticleFX::s_pfxParser->GetSymbol(indClass);
 
 		void* addr = m_pPfx->emitter;
 		int type = 0;
@@ -369,7 +346,7 @@ namespace GOTHIC_ENGINE {
 		for (int i = 0; i < instanceFieldSize; i++)
 		{
 
-			zCPar_Symbol* param = s_pfxParser->GetSymbol(baseClassIndex + i + 1);
+			zCPar_Symbol* param = zCParticleFX::s_pfxParser->GetSymbol(baseClassIndex + i + 1);
 
 			if (!param)
 			{

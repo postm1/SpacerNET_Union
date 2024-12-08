@@ -219,7 +219,7 @@ namespace GOTHIC_ENGINE {
 				if (auto pVob = theApp.GetSelectedVob())
 				{
 
-					if (!theApp.floorVob->GetVisual() || !theApp.floorVob->GetVisual()->objectName.contains(".TGA"))
+					if (!theApp.floorVob->GetVisual() || !theApp.floorVob->GetVisual()->objectName.Contains(".TGA"))
 					{
 						floorVob->SetVisual("SPACER_CIRCLE_ITEM.TGA");
 

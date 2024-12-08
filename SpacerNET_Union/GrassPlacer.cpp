@@ -316,14 +316,7 @@ namespace GOTHIC_ENGINE {
 
 
 #if ENGINE >= Engine_G2
-							if (isItem)
-							{
-								newVob->m_fVobFarClipZScale = 1;
-							}
-							else
-							{
-								newVob->m_fVobFarClipZScale = grassToolVobFarClipZScaleValue;
-							}
+							newVob->m_fVobFarClipZScale = isItem ? 1 : grassToolVobFarClipZScaleValue;
 #endif
 
 							if (!isItem)
