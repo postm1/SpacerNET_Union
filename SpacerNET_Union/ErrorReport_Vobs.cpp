@@ -473,7 +473,7 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 
-				if (vob->GetVobName().contains(' ') && !vob->GetVobName().contains("SPELLFX"))
+				if (vob->GetVobName().Contains(' ') && !vob->GetVobName().Contains("SPELLFX"))
 				{
 					auto entry = new ErrorReportEntry();
 

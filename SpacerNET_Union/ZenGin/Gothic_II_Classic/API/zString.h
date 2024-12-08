@@ -4,7 +4,7 @@
 #define __ZSTRING_H__VER2__
 
 #define USING_UNION_STRING_METHODS True
-#define UNPROTECT_ZSTRING_METHODS  False
+#define UNPROTECT_ZSTRING_METHODS  True
 
 namespace Gothic_II_Classic {
   inline void CreateDirectories( CStringA path ) {
@@ -182,6 +182,10 @@ namespace Gothic_II_Classic {
 
     INLINE bool_t CompareMaskedI( const CStringA& str ) const {
       return ((CStringA&)*this).CompareMaskedI( (CStringA&)str );
+    }
+
+    INLINE bool_t Contains(const zSTRING& cmp) const {
+        return this->HasWord(cmp);
     }
 
     INLINE bool_t HasWord( const zSTRING& cmp ) const {

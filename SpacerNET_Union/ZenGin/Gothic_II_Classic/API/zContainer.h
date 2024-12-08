@@ -278,7 +278,6 @@ namespace Gothic_II_Classic {
           }
         }
       }
-      return False;
     }
 
     void DeleteListDatas() {
@@ -448,6 +447,18 @@ namespace Gothic_II_Classic {
       memmove( &array[pos + 1], &array[pos], sizeof( T ) * ( numInArray - pos ) );
       array[pos] = ins;
       numInArray++;
+    }
+
+    void RemoveDoubles() {
+      for (int i = 0; i < GetNumInList() - 1; i++) {
+        for (int j = i + 1; j < GetNumInList(); j++) {
+          if (array[i] == array[j]) {
+            array[j] = array[numInArray - 1];
+            numInArray--;
+            j--;
+          }
+        }
+      }
     }
 
     void InsertSort( const T& ins ) {

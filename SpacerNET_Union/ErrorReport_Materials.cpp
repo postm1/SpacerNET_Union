@@ -89,7 +89,7 @@ namespace GOTHIC_ENGINE {
 						}
 					}
 
-					if (mat->GetObjectName().contains(".0"))
+					if (mat->GetObjectName().Contains(".0"))
 					{
 						if (!mats.IsInList(mat))
 						{
@@ -108,7 +108,7 @@ namespace GOTHIC_ENGINE {
 						}
 					}
 
-					if (mat->texture->GetObjectName().contains(".TGA.TGA") || mat->texture->GetObjectName().contains(".TGA.0"))
+					if (mat->texture->GetObjectName().Contains(".TGA.TGA") || mat->texture->GetObjectName().Contains(".TGA.0"))
 					{
 						mats.InsertEnd(mat);
 
