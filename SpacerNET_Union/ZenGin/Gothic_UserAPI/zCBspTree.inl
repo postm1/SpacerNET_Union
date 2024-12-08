@@ -4,3 +4,4 @@
 // Add your methods here
 
 void AddVob_Hook(zCVob* vob);
+void RenderVobList_Hook();

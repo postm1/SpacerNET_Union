@@ -20,6 +20,8 @@ namespace Gothic_I_Addon {
 
     // user API
     #include "zCVertexTransform.inl"
+
+    static zCVolatileMemoryBase& s_MemMan;
   };
 
 } // namespace Gothic_I_Addon

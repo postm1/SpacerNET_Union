@@ -95,12 +95,9 @@ namespace GOTHIC_ENGINE {
 	HOOK Invk_zCVobArchive   AS(&zCVob::Archive, &zCVob::Archive_Hook);
 	void zCVob::Archive_Hook(zCArchiver& arc)
 	{
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2
 		if (zDYNAMIC_CAST<zCParticleFX>(this->GetVisual()))
-		{
 			zDYNAMIC_CAST<zCParticleFX>(this->GetVisual())->m_bVisualNeverDies = TRUE;
-		}
-			
 #endif
 		THISCALL(Invk_zCVobArchive)(arc);
 	}
@@ -184,7 +181,7 @@ namespace GOTHIC_ENGINE {
 		return this;
 	}
 
-	// Óáèâàåò çàïóñê êîíòðîëëåðà PFX â ñïåéñåðå
+	// Ã“Ã¡ÄÃ¢Å•ÄºÅˆ Ã§Å•ÄÃ³Å„Ä™ Ä™Ã®Ã­ÅˆÄ‘Ã®Ã«Ã«ÄºÄ‘Å• PFX Ã¢ Å„ÄÄºÃ©Å„ÄºÄ‘Äº
 	HOOK ivk_zCPFXControler_PostLoad AS(&zCPFXControler::PostLoad, &zCPFXControler::PostLoad_Hook);
 	void zCPFXControler::PostLoad_Hook()
 	{
@@ -224,7 +221,7 @@ namespace GOTHIC_ENGINE {
 	zCWorld* zCWorld::zCWorld_Hook() {
 		THISCALL(ivk_zCWorld_zCWorld)();
 		addZonesToWorld = TRUE;
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2
 		SetWaveAnisEnabled(zoptions->ReadBool("SPACER", "zSpacerWaterAniEnabled", FALSE));
 #endif
 		return this;
@@ -385,7 +382,7 @@ namespace GOTHIC_ENGINE {
 		};
 
 		//
-#if ENGINE == Engine_G1
+#if ENGINE <= Engine_G2
 		this->UpdateVisualDependencies();
 #else
 		this->UpdateVisualDependencies(TRUE);
@@ -524,25 +521,24 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	HOOK ivk_oCWorldTimer_Timer AS(&oCWorldTimer::Timer, &oCWorldTimer::Timer_Hook);
+	void oCWorldTimer::Timer_Hook()
+	{
+		if (!theApp.holdTime)
+			THISCALL(ivk_oCWorldTimer_Timer)();
+	}
 
-	
-
-#if ENGINE == Engine_G1
-
-
-	zCVob* __cdecl zCCSCamera_GetPlayerVob(zCCSCamera*);
-	CInvoke <zCVob* (__cdecl*) (zCCSCamera*)> pzCCSCamera_GetPlayerVob(0x004B50C0, zCCSCamera_GetPlayerVob, IVK_AUTO);
-	zCVob* __cdecl zCCSCamera_GetPlayerVob(zCCSCamera* _this)
+	HOOK ivk_zCCsCamera_GetPlayerVob AS(&zCCSCamera::GetPlayerVob, &zCCSCamera::GetPlayerVob_Hook);
+	zCVob* zCCSCamera::GetPlayerVob_Hook()
 	{
 		return NULL;
 	}
 
-	int  __fastcall zCVob_Render(zCVob*, struct zTRenderContext&);
-	CInvoke <int(__fastcall*) (zCVob*, struct zTRenderContext&)> pzCVob_Render(0x005D6090, zCVob_Render, IVK_AUTO);
-	int  __fastcall zCVob_Render(zCVob* _this, struct zTRenderContext& renderContext)
+	HOOK ivk_zCVob_Render AS(&zCVob::Render, &zCVob::Render_Union);
+	BOOL  __fastcall zCVob::Render_Union(zTRenderContext& renderContext)
 	{
 
-		if (theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == _this && theApp.options.GetIntVal("showLightRadiusVob"))
+		if (theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == this && theApp.options.GetIntVal("showLightRadiusVob"))
 		{
 			if (theApp.vobLightSelected->lightData.range != 0.0f)
 			{
@@ -550,7 +546,7 @@ namespace GOTHIC_ENGINE {
 				theApp.s_pLightSphereMesh->Scale(scaler, scaler, scaler);
 			}
 
-			zCCamera::activeCam->SetTransform(zCAM_TRAFO_WORLD, _this->trafoObjToWorld);
+			zCCamera::activeCam->SetTransform(zCAM_TRAFO_WORLD, this->trafoObjToWorld);
 			zTCam_ClipType	meshClip = zCCamera::activeCam->BBox3DInFrustum(theApp.s_pLightSphereMesh->GetBBox3D(), renderContext.clipFlags);
 			renderContext.distVobToCam = zCCamera::activeCam->camMatrix.GetTranslation().LengthApprox();
 			renderContext.hintLightingFullbright = TRUE;
@@ -578,145 +574,45 @@ namespace GOTHIC_ENGINE {
 			};
 		}
 
-
-
-		auto result = pzCVob_Render(_this, renderContext);
-
-
-		return result;
-	}
-
-	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*);
-	CInvoke <void(__thiscall*) (zCBspTree* _this)> pzCBspTree_RenderVobList(0x0051A7E0, zCBspTree_RenderVobList, IVK_AUTO);
-	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*)
-	{
-
-		if (theApp.options.GetIntVal("showInvisibleVobs"))
-		{
-			for (int i = 0; i < _this->renderVobList.GetNum(); i++)
-			{
-				zCVob* vob = _this->renderVobList[i];
-
-				if (vob && !vob->GetShowVisual() && vob->GetVisual() && ogame->GetCamera())
-				{
-					int dist = ogame->GetCamera()->GetVob()->GetPositionWorld().Distance(vob->GetPositionWorld());
-
-					if (dist <= theApp.options.GetIntVal("rangeVobs") * 3)
-					{
-						vob->bbox3D.Draw(GFX_GREEN);
-					}
-				}
-
-			}
-		}
-
-		pzCBspTree_RenderVobList(_this);
-
-		
-	}
-
-	
-
-
-#endif
-
-
-	
-
-#if ENGINE == Engine_G2A
-
-	zCVob * __cdecl zCCSCamera_GetPlayerVob(zCCSCamera*);
-	CInvoke <zCVob *(__cdecl *) (zCCSCamera*)> pzCCSCamera_GetPlayerVob(0x004BE400, zCCSCamera_GetPlayerVob, IVK_AUTO);
-	zCVob * __cdecl zCCSCamera_GetPlayerVob(zCCSCamera* _this)
-	{
-		return NULL;
-	}
-
-
-	int  __fastcall zCVob_Render(zCVob*, struct zTRenderContext &);
-	CInvoke <int(__fastcall *) (zCVob*, struct zTRenderContext &)> pzCVob_Render(0x006015D0, zCVob_Render, IVK_AUTO);
-	int  __fastcall zCVob_Render(zCVob* _this, struct zTRenderContext & renderContext)
-	{
-
-		if (theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == _this && theApp.options.GetIntVal("showLightRadiusVob"))
-		{
-			if (theApp.vobLightSelected->lightData.range != 0.0f)
-			{
-				zREAL scaler = theApp.vobLightSelected->lightData.range / theApp.s_pLightSphereMesh->GetBBox3D().GetSphere3D().radius;
-				theApp.s_pLightSphereMesh->Scale(scaler, scaler, scaler);
-			}
-
-			zCCamera::activeCam->SetTransform(zCAM_TRAFO_WORLD, _this->trafoObjToWorld);
-			zTCam_ClipType	meshClip = zCCamera::activeCam->BBox3DInFrustum(theApp.s_pLightSphereMesh->GetBBox3D(), renderContext.clipFlags);
-			renderContext.distVobToCam = zCCamera::activeCam->camMatrix.GetTranslation().LengthApprox();
-			renderContext.hintLightingFullbright = TRUE;
-
-			if ((meshClip != zCAM_CLIP_TRIV_OUT) && (renderContext.distVobToCam<5000.0F))		// 50m
-			{
-				//zTRnd_AlphaBlendSource oldBlendSrc = zrenderer->GetAlphaBlendSource();
-				//zTRnd_AlphaBlendFunc   oldBlendFunc= zrenderer->GetAlphaBlendFunc  ();
-				zTRnd_PolyDrawMode	   oldDrawMode = zrenderer->GetPolyDrawMode();
-				//zREAL				   oldBlendFac = zrenderer->GetAlphaBlendFactor();
-
-				zrenderer->SetPolyDrawMode(zRND_DRAW_WIRE);
-				//zrenderer->SetAlphaBlendSource(zRND_ALPHA_SOURCE_CONSTANT);
-				//zrenderer->SetAlphaBlendFunc  (zRND_ALPHA_FUNC_BLEND	 );
-				//zrenderer->SetAlphaBlendFactor(0.5F						 );
-
-				if (theApp.vobLightSelected->lightData.range != 0.0f)
-					theApp.s_pLightSphereMesh->Render(renderContext);
-
-				//zrenderer->SetAlphaBlendSource(oldBlendSrc);
-				//zrenderer->SetAlphaBlendFunc  (oldBlendFunc);
-				//zrenderer->SetAlphaBlendFactor(oldBlendFac);
-				zrenderer->SetPolyDrawMode(oldDrawMode);
-
-			};
-		}
-
+#if ENGINE >= Engine_G2
 		auto saveOption = zCVob::GetAnimationsEnabled();
 
 		//cmd << saveOption << endl;
 
-		if (_this)
+		if (!this->visual || this->CastTo<zCVobSpot>() || this->CastTo<zCVobStartpoint>() || this->CastTo<zCVobWaypoint>())
 		{
-			if (!_this->visual || _this->CastTo<zCVobSpot>() || _this->CastTo<zCVobStartpoint>() || _this->CastTo<zCVobWaypoint>())
+			//if (!_this->visual)
 			{
-				//if (!_this->visual)
-				{
-					zCVob::SetAnimationsEnabled(FALSE);
+				zCVob::SetAnimationsEnabled(FALSE);
 
-					renderContext.m_AniMode = zVISUAL_ANIMODE_NONE;
+				renderContext.m_AniMode = zVISUAL_ANIMODE_NONE;
 
-					/*cmd << _this->GetObjectName() 
-						<< " " << zCVob::GetAnimationsEnabled() 
-						<< " " << (int)_this->visual
-						<< endl;*/
-				
-				}
+				/*cmd << _this->GetObjectName()
+					<< " " << zCVob::GetAnimationsEnabled()
+					<< " " << (int)_this->visual
+					<< endl;*/
+
 			}
-			
 		}
+#endif
 
-		
-		auto result =  pzCVob_Render(_this, renderContext);
+		BOOL result = THISCALL(ivk_zCVob_Render)(renderContext);
 
-
+#if ENGINE >= Engine_G2
 		zCVob::SetAnimationsEnabled(saveOption);
+#endif
 		return result;
 	}
 
-	
-	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*);
-	CInvoke <void(__thiscall *) (zCBspTree* _this)> pzCBspTree_RenderVobList(0x0052D0A0, zCBspTree_RenderVobList, IVK_AUTO);
-	void  __fastcall zCBspTree_RenderVobList(zCBspTree* _this, void*)
+	HOOK ivk_zCBspTree_RenderVobList AS(&zCBspTree::RenderVobList, &zCBspTree::RenderVobList_Hook);
+	void zCBspTree::RenderVobList_Hook()
 	{
 
 		if (theApp.options.GetIntVal("showInvisibleVobs"))
 		{
-			for (int i = 0; i < _this->renderVobList.GetNum(); i++)
+			for (int i = 0; i < this->renderVobList.GetNum(); i++)
 			{
-				zCVob* vob = _this->renderVobList[i];
+				zCVob* vob = this->renderVobList[i];
 
 				if (vob && !vob->GetShowVisual() && vob->GetVisual() && ogame->GetCamera())
 				{
@@ -730,11 +626,9 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
-		pzCBspTree_RenderVobList(_this);
+		THISCALL(ivk_zCBspTree_RenderVobList)();
 	}
 
-	// FIXME_G1 ???!
-	
 	HOOK Ivk_zCMesh_Render AS(&zCMesh::Render, &zCMesh::Render_Patch);
 	zBOOL zCMesh::Render_Patch(zTRenderContext& renderContext, zCOLOR* vertexColor)
 	{
@@ -805,14 +699,17 @@ namespace GOTHIC_ENGINE {
 		zCVertexTransform::s_MemMan.Restore(markedPos);
 		return TRUE;
 	}
-	
 
-#endif
-
-
-#if ENGINE > Engine_G1
 	void __cdecl insertionsort_Hook(void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool);
+#if ENGINE == Engine_G1
+	CInvoke <void(__cdecl*) (void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool)> insertionsort_Hooked(0x0053F570, insertionsort_Hook, IVK_AUTO);
+#elif ENGINE == Engine_G1A
+	CInvoke <void(__cdecl*) (void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool)> insertionsort_Hooked(0x00556F40, insertionsort_Hook, IVK_AUTO);
+#elif ENGINE == Engine_G2
+	CInvoke <void(__cdecl*) (void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool)> insertionsort_Hooked(0x0054EAA0, insertionsort_Hook, IVK_AUTO);
+#elif ENGINE == Engine_G2A
 	CInvoke <void(__cdecl*) (void*, unsigned int, unsigned int, int(__cdecl*)(void const*, void const*), bool)> insertionsort_Hooked(0x00553CC0, insertionsort_Hook, IVK_AUTO);
+#endif
 	void __cdecl insertionsort_Hook(void* data, size_t num, size_t size, int(__cdecl* compare)(const void*, const void*), bool falltoqs)
 	{
 		if (num >= 200000 && theApp.options.GetVal("bSortMerge"))
@@ -823,7 +720,7 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
-			const int MAXSIZE = 24;
+			constexpr int MAXSIZE = 24;
 
 			char swapplace[MAXSIZE];
 
@@ -854,7 +751,6 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
-#endif
 
 	// =============================================== TEST HOOKS ===============================================
 	/*
@@ -867,47 +763,16 @@ namespace GOTHIC_ENGINE {
 	}
 	*/
 
-#if ENGINE == Engine_G2A
 	int __cdecl Wld_InsertNpc_Hook();
-	CInvoke <int(__cdecl *) (void)> Wld_InsertNpc_Hooked(0x6DF1F0, Wld_InsertNpc_Hook, IVK_AUTO);
-	int __cdecl Wld_InsertNpc_Hook() {
-		int index;
-		zSTRING posPoint;
-
-		zCParser* p = zCParser::GetParser();
-		p->GetParameter(posPoint);
-		p->GetParameter(index);
-
-		posPoint = posPoint.Upper();
-
-
-		auto& foundPair = theApp.respawnShowList[posPoint];
-
-		auto sym = parser->GetSymbol(index);
-
-		if (!sym) { cmd << "not found: " << posPoint << endl;  return 0; }
-
-		CString monsterName = sym->name;
-
-		// found
-		if (!foundPair.IsNull())
-		{
-			foundPair.GetValue()->monsters.Insert(monsterName);
-		}
-		else
-		{
-			auto entry = new RespawnEntry();
-			entry->monsters.Insert(monsterName);
-			theApp.respawnShowList.Insert(posPoint, entry);
-		}
-		return FALSE;
-
-	}
-#endif
-
 #if ENGINE == Engine_G1
-	int __cdecl Wld_InsertNpc_Hook();
-	CInvoke <int(__cdecl*) (void)> Wld_InsertNpc_Hooked(0x650980, Wld_InsertNpc_Hook, IVK_AUTO);
+	CInvoke <int(__cdecl*) (void)> Wld_InsertNpc_Hooked(0x00650980, Wld_InsertNpc_Hook, IVK_AUTO);
+#elif ENGINE == Engine_G1A
+	CInvoke <int(__cdecl*) (void)> Wld_InsertNpc_Hooked(0x00679400, Wld_InsertNpc_Hook, IVK_AUTO);
+#elif ENGINE == Engine_G2
+	CInvoke <int(__cdecl*) (void)> Wld_InsertNpc_Hooked(0x006822E0, Wld_InsertNpc_Hook, IVK_AUTO);
+#elif ENGINE == Engine_G2A
+	CInvoke <int(__cdecl*) (void)> Wld_InsertNpc_Hooked(0x006DF1F0, Wld_InsertNpc_Hook, IVK_AUTO);
+#endif
 	int __cdecl Wld_InsertNpc_Hook() {
 		int index;
 		zSTRING posPoint;
@@ -941,6 +806,4 @@ namespace GOTHIC_ENGINE {
 		return FALSE;
 
 	}
-
-#endif
 }

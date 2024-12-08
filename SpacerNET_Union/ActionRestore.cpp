@@ -46,7 +46,7 @@ namespace GOTHIC_ENGINE {
 				pVob->SetPositionWorld(pVob->GetPositionWorld());
 				
 
-#if ENGINE >= Engine_G2
+#if ENGINE == Engine_G2A
 				pVob->EndMovement(FALSE);
 #else
 				pVob->EndMovement();

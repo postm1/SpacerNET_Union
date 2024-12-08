@@ -562,4 +562,8 @@ namespace Gothic_II_Classic {
   zCCollisionObjectDef* zCCollObjectProjectile::s_oCollObjClass     = (zCCollisionObjectDef*)0x008C9CE8;
 #endif // __ZCOLLISION_OBJECT_MISC_H__VER2__
 
+#ifdef __ZVERTEX_TRANSFORM_H__VER2__
+  zCVolatileMemoryBase& zCVertexTransform::s_MemMan = *(zCVolatileMemoryBase*)0x008C5CE8;
+#endif
+
 } // namespace Gothic_II_Classic

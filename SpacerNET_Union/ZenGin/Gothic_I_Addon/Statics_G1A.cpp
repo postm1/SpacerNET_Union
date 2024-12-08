@@ -520,5 +520,8 @@ namespace Gothic_I_Addon {
   zCCollisionObjectDef* zCCollObjectProjectile::s_oCollObjClass     = (zCCollisionObjectDef*)0x008B9288;
 #endif // __ZCOLLISION_OBJECT_MISC_H__VER1__
 
+#ifdef __ZVERTEX_TRANSFORM_H__VER1__
+  zCVolatileMemoryBase& zCVertexTransform::s_MemMan = *(zCVolatileMemoryBase*)0x008B51F0;
+#endif
 
 } // namespace Gothic_I_Addon

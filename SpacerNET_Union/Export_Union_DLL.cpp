@@ -80,44 +80,20 @@ namespace GOTHIC_ENGINE {
 			if (!func)
 				return;
 
-
-#if ENGINE == Engine_G1
 			switch (evt)
 			{
-			case Gothic_I_Classic::SPC_EVT_OnCreateVob:
+			case GOTHIC_ENGINE::SPC_EVT_OnCreateVob:
 				arr_OnCreateVob_RegFuncs.Insert(func);
 				break;
-			case Gothic_I_Classic::SPC_EVT_OnDeleteVob:
+			case GOTHIC_ENGINE::SPC_EVT_OnDeleteVob:
 				arr_OnDeleteVob_RegFuncs.Insert(func);
 				break;
-			case Gothic_I_Classic::SPC_EVT_OnApplyDataToVob:
+			case GOTHIC_ENGINE::SPC_EVT_OnApplyDataToVob:
 				arr_OnApplyDataToVob_RegFuncs.Insert(func);
 				break;
-			case Gothic_I_Classic::SPC_EVT_OnSelectVob:
+			case GOTHIC_ENGINE::SPC_EVT_OnSelectVob:
 				arr_OnSelectVob_RegFuncs.Insert(func);
-				break;
-			default:
-				break;
-#else
-			switch (evt)
-			{
-			case Gothic_II_Addon::SPC_EVT_OnCreateVob:
-				arr_OnCreateVob_RegFuncs.Insert(func);
-				break;
-			case Gothic_II_Addon::SPC_EVT_OnDeleteVob:
-				arr_OnDeleteVob_RegFuncs.Insert(func);
-				break;
-			case Gothic_II_Addon::SPC_EVT_OnApplyDataToVob:
-				arr_OnApplyDataToVob_RegFuncs.Insert(func);
-				break;
-			case Gothic_II_Addon::SPC_EVT_OnSelectVob:
-				arr_OnSelectVob_RegFuncs.Insert(func);
-				break;
-			default:
-				break;
-#endif
-
-			
+				break;			
 			}
 		}
 

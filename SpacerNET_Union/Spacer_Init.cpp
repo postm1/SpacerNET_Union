@@ -34,9 +34,6 @@ namespace GOTHIC_ENGINE {
 		//cmd << foundExecutable << endl;
 
 #if ENGINE == Engine_G1
-
-		
-
 		if (foundExecutable != GOTHIC1_EXECUTABLE)
 		{
 			MessageBox(0, "Bad Gothic 1 EXE version! Use only 1.08k (mod)!", 0, 0);
@@ -44,7 +41,6 @@ namespace GOTHIC_ENGINE {
 		}
 
 #elif ENGINE == Engine_G2A
-
 		if (foundExecutable != GOTHIC2A_EXECUTABLE)
 		{
 			MessageBox(0, "Bad Gothic 2 NR EXE version! Use only 2.6.0.0 version!", 0, 0);
@@ -99,7 +95,7 @@ namespace GOTHIC_ENGINE {
 		/*
 		if (!zoptions->ReadBool("VIDEO", "zStartupWindowed", FALSE))
 		{
-			MessageBox(0, "Спейсер нужно запускать в оконном режиме! zStartupWindowed=1 в gothic.ini\nYou must launch SPACER_NET in a window mode! Set zStartupWindowed=1 in gothic.ini", 0, 0);
+			MessageBox(0, "ЕѓДЏДєГ©Е„ДєД‘ Г­ГіД‡Г­Г® Г§Е•ДЏГіЕ„Д™Е•Е€Гј Гў Г®Д™Г®Г­Г­Г®Д› Д‘ДєД‡ДЌД›Дє! zStartupWindowed=1 Гў gothic.ini\nYou must launch SPACER_NET in a window mode! Set zStartupWindowed=1 in gothic.ini", 0, 0);
 			exit(0);
 		}
 		*/
@@ -168,12 +164,15 @@ namespace GOTHIC_ENGINE {
 
 		//presetsLib.Load();
 
+		// kill gLogStatistics
 #if ENGINE == Engine_G1
-		// kill gLogStatistics
-		* (int*)0x0085EB00 = 0;
-#else
-		// kill gLogStatistics
-		* (int*)0x008C2B50 = 0;
+		*(bool*)0x0085EB00 = false;
+#elif ENGINE == Engine_G1A
+		*(bool*)0x008A3454 = false;
+#elif ENGINE == Engine_G2
+		*(bool*)0x008B4590 = false;
+#elif ENGINE == Engine_G2A
+		*(bool*)0x008C2B50 = false;
 #endif
 
 		showRespawnOnVobsRadius = options.GetIntVal("showSpawnListRadius");

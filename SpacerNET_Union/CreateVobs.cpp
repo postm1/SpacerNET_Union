@@ -364,7 +364,7 @@ namespace GOTHIC_ENGINE {
 					vobSound->SetSound(vobName);
 					vobSound->soundRadius = 1500;
 					vobSound->soundVolume = 100;
-#if ENGINE == Engine_G2A
+#if ENGINE >= Engine_G2
 					vobSound->m_zBias = 0;
 #endif
 					vobSound->soundVolType = zCVobSound::zTSoundVolType::SV_SPHERE;
@@ -851,12 +851,9 @@ namespace GOTHIC_ENGINE {
 		oCItem* isItem = dynamic_cast<oCItem*>(pVob);
 	
 		// remove oCVisualFX from the item list
-#if ENGINE > Engine_G1
+#if ENGINE == Engine_G2A
 		if (isItem && isItem->effectVob)
-		{
 			theApp.OnRemoveVob(isItem->effectVob);
-			
-		}
 #endif
 		itemsLocator.RemoveByItem(pVob);
 		theApp.restorator.RemoveByVob(pVob);

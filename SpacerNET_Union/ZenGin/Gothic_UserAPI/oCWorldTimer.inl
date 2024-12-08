@@ -3,3 +3,4 @@
 // User API for oCWorldTimer
 // Add your methods here
 
+void Timer_Hook();

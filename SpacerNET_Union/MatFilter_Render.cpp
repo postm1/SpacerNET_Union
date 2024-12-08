@@ -177,7 +177,7 @@ namespace GOTHIC_ENGINE {
 
 		int result = 0;
 
-		zCTextureConvert* texConv = zrenderer->CreateTextureConvert();
+		zCTexConGeneric* texConv = reinterpret_cast<zCTexConGeneric*>(zrenderer->CreateTextureConvert());
 
 		// защита указателя
 		if (!texConv)
