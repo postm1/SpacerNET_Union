@@ -281,7 +281,6 @@ namespace Gothic_I_Addon {
           }
         }
       }
-      return False;
     }
 
     void DeleteListDatas() {
@@ -451,6 +450,18 @@ namespace Gothic_I_Addon {
       memmove( &array[pos + 1], &array[pos], sizeof( T ) * ( numInArray - pos ) );
       array[pos] = ins;
       numInArray++;
+    }
+
+    void RemoveDoubles() {
+      for (int i = 0; i < GetNumInList() - 1; i++) {
+        for (int j = i + 1; j < GetNumInList(); j++) {
+          if (array[i] == array[j]) {
+            array[j] = array[numInArray - 1];
+            numInArray--;
+            j--;
+          }
+        }
+      }
     }
 
     void InsertSort( const T& ins ) {
@@ -1231,6 +1242,7 @@ namespace Gothic_I_Addon {
 
   template <class T>
   class zCList {
+  public:
     T *data;
     zCList *next;
   public:

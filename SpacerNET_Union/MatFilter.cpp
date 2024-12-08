@@ -79,7 +79,7 @@ namespace GOTHIC_ENGINE {
 		{
 			mat = dynamic_cast<zCMaterial*>(classDef->objectList[i]);
 
-			if (mat && (mat->GetName().StartWith(matName) || mat->GetName().contains(matName) || mat->GetName() == matName))
+			if (mat && (mat->GetName().StartWith(matName) || mat->GetName().Contains(matName) || mat->GetName() == matName))
 			{
 				pList.Insert(mat);
 			}

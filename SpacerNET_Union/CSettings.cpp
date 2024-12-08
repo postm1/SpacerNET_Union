@@ -152,8 +152,7 @@ namespace GOTHIC_ENGINE {
 
 			ogame->GetWorld()->showWaynet = GetIntVal("showWaynet");
 
-			zCVobLight::renderLightVisuals = GetIntVal("showHelpVobs");	
-			zCVob::SetShowHelperVisuals(zCVobLight::renderLightVisuals); 
+			zCVobLight::renderLightVisuals = GetIntVal("showHelpVobs");
 
 			ogame->GetWorld()->bspTree.drawVobBBox3D = GetIntVal("drawBBoxGlobal");	
 

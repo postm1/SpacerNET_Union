@@ -70,3 +70,4 @@ bool HasChildren()
 	return NULL;
 }
 
+BOOL __fastcall Render_Union(zTRenderContext &renderContext);

@@ -1061,14 +1061,14 @@ namespace GOTHIC_ENGINE {
 
 			print.PrintRed(ToStr GetLang("UNION_LIGHT_RAD_ZERO"));
 
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2
 			if (zCSkyControler::GetActiveSkyControler())
 			{
 				zCSkyControler::GetActiveSkyControler()->SetLightDirty();
 			}
 #endif
 			playerLightInt = 500;
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2
 			if (zCSkyControler::GetActiveSkyControler())
 			{
 				zCSkyControler::GetActiveSkyControler()->SetLightDirty();

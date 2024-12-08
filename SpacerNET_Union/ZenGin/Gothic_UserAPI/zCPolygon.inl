@@ -20,6 +20,11 @@ void			__fastcall			SetVertexPtr(zCVertex& vert, int index)
 }
 
 zCMaterial* GetMaterial() const { return material; };
+
+#ifdef __G1
+void SetMaterial(zCMaterial* mat);
+#endif
+
 zCLightMap* GetLightmap() const { return lightmap; };
 zBOOL			GetPortal() const { return flags.portalPoly != zPORTAL_TYPE_NONE; };
 zBOOL			GetSectorFlag() const { return flags.sectorPoly; };

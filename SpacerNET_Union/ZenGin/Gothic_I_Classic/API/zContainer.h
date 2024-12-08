@@ -281,7 +281,6 @@ namespace Gothic_I_Classic {
           }
         }
       }
-      return;
     }
 
     void DeleteListDatas() {
@@ -433,7 +432,6 @@ namespace Gothic_I_Classic {
                 }
             }
         }
-        return;
     }
 
     void InsertEnd( const T& ins ) {

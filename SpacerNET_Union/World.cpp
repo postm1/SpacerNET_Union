@@ -610,7 +610,7 @@ namespace GOTHIC_ENGINE {
 
 		oCNpc::SetNpcAIDisabled(TRUE);
 		dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2
 		zCWorld::s_bAlternateRenderOrder = false;
 #endif
 		ogame->CamInit();
@@ -638,12 +638,16 @@ namespace GOTHIC_ENGINE {
 		//ogame->InsertObjectRoutine(0, "FIREPLACE", 7, 0, 0);
 
 		levelReady = false;
+
+		// kill gLogStatistics
 #if ENGINE == Engine_G1
-		// kill gLogStatistics
-		*(int*)0x0085EB00 = 0;
-#else
-		// kill gLogStatistics
-		* (int*)0x008C2B50 = 0;
+		*(bool*)0x0085EB00 = false;
+#elif ENGINE == Engine_G1A
+		*(bool*)0x008A3454 = false;
+#elif ENGINE == Engine_G2
+		*(bool*)0x008B4590 = false;
+#elif ENGINE == Engine_G2A
+		*(bool*)0x008C2B50 = false;
 #endif
 
 
@@ -742,7 +746,7 @@ namespace GOTHIC_ENGINE {
 			{
 				SetTime(12, 0);
 				zCTexture::RefreshTexMaxSize(16384);
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2
 				zCSkyControler::s_activeSkyControler->m_fRelightTime = 0;
 #endif
 				SetRangeVobs();
@@ -751,7 +755,7 @@ namespace GOTHIC_ENGINE {
 
 			//zCBspTree::s_renderAllPortals = TRUE;
 			//zCBspTree::s_showPortals = TRUE;
-#if ENGINE > Engine_G1
+#if ENGINE >= Engine_G2
 			ogame->GetWorld()->SetWaveAnisEnabled(FALSE);
 
 

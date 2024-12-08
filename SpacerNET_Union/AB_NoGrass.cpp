@@ -43,7 +43,7 @@ namespace GOTHIC_ENGINE {
 					hiddenAmount += 1;
 					vobListGrass.Insert(pVob);
 				}
-				else if (hideBush && (name.contains("NW_NATURE_BUSH") || name.contains("NW_NATURE_FARN") || bushList.IsInList(name)))
+				else if (hideBush && (name.Contains("NW_NATURE_BUSH") || name.Contains("NW_NATURE_FARN") || bushList.IsInList(name)))
 				{
 					bariCenter += pVob->GetPositionWorld();
 					hiddenAmount += 1;
@@ -204,7 +204,7 @@ namespace GOTHIC_ENGINE {
 					{
 						zSTRING name = pVob->GetVisual()->GetVisualName().Upper();
 
-						if (name.contains("NW_NATURE_BUSH") || name.contains("NW_NATURE_FARN") || bushList.IsInList(name))
+						if (name.Contains("NW_NATURE_BUSH") || name.Contains("NW_NATURE_FARN") || bushList.IsInList(name))
 						{
 							entry->pListBush.InsertEnd(pVob);
 						}
