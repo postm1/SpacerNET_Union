@@ -554,16 +554,24 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_SetCameraPos() {
 
-			float x, y, z;
+			float x, y, z, yaw, pitch;
 
 			x = Stack_PeekFloat();
 			y = Stack_PeekFloat();
 			z = Stack_PeekFloat();
+			
+				yaw = Stack_PeekFloat();
+				pitch = Stack_PeekFloat();
+
+				zCQuat q;
+				q.EulerToQuat(zVEC3(yaw, pitch, 0.0));
+				
 
 			if (ogame && ogame->GetCamera())
 			{
 				ogame->GetCamera()->connectedVob->SetPositionWorld(zVEC3(x, y, z));
 				ogame->GetCamera()->connectedVob->ResetXZRotationsWorld();
+				ogame->GetCamera()->connectedVob->SetRotationWorld(q);
 			}
 		}
 
