@@ -560,17 +560,21 @@ namespace GOTHIC_ENGINE {
 			y = Stack_PeekFloat();
 			z = Stack_PeekFloat();
 			
-				yaw = Stack_PeekFloat();
-				pitch = Stack_PeekFloat();
+			yaw = Stack_PeekFloat();
+			pitch = Stack_PeekFloat();
 
-				zCQuat q;
-				q.EulerToQuat(zVEC3(yaw, pitch, 0.0));
+			yaw = Radian(yaw);
+			pitch = Radian(pitch);
+
+			zCQuat q;
+
+			q.EulerToQuat(zVEC3(pitch, yaw, 0.0));
 				
 
 			if (ogame && ogame->GetCamera())
 			{
 				ogame->GetCamera()->connectedVob->SetPositionWorld(zVEC3(x, y, z));
-				ogame->GetCamera()->connectedVob->ResetXZRotationsWorld();
+				//ogame->GetCamera()->connectedVob->ResetXZRotationsWorld();
 				ogame->GetCamera()->connectedVob->SetRotationWorld(q);
 			}
 		}
