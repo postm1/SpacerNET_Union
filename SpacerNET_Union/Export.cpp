@@ -563,6 +563,10 @@ namespace GOTHIC_ENGINE {
 			yaw = Stack_PeekFloat();
 			pitch = Stack_PeekFloat();
 
+			// fixing so output = input
+			yaw = -yaw;
+			pitch = -pitch;
+
 			// set our inner camera controller properly
 			camMov.pitch = pitch;
 			camMov.yaw = yaw + 90.0f; // why? No idea, but it works
