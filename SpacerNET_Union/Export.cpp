@@ -587,6 +587,24 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		__declspec(dllexport) void Extern_GetCurrentCameraPos()
+		{
+			if (!ogame || !ogame->GetCameraVob())
+			{
+				
+				return;
+			}
+
+			auto pos = ogame->GetCameraVob()->GetPositionWorld();
+
+			Stack_PushFloat(pos[0]);
+			Stack_PushFloat(pos[1]);
+			Stack_PushFloat(pos[2]);
+		}
+
+
+		
+
 
 		__declspec(dllexport) void Extern_SetToKeyPos(int key) {
 			theApp.SetCurrentKey(key);
