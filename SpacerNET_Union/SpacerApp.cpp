@@ -70,6 +70,7 @@ namespace GOTHIC_ENGINE {
 		this->cameraMoveWithVobActive = false;
 		this->wasCopiedPressed = false;
 		this->showVobVisualInfo = false;
+		this->holdTime = false;
 
 		this->rotMod = zMH_VIEW;
 
@@ -337,13 +338,6 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SetHoldTime(int enabled)
 	{
-		//FIXME_G1 corrent address?
-#if ENGINE == Engine_G1
-		int& holdTime = *(int*)0x8DA6C0;
-#else
-		int& holdTime = *(int*)0xAB0888;
-#endif
-		
 		holdTime = enabled;
 	}
 
@@ -1089,7 +1083,7 @@ namespace GOTHIC_ENGINE {
 		int	traceFlags = zTRACERAY_STAT_POLY |
 			zTRACERAY_POLY_TEST_WATER;
 
-		if (zCVob::GetShowHelperVisuals())
+		if (zCVob::s_showHelperVisuals)
 			traceFlags |= zTRACERAY_VOB_TEST_HELPER_VISUALS;
 
 		zBOOL hit = wld->TraceRayNearestHit(ray00, ray, (zCVob*)0, traceFlags);
@@ -1216,12 +1210,6 @@ namespace GOTHIC_ENGINE {
 	{
 		//cmd << start.ToString() << " ; " << ray.ToString() << endl;
 
-		//FIXME_G1
-#if ENGINE == Engine_G1
-		print.PrintRed("NO G1 SUPPORT!");
-		return;
-
-#else
 		zCVob* pFoundVob = NULL;
 
 		zTBBox3D box;
@@ -1301,7 +1289,6 @@ namespace GOTHIC_ENGINE {
 
 		ogame->GetWorld()->traceRayReport.foundVob = pFoundVob;
 		ogame->GetWorld()->traceRayReport.foundHit = TRUE;
-#endif
 	}
 
 	void SpacerApp::PickVobFilter()
@@ -1332,7 +1319,7 @@ namespace GOTHIC_ENGINE {
 		world->traceRayIgnoreVobFlag = TRUE;
 		int	traceFlags = zTRACERAY_STAT_POLY | zTRACERAY_POLY_TEST_WATER;
 
-		if (zCVob::GetShowHelperVisuals())
+		if (zCVob::s_showHelperVisuals)
 			traceFlags |= zTRACERAY_VOB_TEST_HELPER_VISUALS;
 
 		//const 
@@ -1674,7 +1661,7 @@ namespace GOTHIC_ENGINE {
 		int	traceFlags = zTRACERAY_STAT_POLY |
 			zTRACERAY_POLY_TEST_WATER;
 
-		if (zCVob::GetShowHelperVisuals())
+		if (zCVob::s_showHelperVisuals)
 			traceFlags |= zTRACERAY_VOB_TEST_HELPER_VISUALS;
 
 		if (ctrlUsed)

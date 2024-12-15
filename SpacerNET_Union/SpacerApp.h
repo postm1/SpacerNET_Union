@@ -124,6 +124,7 @@ namespace GOTHIC_ENGINE {
 			bool dynLightCompile;
 			bool wasCopiedPressed;
 			bool showVobVisualInfo;
+			bool holdTime;
 
 			bool levelReady;
 			bool treeIsReady;

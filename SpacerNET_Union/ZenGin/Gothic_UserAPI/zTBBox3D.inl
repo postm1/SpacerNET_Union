@@ -12,3 +12,7 @@ float GetMaxExtent();
 //zBOOL IsIntersecting(const zPOINT3& rayOrigin, const zVEC3& rayDirection, zREAL& scaleMin, zREAL& scaleMax);
 
 #endif
+
+#if ENGINE < Engine_G2A
+zBOOL IsIntersecting(const zVEC3& rayOrigin, const zVEC3& rayDirection, zREAL& scaleMin, zREAL& scaleMax) const;
+#endif

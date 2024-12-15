@@ -447,7 +447,7 @@ namespace GOTHIC_ENGINE {
 					{
 						if (auto pCont = pVob->CastTo<oCMobContainer>())
 						{
-							if (pCont && pCont->contains.Upper().contains(itemNameSearch))
+							if (pCont && pCont->contains.Upper().Contains(itemNameSearch))
 							{
 								resultFound.Insert(pVob);
 

@@ -115,10 +115,6 @@ namespace Gothic_II_Addon {
     int Search( char const*, unsigned int ) const                                 zCall( 0x0059D110 );
     void Init()                                                                   zCall( 0x006D9B80 );
 
-	INLINE bool_t Contains(const zSTRING& cmp) const {
-		return this->HasWord(cmp);
-	}
-
   public:
 #if USING_UNION_STRING_METHODS
 
@@ -189,7 +185,7 @@ namespace Gothic_II_Addon {
       return ((CStringA&)*this).CompareMaskedI( (CStringA&)str );
     }
 
-	INLINE bool_t contains(const zSTRING& cmp) const {
+	INLINE bool_t Contains(const zSTRING& cmp) const {
 		return this->HasWord(cmp);
 	}
 
