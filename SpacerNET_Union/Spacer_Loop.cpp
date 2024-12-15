@@ -606,6 +606,7 @@ namespace GOTHIC_ENGINE {
 		if (screen && ogame->GetCamera() && ogame->GetWorld() && theApp.showScreenInfo)
 		{
 			zVEC3 pos = ogame->GetCamera()->activeCamPos;
+			zVEC3 rot = ogame->GetCamera()->camMatrix.zMAT4::GetEulerAngles() * DEGREE;
 
 			screen->SetFont("FONT_OLD_10_WHITE_HI.TGA");
 			screen->SetFontColor(zCOLOR(0, 255, 0));
@@ -633,6 +634,10 @@ namespace GOTHIC_ENGINE {
 				PrintDebug((zSTRING(GetLang("UNION_CAM_POS")) + "(" + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
 
 					+ zSTRING(", ") + zSTRING(pos.n[2], 6) + zSTRING(")")));
+				
+				PrintDebug((zSTRING(GetLang("UNION_CAM_ROT")) + "(" + zSTRING(rot.n[0], 6) + zSTRING(", ") + zSTRING(rot.n[1], 6)
+
+					+ zSTRING(", ") + zSTRING(rot.n[2], 6) + zSTRING(")"))); // Z-axis obviously could remain zSTRING("0.0") because it's unnecessary.
 
 
 				if (theApp.pickedVob)
