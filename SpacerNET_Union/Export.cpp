@@ -591,7 +591,9 @@ namespace GOTHIC_ENGINE {
 		{
 			if (!ogame || !ogame->GetCameraVob())
 			{
-				
+				Stack_PushFloat(0);
+				Stack_PushFloat(0);
+				Stack_PushFloat(0);
 				return;
 			}
 
