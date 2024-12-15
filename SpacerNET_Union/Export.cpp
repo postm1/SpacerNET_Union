@@ -563,6 +563,12 @@ namespace GOTHIC_ENGINE {
 			yaw = Stack_PeekFloat();
 			pitch = Stack_PeekFloat();
 
+			// set our inner camera controller properly
+			camMov.pitch = pitch;
+			camMov.yaw = yaw + 90.0f; // why? No idea, but it works
+			camMov.lastFrameTime = 0;
+
+
 			yaw = Radian(yaw);
 			pitch = Radian(pitch);
 
@@ -576,6 +582,8 @@ namespace GOTHIC_ENGINE {
 				ogame->GetCamera()->connectedVob->SetPositionWorld(zVEC3(x, y, z));
 				//ogame->GetCamera()->connectedVob->ResetXZRotationsWorld();
 				ogame->GetCamera()->connectedVob->SetRotationWorld(q);
+
+				
 			}
 		}
 

@@ -269,6 +269,9 @@ if (KeyClick(MOUSE_WHEELDOWN))
 		rot.n[1] = sin(Radian(camMov.pitch));
 		rot.n[2] = sin(Radian(camMov.yaw)) * cos(Radian(camMov.pitch));
 
+
+		//cmd << "yaw: " << camMov.yaw << " pitch: " << camMov.pitch << endl;
+
 		int slerpValue = theApp.options.GetIntVal("slerpRot");
 
 
