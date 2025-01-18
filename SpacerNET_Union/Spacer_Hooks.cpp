@@ -808,7 +808,6 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-#if ENGINE == Engine_G2A
 
 	// массив визуалов, которые были ранее обработаны
 // (для ускорения проверки)
@@ -816,13 +815,9 @@ namespace GOTHIC_ENGINE {
 
 	// 0x006011E0 private: class zCVisual * __thiscall zCVob::GetClassHelperVisual(void)const 
 	zCVisual* __fastcall Ivk_Vob_GetClassHelperVisual(zCVob*);
-	CInvoke <zCVisual* (__thiscall*) (zCVob*)> pIvk_Vob_GetClassHelperVisual(0x006011E0, Ivk_Vob_GetClassHelperVisual, IVK_AUTO);
+	CInvoke <zCVisual* (__thiscall*) (zCVob*)> pIvk_Vob_GetClassHelperVisual(MultiZenDef(0x005D5D60, 0x00000000, 0x00000000, 0x006011E0), Ivk_Vob_GetClassHelperVisual, theApp.IsDx11Active() ? IVK_AUTO : IVK_DISABLED);
 	zCVisual* __fastcall Ivk_Vob_GetClassHelperVisual(zCVob* _this)
 	{
-		if (!theApp.IsDx11Active())
-		{
-			return pIvk_Vob_GetClassHelperVisual(_this);
-		}
 
 		// получаем указатель на визуал по классу воба
 		zCVisual* vis = pIvk_Vob_GetClassHelperVisual(_this);
@@ -868,6 +863,4 @@ namespace GOTHIC_ENGINE {
 		// возвращаем затекстуренный визуал
 		return vis;
 	}
-
-#endif
 }

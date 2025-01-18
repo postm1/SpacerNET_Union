@@ -22,7 +22,7 @@ namespace GOTHIC_ENGINE {
 	#define GetNPC(a) dynamic_cast<oCNpc*>(a)
 	#define LogicKey(a)	zinput->GetState(a)
 	#define DllExport __declspec(dllexport)
-
+	#define MultiZenDef(aG1, aG1A, aG2, aG2A) CHECK_THIS_ENGINE ? ZenDef<TInstance>(aG1, aG1A, aG2, aG2A) : 0x00000000
 
 	#define max(a,b) (a > b ? a : b)
 
