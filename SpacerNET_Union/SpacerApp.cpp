@@ -555,7 +555,15 @@ namespace GOTHIC_ENGINE {
 
 	bool SpacerApp::IsDx11Active()
 	{
-		static bool isEnabled = CheckDx11();
+		static bool initCheck = false;
+		static bool isEnabled = false;
+
+		if (!initCheck)
+		{
+			initCheck = true;
+			isEnabled = CheckDx11();
+		}
+			
 		return isEnabled;
 	}
 

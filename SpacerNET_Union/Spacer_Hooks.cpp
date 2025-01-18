@@ -806,4 +806,68 @@ namespace GOTHIC_ENGINE {
 		return FALSE;
 
 	}
+
+
+#if ENGINE == Engine_G2A
+
+	// массив визуалов, которые были ранее обработаны
+// (для ускорения проверки)
+	zCArray<zCVisual*> arr_CompletedHelperVisuals;
+
+	// 0x006011E0 private: class zCVisual * __thiscall zCVob::GetClassHelperVisual(void)const 
+	zCVisual* __fastcall Ivk_Vob_GetClassHelperVisual(zCVob*);
+	CInvoke <zCVisual* (__thiscall*) (zCVob*)> pIvk_Vob_GetClassHelperVisual(0x006011E0, Ivk_Vob_GetClassHelperVisual, IVK_AUTO);
+	zCVisual* __fastcall Ivk_Vob_GetClassHelperVisual(zCVob* _this)
+	{
+		if (!theApp.IsDx11Active())
+		{
+			return pIvk_Vob_GetClassHelperVisual(_this);
+		}
+
+		// получаем указатель на визуал по классу воба
+		zCVisual* vis = pIvk_Vob_GetClassHelperVisual(_this);
+
+		// если визуала нет
+		if (!vis)
+			// выходим
+			return vis;
+
+		// иначе, пытаемся преобразовать визуал в прогмеш прото (.3DS)
+		zCProgMeshProto* progMesh = dynamic_cast<zCProgMeshProto*>(vis);
+
+		// если это не меш ИЛИ меш, но у него нет материалов ИЛИ визуал уже был ранее обработан
+		if (!progMesh || progMesh->numSubMeshes <= 0 || arr_CompletedHelperVisuals.IsInList(vis))
+			// выходим
+			return vis;
+
+
+		// иначе, пробегаемся по всем его саб мешам (материалам)
+		for (int i = 0; i < progMesh->numSubMeshes; i++)
+		{
+			// берём материал меша
+			zCMaterial* mat = progMesh->subMeshList[i].material;
+
+			// если нет материала или текстура уже установлена
+			if (!mat || mat->texture)
+				// пропускаем саб меш
+				continue;
+
+			// иначе, формируем название текстуры
+			// с приставкой "COLOR_" и суффиксом названия материала
+			zSTRING texName = "COLOR_" + mat->GetName();
+
+			// назначаем текстуру группе полигонов выбранного саб меша
+			mat->SetTexture(texName);
+		}
+
+		// если визуала нет в массиве обработанных визуалов
+		if (!arr_CompletedHelperVisuals.IsInList(vis))
+			// добавляем
+			arr_CompletedHelperVisuals.Insert(vis);
+
+		// возвращаем затекстуренный визуал
+		return vis;
+	}
+
+#endif
 }
