@@ -1181,8 +1181,19 @@ namespace GOTHIC_ENGINE {
 			view->SetFontColor(GFX_GREEN);
 			view->Print(40, 750, GetLang("UNION_TEAM"));
 			view->Print(40, 1000, ToStr GetLang("UNION_DATE_COMPILE") + ToStr __DATE__ + " " + ToStr __TIME__);
+			
+			CString renderStr = ToStr GetLang("UNION_RESOLUTION") + ToStr xRes + "x" + ToStr yRes;
 
-			view->Print(40, 1250, ToStr GetLang("UNION_RESOLUTION") + ToStr xRes + "x" + ToStr yRes);
+			if (IsDx11Active())
+			{
+				renderStr += " (DX 11)";
+			}
+			else
+			{
+				renderStr += " (DX 7)";
+			}
+
+			view->Print(40, 1250, renderStr);
 
 			view->SetFontColor(GFX_RED);
 			view->Print(40, 1750, GetLang("UNION_NOWORLD"));
