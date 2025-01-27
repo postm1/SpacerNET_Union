@@ -1640,9 +1640,27 @@ namespace GOTHIC_ENGINE {
 
 			if (keys.KeyPressed("VOB_DELETE", true))
 			{
-				theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
-				theApp.RemoveVob(pickedVob);
-				theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+				if (pickedVob->HasChildren())
+				{
+					Stack_PushString("WIN_MSG_CONFIRM_REMOVEVOB");
+
+					(callVoidFunc)GetProcAddress(theApp.module, "GetConfirmWindowYesNo")();
+
+					int yes = Stack_PeekInt();
+
+					if (yes)
+					{
+						theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
+						theApp.RemoveVob(pickedVob);
+						theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+					}
+				}
+				else
+				{
+					theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
+					theApp.RemoveVob(pickedVob);
+					theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+				}
 			}
 
 		}

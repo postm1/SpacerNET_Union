@@ -809,6 +809,7 @@ namespace GOTHIC_ENGINE {
 
 	zCArray<zCVisual*> arr_CompletedHelperVisuals;
 
+	// Render help vobs visuals for DX11
 	zCVisual* __fastcall Ivk_Vob_GetClassHelperVisual(zCVob*);
 	CInvoke <zCVisual* (__thiscall*) (zCVob*)> pIvk_Vob_GetClassHelperVisual(MultiZenDef(0x005D5D60, 0x00000000, 0x00000000, 0x006011E0), Ivk_Vob_GetClassHelperVisual, theApp.IsDx11Active() ? IVK_AUTO : IVK_DISABLED);
 	zCVisual* __fastcall Ivk_Vob_GetClassHelperVisual(zCVob* _this)
