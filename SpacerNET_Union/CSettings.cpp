@@ -454,7 +454,7 @@ namespace GOTHIC_ENGINE {
 		list.Insert("bShowBboxModel", set);
 
 
-		set = new CSetting(TYPE_INT, "SPACER", "showVisualInfoX", "200");
+		set = new CSetting(TYPE_INT, "SPACER", "showVisualInfoX", "600");
 		list.Insert("showVisualInfoX", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "showVisualInfoY", "2000");
