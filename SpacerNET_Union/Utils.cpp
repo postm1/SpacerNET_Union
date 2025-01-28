@@ -1497,7 +1497,7 @@ namespace GOTHIC_ENGINE {
 	zSTRING GetMaterialInfoAsString(zCMaterial* mat)
 	{
 		zSTRING text = "\nMat: " + mat->GetName()
-			+ " Texture: " + mat->texture->GetObjectName() 
+			+ " | Texture: " + mat->texture->GetObjectName() 
 			+ " | noCollDet: " + Z mat->noCollDet
 			+ " | MatGroup: " + Z mat->GetMatGroupString()		
 			;
