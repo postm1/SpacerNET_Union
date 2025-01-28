@@ -109,7 +109,8 @@ namespace GOTHIC_ENGINE {
 			for (int i = 0; i < count; i++) {
 				zCVob* vob = activeVobList.GetSafe(i);
 
-				if (vob && vob->showVisual && vob->visual /*&& camera->GetDistanceToVob( *vob ) <= 5000.0f*/) {
+				if (vob && ((vob->showVisual && vob->visual) || ignoreCollisions && IsVobWaypointOrFreepoint(vob)))
+				{
 
 
 					zVEC3 cameraPosition = camera->GetPositionWorld();
@@ -151,8 +152,8 @@ namespace GOTHIC_ENGINE {
 
 			for (int i = 0; i < activeVobList.GetNum(); i++) {
 				zCVob* vob = activeVobList[i];
-				if (vob->showVisual && vob->visual /*&& camera->GetDistanceToVob( *vob ) <= 5000.0f*/) {
-
+				if (vob && ((vob->showVisual && vob->visual) || ignoreCollisions && IsVobWaypointOrFreepoint(vob)))
+				{
 
 					zVEC3 cameraPosition = camera->GetPositionWorld();
 					zVEC3 vobPosition = vob->GetPositionWorld();

@@ -1483,5 +1483,15 @@ namespace GOTHIC_ENGINE {
 		}
 		return false;
 	}
+
+	bool IsVobWaypointOrFreepoint(zCVob* pVob)
+	{
+		if (!pVob) return false;
+
+		auto pWP = pVob->CastTo<zCVobWaypoint>();
+		auto pFP = pVob->CastTo<zCVobSpot>();
+
+		return pWP || pFP;
+	}
 }
 
