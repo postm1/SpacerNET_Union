@@ -187,7 +187,7 @@ namespace GOTHIC_ENGINE {
 			if (pTrigger || pZone || pDamage || pTouchAni)
 			{
 				//check bbox size
-				if (pickedVob->bbox3D.maxs.Distance(pickedVob->bbox3D.mins) >= 10)
+				if (pickedVob->bbox3D.maxs.Distance(pickedVob->bbox3D.mins) >= 5)
 				{
 
 					pickedVob->bbox3D.GetCornerPoints(points);
