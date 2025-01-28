@@ -440,7 +440,7 @@ namespace GOTHIC_ENGINE {
 
 	zCVob* baseSelectVob = NULL;
 
-	void GetNextChildCopy(zCTree<zCVob>* node, zCVob* parent, bool rootVob = false, bool useHierarchy = false)
+	void Tranverse_OnCopyInsert(zCTree<zCVob>* node, zCVob* parent, bool rootVob = false, bool useHierarchy = false, bool parentRootHasChildren = false)
 	{
 		zCVob* farVobCurrent = node->GetData();
 		zCVob* newVob = NULL;
@@ -523,7 +523,7 @@ namespace GOTHIC_ENGINE {
 
 					
 				}
-				else if (theApp.options.GetIntVal("vobInsertVobRotRand"))
+				else if (theApp.options.GetIntVal("vobInsertVobRotRand") && !parentRootHasChildren)
 				{
 					newVob->RotateLocalY(GetRandVal(0, 360));
 				}
@@ -592,7 +592,7 @@ namespace GOTHIC_ENGINE {
 
 		while (node != NULL)
 		{
-			GetNextChildCopy(node, newVob, false, useHierarchy);
+			Tranverse_OnCopyInsert(node, newVob, false, useHierarchy, parentRootHasChildren);
 			node = node->GetNextChild();
 		}
 	}
@@ -665,12 +665,10 @@ namespace GOTHIC_ENGINE {
 
 			if (useHierarchy && (theApp.vobToCopy == theApp.pickedVob || checkCopyVobSelf) && !pItem && !pickedVobWaypont)
 			{
-				//print.PrintRed("Íĺ ěîăó âńňŕâčňü âîá ńŕěîăî â ńĺá˙!");
-				//return;
 				useHierarchy = false;
 			}
 
-
+			bool parentHasChildren = theApp.vobToCopy->HasChildren();
 
 			theApp.vobToCopy->SetDrawBBox3D(FALSE);
 
@@ -684,7 +682,7 @@ namespace GOTHIC_ENGINE {
 
 			
 
-			GetNextChildCopy(tree, parent, true, useHierarchy);
+			Tranverse_OnCopyInsert(tree, parent, true, useHierarchy, parentHasChildren);
 
 
 			theApp.SetSelectedVob(baseSelectVob, "Control+V");
