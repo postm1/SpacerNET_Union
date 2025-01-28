@@ -320,7 +320,7 @@ namespace GOTHIC_ENGINE {
 
 				if (mat && mat->texture)
 				{
-					zSTRING text = "\nMat: " + mat->GetName() + " | Texture: " + mat->texture->GetObjectName();
+					zSTRING text = "\nMat: " + mat->GetName() + " | Texture: " + mat->texture->GetObjectName() + " | noCollDet: " + Z mat->noCollDet;
 
 					auto textureName = mat->texture->GetObjectName();
 
@@ -374,7 +374,7 @@ namespace GOTHIC_ENGINE {
 
 					if (mat && mat->texture)
 					{
-						zSTRING text = "\nMat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName();
+						zSTRING text = "\nMat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName() + " | noCollDet: " + Z mat->noCollDet;
 
 						int curLineSize = pViewVobInfo->FontSize(text);
 
@@ -410,7 +410,7 @@ namespace GOTHIC_ENGINE {
 
 					if (mat && mat->texture)
 					{
-						zSTRING text = "\nMat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName();
+						zSTRING text = "\nMat: " + mat->GetName() + " Texture: " + mat->texture->GetObjectName() + " | noCollDet: " + Z mat->noCollDet;
 
 						int curLineSize = pViewVobInfo->FontSize(text);
 
