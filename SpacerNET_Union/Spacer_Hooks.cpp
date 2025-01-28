@@ -9,7 +9,7 @@ namespace GOTHIC_ENGINE {
 
 		auto ladder = this->CastTo<oCMobLadder>();
 
-		if (!ladder && theApp.options.GetIntVal("bBlockPlayeUseMobInter"))
+		if (!ladder && theApp.options.GetIntVal("bBlockPlayerUseMobInter"))
 		{
 			return FALSE;
 		}

@@ -411,8 +411,8 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "checkBoxFontUnderstroke", "0");
 		list.Insert("checkBoxFontUnderstroke", set);
 		
-		set = new CSetting(TYPE_INT, "SPACER", "bBlockPlayeUseMobInter", "1");
-		list.Insert("bBlockPlayeUseMobInter", set);
+		set = new CSetting(TYPE_INT, "SPACER", "bBlockPlayerUseMobInter", "1");
+		list.Insert("bBlockPlayerUseMobInter", set);
 
 
 		set = new CSetting(TYPE_INT, "SPACER", "infoWinzSpyEnabled", "0");
