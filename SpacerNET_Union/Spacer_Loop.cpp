@@ -306,10 +306,19 @@ namespace GOTHIC_ENGINE {
 		{
 			auto trisCount = pProgMesh->GetNumTri();
 
-			zSTRING text = "\nTrisCount: " + Z trisCount;
-			textToCopy += text;
+			zSTRING text = "\nTrisCount: ";// +Z trisCount;
+			int lenOffset = pViewVobInfo->FontSize(text);
+
+			pViewVobInfo->SetFontColor(zCOLOR(0, 255, 0));
 			pViewVobInfo->Print(startX, start, text);
+
+			pViewVobInfo->SetFontColor(zCOLOR(255, 255, 255, 255));
+			pViewVobInfo->Print(startX + lenOffset, start, Z trisCount);
 			start += 220;
+
+			text += Z trisCount;
+
+			textToCopy += text;
 
 			for (int i = 0; i < pProgMesh->numSubMeshes; i++)
 			{
@@ -482,7 +491,7 @@ namespace GOTHIC_ENGINE {
 
 		if (pVob)
 		{
-			pViewVobInfo->SetFontColor(zCOLOR(209, 162, 32));
+			
 
 			pViewVobInfo->SetFontColor(zCOLOR(255, 255, 255, 255));
 
@@ -496,12 +505,31 @@ namespace GOTHIC_ENGINE {
 
 			if (auto visual = pVob->visual)
 			{
-				textToCopy = "VisualName: " + visual->GetVisualName();
+
+				pViewVobInfo->SetFontColor(zCOLOR(209, 162, 32));
+				zSTRING copyInfo = "(" + Z GetLang("VISUALINFO_COPY") + ")";
+				pViewVobInfo->Print(startX, startY, copyInfo);
+				startY += 220;
+
+				textToCopy = "VisualName: ";
 
 				longestLine = pViewVobInfo->FontSize(textToCopy);
 
+				// output VisualName as diff color
+				pViewVobInfo->SetFontColor(zCOLOR(0, 255, 0));
 				pViewVobInfo->Print(startX, startY, textToCopy);
+
+				// output Visual info with usual color
+				pViewVobInfo->SetFontColor(zCOLOR(255, 255, 255, 255));
+				pViewVobInfo->Print(startX + longestLine, startY, visual->GetVisualName());
+
+				textToCopy += visual->GetVisualName();
+
+				
 				startY += 220;
+
+				pViewVobInfo->SetFontColor(zCOLOR(255, 255, 255, 255));
+
 				ExtractVisualInfoShow(visual, startY, startX, longestLine, textToCopy);
 			}
 			
