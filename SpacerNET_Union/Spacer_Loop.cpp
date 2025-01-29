@@ -306,7 +306,7 @@ namespace GOTHIC_ENGINE {
 		{
 			auto trisCount = pProgMesh->GetNumTri();
 
-			zSTRING text = "\nTrisCount: ";// +Z trisCount;
+			zSTRING text = "TrisCount: ";
 			int lenOffset = pViewVobInfo->FontSize(text);
 
 			pViewVobInfo->SetFontColor(zCOLOR(0, 255, 0));
@@ -316,7 +316,7 @@ namespace GOTHIC_ENGINE {
 			pViewVobInfo->Print(startX + lenOffset, start, Z trisCount);
 			start += 220;
 
-			text += Z trisCount;
+			text = "\n" + text + Z trisCount;
 
 			textToCopy += text;
 
@@ -357,7 +357,7 @@ namespace GOTHIC_ENGINE {
 
 					pViewVobInfo->Print(startX, start, text);
 
-					textToCopy += text;
+					textToCopy += "\n" + text;
 
 					start += 220;
 				}
@@ -394,7 +394,7 @@ namespace GOTHIC_ENGINE {
 
 						pViewVobInfo->Print(startX, start, text);
 
-						textToCopy += text;
+						textToCopy += "\n" + text;
 
 						start += 220;
 					}
@@ -430,7 +430,7 @@ namespace GOTHIC_ENGINE {
 
 						pViewVobInfo->Print(startX, start, text);
 
-						textToCopy += text;
+						textToCopy += "\n" + text;
 
 						start += 220;
 					}
@@ -532,6 +532,12 @@ namespace GOTHIC_ENGINE {
 
 				ExtractVisualInfoShow(visual, startY, startX, longestLine, textToCopy);
 			}
+			else
+			{
+				pViewVobInfoBack->InsertBack("");
+				return;
+			}
+
 			
 
 
