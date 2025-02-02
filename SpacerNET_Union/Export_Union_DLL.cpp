@@ -117,6 +117,36 @@ namespace GOTHIC_ENGINE {
 			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, toggle);
 		}
 
+
+		__declspec(dllexport) BOOL SPC_SetGlobalTreeUpdate(zCVob* pVob)
+		{
+			if (pVob)
+			{
+				theApp.SetSelectedVob(pVob, "SPC_SetGlobalTreeUpdate");
+
+				auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectVob");
+				onSelect((int)pVob);
+
+				theApp.SelectObject(pVob);
+
+				return theApp.GetSelectedVob() == pVob;
+			}
+			else
+			{
+				return FALSE;
+			}
+			
+		}
+
+		__declspec(dllexport) BOOL SPC_SelectObjects(zCArray<zCVob*>& arr_vobs)
+		{
+			for (int i = 0; i < theApp.SelectedVobs.GetNum(); i++)
+			{
+				auto pVob = theApp.SelectedVobs.GetSafe(i);
+				arr_vobs.InsertEnd(*pVob);
+			}
+		}
+
 	}
 
 }
