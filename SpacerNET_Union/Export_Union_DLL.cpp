@@ -118,7 +118,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		__declspec(dllexport) BOOL SPC_SetGlobalTreeUpdate(zCVob* pVob)
+		__declspec(dllexport) BOOL SPC_SelectObject(zCVob* pVob)
 		{
 			if (pVob)
 			{
@@ -138,14 +138,21 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
-		__declspec(dllexport) BOOL SPC_SelectObjects(zCArray<zCVob*>& arr_vobs)
+		/*__declspec(dllexport) BOOL SPC_SelectObjects(zCArray<zCVob*>& arr_vobs)
 		{
+			if (theApp.SelectedVobs.GetNum() == 0)
+			{
+				return FALSE;
+			}
+
 			for (int i = 0; i < theApp.SelectedVobs.GetNum(); i++)
 			{
 				auto pVob = theApp.SelectedVobs.GetSafe(i);
 				arr_vobs.InsertEnd(*pVob);
 			}
-		}
+
+			return TRUE;
+		}*/
 
 	}
 
