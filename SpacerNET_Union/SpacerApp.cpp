@@ -689,6 +689,27 @@ namespace GOTHIC_ENGINE {
 				screen->InsertItem(viewInfo);
 			}
 		}
+		
+		// dx11 PFX recalc bbox
+		/*static int timerVisualPfx = 0;
+		timerVisualPfx += ztimer->frameTimeFloat;
+
+		if (timerVisualPfx >= 1000)
+		{
+			timerVisualPfx = 0;
+
+			if (vob->visual)
+			{
+				zCParticleFX* pfx = dynamic_cast<zCParticleFX*>(vob->visual);
+
+				if (pfx)
+				{
+					
+				}
+			}
+		}*/
+
+		
 
 		vob->bbox3D.Draw(color);
 	}
