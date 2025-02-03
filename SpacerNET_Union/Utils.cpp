@@ -724,7 +724,7 @@ namespace GOTHIC_ENGINE {
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
 
-				cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
+				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
 			}
 		}
 
