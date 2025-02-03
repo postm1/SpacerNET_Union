@@ -641,6 +641,7 @@ namespace GOTHIC_ENGINE {
 
 
 		
+		//cmd << "SearchType: " << type << endl;
 
 		for (int i = 0; i < resVobList.GetNumInList(); i++)
 		{
@@ -718,6 +719,13 @@ namespace GOTHIC_ENGINE {
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
 			}
+			// PFX
+			else if (type == 12 && pVob && pVob->GetVisual() && (pVob->GetVisual()->GetVisualName().EndWith(".pfx") || pVob->GetVisual()->GetVisualName().EndWith(".PFX")))
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+
+				cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
+			}
 		}
 
 		//zCVobLight
@@ -755,6 +763,8 @@ namespace GOTHIC_ENGINE {
 				&& !IsSpacerVob(nextVob)
 				)
 			{
+				
+
 				static addToVobList addEntry = (addToVobList)GetProcAddress(theApp.module, "AddToVobList");
 				Stack_PushString(GetVobName(nextVob));
 				addEntry((uint)nextVob);
