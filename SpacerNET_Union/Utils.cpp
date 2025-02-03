@@ -726,6 +726,13 @@ namespace GOTHIC_ENGINE {
 
 				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
 			}
+			// zones
+			else if (type == 13 && pVob && pVob->CastTo<zCZone>())
+			{
+				finalResultList.Insert(resVobList.GetSafe(i));
+
+				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
+			}
 		}
 
 		//zCVobLight
