@@ -635,24 +635,9 @@ namespace GOTHIC_ENGINE {
 		Loop_PFXEditor();
 
 
-		
-
-		if (screen && ogame->GetCamera() && ogame->GetWorld() && theApp.showScreenInfo)
+		if (screen && ogame->GetCamera() && ogame->GetWorld())
 		{
-			zVEC3 pos = ogame->GetCamera()->activeCamPos;
-			zVEC3 rot = ogame->GetCamera()->camMatrix.zMAT4::GetEulerAngles() * DEGREE;
-
-
-			
-
-			// Fixing float output for Roll angle
-			if (rot[2] < 0.00001 && rot[2] > 0)
-			{
-				rot[2] = 0;
-			}
-
 			screen->SetFont("FONT_OLD_10_WHITE_HI.TGA");
-
 
 			if (theApp.showAfterWorldCompileMessage)
 			{
@@ -661,240 +646,259 @@ namespace GOTHIC_ENGINE {
 				screen->SetFontColor(zCOLOR(255, 255, 255));
 			}
 
-			screen->SetFontColor(zCOLOR(0, 255, 0));
-
-
-			//GetVobInfo();
-			//screen->Print(0, 0, "TEST");
-			//PrintDebug(zSTRING("ForeWindow: ") + zSTRING((int)GetForegroundWindow()));
-
-			if (theApp.options.GetIntVal("showFps"))
+			if (theApp.showScreenInfo)
 			{
-				PrintDebug(zSTRING("FPS: ") + zSTRING(GetFPS()));
-			}
-
-			if (theApp.options.GetIntVal("showTris"))
-			{
-				zTRnd_Stats stat;
-				zrenderer->GetStatistics(stat);
-				PrintDebug(zSTRING(GetLang("UNION_SHOW_TRIS")) + zSTRING(int(stat.numTrisRendered)));
-			}
+				zVEC3 pos = ogame->GetCamera()->activeCamPos;
+				zVEC3 rot = ogame->GetCamera()->camMatrix.zMAT4::GetEulerAngles() * DEGREE;
 
 
-			if (theApp.options.GetIntVal("showCamCoords"))
-			{
-				PrintDebug((zSTRING(GetLang("UNION_CAM_POS")) + "(" + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
+				// Fixing float output for Roll angle
+				if (rot[2] < 0.00001 && rot[2] > 0)
+				{
+					rot[2] = 0;
+				}
 
-					+ zSTRING(", ") + zSTRING(pos.n[2], 6) + zSTRING(")")));
-				
-				PrintDebug((zSTRING(GetLang("UNION_CAM_ROT")) + "(" + zSTRING(rot.n[0], 6) + zSTRING(", ") + zSTRING(rot.n[1], 6)
+				screen->SetFont("FONT_OLD_10_WHITE_HI.TGA");
 
-					+ zSTRING(", ") + zSTRING(rot.n[2], 6) + zSTRING(")"))); // Z-axis obviously could remain zSTRING("0.0") because it's unnecessary.
 
+
+
+				screen->SetFontColor(zCOLOR(0, 255, 0));
+
+
+				//GetVobInfo();
+				//screen->Print(0, 0, "TEST");
+				//PrintDebug(zSTRING("ForeWindow: ") + zSTRING((int)GetForegroundWindow()));
+
+				if (theApp.options.GetIntVal("showFps"))
+				{
+					PrintDebug(zSTRING("FPS: ") + zSTRING(GetFPS()));
+				}
+
+				if (theApp.options.GetIntVal("showTris"))
+				{
+					zTRnd_Stats stat;
+					zrenderer->GetStatistics(stat);
+					PrintDebug(zSTRING(GetLang("UNION_SHOW_TRIS")) + zSTRING(int(stat.numTrisRendered)));
+				}
+
+
+				if (theApp.options.GetIntVal("showCamCoords"))
+				{
+					PrintDebug((zSTRING(GetLang("UNION_CAM_POS")) + "(" + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
+
+						+ zSTRING(", ") + zSTRING(pos.n[2], 6) + zSTRING(")")));
+
+					PrintDebug((zSTRING(GetLang("UNION_CAM_ROT")) + "(" + zSTRING(rot.n[0], 6) + zSTRING(", ") + zSTRING(rot.n[1], 6)
+
+						+ zSTRING(", ") + zSTRING(rot.n[2], 6) + zSTRING(")"))); // Z-axis obviously could remain zSTRING("0.0") because it's unnecessary.
+
+
+					if (theApp.pickedVob)
+					{
+						auto pos = theApp.pickedVob->GetPositionWorld();
+
+						PrintDebug((zSTRING(GetLang("UNION_VOB_POS")) + "(" + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
+
+							+ zSTRING(", ") + zSTRING(pos.n[2], 6) + zSTRING(")")));
+					}
+
+				}
+
+				if (theApp.options.GetIntVal("showVobsCount"))
+				{
+					PrintDebug(zSTRING(GetLang("UNION_VOB_COUNT")) + zSTRING(ogame->GetWorld()->globalVobTree.CountNodes() - 1));
+				}
+
+				if (theApp.options.GetIntVal("showWaypointsCount"))
+				{
+					PrintDebug(zSTRING(GetLang("UNION_WP_COUNT")) + zSTRING(ogame->GetWorld()->wayNet->wplist.GetNumInList()));
+				}
+
+				screen->SetFontColor(zCOLOR(240, 123, 14));
+
+
+				if (theApp.pickedWaypoint && theApp.pickedWaypoint2nd)
+				{
+					PrintDebug(ToStr "WP 1: " + GetVobNameSafe(theApp.pickedWaypoint));
+					PrintDebug(ToStr "WP 2: " + GetVobNameSafe(theApp.pickedWaypoint2nd));
+				}
+				else if (theApp.pickedVob)
+				{
+					PrintDebug(ToStr GetVobNameSafe(theApp.pickedVob) + " Ref: " + ToStr theApp.pickedVob->refCtr);
+
+					if (theApp.options.GetIntVal("showVobDist"))
+					{
+						PrintDebug(ToStr GetLang("UNION_DIST") + ToStr(int)Dist(ogame->GetCamera()->connectedVob, theApp.pickedVob));
+					}
+
+				}
+
+				if (theApp.options.GetIntVal("showPortalsInfo"))
+				{
+					RenderPortals();
+				}
+
+
+				if (GetSelectedTool() == TM_BBOXEDIT)
+				{
+					screen->SetFontColor(zCOLOR(255, 0, 0));
+
+					PrintDebug(zSTRING(GetLang("TOOL_BBOX_EDIT_MODE_SELECTED")));
+					screen->SetFontColor(zCOLOR(255, 255, 255));
+				}
+
+
+				/*
+				if (zmusic)
+				{
+					auto theme = zmusic->GetActiveTheme();
+
+					if (theme)
+					{
+						PrintDebug("Theme: " + theme->fileName + " " + theme->name);
+
+					}
+
+
+
+
+				}
+				*/
+
+
+				/*
+				int day, hour, min, nFont;
+				ogame->GetTime(day, hour, min);
+
+				if (min >= 10)
+				{
+					PrintDebug(zSTRING(day + 1) + " " + zSTRING(hour) + ":" + zSTRING(min));
+				}
+				else
+				{
+					PrintDebug(zSTRING(day + 1) + " " + +zSTRING(hour) + ":0" + zSTRING(min));
+
+				}
+				*/
+
+
+
+				//PrintDebug(ToStr zCWorld::s_bWaveAnisEnabled);
+				screen->SetFontColor(zCOLOR(255, 255, 255));
+
+
+
+				if (theApp.showRespawnOnVobs)
+				{
+
+					zTBBox3D bbox;
+					zCArray<zCVob*> found;
+					zREAL distance = theApp.showRespawnOnVobsRadius;
+
+					bbox.maxs = bbox.mins = ogame->GetCamera()->GetVob()->GetPositionWorld();
+					bbox.maxs[0] += distance; bbox.maxs[1] += distance; bbox.maxs[2] += distance;
+					bbox.mins[0] -= distance; bbox.mins[1] -= distance; bbox.mins[2] -= distance;
+					ogame->GetWorld()->CollectVobsInBBox3D(found, bbox);
+
+
+					zCVobSpot* spot = NULL;
+					zCVobWaypoint* wp = NULL;
+					zCOLOR color;
+					zPOINT3 wsPoint1, csPoint1;
+					zPOINT2 ssPoint1;
+					color = GFX_RED;
+
+					screen->SetFontColor(zCOLOR(255, 255, 255));
+
+					int distDraw = distance - 500;
+					for (int i = 0; i < found.GetNumInList(); i++)
+					{
+						auto vob = found.GetSafe(i);
+
+						if (vob)
+						{
+							spot = dynamic_cast<zCVobSpot*>(found[i]);
+							wp = dynamic_cast<zCVobWaypoint*>(found[i]);
+
+
+							if (spot || wp)
+							{
+								auto& foundPair = theApp.respawnShowList[vob->GetVobName()];
+
+								if (!foundPair.IsNull())
+								{
+									CString info = "";
+
+									for (int j = 0; j < foundPair.GetValue()->monsters.GetNumInList(); j++)
+									{
+										info += foundPair.GetValue()->monsters.GetSafe(j) + " | ";
+									}
+
+									info = info.Cut(info.Length() - 3, 3);
+
+									if (spot)
+									{
+
+										wsPoint1 = spot->GetPositionWorld() + zVEC3(0, 350, 0);
+										csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
+										if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
+										if ((csPoint1[VZ] < distDraw) && (csPoint1[VZ] > 0))
+											screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
+									};
+
+									if (wp)
+									{
+
+										wsPoint1 = wp->GetPositionWorld() + zVEC3(0, 150, 0);
+										csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
+										if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
+										if ((csPoint1[VZ] < distDraw) && (csPoint1[VZ] > 0))
+											screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
+									};
+								}
+							}
+
+
+						}
+
+
+					}
+
+				}
+
+				screen->SetFontColor(zCOLOR(255, 255, 255));
 
 				if (theApp.pickedVob)
 				{
-					auto pos = theApp.pickedVob->GetPositionWorld();
-
-					PrintDebug((zSTRING(GetLang("UNION_VOB_POS")) + "(" + zSTRING(pos.n[0], 6) + zSTRING(", ") + zSTRING(pos.n[1], 6)
-
-						+ zSTRING(", ") + zSTRING(pos.n[2], 6) + zSTRING(")")));
-				}
-				
-			}
-
-			if (theApp.options.GetIntVal("showVobsCount"))
-			{
-				PrintDebug(zSTRING(GetLang("UNION_VOB_COUNT")) + zSTRING(ogame->GetWorld()->globalVobTree.CountNodes() - 1));
-			}
-
-			if (theApp.options.GetIntVal("showWaypointsCount"))
-			{
-				PrintDebug(zSTRING(GetLang("UNION_WP_COUNT")) + zSTRING(ogame->GetWorld()->wayNet->wplist.GetNumInList()));
-			}
-
-			screen->SetFontColor(zCOLOR(240, 123, 14));
-
-
-			if (theApp.pickedWaypoint && theApp.pickedWaypoint2nd)
-			{
-				PrintDebug(ToStr "WP 1: " + GetVobNameSafe(theApp.pickedWaypoint));
-				PrintDebug(ToStr "WP 2: " + GetVobNameSafe(theApp.pickedWaypoint2nd));
-			}
-			else if (theApp.pickedVob)
-			{
-				PrintDebug(ToStr GetVobNameSafe(theApp.pickedVob) + " Ref: " + ToStr theApp.pickedVob->refCtr);
-
-				if (theApp.options.GetIntVal("showVobDist"))
-				{
-					PrintDebug(ToStr GetLang("UNION_DIST") + ToStr(int)Dist(ogame->GetCamera()->connectedVob, theApp.pickedVob));
-				}
-
-			}
-
-			if (theApp.options.GetIntVal("showPortalsInfo"))
-			{
-				RenderPortals();
-			}
-			
-
-			if (GetSelectedTool() == TM_BBOXEDIT)
-			{
-				screen->SetFontColor(zCOLOR(255, 0, 0));
-
-				PrintDebug(zSTRING(GetLang("TOOL_BBOX_EDIT_MODE_SELECTED")));
-				screen->SetFontColor(zCOLOR(255, 255, 255));
-			}
-
-
-			/*
-			if (zmusic)
-			{
-				auto theme = zmusic->GetActiveTheme();
-
-				if (theme)
-				{
-					PrintDebug("Theme: " + theme->fileName + " " + theme->name);
-
-				}
-
-
-				
-				
-			}
-			*/
-			
-			
-			/*
-			int day, hour, min, nFont;
-			ogame->GetTime(day, hour, min);
-
-			if (min >= 10)
-			{
-				PrintDebug(zSTRING(day + 1) + " " + zSTRING(hour) + ":" + zSTRING(min));
-			}
-			else
-			{
-				PrintDebug(zSTRING(day + 1) + " " + +zSTRING(hour) + ":0" + zSTRING(min));
-
-			}
-			*/
-		
-
-
-			//PrintDebug(ToStr zCWorld::s_bWaveAnisEnabled);
-			screen->SetFontColor(zCOLOR(255, 255, 255));
-
-
-			
-			if (theApp.showRespawnOnVobs)
-			{
-
-				zTBBox3D bbox;
-				zCArray<zCVob*> found;
-				zREAL distance = theApp.showRespawnOnVobsRadius;
-
-				bbox.maxs = bbox.mins = ogame->GetCamera()->GetVob()->GetPositionWorld();
-				bbox.maxs[0] += distance; bbox.maxs[1] += distance; bbox.maxs[2] += distance;
-				bbox.mins[0] -= distance; bbox.mins[1] -= distance; bbox.mins[2] -= distance;
-				ogame->GetWorld()->CollectVobsInBBox3D(found, bbox);
-
-				
-				zCVobSpot* spot = NULL;
-				zCVobWaypoint* wp = NULL;
-				zCOLOR color;
-				zPOINT3 wsPoint1, csPoint1;
-				zPOINT2 ssPoint1;
-				color = GFX_RED;
-
-				screen->SetFontColor(zCOLOR(255, 255, 255));
-
-				int distDraw = distance - 500;
-				for (int i = 0; i<found.GetNumInList(); i++)
-				{
-					auto vob = found.GetSafe(i);
-
-					if (vob)
+					if (auto pMob = theApp.pickedVob->CastTo<oCMOB>())
 					{
-						spot = dynamic_cast<zCVobSpot*>(found[i]);
-						wp = dynamic_cast<zCVobWaypoint*>(found[i]);
+						screen->SetFontColor(zCOLOR(229, 182, 52));
 
+						PrintMobName(pMob);
 
-						if (spot || wp)
+						screen->SetFontColor(zCOLOR(255, 255, 255));
+					}
+				}
+				/*
+
+				if (leakPolyList)
+				{
+					for (int i = 0; i < leakPolyList->GetNumInList(); i++)
+					{
+						auto poly = leakPolyList->GetSafe(i);
+
+						if (poly)
 						{
-							auto& foundPair = theApp.respawnShowList[vob->GetVobName()];
-
-							if (!foundPair.IsNull())
-							{
-								CString info = "";
-
-								for (int j = 0; j < foundPair.GetValue()->monsters.GetNumInList(); j++)
-								{
-									info += foundPair.GetValue()->monsters.GetSafe(j) + " | ";
-								}
-
-								info = info.Cut(info.Length() - 3, 3);
-
-								if (spot)
-								{
-
-									wsPoint1 = spot->GetPositionWorld() + zVEC3(0, 350, 0);
-									csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
-									if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
-									if ((csPoint1[VZ] < distDraw) && (csPoint1[VZ] > 0))
-										screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
-								};
-
-								if (wp)
-								{
-
-									wsPoint1 = wp->GetPositionWorld() + zVEC3(0, 150, 0);
-									csPoint1 = ogame->GetCamera()->Transform(wsPoint1);
-									if (csPoint1[VZ] >= 0)	ogame->GetCamera()->Project(&csPoint1, ssPoint1[VX], ssPoint1[VY]);
-									if ((csPoint1[VZ] < distDraw) && (csPoint1[VZ] > 0))
-										screen->Print(screen->anx(ssPoint1[VX]), screen->any(ssPoint1[VY]), info);
-								};
-							}
+							poly->DrawWire(zCOLOR(255, 0, 0));
 						}
-
-						
-					}
-					
-					
-				}
-
-			}
-			
-			screen->SetFontColor(zCOLOR(255, 255, 255));
-			
-			if (theApp.pickedVob)
-			{
-				if (auto pMob = theApp.pickedVob->CastTo<oCMOB>())
-				{
-					screen->SetFontColor(zCOLOR(229, 182, 52));
-
-					PrintMobName(pMob);
-
-					screen->SetFontColor(zCOLOR(255, 255, 255));
-				}
-			}
-			/*
-
-			if (leakPolyList)
-			{
-				for (int i = 0; i < leakPolyList->GetNumInList(); i++)
-				{
-					auto poly = leakPolyList->GetSafe(i);
-
-					if (poly)
-					{
-						poly->DrawWire(zCOLOR(255, 0, 0));
 					}
 				}
+				*/
 			}
-			*/
-			
 		}
+
+
 
 		ShowVobInfo();
 
