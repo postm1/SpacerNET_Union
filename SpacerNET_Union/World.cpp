@@ -700,6 +700,30 @@ namespace GOTHIC_ENGINE {
 			if (pVob)
 			{
 				ogame->GetCameraVob()->SetPositionWorld(pVob->GetPositionWorld() + zVEC3(0, 100, 0));
+				//ogame->GetCameraVob()->ResetRotationsWorld();
+				//ogame->GetCameraVob()->SetHeadingAtWorld(pVob->GetAtVectorWorld());
+
+				//zVEC3 rot = pVob->trafoObjToWorld.GetEulerAngles() * DEGREE;
+
+				
+				//ogame->GetCameraVob()->RotateLocalY(pVob->GetAtVectorWorld());
+
+				/*auto angle0 = Alg_Rad2Deg(pVob->GetAtVectorWorld().GetAngleXZ());
+				auto angle1 = pVob->GetAtVectorWorld().GetAngleXY();
+				auto angle2 = pVob->GetAtVectorWorld().GetAngleYZ();*/
+
+
+				//ogame->GetCameraVob()->RotateLocalY(angle0);
+
+				//cmd << "=============" << endl;
+				//cmd << angle0 << "/" << angle1 << "/" << angle2 << endl;
+				//cmd << pVob->GetAtVectorWorld().ToString() << endl;
+
+				/*cmd << rot.ToString() << endl;
+
+				camMov.yaw = - rot[1] - 90.0f;
+				camMov.pitch = 0;
+				camMov.lastFrameTime = 0;*/
 			}
 			else
 			{
@@ -710,7 +734,12 @@ namespace GOTHIC_ENGINE {
 
 				if (resultList.GetNumInList() > 0)
 				{
-					ogame->GetCameraVob()->SetPositionWorld(resultList.GetSafe(0)->GetPositionWorld() + zVEC3(0, 75, 0));
+					auto pVob = resultList.GetSafe(0);
+
+
+					ogame->GetCameraVob()->SetPositionWorld(pVob->GetPositionWorld() + zVEC3(0, 100, 0));
+					//ogame->GetCameraVob()->SetHeadingAtWorld(pVob->GetAtVectorWorld());
+
 				}
 			}
 			
