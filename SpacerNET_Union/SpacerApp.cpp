@@ -2364,4 +2364,83 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+
+	void SpacerApp::CreateVobSpacerCameraStartPos()
+	{
+
+		auto pickMode = theApp.GetPickMode();
+
+		if (pickMode != SWM_VOBS)
+		{
+			print.PrintRed(GetLang("WRONG_NOT_VOB_MOD"));
+			return;
+		}
+
+		auto pVob = ogame->GetWorld()->SearchVobByName("VOB_SPACER_CAMERA_START");
+
+		if (pVob)
+		{
+
+			if (GetSelectedVob())
+			{
+				SetSelectedVob(NULL, "CreateVobSpacerCameraStartPos");
+			}
+
+
+			theApp.SetSelectedVob(pVob, "CreateVobSpacerCameraStartPos");
+
+
+			zCVob* movvob = ogame->GetCamera()->connectedVob;
+
+			zVEC3 vob_pos = pVob->GetPositionWorld();
+			zVEC3 cam_vec = movvob->GetAtVectorWorld();
+
+
+
+			movvob->SetPositionWorld(vob_pos - cam_vec * (float)400);
+
+
+			auto onSelect = (onSelectVob)GetProcAddress(theApp.module, "OnSelectVob");
+			onSelect((int)theApp.pickedVob);
+
+			print.PrintRed(GetLang("ERR_VOB_EXISTS"));
+		}
+		else
+		{
+			if (GetSelectedVob())
+			{
+				SetSelectedVob(NULL, "CreateVobSpacerCameraStartPos");
+			}
+
+			zCVob* newvob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance("zCVob"));
+
+
+			if (newvob)
+			{
+				newvob->SetVobName("VOB_SPACER_CAMERA_START");
+
+				zVEC3 pos = ogame->GetCamera()->connectedVob->GetPositionWorld();
+				zVEC3 dir = ogame->GetCamera()->connectedVob->GetAtVectorWorld().Normalize();
+
+
+				
+
+				InsertIntoWorld(newvob, NULL);
+
+				theApp.selectNextVobForce = true;
+
+				newvob->SetPositionWorld(pos + dir * 50);
+				newvob->SetHeadingWorld(pos);
+
+
+				newvob->Release();
+
+
+				theApp.SetSelectedVob(newvob, "CreateNewVob");
+
+
+			}
+			
+		}
+	}
 }

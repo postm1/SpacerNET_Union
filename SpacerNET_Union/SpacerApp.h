@@ -407,6 +407,8 @@ namespace GOTHIC_ENGINE {
 
 		void Init();
 
+		void CreateVobSpacerCameraStartPos();
+
 		void SearchSelectVob(zCVob * pickedVob);
 
 		void SearchFillVobClass(CString vobClass, bool isNewType=false);

@@ -1563,7 +1563,12 @@ namespace GOTHIC_ENGINE {
 			theApp.showRespawnOnVobsRadius = radius;
 
 		}
-		
+
+
+		__declspec(dllexport) void Extern_CreateVobSpacerCameraStartPos()
+		{
+			theApp.CreateVobSpacerCameraStartPos();
+		}
 	}
 
 }
