@@ -152,6 +152,7 @@ namespace GOTHIC_ENGINE {
 			bool bDebugSpacerLoadMesh;
 			bool showScreenInfo;
 			bool cameraMoveWithVobActive;
+			bool showAfterWorldCompileMessage;
 
 			zEVobMotionHeading rotMod;
 

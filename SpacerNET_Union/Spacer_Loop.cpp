@@ -642,6 +642,9 @@ namespace GOTHIC_ENGINE {
 			zVEC3 pos = ogame->GetCamera()->activeCamPos;
 			zVEC3 rot = ogame->GetCamera()->camMatrix.zMAT4::GetEulerAngles() * DEGREE;
 
+
+			
+
 			// Fixing float output for Roll angle
 			if (rot[2] < 0.00001 && rot[2] > 0)
 			{
@@ -649,6 +652,15 @@ namespace GOTHIC_ENGINE {
 			}
 
 			screen->SetFont("FONT_OLD_10_WHITE_HI.TGA");
+
+
+			if (theApp.showAfterWorldCompileMessage)
+			{
+				screen->SetFontColor(zCOLOR(255, 0, 0));
+				screen->PrintCX(3000, zSTRING(GetLang("WORLD_COMPILED_PRE_WORK_WARN")));
+				screen->SetFontColor(zCOLOR(255, 255, 255));
+			}
+
 			screen->SetFontColor(zCOLOR(0, 255, 0));
 
 

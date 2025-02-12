@@ -413,6 +413,7 @@ namespace GOTHIC_ENGINE {
 		ogame->GetGameWorld()->MergeVobSubtree(worldName, 0, zCWorld::zWLD_LOAD_MERGE_ADD);
 
 
+		showAfterWorldCompileMessage = true;
 
 		if (ogame->GetWorld())
 		{
@@ -553,6 +554,7 @@ namespace GOTHIC_ENGINE {
 
 				(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 
+				showAfterWorldCompileMessage = true;
 
 				PlaySoundGame(ToStr "CS_IAI_ME_ME");
 			}

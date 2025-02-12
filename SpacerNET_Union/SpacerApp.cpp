@@ -71,6 +71,7 @@ namespace GOTHIC_ENGINE {
 		this->wasCopiedPressed = false;
 		this->showVobVisualInfo = false;
 		this->holdTime = false;
+		this->showAfterWorldCompileMessage = false;
 
 		this->rotMod = zMH_VIEW;
 
@@ -443,6 +444,7 @@ namespace GOTHIC_ENGINE {
 		levelReady = false;
 		treeIsReady = false;
 		firstTimeZenSaved = false;
+		showAfterWorldCompileMessage = false;
 		theApp.ClearRespList();
 		globalParent = NULL;
 		camMan.Reset();
