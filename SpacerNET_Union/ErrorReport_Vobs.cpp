@@ -182,6 +182,7 @@ namespace GOTHIC_ENGINE {
 							|| visName.HasWord(",")
 							|| visName.HasWord("!")
 							|| visName.HasWord("=")
+							|| visName.HasWord(" ")
 							)
 						{
 							auto entry = new ErrorReportEntry();
@@ -518,7 +519,7 @@ namespace GOTHIC_ENGINE {
 
 					static auto callFunc = (intFuncPointer)GetProcAddress(theApp.module, "Utils_IsOnlyLatin");
 
-					if (callFunc() == FALSE)
+					if (callFunc() == FALSE || vob->GetVobName().Contains(" ") && !vob->GetVobName().Contains("SPELLFX_"))
 					{
 						auto entry = new ErrorReportEntry();
 
