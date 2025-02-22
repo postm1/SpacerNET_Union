@@ -207,5 +207,14 @@ namespace GOTHIC_ENGINE {
 
 	enum TMatLibFlag { NullLib = 0 };
 
-	DllExport zTWE_ControllerEvents ControllerEvents;
 }
+
+#if ENGINE == Engine_G1
+DllExport Gothic_I_Classic::zTWE_ControllerEvents ControllerEvents;
+#elif ENGINE == Engine_G1A
+DllExport Gothic_I_Addon::zTWE_ControllerEvents ControllerEvents;
+#elif ENGINE == Engine_G2
+DllExport Gothic_II_Classic::zTWE_ControllerEvents ControllerEvents;
+#elif ENGINE == Engine_G2A
+DllExport Gothic_II_Addon::zTWE_ControllerEvents ControllerEvents;
+#endif
