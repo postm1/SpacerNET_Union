@@ -64,7 +64,9 @@ namespace GOTHIC_ENGINE {
 
 						AddEntry(entry);
 					}
-
+					 
+					// NOPE IT IS OK, ITEM CAN BE IN PARENT
+					/*
 					if (pItem->HasParentVob())
 					{
 						if (auto pParentVob =  pItem->GetParentVob())
@@ -89,6 +91,7 @@ namespace GOTHIC_ENGINE {
 						}
 					
 					}
+					*/
 				}
 				else if (vob->GetClassDef() == zCVob::classDef)
 				{
