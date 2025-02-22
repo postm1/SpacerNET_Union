@@ -14,6 +14,8 @@ namespace GOTHIC_ENGINE {
 		return 0;
 	}
 
+	int lightRadiusSafe = 0;
+
 
 	// game mod inside spacer
 	void SpacerApp::GameLoop()
@@ -181,6 +183,8 @@ namespace GOTHIC_ENGINE {
 		//print.PrintRed("Playing the game...");
 		if (!g_bIsPlayingGame)
 		{
+
+			lightRadiusSafe = playerLightInt;
 
 			GetClipCursor(&rcOldClip);
 
@@ -401,6 +405,19 @@ namespace GOTHIC_ENGINE {
 
 
 			g_bIsPlayingGame = false;
+
+			if (lightRadiusSafe > 0)
+			{
+				playerLightInt = lightRadiusSafe;
+
+#if ENGINE >= Engine_G2
+				if (zCSkyControler::GetActiveSkyControler())
+				{
+					zCSkyControler::GetActiveSkyControler()->SetLightDirty();
+				}
+#endif
+				playerLightInt = lightRadiusSafe;
+			}
 
 			ShowCursor(TRUE);
 

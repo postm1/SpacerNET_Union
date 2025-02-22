@@ -1534,5 +1534,6 @@ namespace GOTHIC_ENGINE {
 
 		return text;
 	}
+
 }
 
