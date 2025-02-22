@@ -2233,8 +2233,8 @@ namespace GOTHIC_ENGINE {
 				// update triggerTarget
 				if (vob)
 				{
-					//auto cleanTriggerForm = (voidFuncPointer)GetProcAddress(theApp.module, "CleanTriggerForm");
-					//cleanTriggerForm();
+					auto cleanTriggerForm = (voidFuncPointer)GetProcAddress(theApp.module, "CleanTriggerForm");
+					cleanTriggerForm();
 
 					//cmd << "Update TriggerTarget" << endl;
 
