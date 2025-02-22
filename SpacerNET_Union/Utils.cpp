@@ -484,9 +484,9 @@ namespace GOTHIC_ENGINE {
 		return result;
 	}
 
-	bool CheckUniqNameExist(CString name)
+	int CheckUniqNameExistResult(CString name)
 	{
-		bool result = false;
+		int result = 0;
 
 		zSTRING vobName = zSTRING(name).Upper();
 
@@ -500,30 +500,42 @@ namespace GOTHIC_ENGINE {
 
 				if (vobName.Length() == 0)
 				{
-					result = true;
+					result = 2;
 				}
 
-
-
-				zCWayNet* waynet = ogame->GetWorld()->GetWayNet();
-
-				if (waynet)
+				if (vobName.Length() > 0)
 				{
-					zCWaypoint* found = waynet->GetWaypoint(vobName);
 
-					if (found)
+					zCWayNet* waynet = ogame->GetWorld()->GetWayNet();
+
+					if (waynet)
 					{
-						result = true;
+						zCWaypoint* found = waynet->GetWaypoint(vobName);
+
+						if (found)
+						{
+							result = 1;
+						}
+					}
+
+					zCArray<zCVob*> resultSearch;
+
+					ogame->GetWorld()->SearchVobListByName(vobName, resultSearch);
+
+					if (resultSearch.GetNumInList() > 0)
+					{
+						for (int i = 0; i < resultSearch.GetNumInList(); i++)
+						{
+							if (resultSearch.GetSafe(i) != theApp.pickedVob)
+							{
+								result = 1;
+								break;
+							}
+						}
 					}
 				}
-
-
-				zCVob* vob = ogame->GetWorld()->SearchVobByName(vobName);
-
-				if (vob)
-				{
-					result = true;
-				}
+				
+				
 			}
 		}
 		else if (mm.matSelectedInTree)
@@ -540,9 +552,9 @@ namespace GOTHIC_ENGINE {
 			{
 				mat = dynamic_cast<zCMaterial*>(classDef->objectList[i]);
 
-				if (mat && mat->GetName() == matName)
+				if (mat && mat->GetName() == matName && mm.matSelectedInTree != mat)
 				{
-					result = true;
+					result = 1;
 					break;
 				}
 

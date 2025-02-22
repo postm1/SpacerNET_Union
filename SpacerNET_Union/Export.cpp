@@ -316,7 +316,7 @@ namespace GOTHIC_ENGINE {
 
 			CString name = Stack_PeekString();
 
-			return CheckUniqNameExist(name);
+			return CheckUniqNameExistResult(name);
 		}
 
 		__declspec(dllexport) void Extern_CreateWaypoint(bool addToNet, bool autoGenerate) {
