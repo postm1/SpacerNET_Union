@@ -64,6 +64,31 @@ namespace GOTHIC_ENGINE {
 
 						AddEntry(entry);
 					}
+
+					if (pItem->HasParentVob())
+					{
+						if (auto pParentVob =  pItem->GetParentVob())
+						{
+							auto pTrigger = pParentVob->CastTo<zCMover>();
+							auto pCompo = pParentVob->CastTo<zCVobLevelCompo>();
+
+							if (!pTrigger && !pCompo)
+							{
+								auto entry = new ErrorReportEntry();
+
+								entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_ITEM_PARENT);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(pItem->GetInstanceName());
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
+							
+						}
+					
+					}
 				}
 				else if (vob->GetClassDef() == zCVob::classDef)
 				{
@@ -508,7 +533,22 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 
+				if (auto pTriggerLevelChange = vob->CastTo<oCTriggerChangeLevel>())
+				{
+					if (pTriggerLevelChange->levelName.Contains(" "))
+					{
+						auto entry = new ErrorReportEntry();
 
+						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_CHANGELEVEL_SPACE);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(vob->GetVobName());
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+				}
 				
 
 				if (auto fp = vob->CastTo<zCVobSpot>())
