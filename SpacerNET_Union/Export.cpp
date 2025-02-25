@@ -1573,16 +1573,22 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_SetUV_Settings(float minA, float maxA, float distAngle, int ignoreNoColl)
 		{
-			mm.uvSettings.minArea = minA;
-			mm.uvSettings.maxArea = maxA;
-			mm.uvSettings.distAngle = distAngle;
-			mm.uvSettings.ignoreNoColl = ignoreNoColl;
+			mm.uvStruct.minArea = minA;
+			mm.uvStruct.maxArea = maxA;
+			mm.uvStruct.distAngle = distAngle;
+			mm.uvStruct.ignoreNoColl = ignoreNoColl;
 		}
 
 		__declspec(dllexport) void Extern_UV_FindErrors()
 		{
 			mm.UV_FindErrors();
 		}
+
+		__declspec(dllexport) void Extern_UV_SetPolyRadius(int radius)
+		{
+			mm.uvStruct.radiusShowPolys = radius;
+		}
+		
 	}
 
 }

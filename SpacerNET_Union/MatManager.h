@@ -119,13 +119,20 @@ namespace GOTHIC_ENGINE {
 		{
 			float minArea = 0.001;
 			float maxArea = 5.0f;
-			float distAngle = 15.0f;
+			float distAngle = 35.0f;
 			bool ignoreNoColl = true;
+			int radiusShowPolys = 8000;
 
-		} uvSettings;
+			zCArray<zCPolygon*> badPolys;
+			zCArray<zCPolygon*> allPolys;
+
+		} uvStruct;
 
 		void UV_FindErrors();
 		void UV_GatherPolygons();
+		void UV_FindErrors_ClearAll();
+		void UV_FindBadPolys();
+		void UV_Loop();
 	};
 
 }

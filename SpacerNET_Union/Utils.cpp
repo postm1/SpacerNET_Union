@@ -3,6 +3,7 @@
 
 #include <string>
 #include <chrono>
+#include <unordered_set>
 
 namespace GOTHIC_ENGINE {
 

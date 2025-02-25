@@ -47,6 +47,14 @@ namespace GOTHIC_ENGINE {
 				zlineCache->Line3D(pos0, pos1, GFX_RED, 0);
 				zlineCache->Line3D(pos1, pos2, GFX_RED, 0);
 				zlineCache->Line3D(pos2, pos0, GFX_RED, 0);
+
+				if (uvStruct.badPolys.GetNumInList() > 0)
+				{
+					int lenNormal = sqrt(poly->GetArea());
+
+					zClamp(lenNormal, 100, 800);
+					zlineCache->Line3D(poly->GetCenter(), poly->GetCenter() + poly->GetNormal() * lenNormal, GFX_GREEN, 0);
+				}
 			}
 		}
 	}
@@ -59,6 +67,8 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+
+		UV_Loop();
 
 		if (theApp.GetSelectedVob())
 		{

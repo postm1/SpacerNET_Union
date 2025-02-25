@@ -438,6 +438,7 @@ namespace GOTHIC_ENGINE {
 		zinput->ClearKeyBuffer();
 		mm.CleanSelection();
 		mm.pMaterialsMap.Clear();
+		mm.UV_FindErrors_ClearAll();
 
 		isMerged = false;
 		isMesh = false;
