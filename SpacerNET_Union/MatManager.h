@@ -113,6 +113,19 @@ namespace GOTHIC_ENGINE {
 		void OnSelectMaterial(zCMaterial* mat);
 		void OnSelectInMatFilter(zCMaterial* mat);
 		void ExtractTexture(zCMaterial* mat);
+
+
+		struct UV_Settings
+		{
+			float minArea = 0.001;
+			float maxArea = 5.0f;
+			float distAngle = 15.0f;
+			bool ignoreNoColl = true;
+
+		} uvSettings;
+
+		void UV_FindErrors();
+		void UV_GatherPolygons();
 	};
 
 }

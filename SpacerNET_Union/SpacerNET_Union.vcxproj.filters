@@ -3056,6 +3056,9 @@
     <ClInclude Include="Load3DS_Fast.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Optimizations</Filter>
     </ClInclude>
+    <ClInclude Include="MatManager_UV.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

@@ -1569,6 +1569,20 @@ namespace GOTHIC_ENGINE {
 		{
 			theApp.CreateVobSpacerCameraStartPos();
 		}
+
+
+		__declspec(dllexport) void Extern_SetUV_Settings(float minA, float maxA, float distAngle, int ignoreNoColl)
+		{
+			mm.uvSettings.minArea = minA;
+			mm.uvSettings.maxArea = maxA;
+			mm.uvSettings.distAngle = distAngle;
+			mm.uvSettings.ignoreNoColl = ignoreNoColl;
+		}
+
+		__declspec(dllexport) void Extern_UV_FindErrors()
+		{
+			mm.UV_FindErrors();
+		}
 	}
 
 }

@@ -48,6 +48,7 @@
 #include "ErrorReport_Materials.cpp"
 #include "AB_Debug.cpp"
 #include "ErrorReport_Vobs.cpp"
+#include "MatManager_UV.cpp"
 #include "Load3DS_Fast.cpp"
 #include "MatFilter_Render.cpp"
 #include "TestLoop.cpp"
