@@ -53,11 +53,10 @@ namespace GOTHIC_ENGINE {
 			{
 				zSTRING name = mat->texture->GetObjectName();
 
-				if (name == "NW_MISC_FULLALPHA_01.TGA" || name == "MODIALPHA01.TGA")
+				if (name == "NW_MISC_FULLALPHA_01.TGA" || name == "MODIALPHA01.TGA" || name == "AB_ALPHA.TGA")
 				{
 					continue;
 				}
-				
 			}
 
 			// polys in original list can have copies, so we must check them
