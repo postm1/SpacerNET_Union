@@ -30,12 +30,43 @@ namespace GOTHIC_ENGINE {
 		CheckVobs();
 
 		PrintReport();
+
+		SortReports();
+
 		SendAll();
 	}
 
+	bool CompareElements(const ErrorReportEntry* elem1, const ErrorReportEntry* elem2) {
+
+		// Сравниваем значения enum
+		return elem1->problemType < elem2->problemType;
+	}
+
+	void ErrorReport::SortReports()
+	{
+		std::vector<ErrorReportEntry*> pElems;
+		pElems.reserve(pList.GetNumInList());
+
+		for (int i = 0; i < pList.GetNumInList(); i++)
+		{
+			pElems.push_back(pList.GetSafe(i));
+		}
+		
+		std::sort(pElems.begin(), pElems.end(), CompareElements);
+
+		pList.DeleteList();
+
+		for (const auto& elem : pElems) 
+		{
+			pList.InsertEnd(elem);
+			//cmd << elem->problemType << ": " << elem->vobName << endl;
+		}
+	}
 
 	void ErrorReport::SendAll()
 	{
+		
+
 		for (int i = 0; i < pList.GetNumInList(); i++)
 		{
 			if (auto pEntry = pList.GetSafe(i))

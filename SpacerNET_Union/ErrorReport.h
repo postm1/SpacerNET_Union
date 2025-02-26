@@ -118,6 +118,7 @@ namespace GOTHIC_ENGINE {
         void CheckVobs();
         void PrintReport();
         void SendAll();
+        void SortReports();
 
         void AddEntry(ErrorReportEntry* pEntry);
 
