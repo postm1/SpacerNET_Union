@@ -4,6 +4,7 @@
 #include <string>
 #include <chrono>
 #include <unordered_set>
+#include <algorithm>
 
 namespace GOTHIC_ENGINE {
 

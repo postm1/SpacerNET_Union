@@ -133,6 +133,8 @@ namespace GOTHIC_ENGINE {
 		void UV_FindErrors_ClearAll();
 		void UV_FindBadPolys();
 		void UV_Loop();
+		void UV_PrintPolyData(zCPolygon* poly);
+		zCView* pUVShowView = NULL;
 	};
 
 }

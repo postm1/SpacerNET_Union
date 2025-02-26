@@ -148,7 +148,7 @@ namespace GOTHIC_ENGINE {
 		return true;
 	}
 
-	bool CompareAreas(const zVEC3& v0, const zVEC3& v1, const zVEC3& v2, const zVEC3& uv0, const zVEC3& uv1, const zVEC3& uv2)
+	bool CompareAreas(const zVEC3& v0, const zVEC3& v1, const zVEC3& v2, const zVEC3& uv0, const zVEC3& uv1, const zVEC3& uv2, float& a, float& b, bool& sim)
 	{
 		const zVEC3 edge3d1 = v1 - v0;
 		const zVEC3 edge3d2 = v2 - v0;
@@ -159,6 +159,8 @@ namespace GOTHIC_ENGINE {
 
 		const float u1 = uv1[0] - uv0[0], v1_uv = uv1[1] - uv0[1];
 		const float u2 = uv2[0] - uv0[0], v2_uv = uv2[1] - uv0[1];
+
+
 		const float areaUV = 0.5f * std::fabs(u1 * v2_uv - v1_uv * u2);
 
 		//zSTRING result = zSTRING(area3d, 20) + " / " + zSTRING(areaUV, 20);
@@ -173,9 +175,70 @@ namespace GOTHIC_ENGINE {
 			return false;
 		}
 
-		auto ratioEdge1 = edge3d1.Length() / area3d;
-		auto ratioEdge2 = edge3d2.Length() / area3d;
-		auto ratioEdge3 = edge3d3.Length() / area3d;
+		// length of UV edges
+		float sidesUV[3] = {
+			(uv1 - uv0).Length(),
+			(uv2 - uv0).Length(),
+			(uv2 - uv1).Length()
+		};
+
+		// length of 3d triangle edges
+
+		float sides3d[3] = {
+			edge3d1.Length(),
+			edge3d2.Length(),
+			edge3d3.Length()
+		};
+
+
+		// Сортируем стороны по возрастанию
+		std::sort(sides3d, sides3d + 3);
+
+		// Сортируем стороны по возрастанию
+		std::sort(sidesUV, sidesUV + 3);
+
+		// Проверка на вырожденный треугольник по максимальной стороне
+		if (sides3d[2] < 1e-9f) return false;
+		if (sidesUV[2] < 1e-9f) return false;
+
+
+		// Нормализуем стороны относительно наибольшей
+		auto sidesRatio3d = zVEC3(
+			sides3d[0] / sides3d[2],
+			sides3d[1] / sides3d[2],
+			sides3d[2] / sides3d[2] // Всегда 1.0
+		);
+
+		// Нормализуем стороны относительно наибольшей
+		auto sidesRatioUV = zVEC3(
+			sidesUV[0] / sidesUV[2],
+			sidesUV[1] / sidesUV[2],
+			sidesUV[2] / sidesUV[2] // Всегда 1.0
+		);
+
+		const float threshold = 0.5f;
+
+		auto aRatio = sidesRatio3d[0];
+		auto bRatio = sidesRatio3d[1];
+
+		a = aRatio;
+		b = bRatio;
+
+		//bool similiar = std::abs(aRatio) >= threshold && std::abs(bRatio) >= threshold;
+
+		//sim = similiar;
+
+		//if (!similiar)
+		//{
+		//	//cmd << "Found !similiar: a = " << a << " b = " << b << endl;
+		//	return false;
+		//}
+
+
+		// 0.5 / 100
+		// 0.3 / 80
+		// 0.1 / 25
+
 
 		/*float ratioAreaSideThreshold = 0.0003f;
 
@@ -208,14 +271,14 @@ namespace GOTHIC_ENGINE {
 				if (!resultCheckAngles)
 				{
 					uvStruct.badPolys.InsertEnd(poly);
-					//auto startVec = poly->GetCenter();
-					//theApp.debug.AddLine(startVec, startVec + poly->GetNormal() * 500, GFX_RED, 65000);
-
 				}
 				else
 				{
+					float a, b;
+					bool sim = false;
+
 					auto resultArea = CompareAreas(poly->vertex[0]->position, poly->vertex[1]->position, poly->vertex[2]->position,
-						uv0, uv1, uv2);
+						uv0, uv1, uv2, a, b, sim);
 
 					if (!resultArea)
 					{
@@ -241,6 +304,41 @@ namespace GOTHIC_ENGINE {
 		cmd << "Potentially BadPolys found: " << uvStruct.badPolys.GetNumInList() << endl;
 	}
 
+	void MatManager::UV_PrintPolyData(zCPolygon* poly)
+	{
+		zVEC3 pos0 = poly->vertex[0]->position;
+		zVEC3 pos1 = poly->vertex[1]->position;
+		zVEC3 pos2 = poly->vertex[2]->position;
+
+
+		zlineCache->Line3D(pos0, pos1, GFX_RED, 0);
+		zlineCache->Line3D(pos1, pos2, GFX_RED, 0);
+		zlineCache->Line3D(pos2, pos0, GFX_RED, 0);
+
+
+		if (!pUVShowView)
+		{
+			pUVShowView = standardView();
+			screen->InsertItem(pUVShowView);
+		}
+
+
+		float a, b;
+		bool sim = false;
+
+		zVEC3 uv0 = zVEC3(poly->feature[0]->texu, poly->feature[0]->texv, 0);
+		zVEC3 uv1 = zVEC3(poly->feature[1]->texu, poly->feature[1]->texv, 0);
+		zVEC3 uv2 = zVEC3(poly->feature[2]->texu, poly->feature[2]->texv, 0);
+
+		auto resultArea = CompareAreas(poly->vertex[0]->position, poly->vertex[1]->position, poly->vertex[2]->position,
+			uv0, uv1, uv2, a, b, sim);
+
+		zSTRING infoTriangle = zSTRING(a, 20) + " / " + zSTRING(b, 20) + " Sim: " + Z sim;
+
+		pUVShowView->ClrPrintwin();
+		pUVShowView->Print(200, 3000, infoTriangle);
+	}
+
 	void MatManager::UV_Loop()
 	{
 		for (size_t i = 0; i < uvStruct.badPolys.GetNumInList(); i++)
@@ -249,7 +347,7 @@ namespace GOTHIC_ENGINE {
 			{
 				if (poly->GetCenter().Distance(ogame->GetCameraVob()->GetPositionWorld()) <= uvStruct.radiusShowPolys)
 				{
-
+					
 					zVEC3 pos0 = poly->vertex[0]->position;
 					zVEC3 pos1 = poly->vertex[1]->position;
 					zVEC3 pos2 = poly->vertex[2]->position;
@@ -258,7 +356,6 @@ namespace GOTHIC_ENGINE {
 					zlineCache->Line3D(pos0, pos1, GFX_RED, 0);
 					zlineCache->Line3D(pos1, pos2, GFX_RED, 0);
 					zlineCache->Line3D(pos2, pos0, GFX_RED, 0);
-
 					//poly->DrawWire(GFX_RED);
 					//theApp.debug.AddLine(poly->GetCenter(), poly->GetCenter() + poly->GetNormal() * 500, GFX_RED, 16);
 				}

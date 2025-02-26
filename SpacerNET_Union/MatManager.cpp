@@ -54,6 +54,8 @@ namespace GOTHIC_ENGINE {
 
 					zClamp(lenNormal, 100, 800);
 					zlineCache->Line3D(poly->GetCenter(), poly->GetCenter() + poly->GetNormal() * lenNormal, GFX_GREEN, 0);
+
+					//UV_PrintPolyData(poly);
 				}
 			}
 		}
