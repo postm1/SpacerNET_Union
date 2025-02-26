@@ -1412,6 +1412,8 @@ namespace GOTHIC_ENGINE {
 			if (ProjPoint1[VZ] > 0.0f)
 			{
 				auto text = parser->GetScriptString(pMob->name);
+				auto scene = "ScemeName: " + pMob->GetScemeName();
+				
 
 				zPOINT2	  ProjPoint2;
 				zCCamera::activeCam->Project(&ProjPoint1, ProjPoint2[VX], ProjPoint2[VY]);
@@ -1428,7 +1430,7 @@ namespace GOTHIC_ENGINE {
 				zClamp(nX, 0, 8191 - screen->FontSize(text));
 
 				screen->Print(nX, nY, text);
-
+				screen->Print(nX, nY + 220, scene);
 			};
 		}
 	}
