@@ -174,30 +174,46 @@ namespace GOTHIC_ENGINE {
 
 						//cmd << "Visual: " << visName << " Index: " << lastIndexOf << " Length: " << length << endl;
 
-						Stack_PushString(visName);
 
-						static auto callFunc = (intFuncPointer)GetProcAddress(theApp.module, "Utils_IsOnlyLatin");
-						
-						if (callFunc() == FALSE 
-							|| !visName.HasWord(".") 
-							|| (length - 1 - lastIndexOf) != 3 
-							|| visName.HasWord(";") 
-							|| visName.HasWord(",")
-							|| visName.HasWord("!")
-							|| visName.HasWord("=")
-							|| visName.HasWord(" ")
-							)
+						if (visName.Contains(" "))
 						{
 							auto entry = new ErrorReportEntry();
 
 							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_VISUAL_SYMBOLS);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_VISUAL_SPACE);
 							entry->SetObject((uint)vob);
 							entry->SetVobName(visName);
 							entry->SetMaterialName("");
 							entry->SetTextureName("");
 
-							AddEntry(entry);	
+							AddEntry(entry);
+						}
+						else
+						{
+							Stack_PushString(visName);
+
+							static auto callFunc = (intFuncPointer)GetProcAddress(theApp.module, "Utils_IsOnlyLatin");
+
+							if (callFunc() == FALSE
+								|| !visName.HasWord(".")
+								|| (length - 1 - lastIndexOf) != 3
+								|| visName.HasWord(";")
+								|| visName.HasWord(",")
+								|| visName.HasWord("!")
+								|| visName.HasWord("=")
+								)
+							{
+								auto entry = new ErrorReportEntry();
+
+								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_VISUAL_SYMBOLS);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(visName);
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
 						}
 					}
 					
@@ -502,32 +518,17 @@ namespace GOTHIC_ENGINE {
 					}
 				}
 
-				if (vob->GetVobName().Contains(' ') && !vob->GetVobName().Contains("SPELLFX"))
-				{
-					auto entry = new ErrorReportEntry();
-
-					entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-					entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NAME_SPACE);
-					entry->SetObject((uint)vob);
-					entry->SetVobName(vob->GetVobName());
-					entry->SetMaterialName("");
-					entry->SetTextureName("");
-
-					AddEntry(entry);
-				}
+				
 
 				if (vob->GetVobName().Length() > 0)
 				{
-					Stack_PushString(vob->GetVobName());
 
-					static auto callFunc = (intFuncPointer)GetProcAddress(theApp.module, "Utils_IsOnlyLatin");
-
-					if (callFunc() == FALSE || vob->GetVobName().Contains(" ") && !vob->GetVobName().Contains("SPELLFX_"))
+					if (vob->GetVobName().Contains(' ') && !vob->GetVobName().Contains("SPELLFX"))
 					{
 						auto entry = new ErrorReportEntry();
 
 						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_NAME_SYMBOLS);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NAME_SPACE);
 						entry->SetObject((uint)vob);
 						entry->SetVobName(vob->GetVobName());
 						entry->SetMaterialName("");
@@ -535,6 +536,27 @@ namespace GOTHIC_ENGINE {
 
 						AddEntry(entry);
 					}
+					else
+					{
+						Stack_PushString(vob->GetVobName());
+
+						static auto callFunc = (intFuncPointer)GetProcAddress(theApp.module, "Utils_IsOnlyLatin");
+
+						if (callFunc() == FALSE)
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_NAME_SYMBOLS);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(vob->GetVobName());
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
+					
 				}
 
 				if (auto pTriggerLevelChange = vob->CastTo<oCTriggerChangeLevel>())
