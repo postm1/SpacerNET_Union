@@ -434,21 +434,7 @@ namespace GOTHIC_ENGINE {
 
 					if (keyName.Length() > 0)
 					{
-						bool flagNotItem = false;
-						auto itemSymbol = parser->GetSymbol(keyName);
-
-						if (itemSymbol)
-						{
-							int base = parser->GetBase(parser->GetIndex(keyName));
-							int item = parser->GetIndex(zSTRING("C_Item"));
-
-							if (base != item)
-							{
-								flagNotItem = true;
-							}
-						}
-
-						if (!itemSymbol || flagNotItem)
+						if (!IsItemExistsInScript(keyName))
 						{
 							auto entry = new ErrorReportEntry();
 
