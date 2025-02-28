@@ -545,6 +545,26 @@ namespace GOTHIC_ENGINE {
 					
 				}
 
+				if (auto pTrigScript = vob->CastTo<oCTriggerScript>())
+				{
+					auto funcName = pTrigScript->scriptFunc;
+
+					if (funcName.Length() > 0 && parser->GetIndex(funcName) == -1)
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_TRIGGER_SCRIPT_FUNC);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(funcName);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+						
+					}
+				}
+
 				if (auto pTriggerLevelChange = vob->CastTo<oCTriggerChangeLevel>())
 				{
 					if (pTriggerLevelChange->levelName.Contains(" "))
