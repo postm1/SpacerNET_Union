@@ -309,7 +309,8 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "bHandleNamesUpperCase", "0");
 		list.Insert("bHandleNamesUpperCase", set);
 
-		
+		set = new CSetting(TYPE_INT, "SPACER", "checkBoxDisableUpper", "0");
+		list.Insert("checkBoxDisableUpper", set);
 		
 		//=======================================================
 

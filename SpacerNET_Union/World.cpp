@@ -255,7 +255,7 @@ namespace GOTHIC_ENGINE {
 			ogame->GetCamera()->connectedVob->GetHomeWorld()->RemoveVob(ogame->GetCamera()->connectedVob);
 
 		
-		if (theApp.options.GetIntVal("bHandleNamesUpperCase"))
+		if (theApp.options.GetIntVal("bHandleNamesUpperCase") && !theApp.options.GetIntVal("checkBoxDisableUpper"))
 		{
 			this->HandleUpperCase();
 		}
