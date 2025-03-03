@@ -133,7 +133,7 @@ namespace GOTHIC_ENGINE {
 								entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_PFX_CANT_HAVE_DYNCOLL);
 								entry->SetObject((uint)vob);
-								entry->SetVobName(vob->GetVobName());
+								entry->SetVobName(vob->visual->GetVisualName());
 								entry->SetMaterialName("");
 								entry->SetTextureName("");
 
@@ -237,7 +237,7 @@ namespace GOTHIC_ENGINE {
 							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
 							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_TGA_DYNCOLL);
 							entry->SetObject((uint)vob);
-							entry->SetVobName(vob->GetVobName());
+							entry->SetVobName(vob->visual->GetVisualName());
 							entry->SetMaterialName("");
 							entry->SetTextureName("");
 
