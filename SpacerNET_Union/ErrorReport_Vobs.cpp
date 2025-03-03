@@ -125,6 +125,20 @@ namespace GOTHIC_ENGINE {
 
 								AddEntry(entry);
 							}
+
+							if (vob->GetCollDetDyn())
+							{
+								auto entry = new ErrorReportEntry();
+
+								entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_PFX_CANT_HAVE_DYNCOLL);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(vob->GetVobName());
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
 						}
 
 
@@ -214,6 +228,20 @@ namespace GOTHIC_ENGINE {
 
 								AddEntry(entry);
 							}
+						}
+
+						if (vob->GetCollDetDyn() && (visName.Upper().Contains(".TGA")))
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_TGA_DYNCOLL);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(vob->GetVobName());
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
 						}
 					}
 					
