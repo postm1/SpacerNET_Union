@@ -153,6 +153,9 @@ namespace GOTHIC_ENGINE {
 			bool showScreenInfo;
 			bool cameraMoveWithVobActive;
 			bool showAfterWorldCompileMessage;
+			int compareVobsDynCount;
+			zCArray<zCVob*> compareDynList;
+			zCArray<zCVob*> compareVobsAll;
 
 			zEVobMotionHeading rotMod;
 

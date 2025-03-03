@@ -371,6 +371,10 @@ namespace GOTHIC_ENGINE {
 
 		debug.CleanLines();
 
+		compareVobsDynCount = 0;
+		compareDynList.DeleteList();
+		compareVobsAll.DeleteList();
+
 		pickedVob = NULL;
 		vobToCopy = NULL;
 		globalParent = NULL;

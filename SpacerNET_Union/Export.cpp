@@ -1589,6 +1589,70 @@ namespace GOTHIC_ENGINE {
 			mm.uvStruct.radiusShowPolys = radius;
 		}
 		
+		__declspec(dllexport) void Extern_CompareVobsPrepare()
+		{
+			theApp.compareVobsDynCount = 0;
+			theApp.compareDynList.DeleteList();
+			theApp.compareVobsAll.DeleteList();
+			theApp.debug.CleanLines();
+
+			ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, theApp.compareVobsAll, NULL);
+
+			cmd << "CountAllList #1: " << theApp.compareVobsAll.GetNum() << endl;
+
+			for (int i = theApp.compareVobsAll.GetNum() - 1; i >= 0; i--)
+			{
+				if (auto pVob = theApp.compareVobsAll.GetSafe(i))
+				{
+					if (!pVob->GetVisual() || !pVob->showVisual || pVob->CastTo<oCItem>())
+					{
+						theApp.compareVobsAll.RemoveOrderIndex(i);
+					}
+				}
+			}
+
+			cmd << "CountAllList #2: " << theApp.compareVobsAll.GetNum() << endl;
+
+		}
+
+		__declspec(dllexport) void Extern_CompareVobsAfter()
+		{
+			cmd << "Count vobs: " << theApp.compareVobsDynCount << endl;
+			print.PrintRed("Count: " + Z theApp.compareDynList.GetNumInList());
+		}
+
+		__declspec(dllexport) void Extern_CompareVobsDynColl()
+		{
+			int dyncoll = Stack_PeekInt();
+			CString visual = Stack_PeekString();
+	
+
+			for (int i = 0; i < theApp.compareVobsAll.GetNumInList(); i++)
+			{
+				if (auto pVob = theApp.compareVobsAll.GetSafe(i))
+				{
+					if (auto pVisual = pVob->GetVisual())
+					{
+						if (pVob->GetCollDetDyn() != dyncoll)
+						{
+							auto vobVisual = pVisual->GetVisualName();
+
+							if (vobVisual.Contains(".3DS"))
+							{
+								if (visual == vobVisual.ToChar())
+								{
+									theApp.compareVobsDynCount += 1;
+									theApp.compareDynList.InsertEnd(pVob);
+									theApp.debug.AddLine(pVob->GetPositionWorld(), pVob->GetPositionWorld() + zVEC3(0, 3000, 0), GFX_RED, 100e3);
+								}
+							}
+						}
+						
+					}
+				}
+			}
+		}
+		
 	}
 
 }
