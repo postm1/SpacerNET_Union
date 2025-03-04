@@ -1607,7 +1607,7 @@ namespace GOTHIC_ENGINE {
 			{
 				if (auto pVob = theApp.compareVobsAll.GetSafe(i))
 				{
-					if (!pVob->GetVisual() || !pVob->showVisual || pVob->CastTo<oCItem>())
+					if (!pVob->GetVisual() || !pVob->showVisual || pVob->CastTo<oCItem>() || pVob->CastTo<zCMover>())
 					{
 						theApp.compareVobsAll.RemoveOrderIndex(i);
 					}
