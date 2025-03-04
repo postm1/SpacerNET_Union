@@ -371,9 +371,9 @@ namespace GOTHIC_ENGINE {
 
 		debug.CleanLines();
 
-		compareVobsDynCount = 0;
 		compareDynList.DeleteList();
 		compareVobsAll.DeleteList();
+		theApp.compareCatalogVisualsMap.clear();
 
 		pickedVob = NULL;
 		vobToCopy = NULL;

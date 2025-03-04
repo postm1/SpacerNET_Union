@@ -1,10 +1,7 @@
 // Supported with union (c) 2020 Union team
 // Union SOURCE file
 
-#include <string>
-#include <chrono>
-#include <unordered_set>
-#include <algorithm>
+
 
 namespace GOTHIC_ENGINE {
 

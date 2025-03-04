@@ -1591,14 +1591,17 @@ namespace GOTHIC_ENGINE {
 		
 		__declspec(dllexport) void Extern_CompareVobsPrepare()
 		{
-			theApp.compareVobsDynCount = 0;
 			theApp.compareDynList.DeleteList();
 			theApp.compareVobsAll.DeleteList();
+			theApp.compareCatalogVisualsMap.clear();
+
 			theApp.debug.CleanLines();
 
 			ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, theApp.compareVobsAll, NULL);
 
-			cmd << "CountAllList #1: " << theApp.compareVobsAll.GetNum() << endl;
+			cmd << "<==== COMMON REPORT ====>" << endl;
+			cmd << "\nAllVobs in ZEN: " << theApp.compareVobsAll.GetNum() << endl;
+
 
 			for (int i = theApp.compareVobsAll.GetNum() - 1; i >= 0; i--)
 			{
@@ -1611,21 +1614,77 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
-			cmd << "CountAllList #2: " << theApp.compareVobsAll.GetNum() << endl;
+			cmd << "Filtered vobs for compare: " << theApp.compareVobsAll.GetNum() << endl;
 
 		}
 
 		__declspec(dllexport) void Extern_CompareVobsAfter()
 		{
-			cmd << "Count vobs: " << theApp.compareVobsDynCount << endl;
-			print.PrintRed("Count: " + Z theApp.compareDynList.GetNumInList());
-		}
+			std::unordered_set<std::string> uniqVobNames;
+			uniqVobNames.reserve(100);
+			
 
-		__declspec(dllexport) void Extern_CompareVobsDynColl()
-		{
-			int dyncoll = Stack_PeekInt();
-			CString visual = Stack_PeekString();
-	
+			cmd << "\n<REPORT Bad Coll>" << endl;
+
+			// looking for vobs with bad collision
+			for (int i = 0; i < theApp.compareVobsAll.GetNumInList(); i++)
+			{
+				if (auto pVob = theApp.compareVobsAll.GetSafe(i))
+				{
+					if (auto pVisual = pVob->GetVisual())
+					{
+						auto vobVisual = pVisual->GetVisualName();
+						auto vobVisualChar = vobVisual.ToChar();
+
+						auto it = theApp.compareCatalogVisualsMap.find(vobVisualChar);
+
+						// Check if the key was found
+						if (it != theApp.compareCatalogVisualsMap.end()) 
+						{
+							if (pVob->GetCollDetDyn() != it->second)
+							{
+								// fixme?
+								if (vobVisual.Contains(".3DS"))
+								{
+									theApp.compareDynList.InsertEnd(pVob);
+									theApp.debug.AddLine(pVob->GetPositionWorld(), pVob->GetPositionWorld() + zVEC3(0, 3000, 0), GFX_RED, 100e3);
+									
+
+									if (uniqVobNames.find(vobVisualChar) == uniqVobNames.end())
+									{
+										uniqVobNames.insert(vobVisualChar);
+										
+									}
+								}
+							}
+						}
+
+					}
+				}
+			}
+
+
+			
+
+			std::vector<std::string> sortedVobNames(uniqVobNames.begin(), uniqVobNames.end());
+
+			// Step 2: Sort the vector
+			std::sort(sortedVobNames.begin(), sortedVobNames.end());
+
+			// Step 3: Output the sorted elements
+			for (const auto& name : sortedVobNames) 
+			{
+				cmd << "BadColl: " << name.c_str() << endl;
+			}
+
+			cmd << "\n<REPORT No Catalog>" << endl;
+
+			// looking for vobs which are not in Vob Catalog
+
+			std::unordered_set<zCVob*> noCatalogVobs;
+			std::unordered_set<std::string> noCatalogVobsNames;
+
+			noCatalogVobs.reserve(100);
 
 			for (int i = 0; i < theApp.compareVobsAll.GetNumInList(); i++)
 			{
@@ -1633,24 +1692,52 @@ namespace GOTHIC_ENGINE {
 				{
 					if (auto pVisual = pVob->GetVisual())
 					{
-						if (pVob->GetCollDetDyn() != dyncoll)
-						{
-							auto vobVisual = pVisual->GetVisualName();
+						auto vobVisual = pVisual->GetVisualName().Upper();
+						auto vobVisualChar = vobVisual.ToChar();
 
-							if (vobVisual.Contains(".3DS"))
+						if (vobVisual.Contains(".3DS"))
+						{
+							if (theApp.compareCatalogVisualsMap.find(vobVisualChar) == theApp.compareCatalogVisualsMap.end())
 							{
-								if (visual == vobVisual.ToChar())
+								if (noCatalogVobsNames.find(vobVisualChar) == noCatalogVobsNames.end())
 								{
-									theApp.compareVobsDynCount += 1;
-									theApp.compareDynList.InsertEnd(pVob);
-									theApp.debug.AddLine(pVob->GetPositionWorld(), pVob->GetPositionWorld() + zVEC3(0, 3000, 0), GFX_RED, 100e3);
+									noCatalogVobs.insert(pVob);
+									noCatalogVobsNames.insert(vobVisualChar);
 								}
 							}
 						}
-						
 					}
 				}
 			}
+
+
+			for (const auto& item : noCatalogVobs) 
+			{
+				theApp.debug.AddLine(item->GetPositionWorld(), item->GetPositionWorld() + zVEC3(0, 3000, 0), GFX_GREEN, 100e3);
+				cmd << item->visual->GetVisualName() << endl;
+			}
+
+			cmd << "Count vobs: " << theApp.compareDynList.GetNumInList() << endl;
+			cmd << "NoCatalogVobs: " << noCatalogVobs.size() << endl;
+
+			print.PrintRed("Count bad coll: " + Z theApp.compareDynList.GetNumInList());
+			print.PrintRed("NoCatalogVobs: " + Z (int)noCatalogVobs.size());
+
+		}
+
+		__declspec(dllexport) void Extern_AddVobsDynCollListCompare()
+		{
+			int dyncoll = Stack_PeekInt();
+			CString visual = Stack_PeekString();
+			
+
+			std::string visualCheck = visual.Upper().ToChar();
+
+			if (theApp.compareCatalogVisualsMap.find(visualCheck) == theApp.compareCatalogVisualsMap.end())
+			{
+				theApp.compareCatalogVisualsMap[visualCheck] = dyncoll;
+			}
+
 		}
 		
 	}
