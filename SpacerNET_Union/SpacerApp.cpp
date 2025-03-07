@@ -91,6 +91,8 @@ namespace GOTHIC_ENGINE {
 		{
 			sides[i] = NULL;
 		}
+
+		this->isNewBalanceMod = false;
 		
 	}
 

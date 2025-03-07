@@ -20,6 +20,7 @@ namespace GOTHIC_ENGINE {
 		bool visualEditorActive;
 		bool pluginsChecked;
 		bool filterMatWindowActive;
+		
 		zCArray<zSTRING> whiteArrayPlugins;
 		zCArray<zSTRING> blackArrayPlugins;
 		ItemsLocator itemsLocator;
@@ -30,6 +31,7 @@ namespace GOTHIC_ENGINE {
 		int isBboxChangeMod;
 
 		zCArray<zCPolygon*>* leakPolyList;
+		
 
 		Common::Map<CString, RespawnEntry*> respawnShowList;
 		zCArray<zSTRING> respFuncList;
@@ -92,6 +94,12 @@ namespace GOTHIC_ENGINE {
 			zCMesh*	s_pLightSphereMesh;
 			zCVobLight* vobLightSelected;
 		};
+
+		struct
+		{
+			bool isNewBalanceMod;
+		};
+
 		struct
 		{
 			int zSpyLevel;

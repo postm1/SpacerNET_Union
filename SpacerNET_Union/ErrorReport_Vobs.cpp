@@ -432,6 +432,12 @@ namespace GOTHIC_ENGINE {
 
 					if (onStateFunc.Length() > 0)
 					{
+
+						if (theApp.isNewBalanceMod && onStateFunc == "RX_AUTOCHEST")
+						{
+							continue;
+						}
+
 						if (!parser->GetSymbol(onStateFunc + "_S0")
 							&& !parser->GetSymbol(onStateFunc + "_S1")
 							&& !parser->GetSymbol(onStateFunc + "_S2")
