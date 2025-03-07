@@ -35,6 +35,19 @@ namespace GOTHIC_ENGINE {
 				{
 					continue;
 				}
+				else if (vob->m_fVobFarClipZScale < 0.0f || vob->m_fVobFarClipZScale >= 3.01f)
+				{
+					auto entry = new ErrorReportEntry();
+
+					entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+					entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_ZFARVOB);
+					entry->SetObject((uint)vob);
+					entry->SetVobName(vob->GetVobName());
+					entry->SetMaterialName("");
+					entry->SetTextureName("");
+
+					AddEntry(entry);
+				}
 				else if (auto pItem = vob->CastTo<oCItem>())
 				{
 					if (!pItem->visual)
@@ -97,6 +110,12 @@ namespace GOTHIC_ENGINE {
 				{
 					if (!vob->visual)
 					{
+
+						if (vob->GetVobName() == "VOB_SPACER_CAMERA_START")
+						{
+							continue;
+						}
+
 						auto entry = new ErrorReportEntry();
 
 						entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
