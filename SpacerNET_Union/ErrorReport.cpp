@@ -23,11 +23,11 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	void ErrorReport::SearchAll()
+	void ErrorReport::SearchAll(int autoFix)
 	{
 		ClearAll();
 		CheckPolygons();
-		CheckVobs();
+		CheckVobs(autoFix);
 
 		PrintReport();
 

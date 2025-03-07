@@ -6,7 +6,7 @@ namespace GOTHIC_ENGINE {
 
 
 	
-	void ErrorReport::CheckVobs()
+	void ErrorReport::CheckVobs(int autoFix)
 	{
 		zCArray<zCVob*> activeVobList;
 
@@ -37,16 +37,26 @@ namespace GOTHIC_ENGINE {
 				}
 				else if (vob->m_fVobFarClipZScale < 0.0f || vob->m_fVobFarClipZScale >= 3.01f)
 				{
-					auto entry = new ErrorReportEntry();
 
-					entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-					entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_ZFARVOB);
-					entry->SetObject((uint)vob);
-					entry->SetVobName(vob->GetVobName());
-					entry->SetMaterialName("");
-					entry->SetTextureName("");
+					if (autoFix)
+					{
+						vob->m_fVobFarClipZScale = 1.0f;
+						cmd << "Fixing vobFarClipZScale, set to 1.0: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+					}
+					else
+					{
+						auto entry = new ErrorReportEntry();
 
-					AddEntry(entry);
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_BAD_ZFARVOB);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(vob->GetVobName());
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+					
 				}
 				else if (auto pItem = vob->CastTo<oCItem>())
 				{
@@ -147,16 +157,26 @@ namespace GOTHIC_ENGINE {
 
 							if (vob->GetCollDetDyn())
 							{
-								auto entry = new ErrorReportEntry();
 
-								entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
-								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_PFX_CANT_HAVE_DYNCOLL);
-								entry->SetObject((uint)vob);
-								entry->SetVobName(vob->visual->GetVisualName());
-								entry->SetMaterialName("");
-								entry->SetTextureName("");
+								if (autoFix)
+								{
+									vob->SetCollDetDyn(FALSE);
+									cmd << "Fixing DynColl for PFX: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+								}
+								else
+								{
+									auto entry = new ErrorReportEntry();
 
-								AddEntry(entry);
+									entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+									entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_PFX_CANT_HAVE_DYNCOLL);
+									entry->SetObject((uint)vob);
+									entry->SetVobName(vob->visual->GetVisualName());
+									entry->SetMaterialName("");
+									entry->SetTextureName("");
+
+									AddEntry(entry);
+								}
+								
 							}
 						}
 
@@ -185,17 +205,25 @@ namespace GOTHIC_ENGINE {
 						if (visName == name || name == rawname)
 						{
 							
+							if (autoFix && !vob->CastTo<zCTrigger>())
+							{
+								cmd << "Fixing name == visual: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+								vob->SetObjectName("");
+							}
+							else
+							{
+								auto entry = new ErrorReportEntry();
 
-							auto entry = new ErrorReportEntry();
+								entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NAME_IS_VISUAL);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(name);
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
 
-							entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
-							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NAME_IS_VISUAL);
-							entry->SetObject((uint)vob);
-							entry->SetVobName(name);
-							entry->SetMaterialName("");
-							entry->SetTextureName("");
-
-							AddEntry(entry);
+								AddEntry(entry);
+							}
+							
 						}
 					}
 

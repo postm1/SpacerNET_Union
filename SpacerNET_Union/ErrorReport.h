@@ -118,10 +118,10 @@ namespace GOTHIC_ENGINE {
     public:
         void Init();
         void SendReport(ErrorReportEntry* pEntry);
-        void SearchAll();
+        void SearchAll(int autoFix);
         void ClearAll();
         void CheckPolygons();
-        void CheckVobs();
+        void CheckVobs(int autoFix);
         void PrintReport();
         void SendAll();
         void SortReports();

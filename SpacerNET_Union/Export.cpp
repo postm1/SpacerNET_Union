@@ -1493,9 +1493,9 @@ namespace GOTHIC_ENGINE {
 			return (int)(Union.GetEngineVersion() == Engine_G1);
 		}
 	
-		__declspec(dllexport) void Extern_ReportCreateAll()
+		__declspec(dllexport) void Extern_ReportCreateAll(int autoFix)
 		{
-			report.SearchAll();
+			report.SearchAll(autoFix);
 		}
 
 
