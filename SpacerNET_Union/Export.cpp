@@ -1624,7 +1624,7 @@ namespace GOTHIC_ENGINE {
 			uniqVobNames.reserve(100);
 			
 
-			cmd << "\n<REPORT Bad Coll>" << endl;
+			cmd << "\n<REPORT Bad Coll> Count: " << endl;
 
 			// looking for vobs with bad collision
 			for (int i = 0; i < theApp.compareVobsAll.GetNumInList(); i++)
@@ -1644,7 +1644,7 @@ namespace GOTHIC_ENGINE {
 							if (pVob->GetCollDetDyn() != it->second)
 							{
 								// fixme?
-								if (vobVisual.Contains(".3DS"))
+								if (vobVisual.Contains(".3DS") && !vobVisual.Contains("INVISIBLE_"))
 								{
 									theApp.compareDynList.InsertEnd(pVob);
 									theApp.debug.AddLine(pVob->GetPositionWorld(), pVob->GetPositionWorld() + zVEC3(0, 3000, 0), GFX_RED, 100e3);
@@ -1717,12 +1717,13 @@ namespace GOTHIC_ENGINE {
 				cmd << item->visual->GetVisualName() << endl;
 			}
 
-			cmd << "Count vobs: " << theApp.compareDynList.GetNumInList() << endl;
-			cmd << "NoCatalogVobs: " << noCatalogVobs.size() << endl;
+			cmd << endl;
+			cmd << GetLang("COLL_REPORT_ALL_BAD_COLL").ToChar() << theApp.compareDynList.GetNumInList() << endl;
+			cmd << GetLang("COLL_REPORT_ALL_NOT_CATALOG").ToChar() << noCatalogVobs.size() << endl;
 
-			print.PrintRed("Count bad coll: " + Z theApp.compareDynList.GetNumInList());
-			print.PrintRed("NoCatalogVobs: " + Z (int)noCatalogVobs.size());
-
+			print.PrintRed(GetLang("COLL_REPORT_ALL_BAD_COLL").ToChar() + Z theApp.compareDynList.GetNumInList());
+			print.PrintRed(GetLang("COLL_REPORT_ALL_NOT_CATALOG").ToChar() + Z (int)noCatalogVobs.size());
+			print.PrintRed(GetLang("COLL_REPORT_ALL_CONSOLE").ToChar());
 		}
 
 		__declspec(dllexport) void Extern_AddVobsDynCollListCompare()
