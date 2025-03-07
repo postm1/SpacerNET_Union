@@ -312,6 +312,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "checkBoxDisableUpper", "0");
 		list.Insert("checkBoxDisableUpper", set);
 		
+
+		set = new CSetting(TYPE_INT, "SPACER", "bShowMobScheme", "1");
+		list.Insert("bShowMobScheme", set);
 		//=======================================================
 
 		set = new CSetting(TYPE_INT, "SPACER", "maxFPS", "0");

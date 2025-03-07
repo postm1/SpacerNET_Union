@@ -1427,7 +1427,13 @@ namespace GOTHIC_ENGINE {
 				zClamp(nX, 0, 8191 - screen->FontSize(text));
 
 				screen->Print(nX, nY, text);
-				screen->Print(nX, nY + 220, scene);
+
+				if (theApp.options.GetIntVal("bShowMobScheme"))
+				{
+					screen->Print(nX, nY + 220, scene);
+				}
+
+				
 			};
 		}
 	}
