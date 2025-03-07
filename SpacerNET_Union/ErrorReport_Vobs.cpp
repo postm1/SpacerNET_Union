@@ -41,6 +41,9 @@ namespace GOTHIC_ENGINE {
 				{
 					continue;
 				}
+
+#if ENGINE >= Engine_G2
+
 				else if (vob->m_fVobFarClipZScale < 0.0f || vob->m_fVobFarClipZScale >= 3.01f)
 				{
 
@@ -64,6 +67,7 @@ namespace GOTHIC_ENGINE {
 					}
 					
 				}
+#endif //
 				else if (auto pItem = vob->CastTo<oCItem>())
 				{
 					if (!pItem->visual)
