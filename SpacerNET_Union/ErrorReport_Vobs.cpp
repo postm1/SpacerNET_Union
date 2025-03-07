@@ -20,6 +20,12 @@ namespace GOTHIC_ENGINE {
 		zCArray<zSTRING> fpNames;
 		zCArray<zSTRING> containerNames;
 
+
+		if (autoFix)
+		{
+			cmd << endl << "<===== AUTO FIX MOD ACTIVATED =====>" << endl;
+		}
+
 		for (int i = 0; i < count; i++) 
 		{
 			zCVob* vob = activeVobList.GetSafe(i);
@@ -1014,5 +1020,12 @@ namespace GOTHIC_ENGINE {
 		}
 
 		resultList.DeleteList();
+
+
+		if (autoFix)
+		{
+			cmd << endl << "<AUTO FIX MOD END>" << endl;
+			print.PrintRed(GetLang("REPORT_ALL_CONSOLE").ToChar());
+		}
 	}
 }

@@ -1723,7 +1723,7 @@ namespace GOTHIC_ENGINE {
 
 			print.PrintRed(GetLang("COLL_REPORT_ALL_BAD_COLL").ToChar() + Z theApp.compareDynList.GetNumInList());
 			print.PrintRed(GetLang("COLL_REPORT_ALL_NOT_CATALOG").ToChar() + Z (int)noCatalogVobs.size());
-			print.PrintRed(GetLang("COLL_REPORT_ALL_CONSOLE").ToChar());
+			print.PrintRed(GetLang("REPORT_ALL_CONSOLE").ToChar());
 		}
 
 		__declspec(dllexport) void Extern_AddVobsDynCollListCompare()
