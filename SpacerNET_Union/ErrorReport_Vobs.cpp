@@ -1126,18 +1126,30 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
-			/*
+			
 			for (size_t i = 0; i < resultList.GetNumInList(); i++)
 			{
 				if (auto pVob = resultList.GetSafe(i))
 				{
 					if (auto pLight = pVob->CastTo<zCVobLight>())
 					{
-						//
+						if (pLight->GetCollDetDyn())
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_LIGHT_DYNCOLL);
+							entry->SetObject((uint)pLight);
+							entry->SetVobName("");
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
 					}
 				}
 			}
-			*/
+			
 			
 		}
 
