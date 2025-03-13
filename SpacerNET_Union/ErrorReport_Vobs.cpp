@@ -49,8 +49,18 @@ namespace GOTHIC_ENGINE {
 
 					if (autoFix)
 					{
-						vob->m_fVobFarClipZScale = 1.0f;
-						cmd << "Fixing vobFarClipZScale, set to 1.0: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+						if (vob->m_fVobFarClipZScale > 3)
+						{
+							vob->m_fVobFarClipZScale = 2.0f;
+							cmd << "Fixing vobFarClipZScale, set to 1.0: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+						}
+						else
+						{
+							vob->m_fVobFarClipZScale = 1.0f;
+							cmd << "Fixing vobFarClipZScale, set to 1.0: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+						}
+						
+						
 					}
 					else
 					{
