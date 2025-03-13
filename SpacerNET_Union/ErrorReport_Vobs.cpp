@@ -20,6 +20,7 @@ namespace GOTHIC_ENGINE {
 		zCArray<zSTRING> fpNames;
 		zCArray<zSTRING> containerNames;
 
+		zCWayNet* waynet = ogame->GetWorld()->wayNet;
 
 		if (autoFix)
 		{
@@ -52,7 +53,7 @@ namespace GOTHIC_ENGINE {
 						if (vob->m_fVobFarClipZScale > 3)
 						{
 							vob->m_fVobFarClipZScale = 2.0f;
-							cmd << "Fixing vobFarClipZScale, set to 1.0: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+							cmd << "Fixing vobFarClipZScale, set to 2.0: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
 						}
 						else
 						{
@@ -727,6 +728,42 @@ namespace GOTHIC_ENGINE {
 
 						AddEntry(entry);
 					}
+
+					if (waynet)
+					{
+						zCWaypoint* wpNet = waynet->SearchWaypoint(wp);
+
+						if (!wpNet)
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_WP_NOT_IN_WAYNET);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(wpName);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+						else
+						{
+							if (wpNet->GetNumberOfWays() == 0)
+							{
+								auto entry = new ErrorReportEntry();
+
+								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_WP_NO_CONNECTIONS);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(wpName);
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
+						}
+					}
+
 				}
 				else if (auto mobCont = vob->CastTo<oCMobContainer>())
 				{
