@@ -1073,6 +1073,74 @@ namespace GOTHIC_ENGINE {
 		resultList.DeleteList();
 
 
+		// find close light sources (double)
+		ogame->GetWorld()->SearchVobListByClass(zCVobLight::classDef, resultList, 0);
+		{
+			float threshHoldDouble = 7.0f;
+			std::unordered_set<int> setFoundIndexes;
+
+			setFoundIndexes.reserve(100);
+
+			//cmd << "zCVobLight: " << resultList.GetNumInList() << endl;
+
+			if (resultList.GetNumInList() > 1)
+			{
+				for (size_t i = 0; i < resultList.GetNumInList(); i++)
+				{
+					if (auto pVob = resultList.GetSafe(i))
+					{
+						for (size_t j = 0; j < resultList.GetNumInList(); j++)
+						{
+							if (auto pVob2 = resultList.GetSafe(j))
+							{
+								if (i != j)
+								{
+									if (setFoundIndexes.find(j) == setFoundIndexes.end())
+									{
+										//cmd << "setFoundIndexes: " << j << endl;
+
+										if (pVob->GetPositionWorld().Distance(pVob2->GetPositionWorld()) <= threshHoldDouble)
+										{
+											//cmd << "Insert: " << j << endl;
+											setFoundIndexes.insert(j);
+
+											auto entry = new ErrorReportEntry();
+
+											entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+											entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_LIGHT_CLOSE_TOGETHER);
+											entry->SetObject((uint)pVob2);
+											entry->SetVobName("");
+											entry->SetMaterialName("");
+											entry->SetTextureName("");
+
+											AddEntry(entry);
+
+											
+										}
+									}
+									
+								}
+							}
+						}
+					}
+				}
+			}
+
+			/*
+			for (size_t i = 0; i < resultList.GetNumInList(); i++)
+			{
+				if (auto pVob = resultList.GetSafe(i))
+				{
+					if (auto pLight = pVob->CastTo<zCVobLight>())
+					{
+						//
+					}
+				}
+			}
+			*/
+			
+		}
+
 		if (autoFix)
 		{
 			cmd << endl << "<AUTO FIX MOD END>" << endl;
