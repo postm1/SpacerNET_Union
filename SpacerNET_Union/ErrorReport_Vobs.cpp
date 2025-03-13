@@ -528,6 +528,20 @@ namespace GOTHIC_ENGINE {
 							AddEntry(entry);
 						}
 					}
+
+					if (!pMobCommon->collDetectionDynamic && pMobCommon->showVisual)
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_MOB_NO_COLL);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(GetVobNameSafe(pMobCommon));
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
 				}
 
 				if (auto pLock = vob->CastTo<oCMobLockable>())
@@ -748,7 +762,7 @@ namespace GOTHIC_ENGINE {
 						}
 						else
 						{
-							if (wpNet->GetNumberOfWays() == 0)
+							if (wpNet->GetNumberOfWays() == 0 && wp->GetVobName() != "TOT")
 							{
 								auto entry = new ErrorReportEntry();
 
