@@ -529,7 +529,7 @@ namespace GOTHIC_ENGINE {
 						}
 					}
 
-					if (!pMobCommon->collDetectionDynamic && pMobCommon->showVisual)
+					if (!pMobCommon->collDetectionDynamic && pMobCommon->showVisual && !pMobCommon->CastTo<oCMobSwitch>())
 					{
 						auto entry = new ErrorReportEntry();
 
