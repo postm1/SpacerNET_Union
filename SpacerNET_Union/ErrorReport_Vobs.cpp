@@ -1099,11 +1099,11 @@ namespace GOTHIC_ENGINE {
 
 			if (resultList.GetNumInList() > 1)
 			{
-				for (size_t i = 0; i < resultList.GetNumInList(); i++)
+				for (int i = 0; i < resultList.GetNumInList(); i++)
 				{
 					if (auto pVob = resultList.GetSafe(i))
 					{
-						for (size_t j = 0; j < resultList.GetNumInList(); j++)
+						for (int j = 0; j < resultList.GetNumInList(); j++)
 						{
 							if (auto pVob2 = resultList.GetSafe(j))
 							{
@@ -1141,8 +1141,9 @@ namespace GOTHIC_ENGINE {
 			}
 
 			auto bsp = ogame->GetGameWorld()->GetBspTree();
+			bool searchBadLightNoPortals = bsp && bsp->bspTreeMode == zBSP_MODE_OUTDOOR;
 
-			for (size_t i = 0; i < resultList.GetNumInList(); i++)
+			for (int i = 0; i < resultList.GetNumInList(); i++)
 			{
 				if (auto pVob = resultList.GetSafe(i))
 				{
@@ -1163,7 +1164,7 @@ namespace GOTHIC_ENGINE {
 						}
 						
 
-						if (pLight->lightData.isStatic)
+						if (searchBadLightNoPortals && pLight->lightData.isStatic)
 						{
 							zSTRING* name = (zSTRING*)bsp->GetSectorNameVobIsIn(pLight);
 
