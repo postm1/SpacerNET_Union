@@ -341,7 +341,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatManager::UV_Loop()
 	{
-		for (size_t i = 0; i < uvStruct.badPolys.GetNumInList(); i++)
+		for (int i = 0; i < uvStruct.badPolys.GetNumInList(); i++)
 		{
 			if (auto poly = uvStruct.badPolys.GetSafe(i))
 			{

@@ -495,11 +495,45 @@ namespace GOTHIC_ENGINE {
 		// search
 		if (searchType == SearchVobType::Search)
 		{
-			for (int i = 0; i < resultFound.GetNum(); i++)
+			std::vector<zCVob*> vobsVector;
+
+			vobsVector.reserve(resultFound.GetNum());
+
+
+			// creating vector for future sorting
+			for (int i = 0; i < resultFound.GetNum(); i++) 
 			{
 				zCVob* vob = resultFound[i];
 
 				if (vob && arr.SearchEqual((uint)vob) == Invalid)
+				{
+					vobsVector.push_back(vob);
+					arr.Insert((uint)vob);
+				}
+			}
+
+			resultFound.DeleteList();
+
+
+			std::sort(vobsVector.begin(), vobsVector.end(), [](zCVob* a, zCVob* b) {
+
+				std::string aStr = GetVobName(a);
+				std::string bStr = GetVobName(b);
+				return aStr < bStr;
+				});
+
+
+			for (auto& entry: vobsVector)
+			{
+				resultFound.InsertEnd(entry);
+			}
+
+
+			for (int i = 0; i < resultFound.GetNum(); i++)
+			{
+				zCVob* vob = resultFound[i];
+
+				if (vob)
 				{
 
 					if (radius != -1 && camPos.Distance(vob->GetPositionWorld()) > radius)
@@ -508,8 +542,6 @@ namespace GOTHIC_ENGINE {
 					}
 
 					Stack_PushString(GetVobName(vob));
-
-					arr.Insert((uint)vob);
 
 					callFunc((uint)vob);
 
