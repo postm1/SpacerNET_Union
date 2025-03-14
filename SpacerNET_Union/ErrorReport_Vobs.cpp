@@ -1140,7 +1140,8 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 
-			
+			auto bsp = ogame->GetGameWorld()->GetBspTree();
+
 			for (size_t i = 0; i < resultList.GetNumInList(); i++)
 			{
 				if (auto pVob = resultList.GetSafe(i))
@@ -1159,6 +1160,26 @@ namespace GOTHIC_ENGINE {
 							entry->SetTextureName("");
 
 							AddEntry(entry);
+						}
+						
+
+						if (pLight->lightData.isStatic)
+						{
+							zSTRING* name = (zSTRING*)bsp->GetSectorNameVobIsIn(pLight);
+
+							if (!name)
+							{
+								auto entry = new ErrorReportEntry();
+
+								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_STATIC_LIGHT_NO_PORTAL);
+								entry->SetObject((uint)pLight);
+								entry->SetVobName("");
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
 						}
 					}
 				}
