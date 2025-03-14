@@ -1090,7 +1090,7 @@ namespace GOTHIC_ENGINE {
 		// find close light sources (double)
 		ogame->GetWorld()->SearchVobListByClass(zCVobLight::classDef, resultList, 0);
 		{
-			float threshHoldDouble = 7.0f;
+			float threshHoldDouble = 8.5f;
 			std::unordered_set<int> setFoundIndexes;
 
 			setFoundIndexes.reserve(100);
