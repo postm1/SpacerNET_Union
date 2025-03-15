@@ -1542,5 +1542,29 @@ namespace GOTHIC_ENGINE {
 		return text;
 	}
 
+	std::string zMAT4::ToString()
+	{
+		std::string result;
+
+		result += "\n";
+
+		for (int i = 0; i < 4; ++i) {
+			result += "[";
+
+			for (int j = 0; j < 4; ++j) {
+				float value = v[i][j];
+
+				result += std::to_string(value); // Преобразуем число в строку
+				if (j < 3) {
+					result += ", "; // Добавляем запятую между элементами
+				}
+			}
+
+			result += "]\n"; // Добавляем символ новой строки
+		}
+
+		return result;
+	}
+
 }
 
