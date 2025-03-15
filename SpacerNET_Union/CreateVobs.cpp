@@ -420,6 +420,9 @@ namespace GOTHIC_ENGINE {
 					//cmd << "VOB ROTATE DECAL" << endl;
 					newvob->SetHeadingWorld(pos);
 					newvob->RotateLocalY(180);
+					dec->decal2Sided = true;
+					dec->SetDecalDim(150, 150);
+					dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
 				}
 			}
 
