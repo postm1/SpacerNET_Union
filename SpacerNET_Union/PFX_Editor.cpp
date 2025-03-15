@@ -19,6 +19,12 @@ namespace GOTHIC_ENGINE {
 		zVEC3 forwVel;
 		zVEC3 oldCamPos;
 
+		int forwDistMax = 800;
+		bool forward = true;
+
+		float radius = 300;
+		float w = 0;
+		zVEC3 center;
 	} moveStruct;
 
 	void PlaceNearCamera_PFXEditor();
@@ -153,11 +159,16 @@ namespace GOTHIC_ENGINE {
 		if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
 		{
 			
-			moveStruct.finalForwPos = pos + dir * 1000;
+			moveStruct.finalForwPos = pos + dir * moveStruct.forwDistMax + zVEC3(0, 150, 0);
 			moveStruct.forwVel = dir;
 			moveStruct.oldCamPos = pos + dir * 350;
+			moveStruct.forward = true;
 
-			theApp.debug.AddLine(moveStruct.oldCamPos, moveStruct.finalForwPos, GFX_RED, 10000);
+			//theApp.debug.AddLine(moveStruct.oldCamPos, moveStruct.finalForwPos, GFX_RED, 15000);
+		}
+		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_CIRCLE)
+		{
+			moveStruct.center = pos + dir * 400;
 		}
 		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_STATIC)
 		{
@@ -170,10 +181,20 @@ namespace GOTHIC_ENGINE {
 		if (m_pPfx && pfxEditorVob)
 		{
 			zVEC3 pos = ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 350 + ogame->GetCamera()->connectedVob->GetPositionWorld();
-			pfxEditorVob->SetPositionWorld(pos + zVEC3(0, 100, 0));
+			
 			m_pPfx->dontKillPFXWhenDone = TRUE;
 
 			SetMotionTypePFX(pfxMotionType);
+
+			if (pfxMotionType == SPACER_PFX_MOTION_TYPE_STATIC)
+			{
+				pfxEditorVob->SetPositionWorld(pos + zVEC3(0, 100, 0));
+			}
+			else
+			{
+				pfxEditorVob->SetPositionWorld(pos);
+			}
+			
 		}
 	}
 
@@ -196,14 +217,46 @@ namespace GOTHIC_ENGINE {
 				}
 				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
 				{
-					auto speedTransDv = moveStruct.forwVel * 300 * (speed / 100.0f) * dt;
+					auto speedTrans = moveStruct.forwVel * (300.0f * speed / 100.0f);
 
-					auto newPos = pfxEditorVob->GetPositionWorld() + speedTransDv;
+					auto newPos = pfxEditorVob->GetPositionWorld() + speedTrans * dt;
 
-					if (newPos.Distance(moveStruct.oldCamPos) <= 30 || newPos.Distance(moveStruct.oldCamPos) >= 1000)
+					if (moveStruct.forward)
 					{
-						moveStruct.forwVel *= -1;
+						if (newPos.Distance(moveStruct.oldCamPos) >= moveStruct.forwDistMax)
+						{
+							moveStruct.forward = false;
+							moveStruct.forwVel *= -1;
+						}
 					}
+					else
+					{
+						if (newPos.Distance(moveStruct.oldCamPos) <= 50)
+						{
+							moveStruct.forward = true;
+							moveStruct.forwVel *= -1;
+						}
+					}
+
+					pfxEditorVob->SetPositionWorld(newPos);
+					//theApp.debug.AddLine(newPos, newPos + zVEC3(0, 100, 0), GFX_BLUE, 2000);
+				}
+				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
+				{
+					auto w = PI / 2 * (speed / 100.0f);
+					moveStruct.w += w * dt;
+
+					if (moveStruct.w > PI2)
+					{
+						moveStruct.w -= PI2;
+					}
+
+					float x, z;
+
+					x = moveStruct.radius * cos(moveStruct.w);
+					z = moveStruct.radius * sin(moveStruct.w);
+
+					auto newPos = moveStruct.center + zVEC3(x, 0, z);
 
 					pfxEditorVob->SetPositionWorld(newPos);
 				}
