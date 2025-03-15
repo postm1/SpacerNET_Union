@@ -155,21 +155,30 @@ namespace GOTHIC_ENGINE {
 
 		auto pos = ogame->GetCameraVob()->GetPositionWorld();
 		auto dir = ogame->GetCameraVob()->GetAtVectorWorld();
+		auto right = ogame->GetCameraVob()->GetRightVectorWorld();
 
 		if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
 		{
 			
-			moveStruct.finalForwPos = pos + dir * moveStruct.forwDistMax + zVEC3(0, 150, 0);
-			moveStruct.forwVel = dir;
+			moveStruct.finalForwPos = pos + dir * moveStruct.forwDistMax + right * 150;
+			moveStruct.forwVel = (moveStruct.finalForwPos - pos).Normalize();
 			moveStruct.oldCamPos = pos + dir * 350;
 			moveStruct.forward = true;
 
+			pfxEditorVob->SetPositionWorld(moveStruct.oldCamPos);
 			//theApp.debug.AddLine(moveStruct.oldCamPos, moveStruct.finalForwPos, GFX_RED, 15000);
 		}
 		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_CIRCLE)
 		{
 			moveStruct.center = pos + dir * 500;
-			moveStruct.radius = m_pPfx->emitter->shpCircleSphereRadius > 1 ? m_pPfx->emitter->shpCircleSphereRadius * 10 : 150;
+			int radius = m_pPfx->emitter->shpCircleSphereRadius > 1 ? m_pPfx->emitter->shpCircleSphereRadius * 10 : 150;
+
+			if (radius > 700)
+			{
+				radius = 700;
+			}
+
+			moveStruct.radius = radius;
 		}
 		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_STATIC)
 		{
