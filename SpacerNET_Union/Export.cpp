@@ -1743,7 +1743,7 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_SetPFXMotionType(int type)
 		{
-			theApp.pfxMotionType = (SpacerPfxMotion)type;
+			SetMotionTypePFX(type);
 		}
 
 

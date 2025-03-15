@@ -165,8 +165,6 @@ namespace GOTHIC_ENGINE {
 			zCArray<zCVob*> compareVobsAll;
 			std::map<std::string, int> compareCatalogVisualsMap;
 
-			SpacerPfxMotion pfxMotionType;
-
 			zEVobMotionHeading rotMod;
 
 			zCVob* floorVob;

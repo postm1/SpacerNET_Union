@@ -93,7 +93,6 @@ namespace GOTHIC_ENGINE {
 		}
 
 		this->isNewBalanceMod = false;
-		this->pfxMotionType = SPACER_PFX_MOTION_TYPE_STATIC;
 		
 	}
 

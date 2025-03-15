@@ -472,6 +472,11 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "intPfxEditorHighlightValues", "2");
 		list.Insert("intPfxEditorHighlightValues", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "intPfxEditorSpeedMotion", "100");
+		list.Insert("intPfxEditorSpeedMotion", set);
+
+		
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);

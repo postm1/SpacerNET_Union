@@ -11,6 +11,17 @@ namespace GOTHIC_ENGINE {
 	CString currentPFXName;
 	int cooldDownShowTimer = 0;
 	const int PFX_EDITOR_CD_SHOW_TIME_MS = 30;
+	SpacerPfxMotion pfxMotionType = SpacerPfxMotion::SPACER_PFX_MOTION_TYPE_STATIC;
+
+	struct
+	{
+		zVEC3 finalForwPos;
+		zVEC3 forwVel;
+		zVEC3 oldCamPos;
+
+	} moveStruct;
+
+	void PlaceNearCamera_PFXEditor();
 
 	//show current pfx again
 	void Reload_PFX()
@@ -25,6 +36,8 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	
+
 	void Clear_PFXEditor()
 	{
 		pfxEditorVob = NULL;
@@ -32,15 +45,7 @@ namespace GOTHIC_ENGINE {
 		m_pWorld = NULL;
 	}
 
-	void PlaceNearCamera_PFXEditor()
-	{
-		if (m_pPfx && pfxEditorVob)
-		{
-			zVEC3 pos = ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 350 + ogame->GetCamera()->connectedVob->GetPositionWorld();
-			pfxEditorVob->SetPositionWorld(pos + zVEC3(0, 100, 0));
-			m_pPfx->dontKillPFXWhenDone = TRUE;
-		}
-	}
+	
 
 	void PfxEditorStopEffect()
 	{
@@ -133,6 +138,44 @@ namespace GOTHIC_ENGINE {
 	}
 
 	
+	void SetMotionTypePFX(int type)
+	{
+		pfxMotionType = (SpacerPfxMotion)type;
+
+		if (!pfxEditorVob || !ogame || !ogame->GetWorld() || !ogame->GetCameraVob())
+		{
+			return;
+		}
+
+		auto pos = ogame->GetCameraVob()->GetPositionWorld();
+		auto dir = ogame->GetCameraVob()->GetAtVectorWorld();
+
+		if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
+		{
+			
+			moveStruct.finalForwPos = pos + dir * 1000;
+			moveStruct.forwVel = dir;
+			moveStruct.oldCamPos = pos + dir * 350;
+
+			theApp.debug.AddLine(moveStruct.oldCamPos, moveStruct.finalForwPos, GFX_RED, 10000);
+		}
+		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_STATIC)
+		{
+			pfxEditorVob->SetPositionWorld(pos + dir * 350);
+		}
+	}
+
+	void PlaceNearCamera_PFXEditor()
+	{
+		if (m_pPfx && pfxEditorVob)
+		{
+			zVEC3 pos = ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 350 + ogame->GetCamera()->connectedVob->GetPositionWorld();
+			pfxEditorVob->SetPositionWorld(pos + zVEC3(0, 100, 0));
+			m_pPfx->dontKillPFXWhenDone = TRUE;
+
+			SetMotionTypePFX(pfxMotionType);
+		}
+	}
 
 	void Loop_PFXEditor()
 	{
@@ -145,10 +188,24 @@ namespace GOTHIC_ENGINE {
 			if (pfxEditorVob)
 			{
 				auto dt = ztimer->frameTimeFloat / 1000.0f;
+				auto speed = theApp.options.GetIntVal("intPfxEditorSpeedMotion");
 
-				if (theApp.pfxMotionType == SPACER_PFX_MOTION_TYPE_ROTATE_LOCAL_Y)
+				if (pfxMotionType == SPACER_PFX_MOTION_TYPE_ROTATE_LOCAL_Y)
 				{
-					pfxEditorVob->RotateLocalY(30 * dt);
+					pfxEditorVob->RotateLocalY(150 * (speed / 100.0f) * dt);
+				}
+				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
+				{
+					auto speedTransDv = moveStruct.forwVel * 300 * (speed / 100.0f) * dt;
+
+					auto newPos = pfxEditorVob->GetPositionWorld() + speedTransDv;
+
+					if (newPos.Distance(moveStruct.oldCamPos) <= 30 || newPos.Distance(moveStruct.oldCamPos) >= 1000)
+					{
+						moveStruct.forwVel *= -1;
+					}
+
+					pfxEditorVob->SetPositionWorld(newPos);
 				}
 			}
 			//fixes the code in Invk_zCVobArchive. WTF?! 
