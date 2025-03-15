@@ -141,7 +141,16 @@ namespace GOTHIC_ENGINE {
 
 		if (m_pPfx)
 		{
+			// moving PFX vob
+			if (pfxEditorVob)
+			{
+				auto dt = ztimer->frameTimeFloat / 1000.0f;
 
+				if (theApp.pfxMotionType == SPACER_PFX_MOTION_TYPE_ROTATE_LOCAL_Y)
+				{
+					pfxEditorVob->RotateLocalY(30 * dt);
+				}
+			}
 			//fixes the code in Invk_zCVobArchive. WTF?! 
 			if (theApp.GetSelectedVob() == pfxEditorVob)
 			{

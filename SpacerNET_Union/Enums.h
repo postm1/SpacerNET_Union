@@ -204,6 +204,13 @@ namespace GOTHIC_ENGINE {
 		SPC_EVT_OnSelectVob          // when a vob is selected
 	};
 
+	enum SpacerPfxMotion
+	{
+		SPACER_PFX_MOTION_TYPE_STATIC = 0,
+		SPACER_PFX_MOTION_TYPE_CIRCLE,
+		SPACER_PFX_MOTION_TYPE_FORW,
+		SPACER_PFX_MOTION_TYPE_ROTATE_LOCAL_Y
+	};
 
 	enum TMatLibFlag { NullLib = 0 };
 
