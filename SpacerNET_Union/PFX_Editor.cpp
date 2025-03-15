@@ -148,7 +148,7 @@ namespace GOTHIC_ENGINE {
 	{
 		pfxMotionType = (SpacerPfxMotion)type;
 
-		if (!pfxEditorVob || !ogame || !ogame->GetWorld() || !ogame->GetCameraVob())
+		if (!pfxEditorVob || !ogame || !ogame->GetWorld() || !ogame->GetCameraVob() || !m_pPfx || !m_pPfx->emitter)
 		{
 			return;
 		}
@@ -168,7 +168,8 @@ namespace GOTHIC_ENGINE {
 		}
 		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_CIRCLE)
 		{
-			moveStruct.center = pos + dir * 400;
+			moveStruct.center = pos + dir * 500;
+			moveStruct.radius = m_pPfx->emitter->shpCircleSphereRadius > 1 ? m_pPfx->emitter->shpCircleSphereRadius * 10 : 150;
 		}
 		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_STATIC)
 		{
@@ -241,7 +242,7 @@ namespace GOTHIC_ENGINE {
 					pfxEditorVob->SetPositionWorld(newPos);
 					//theApp.debug.AddLine(newPos, newPos + zVEC3(0, 100, 0), GFX_BLUE, 2000);
 				}
-				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
+				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_CIRCLE)
 				{
 					auto w = PI / 2 * (speed / 100.0f);
 					moveStruct.w += w * dt;
@@ -255,6 +256,8 @@ namespace GOTHIC_ENGINE {
 
 					x = moveStruct.radius * cos(moveStruct.w);
 					z = moveStruct.radius * sin(moveStruct.w);
+
+					//cmd << x << " " << z << endl;
 
 					auto newPos = moveStruct.center + zVEC3(x, 0, z);
 
