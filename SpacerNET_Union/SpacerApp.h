@@ -102,6 +102,26 @@ namespace GOTHIC_ENGINE {
 
 		struct
 		{
+			// выбранный режим отображения сетки сферы (настраивается пользователем)
+			eSphereDrawMode sphereDrawMode = DRAW_FULL_SPHERE;
+
+			// цвет сетки источника освещения (настраивается пользователем)
+			zCOLOR sphereWireColor = zCOLOR(170, 170, 170, 255);
+
+			// выводить ли значение радиуса источника освещения (1 - да, 0 - нет)
+			// (настраивается пользователем)
+			BOOL bDrawRadiusValue = TRUE;
+
+			// использовать ли наклон сферы (1 - да, 0 - нет)
+			BOOL bUseSphereTrafo = TRUE;
+
+			// формат вывода значения радиуса сферы
+			string radiusTextFmt = "R: %s";
+
+		} lightSphereSettings;
+
+		struct
+		{
 			int zSpyLevel;
 			bool zSpyActive;
 			bool insertBlockedTemp;

@@ -3059,6 +3059,9 @@
     <ClInclude Include="MatManager_UV.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
     </ClInclude>
+    <ClInclude Include="DrawSphere.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

@@ -752,6 +752,32 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+
+	/*****************************************************/
+	//  Forbit to draw regular Bbbox with new spheres
+	/*****************************************************/
+	void __fastcall Ivk_BBox3D_Draw(zTBBox3D*, void*, const zCOLOR&);
+	CInvoke <void(__thiscall*) (zTBBox3D*, const zCOLOR&)> pIvk_BBox3D_Draw(MultiZenDef(0x00531E90, 0, 0, 0x00545EE0), Ivk_BBox3D_Draw, IVK_AUTO);
+	void __fastcall Ivk_BBox3D_Draw(zTBBox3D* _this, void* vt, const zCOLOR& col)
+	{
+		// if we need to hide usual bbox in sphere draw mod
+		if (theApp.lightSphereSettings.sphereDrawMode != DRAW_NONE)
+		{
+			// Get selected object
+			if (zCVob* selVob = theApp.GetSelectedVob())
+			{
+				// if selected object is zCVobLight
+				zCVobLight* pLight = dynamic_cast<zCVobLight*>(selVob);
+
+				if (pLight && _this == &selVob->bbox3D)
+					return;
+			}
+		}
+
+		pIvk_BBox3D_Draw(_this, col);
+	}
+
+
 	// =============================================== TEST HOOKS ===============================================
 	/*
 

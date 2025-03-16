@@ -633,6 +633,7 @@ namespace GOTHIC_ENGINE {
 
 		itemsLocator.Loop();
 		Loop_PFXEditor();
+		DrawLightSphere_Loop();
 
 
 		if (screen && ogame->GetCamera() && ogame->GetWorld())

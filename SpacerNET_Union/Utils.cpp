@@ -1566,5 +1566,7 @@ namespace GOTHIC_ENGINE {
 		return result;
 	}
 
+	extern void DrawLightSphere_Loop();
+
 }
 

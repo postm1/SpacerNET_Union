@@ -213,6 +213,14 @@ namespace GOTHIC_ENGINE {
 		SPACER_PFX_MOTION_TYPE_FORW_ONLY
 	};
 
+	enum eSphereDrawMode
+	{
+		DRAW_NONE,			// no Sphere, standart BBX
+		DRAW_ONLY_ORBITS,	// only orbits
+		DRAW_FULL_SPHERE	// full mesh
+	};
+
+
 	enum TMatLibFlag { NullLib = 0 };
 
 }
