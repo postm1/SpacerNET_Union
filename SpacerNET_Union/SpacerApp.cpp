@@ -737,7 +737,7 @@ namespace GOTHIC_ENGINE {
 
 		int range = playerLightInt;
 
-		if (range == 0 && pLightDx11)
+		if ((range == 0 || !options.GetIntVal("bShowAmbientLightDx11")) && pLightDx11)
 		{
 			RenderDX11_RemoveAmbientLight();
 			return;
@@ -773,13 +773,13 @@ namespace GOTHIC_ENGINE {
 		auto camPos = ogame->GetCameraVob()->GetPositionWorld();
 		auto camDir = ogame->GetCameraVob()->GetAtVectorWorld();
 
-		pLightDx11->SetPositionWorld(camPos - camDir * 100);
+		pLightDx11->SetPositionWorld(camPos - camDir * 50);
 
 		if (pLightDx11->lightData.range != range)
 		{
 			pLightDx11->SetRange(range, 1);
 			ogame->GetCameraVob()->SetPositionWorld(ogame->GetCameraVob()->GetPositionWorld());
-			pLightDx11->SetPositionWorld(camPos - camDir * 100);
+			pLightDx11->SetPositionWorld(camPos - camDir * 50);
 		}
 		
 
