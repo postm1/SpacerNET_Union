@@ -1746,8 +1746,59 @@ namespace GOTHIC_ENGINE {
 			SetMotionTypePFX(type);
 		}
 
+		__declspec(dllexport) int Extern_PFX_NameExists()
+		{
+			CString pfxName = Stack_PeekString();
 
-		
+			zSTRING name = pfxName;
+
+			int size = zCParticleFX::s_emitterPresetList.GetNumInList();
+
+			for (int i = 0; i < size; i++)
+			{
+				if (auto pfx = zCParticleFX::s_emitterPresetList.GetSafe(i))
+				{
+					if (pfx->particleFXName == name)
+					{
+						return TRUE;
+					}
+				}
+			}
+
+			return FALSE;
+
+		}
+		// future code
+		__declspec(dllexport) void Extern_CreateNewPFX_Clean()
+		{
+			static auto addPFXNew = (callVoidFunc)GetProcAddress(theApp.module, "AddPacticleToListNew");
+
+			CString pfxName = Stack_PeekString();
+			zSTRING name = pfxName;
+
+			zCParticleEmitter* emitter = zNEW(zCParticleEmitter);
+
+			//parserParticleFX->CreateInstance(name, emitter);
+			
+			emitter->particleFXName = name;
+
+			zCParticleFX::s_emitterPresetList.Insert(emitter);
+
+			zCParticleFX::s_emitterPresetList.QuickSort();
+
+			//zCParticleFX::ParseParticleFXScript();
+
+
+			zCParticleFX::s_pfxParser->SaveInstance(name, zCParticleFX::SearchParticleEmitter(name));
+
+			zCParticleFX::ParseParticleFXScript();
+
+			
+			/*
+			Stack_PushString(name);
+			addPFXNew();
+			*/
+		}
 		
 	}
 
