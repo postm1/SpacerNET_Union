@@ -437,6 +437,7 @@ namespace GOTHIC_ENGINE {
 			|| pfxEditorVob == pVob
 			|| theApp.floorVob == pVob
 			|| theApp.mobInterSlotsVobs.IsInList(pVob)
+			|| theApp.pLightDx11 == pVob
 			//|| pVob->GetVobName() == "VOB_SPACER_CAMERA_START" // this vob can be selected, so remove it from here
 			)
 		{

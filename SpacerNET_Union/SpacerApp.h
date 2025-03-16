@@ -93,6 +93,7 @@ namespace GOTHIC_ENGINE {
 		{
 			zCMesh*	s_pLightSphereMesh;
 			zCVobLight* vobLightSelected;
+			zCVobLight* pLightDx11;
 		};
 
 		struct
@@ -296,6 +297,8 @@ namespace GOTHIC_ENGINE {
 		SpacerWorkMode GetPickMode();
 		void PreRender();
 		void RenderSelectedVobBbox();
+		void RenderDX11_AmbientLight();
+		void RenderDX11_RemoveAmbientLight();
 		bool IsDx11Active();
 		void RenderDx11_Bbox(zCVob* vob);
 		void RenderDx11_Pivot(zCVob* vob);

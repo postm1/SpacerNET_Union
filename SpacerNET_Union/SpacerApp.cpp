@@ -93,6 +93,8 @@ namespace GOTHIC_ENGINE {
 		}
 
 		this->isNewBalanceMod = false;
+
+		this->pLightDx11 = NULL;
 		
 	}
 
@@ -370,6 +372,9 @@ namespace GOTHIC_ENGINE {
 			theApp.ToggleGame();
 			
 		}
+		
+		
+		RenderDX11_RemoveAmbientLight();
 
 		debug.CleanLines();
 
@@ -723,6 +728,59 @@ namespace GOTHIC_ENGINE {
 		vob->bbox3D.Draw(color);
 	}
 
+	void SpacerApp::RenderDX11_AmbientLight()
+	{
+		if (g_bIsPlayingGame || !ogame || !IsAWorldLoaded() || !ogame->GetCameraVob())
+		{
+			return;
+		}
+
+		int range = playerLightInt;
+
+		if (range == 0 && pLightDx11)
+		{
+			RenderDX11_RemoveAmbientLight();
+			return;
+		}
+
+		if (!pLightDx11 && range == 0)
+		{
+			return;
+		}
+		
+
+		if (!pLightDx11)
+		{
+			pLightDx11 = new zCVobLight();
+			pLightDx11->lightData.m_bCanMove = true;
+			pLightDx11->SetRange(range, 1);
+			pLightDx11->lightData.lightColor.SetRGB(255, 255, 255);
+			pLightDx11->lightData.isStatic = FALSE;
+			pLightDx11->lightData.isTurnedOn = TRUE;
+			pLightDx11->dontWriteIntoArchive = TRUE;//
+			pLightDx11->SetCollDet(FALSE);
+			pLightDx11->ignoredByTraceRay = TRUE;
+			ogame->GetWorld()->AddVob(pLightDx11);
+		}
+
+		pLightDx11->SetRange(range, 1);
+
+		auto camPos = ogame->GetCameraVob()->GetPositionWorld();
+		auto camDir = ogame->GetCameraVob()->GetAtVectorWorld();
+
+		pLightDx11->SetPositionWorld(camPos - camDir * 100);
+	}
+
+	void SpacerApp::RenderDX11_RemoveAmbientLight()
+	{
+		if (pLightDx11)
+		{
+			pLightDx11->RemoveVobFromWorld();
+
+			zRELEASE(pLightDx11);
+		}
+	}
+
 	void SpacerApp::RenderSelectedVobBbox()
 	{
 		if (!IsDx11Active())
@@ -735,6 +793,7 @@ namespace GOTHIC_ENGINE {
 
 		RenderDx11_Bbox(vob);
 		RenderDx11_Pivot(vob);
+		RenderDX11_AmbientLight();
 
 
 		if (pickedWaypoint2nd)

@@ -194,6 +194,7 @@ namespace GOTHIC_ENGINE {
 			auto safePosPlayer = ogame->GetCamera()->connectedVob->GetPositionWorld();
 
 			g_bIsPlayingGame = true;
+			RenderDX11_RemoveAmbientLight();
 
 			SetSelectedVob(NULL);
 
