@@ -476,7 +476,22 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "intPfxEditorSpeedMotion", "100");
 		list.Insert("intPfxEditorSpeedMotion", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "sphereWireColorR", "255");
+		list.Insert("sphereWireColorR", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "sphereWireColorG", "255");
+		list.Insert("sphereWireColorG", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "sphereWireColorB", "255");
+		list.Insert("sphereWireColorB", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "bDrawRadiusValue", "1");
+		list.Insert("bDrawRadiusValue", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "sphereDrawMode", "1");
+		list.Insert("sphereDrawMode", set);
 		
+	
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);

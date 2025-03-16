@@ -103,7 +103,7 @@ namespace GOTHIC_ENGINE {
 		struct
 		{
 			// draw sphere mod
-			eSphereDrawMode sphereDrawMode = DRAW_FULL_SPHERE;
+			eSphereDrawMode sphereDrawMode = DRAW_NONE;
 
 			// wire color
 			zCOLOR sphereWireColor = zCOLOR(170, 170, 170, 255);

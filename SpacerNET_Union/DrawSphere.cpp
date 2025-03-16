@@ -319,6 +319,14 @@ namespace GOTHIC_ENGINE {
 	// В цикле обработки источников света
 	void DrawLightSphere_Loop()
 	{
+		theApp.lightSphereSettings.bDrawRadiusValue = theApp.options.GetIntVal("bDrawRadiusValue");
+		theApp.lightSphereSettings.sphereWireColor.r = theApp.options.GetIntVal("sphereWireColorR");
+		theApp.lightSphereSettings.sphereWireColor.g = theApp.options.GetIntVal("sphereWireColorG");
+		theApp.lightSphereSettings.sphereWireColor.b = theApp.options.GetIntVal("sphereWireColorB");
+		theApp.lightSphereSettings.sphereDrawMode = (eSphereDrawMode)theApp.options.GetIntVal("sphereDrawMode");
+
+		
+
 		// если отрисовка сетки выключена
 		if (theApp.lightSphereSettings.sphereDrawMode == eSphereDrawMode::DRAW_NONE)
 			// выходим
