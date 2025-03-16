@@ -4,14 +4,18 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+
+	const int PFX_EDITOR_CD_SHOW_TIME_MS = 30;
+	SpacerPfxMotion pfxMotionType = SpacerPfxMotion::SPACER_PFX_MOTION_TYPE_STATIC;
+
 	zCParticleFX* m_pPfx = NULL;
 	int instanceFieldSize = 0;
 	zCVob* pfxEditorVob = NULL;
 	zCWorld* m_pWorld;
 	CString currentPFXName;
 	int cooldDownShowTimer = 0;
-	const int PFX_EDITOR_CD_SHOW_TIME_MS = 30;
-	SpacerPfxMotion pfxMotionType = SpacerPfxMotion::SPACER_PFX_MOTION_TYPE_STATIC;
+	
+	
 
 	struct
 	{
@@ -157,7 +161,7 @@ namespace GOTHIC_ENGINE {
 		auto dir = ogame->GetCameraVob()->GetAtVectorWorld();
 		auto right = ogame->GetCameraVob()->GetRightVectorWorld();
 
-		if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
+		if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORWBACK)
 		{
 			
 			moveStruct.finalForwPos = pos + dir * moveStruct.forwDistMax + right * 150;
@@ -167,6 +171,15 @@ namespace GOTHIC_ENGINE {
 
 			pfxEditorVob->SetPositionWorld(moveStruct.oldCamPos);
 			//theApp.debug.AddLine(moveStruct.oldCamPos, moveStruct.finalForwPos, GFX_RED, 15000);
+		}
+		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW_ONLY)
+		{
+			moveStruct.finalForwPos = pos + dir * moveStruct.forwDistMax + right * 150;
+			moveStruct.forwVel = (moveStruct.finalForwPos - pos).Normalize();
+			moveStruct.oldCamPos = pos + dir * 350;
+			moveStruct.forward = true;
+
+			pfxEditorVob->SetPositionWorld(moveStruct.oldCamPos);
 		}
 		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_CIRCLE)
 		{
@@ -181,6 +194,10 @@ namespace GOTHIC_ENGINE {
 			moveStruct.radius = radius;
 		}
 		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_STATIC)
+		{
+			pfxEditorVob->SetPositionWorld(pos + dir * 350);
+		}
+		else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_ROTATE_LOCAL_Y)
 		{
 			pfxEditorVob->SetPositionWorld(pos + dir * 350);
 		}
@@ -225,7 +242,7 @@ namespace GOTHIC_ENGINE {
 				{
 					pfxEditorVob->RotateLocalY(150 * (speed / 100.0f) * dt);
 				}
-				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW)
+				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORWBACK)
 				{
 					auto speedTrans = moveStruct.forwVel * (300.0f * speed / 100.0f);
 
@@ -250,6 +267,19 @@ namespace GOTHIC_ENGINE {
 
 					pfxEditorVob->SetPositionWorld(newPos);
 					//theApp.debug.AddLine(newPos, newPos + zVEC3(0, 100, 0), GFX_BLUE, 2000);
+				}
+				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_FORW_ONLY)
+				{
+					auto speedTrans = moveStruct.forwVel * (300.0f * speed / 100.0f);
+					auto newPos = pfxEditorVob->GetPositionWorld() + speedTrans * dt;
+
+
+					if (newPos.Distance(moveStruct.oldCamPos) >= moveStruct.forwDistMax)
+					{
+						newPos = moveStruct.oldCamPos;
+					}
+
+					pfxEditorVob->SetPositionWorld(newPos);
 				}
 				else if (pfxMotionType == SPACER_PFX_MOTION_TYPE_CIRCLE)
 				{
