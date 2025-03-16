@@ -537,8 +537,8 @@ namespace GOTHIC_ENGINE {
 	HOOK ivk_zCVob_Render AS(&zCVob::Render, &zCVob::Render_Union);
 	BOOL  __fastcall zCVob::Render_Union(zTRenderContext& renderContext)
 	{
-
-		if (theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == this && theApp.options.GetIntVal("showLightRadiusVob"))
+		//turn off standart sphere
+		if (false && theApp.s_pLightSphereMesh != NULL && theApp.vobLightSelected == this && theApp.options.GetIntVal("showLightRadiusVob"))
 		{
 			if (theApp.vobLightSelected->lightData.range != 0.0f)
 			{

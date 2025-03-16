@@ -488,7 +488,7 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "bDrawRadiusValue", "1");
 		list.Insert("bDrawRadiusValue", set);
 
-		set = new CSetting(TYPE_INT, "SPACER", "sphereDrawMode", "1");
+		set = new CSetting(TYPE_INT, "SPACER", "sphereDrawMode", "2");
 		list.Insert("sphereDrawMode", set);
 		
 	
