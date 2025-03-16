@@ -765,8 +765,6 @@ namespace GOTHIC_ENGINE {
 			pLightDx11->dontWriteIntoArchive = TRUE;//
 			pLightDx11->SetCollDet(FALSE);
 			pLightDx11->ignoredByTraceRay = TRUE;
-			pLightDx11->SetVisual(NULL);
-			pLightDx11->showVisual = FALSE;
 			ogame->GetWorld()->AddVob(pLightDx11);
 		}
 
@@ -775,13 +773,13 @@ namespace GOTHIC_ENGINE {
 		auto camPos = ogame->GetCameraVob()->GetPositionWorld();
 		auto camDir = ogame->GetCameraVob()->GetAtVectorWorld();
 
-		pLightDx11->SetPositionWorld(camPos - camDir * 30);
+		pLightDx11->SetPositionWorld(camPos - camDir * 100);
 
 		if (pLightDx11->lightData.range != range)
 		{
 			pLightDx11->SetRange(range, 1);
 			ogame->GetCameraVob()->SetPositionWorld(ogame->GetCameraVob()->GetPositionWorld());
-			pLightDx11->SetPositionWorld(camPos - camDir * 30);
+			pLightDx11->SetPositionWorld(camPos - camDir * 100);
 		}
 		
 
