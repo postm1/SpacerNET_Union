@@ -400,13 +400,16 @@ namespace GOTHIC_ENGINE {
 			GetProjection(x, y, s.center);
 
 			// если источник в пределах видимости камеры
-			if (!(x < 0 || x > 8192 || y < 0 || y > 8192 || (x == 0 && y == 0)))
+			if (!(x < 0 || x > SCREEN_MAX || y < 0 || y > SCREEN_MAX || (x == 0 && y == 0)))
 			{
 				// получаем ширину текста (в вирт. координатах)
 				int txt_vsizex = screen->FontSize(txt);
 
 				// выводим значение радиуса на экран
+				auto color = screen->fontColor;
+				screen->SetFontColor(GFX_RED);
 				screen->Print(x - txt_vsizex / 2, y + zPixelY(32 / 2 + 7), txt);
+				screen->SetFontColor(color);
 			}
 		}
 	}
