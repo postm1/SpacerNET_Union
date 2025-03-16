@@ -747,6 +747,11 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+
+		if (!options.GetIntVal("bShowAmbientLightDx11"))
+		{
+			return;
+		}
 		
 
 		if (!pLightDx11)
@@ -763,12 +768,22 @@ namespace GOTHIC_ENGINE {
 			ogame->GetWorld()->AddVob(pLightDx11);
 		}
 
-		pLightDx11->SetRange(range, 1);
+
 
 		auto camPos = ogame->GetCameraVob()->GetPositionWorld();
 		auto camDir = ogame->GetCameraVob()->GetAtVectorWorld();
 
 		pLightDx11->SetPositionWorld(camPos - camDir * 100);
+
+		if (pLightDx11->lightData.range != range)
+		{
+			pLightDx11->SetRange(range, 1);
+			ogame->GetCameraVob()->SetPositionWorld(ogame->GetCameraVob()->GetPositionWorld());
+			pLightDx11->SetPositionWorld(camPos - camDir * 100);
+		}
+		
+
+		
 	}
 
 	void SpacerApp::RenderDX11_RemoveAmbientLight()
