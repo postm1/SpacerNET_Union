@@ -138,6 +138,14 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
+		__declspec(dllexport) int SPC_GetCurrentLangId()
+		{
+			static auto getLang = (intFuncPointer)GetProcAddress(theApp.module, "GetCurrentLangId");
+			return getLang();
+		}
+
+
+
 		/*__declspec(dllexport) BOOL SPC_SelectObjects(zCArray<zCVob*>& arr_vobs)
 		{
 			if (theApp.SelectedVobs.GetNum() == 0)
