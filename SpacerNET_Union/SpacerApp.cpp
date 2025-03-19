@@ -2322,6 +2322,11 @@ namespace GOTHIC_ENGINE {
 					SetMover();
 				}
 				
+				// forcely apply bbox size for light
+				if (auto pLight = vob->CastTo<zCVobLight>())
+				{
+					pLight->SetRange(pLight->lightData.range, 1);
+				}
 				//Message::Box("Apply 4");
 
 				//cmd << "ApplyProps for vob 4 " << AHEX32((uint)current_object) << endl;
