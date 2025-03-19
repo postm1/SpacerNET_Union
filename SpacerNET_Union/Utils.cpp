@@ -1578,19 +1578,31 @@ namespace GOTHIC_ENGINE {
 			{
 				zTParticle* p = pfx->firstPart;
 
+				zTBBox3D& bb = pfx->bbox3DWorld;
+
+				bb.Init();
+
 				if (p)
 				{
-					zTBBox3D& bb = pfx->bbox3DWorld;
-
-					// сбрасываем размеры объёма
-					bb.Init();
-
 					while (p)
 					{
-						// и насыщаем объём этими координатами
 						bb.AddPoint(p->positionWS);
 						p = p->next;
 					}
+
+				}
+				else
+				{
+					pfx->bbox3DWorld.Init();
+
+					zVEC3 vobPos = pickedVob->GetPositionWorld();
+
+					const zVEC3 vMax(50, 50, 50);
+
+					pfx->bbox3DWorld.AddPoint(vobPos + vMax);
+					pfx->bbox3DWorld.AddPoint(vobPos - vMax);
+
+					pickedVob->bbox3D = pfx->bbox3DWorld;
 
 				}
 			}
