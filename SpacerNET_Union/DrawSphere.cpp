@@ -415,7 +415,7 @@ namespace GOTHIC_ENGINE {
 
 				// выводим значение радиуса на экран
 				auto color = screen->fontColor;
-				screen->SetFontColor(GFX_WHITE);
+				//screen->SetFontColor(GFX_WHITE);
 				screen->Print(x - txt_vsizex / 2, y + zPixelY(32 / 2 + 7), txt);
 				screen->SetFontColor(color);
 			}
