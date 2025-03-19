@@ -337,18 +337,6 @@ namespace GOTHIC_ENGINE {
 									}
 								}
 							}
-							{
-								auto entry = new ErrorReportEntry();
-
-								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_TGA_DYNCOLL);
-								entry->SetObject((uint)vob);
-								entry->SetVobName(vob->visual->GetVisualName());
-								entry->SetMaterialName("");
-								entry->SetTextureName("");
-
-								AddEntry(entry);
-							}
 						}
 
 
