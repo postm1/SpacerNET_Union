@@ -298,19 +298,60 @@ namespace GOTHIC_ENGINE {
 							}
 						}
 
-						if (vob->GetCollDetDyn() && (visName.Upper().Contains(".TGA")))
+						if ((visName.Upper().Contains(".TGA")))
 						{
-							auto entry = new ErrorReportEntry();
+							if (vob->GetCollDetDyn())
+							{
+								auto entry = new ErrorReportEntry();
 
-							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_TGA_DYNCOLL);
-							entry->SetObject((uint)vob);
-							entry->SetVobName(vob->visual->GetVisualName());
-							entry->SetMaterialName("");
-							entry->SetTextureName("");
+								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_TGA_DYNCOLL);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(vob->visual->GetVisualName());
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
 
-							AddEntry(entry);
+								AddEntry(entry);
+							}
+							
+
+							if (auto pVisual = vob->GetVisual())
+							{
+								if (auto pDecal = pVisual->CastTo<zCDecal>())
+								{
+									if (pDecal->decalMaterial)
+									{
+										if (pDecal->decalMaterial->GetAlphaBlendFunc() == zRND_ALPHA_FUNC_NONE)
+										{
+											auto entry = new ErrorReportEntry();
+
+											entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+											entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_DECAL_BAD_BLEND);
+											entry->SetObject((uint)vob);
+											entry->SetVobName(GetVobName(vob));
+											entry->SetMaterialName("");
+											entry->SetTextureName("");
+
+											AddEntry(entry);
+										}
+									}
+								}
+							}
+							{
+								auto entry = new ErrorReportEntry();
+
+								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_TGA_DYNCOLL);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(vob->visual->GetVisualName());
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
 						}
+
+
 					}
 					
 				}
