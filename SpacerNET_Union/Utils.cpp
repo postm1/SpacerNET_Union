@@ -1569,5 +1569,34 @@ namespace GOTHIC_ENGINE {
 
 	extern void DrawLightSphere_Loop();
 
+
+	void UpdatePfxBbox(zCVob* pickedVob)
+	{
+		if (auto pVisual = pickedVob->GetVisual())
+		{
+			if (zCParticleFX* pfx = dynamic_cast<zCParticleFX*>(pVisual))
+			{
+				zTParticle* p = pfx->firstPart;
+
+				if (p)
+				{
+					zTBBox3D& bb = pfx->bbox3DWorld;
+
+					// сбрасываем размеры объёма
+					bb.Init();
+
+					while (p)
+					{
+						// и насыщаем объём этими координатами
+						bb.AddPoint(p->positionWS);
+						p = p->next;
+					}
+
+				}
+			}
+		}
+
+	}
+
 }
 

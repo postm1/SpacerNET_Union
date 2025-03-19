@@ -407,7 +407,7 @@ namespace GOTHIC_ENGINE {
 		
 		pickedVob->SetPositionWorld(pos);
 
-	
+		UpdatePfxBbox(pickedVob);
 
 
 		if (dynamic_cast<zCVobWaypoint*>(pickedVob))

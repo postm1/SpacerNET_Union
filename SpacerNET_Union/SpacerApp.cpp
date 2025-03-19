@@ -1035,7 +1035,13 @@ namespace GOTHIC_ENGINE {
 				pickedVob->SetDrawBBox3D(TRUE);
 			}
 
+			if (mainTimer[TIMER_ID_PFX_UPDATE_BBOX].Await(300))
+			{
+				UpdatePfxBbox(pickedVob);
+			}
 		}
+
+		
 
 
 		ClearBboxDecal();
