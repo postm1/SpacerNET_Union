@@ -1185,7 +1185,7 @@ namespace GOTHIC_ENGINE {
 
 							if (autoFix)
 							{
-								vob->SetCollDetDyn(FALSE);
+								pLight->SetCollDetDyn(FALSE);
 								cmd << "Fixing DynColl for zCVobLight: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
 							}
 							else
