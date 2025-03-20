@@ -21,6 +21,7 @@ namespace GOTHIC_ENGINE {
 		void RemoveFromSelection(zCVob* vob);
 		void ClearSelection();
 		void RemoveSelected();
+		void SaveSelected();
 		void DrawDx11();
 		void ManageKeys();
 	};

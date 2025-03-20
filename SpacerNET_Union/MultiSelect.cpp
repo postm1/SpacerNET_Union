@@ -229,6 +229,17 @@ namespace GOTHIC_ENGINE {
 		theApp.SelectedVobs.Clear();
 	}
 
+	// fixme add later
+	void MultiSelect::SaveSelected()
+	{
+		for (uint i = 0; i < theApp.SelectedVobs.GetNum(); i++)
+		{
+			if (auto pVob = theApp.SelectedVobs.GetSafe(i))
+			{
+
+			}
+		}
+	}
 
 	void MultiSelect::DrawDx11()
 	{
