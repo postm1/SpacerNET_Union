@@ -1263,8 +1263,20 @@ namespace GOTHIC_ENGINE {
 			{
 				
 #if ENGINE < Engine_G2
+				zCProgMeshProto* pProgMeshChild = vobChild->visual->CastTo<zCProgMeshProto>();
+				if (pProgMeshChild)
+				{
+					zCMesh* pMeshChild = pProgMeshChild->GetMesh_G1(0);
 
-				//FIXME_G1 SUPPORT GetMesh
+					if (pMeshChild)
+					{
+						cmd << "Merge: " << vobChild->GetObjectName() << endl;
+
+						pMesh->MergeMesh(pMeshChild, vobChild->trafoObjToWorld);
+					}
+
+				}
+				
 #else
 				// ďűňŕĺěń˙ ďđĺîáđŕçîâŕňü âčçóŕë â "ďđîă ěĺř ďđîňî"
 				zCProgMeshProto* pProgMeshChild = vobChild->visual->CastTo<zCProgMeshProto>();
@@ -1308,14 +1320,13 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-#if ENGINE < Engine_G2
+
 
 		// FIXME_G1 SUPPORT GetMesh
-		print.PrintRed("NO G1 SUPPORT!");
-		return;
-#else
+		//print.PrintRed("NO G1 SUPPORT!");
+		//return;
 
-		// ďűňŕĺěń˙ ďđĺîáđŕçîâŕňü âčçóŕë â "ďđîă ěĺř ďđîňî"
+
 		zCProgMeshProto* pProgMesh = pVob->visual->CastTo<zCProgMeshProto>();
 
 		if (!pProgMesh)
@@ -1325,18 +1336,18 @@ namespace GOTHIC_ENGINE {
 		}
 			
 
-
+#if ENGINE == Engine_G1
+		zCMesh* pMesh = pProgMesh->GetMesh_G1(0);
+#else
 		zCMesh* pMesh = pProgMesh->GetMesh(0);
+#endif // DEBUG
+
 
 		if (!pMesh || name.Length() == 0)
 		{
 			print.PrintRed(GetLang("VOB_VISUAL_SAVE_FAIL"));
 			return;
 		}
-		
-
-
-		
 		
 
 		pMesh->TransformAllVerts(pVob->trafoObjToWorld, FALSE);
@@ -1374,7 +1385,6 @@ namespace GOTHIC_ENGINE {
 		zRELEASE(pMesh);
 
 
-#endif
 	}
 
 	void Clipboard(const char* output)
@@ -1572,6 +1582,7 @@ namespace GOTHIC_ENGINE {
 
 	void UpdatePfxBbox(zCVob* pickedVob)
 	{
+#if ENGINE >= Engine_G2
 		if (auto pVisual = pickedVob->GetVisual())
 		{
 			if (zCParticleFX* pfx = dynamic_cast<zCParticleFX*>(pVisual))
@@ -1607,8 +1618,54 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 		}
+#endif
 
 	}
 
+#if ENGINE == Engine_G1
+	zCMesh* zCProgMeshProto::GetMesh_G1(const int a_iLODIndex)
+	{
+		zCMesh* mesh = zNEW(zCMesh);
+		int numPoly = 0;
+
+		for (int n = 0; n < numSubMeshes; n++) numPoly += subMeshList[n].triList.GetNum();
+
+		//zCMesh::S_InitVertexMergeCache(mesh);
+
+		mesh->AllocPolys(numPoly);
+		mesh->AllocVerts(numPoly * 3);
+
+		for (int i = 0; i < numSubMeshes; i++)
+		{
+			for (int p = 0; p < subMeshList[i].triList.GetNum(); p++)
+			{
+				zPOINT3 a, b, c;
+				zVEC2	f, g, h;
+				a = posList[subMeshList[i].wedgeList[subMeshList[i].triList[p].wedge[0]].position];
+				b = posList[subMeshList[i].wedgeList[subMeshList[i].triList[p].wedge[1]].position];
+				c = posList[subMeshList[i].wedgeList[subMeshList[i].triList[p].wedge[2]].position];
+				f = subMeshList[i].wedgeList[subMeshList[i].triList[p].wedge[0]].texUV;
+				g = subMeshList[i].wedgeList[subMeshList[i].triList[p].wedge[1]].texUV;
+				h = subMeshList[i].wedgeList[subMeshList[i].triList[p].wedge[2]].texUV;
+				zCPolygon* newPoly = mesh->AddPoly();
+				newPoly->AddVertex(mesh->AddVertexSmart(a));
+				newPoly->AddVertex(mesh->AddVertexSmart(b));
+				newPoly->AddVertex(mesh->AddVertexSmart(c));
+				zERR_ASSERT(newPoly);
+				newPoly->SetMapping(0, f);
+				newPoly->SetMapping(1, g);
+				newPoly->SetMapping(2, h);
+				newPoly->polyPlane = subMeshList[i].triPlaneList[subMeshList[i].triPlaneIndexList[p]];
+				newPoly->SetMaterial(subMeshList[i].material);
+
+			};
+		}
+
+		mesh->meshName = this->GetObjectName();
+		//zCMesh::S_DeleteVertexMergeCache();
+
+		return mesh;
+	}
+#endif
 }
 

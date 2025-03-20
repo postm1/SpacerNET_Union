@@ -757,7 +757,9 @@ namespace GOTHIC_ENGINE {
 		if (!pLightDx11)
 		{
 			pLightDx11 = new zCVobLight();
+#if ENGINE >= Engine_G2
 			pLightDx11->lightData.m_bCanMove = true;
+#endif
 			pLightDx11->SetRange(range, 1);
 			pLightDx11->lightData.lightColor.SetRGB(255, 255, 255);
 			pLightDx11->lightData.isStatic = FALSE;
