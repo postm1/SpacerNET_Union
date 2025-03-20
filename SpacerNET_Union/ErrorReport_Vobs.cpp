@@ -315,7 +315,7 @@ namespace GOTHIC_ENGINE {
 							}
 							
 
-							if (auto pVisual = vob->GetVisual())
+							/*if (auto pVisual = vob->GetVisual())
 							{
 								if (auto pDecal = pVisual->CastTo<zCDecal>())
 								{
@@ -336,7 +336,7 @@ namespace GOTHIC_ENGINE {
 										}
 									}
 								}
-							}
+							}*/
 						}
 
 
