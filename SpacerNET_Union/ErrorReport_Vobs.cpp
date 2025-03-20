@@ -1178,18 +1178,30 @@ namespace GOTHIC_ENGINE {
 				{
 					if (auto pLight = pVob->CastTo<zCVobLight>())
 					{
+
+						
 						if (pLight->GetCollDetDyn())
 						{
-							auto entry = new ErrorReportEntry();
 
-							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_LIGHT_DYNCOLL);
-							entry->SetObject((uint)pLight);
-							entry->SetVobName("");
-							entry->SetMaterialName("");
-							entry->SetTextureName("");
+							if (autoFix)
+							{
+								vob->SetCollDetDyn(FALSE);
+								cmd << "Fixing DynColl for zCVobLight: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+							}
+							else
+							{
+								auto entry = new ErrorReportEntry();
 
-							AddEntry(entry);
+								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_LIGHT_DYNCOLL);
+								entry->SetObject((uint)pLight);
+								entry->SetVobName("");
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
+							
 						}
 						
 
