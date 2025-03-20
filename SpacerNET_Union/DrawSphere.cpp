@@ -369,12 +369,6 @@ namespace GOTHIC_ENGINE {
 		theApp.lightSphereSettings.sphereWireColor.b = theApp.options.GetIntVal("sphereWireColorB");
 		theApp.lightSphereSettings.sphereDrawMode = (eSphereDrawMode)theApp.options.GetIntVal("sphereDrawMode");
 
-		
-
-		// если отрисовка сетки выключена
-		if (theApp.lightSphereSettings.sphereDrawMode == eSphereDrawMode::DRAW_NONE)
-			// выходим
-			return;
 
 		// иначе, получаем выделенный объект и пытаемся преобразовать его в источник света
 		zCVobLight* pLight = dynamic_cast<zCVobLight*>(SPC_GetSelectedObject());
@@ -384,12 +378,41 @@ namespace GOTHIC_ENGINE {
 			// выходим
 			return;
 
+
 		// иначе, формируем основные данные
 		// об этом источнике света:
 		// радиус освещения и его координаты в мире
 		zTBSphere3D s;
 		s.radius = pLight->lightData.range;
 		s.center = pLight->GetPositionWorld();
+
+		/***************************/
+		//  Значение радиуса сферы
+		/***************************/
+		// если нужно вывести радиус сферы
+		if (theApp.lightSphereSettings.bDrawRadiusValue == TRUE)
+		{
+
+			int x, y;
+			// получаем проекцию координат источника на экране
+			GetProjection(x, y, s.center);
+
+			// если источник в пределах видимости камеры
+			if (!(x < 0 || x > SCREEN_MAX || y < 0 || y > SCREEN_MAX || (x == 0 && y == 0)))
+			{
+				// выводим значение радиуса на экран
+				PrintRadiusValue(x, y, s.radius);
+			}
+		}
+
+
+
+		// если отрисовка сетки выключена
+		if (theApp.lightSphereSettings.sphereDrawMode == eSphereDrawMode::DRAW_NONE)
+			// выходим
+			return;
+
+	
 
 		// матрица трансформаций для сетки сферы;
 		// либо есть, либо её нет, в зависимости от флага "bUseSphereTrafo";
@@ -438,23 +461,5 @@ namespace GOTHIC_ENGINE {
 		zlineCache->Line3D(pt1, pt2, theApp.lightSphereSettings.sphereWireColor, 1);
 
 
-		/***************************/
-		//  Значение радиуса сферы
-		/***************************/
-		// если нужно вывести радиус сферы
-		if (theApp.lightSphereSettings.bDrawRadiusValue == TRUE)
-		{
-
-			int x, y;
-			// получаем проекцию координат источника на экране
-			GetProjection(x, y, s.center);
-
-			// если источник в пределах видимости камеры
-			if (!(x < 0 || x > SCREEN_MAX || y < 0 || y > SCREEN_MAX || (x == 0 && y == 0)))
-			{
-				// выводим значение радиуса на экран
-				PrintRadiusValue(x, y, s.radius);
-			}
-		}
 	}
 }
