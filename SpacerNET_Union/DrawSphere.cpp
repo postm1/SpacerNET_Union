@@ -313,7 +313,51 @@ namespace GOTHIC_ENGINE {
 
 
 	
+	// Вывод значения радиуса источника освещения "radius" на экран,
+// в заданных "x" и "y" координатах
+	inline void PrintRadiusValue(int x, int y, float radius)
+	{
+		// если менеджера шрифтов нет
+		if (!zfontman)
+			// выходим
+			return;
 
+		// иначе, однократно получаем указатель на шрифт по умолчанию
+		static zCFont* pFontRadius = zfontman->GetFont(zfontman->Load("Font_Default.tga"));
+
+		// формируем текстовое значение радиуса, с учётом формата вывода строки "radiusTextFmt"
+		zSTRING txt = string::Combine(theApp.lightSphereSettings.radiusTextFmt.ToChar(), string(radius, 0));
+
+		// запоминаем текущий шрифт и цвет текста вьюпорта
+		// (для последующего восстановления)
+		zCFont* old_font = screen->font;
+		zCOLOR old_fontColor = screen->fontColor;
+
+
+		// меняем шрифт вьюпорта на "шрифт по умолчанию"
+		screen->SetFont(pFontRadius);
+
+		// меняем цвет шрифта вьюпорта на светлый, непрозрачный
+		screen->fontColor = zCOLOR(255, 255, 255, 255);
+
+		// получаем ширину текста (в вирт. координатах)
+		int txt_vsizex = screen->FontSize(txt);
+
+		// выравниваем текст по центру, относительно заданной координаты x
+		x -= (txt_vsizex / 2);
+
+		// сдвигаем текст вниз на 23 пикселя, относительно заданной координаты y,
+		// оставляя место для иконки источника
+		y += zPixelY(23);
+
+		// выводим обычный текст, со значением радиуса
+		screen->Print(x, y, txt);
+
+
+		// восстанавливаем шрифт и цвет текста вьюпорта
+		screen->font = old_font;
+		screen->fontColor = old_fontColor;
+	}
 
 
 	// В цикле обработки источников света
@@ -400,8 +444,6 @@ namespace GOTHIC_ENGINE {
 		// если нужно вывести радиус сферы
 		if (theApp.lightSphereSettings.bDrawRadiusValue == TRUE)
 		{
-			// заполняем строку текстом, с учётом формата вывода строки "radiusTextFmt"
-			zSTRING txt = string::Combine(theApp.lightSphereSettings.radiusTextFmt.ToChar(), string(s.radius, 0));
 
 			int x, y;
 			// получаем проекцию координат источника на экране
@@ -410,14 +452,8 @@ namespace GOTHIC_ENGINE {
 			// если источник в пределах видимости камеры
 			if (!(x < 0 || x > SCREEN_MAX || y < 0 || y > SCREEN_MAX || (x == 0 && y == 0)))
 			{
-				// получаем ширину текста (в вирт. координатах)
-				int txt_vsizex = screen->FontSize(txt);
-
 				// выводим значение радиуса на экран
-				auto color = screen->fontColor;
-				screen->SetFontColor(zCOLOR(255, 255, 255, 255));
-				screen->Print(x - txt_vsizex / 2, y + zPixelY(32 / 2 + 7), txt);
-				screen->SetFontColor(color);
+				PrintRadiusValue(x, y, s.radius);
 			}
 		}
 	}
