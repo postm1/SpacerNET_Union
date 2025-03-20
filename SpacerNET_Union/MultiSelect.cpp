@@ -234,10 +234,7 @@ namespace GOTHIC_ENGINE {
 	{
 		for (uint i = 0; i < theApp.SelectedVobs.GetNum(); i++)
 		{
-			if (auto pVob = theApp.SelectedVobs.GetSafe(i))
-			{
-
-			}
+			
 		}
 	}
 
