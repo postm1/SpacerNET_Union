@@ -120,10 +120,14 @@ namespace GOTHIC_ENGINE {
 
 		zMAT4& trafo = pVob->GetNewTrafoObjToWorld();
 
-		if (auto pDecal = pVob->GetVisual()->CastTo<zCDecal>())
+		if (pVob->GetVisual())
 		{
-			pDecal->decal2Sided = TRUE;
+			if (auto pDecal = pVob->GetVisual()->CastTo<zCDecal>())
+			{
+				pDecal->decal2Sided = TRUE;
+			}
 		}
+		
 
 		//print.PrintRed(zSTRING(vobSizeMult));
 
@@ -194,16 +198,19 @@ namespace GOTHIC_ENGINE {
 
 
 
-
-
-					zCDecal* dec = ((zCDecal*)floorVob->GetVisual());
-
-					if (dec)
+					if (floorVob->GetVisual())
 					{
-						dec->decal2Sided = true;
-						dec->SetDecalDim(100, 100);
-						dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
+						zCDecal* dec = ((zCDecal*)floorVob->GetVisual()->CastTo<zCDecal>());
+
+						if (dec)
+						{
+							dec->decal2Sided = true;
+							dec->SetDecalDim(100, 100);
+							dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
+						}
 					}
+
+					
 
 					floorVob->RotateLocalX(90);
 					floorVob->showVisual = 0;
@@ -223,14 +230,19 @@ namespace GOTHIC_ENGINE {
 					{
 						floorVob->SetVisual("SPACER_CIRCLE_ITEM.TGA");
 
-						zCDecal* dec = ((zCDecal*)floorVob->GetVisual());
 
-						if (dec)
+						if (floorVob->GetVisual())
 						{
-							dec->decal2Sided = true;
-							dec->SetDecalDim(100, 100);
-							dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
+							zCDecal* dec = ((zCDecal*)floorVob->GetVisual()->CastTo<zCDecal>());
+
+							if (dec)
+							{
+								dec->decal2Sided = true;
+								dec->SetDecalDim(100, 100);
+								dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
+							}
 						}
+						
 
 						floorVob->RotateLocalX(90);
 
@@ -256,33 +268,36 @@ namespace GOTHIC_ENGINE {
 
 
 
-
-						zCDecal* dec = ((zCDecal*)floorVob->GetVisual());
-
-						if (dec)
+						if (floorVob->GetVisual())
 						{
+							zCDecal* dec = ((zCDecal*)floorVob->GetVisual()->CastTo<zCDecal>());
 
-							zREAL diff = pVob->bbox3D.GetMaxExtent() / 1.75f;
-
-
-							if (diff == 0)
+							if (dec)
 							{
-								diff = 35;
-							}
-							//cmd << "diff: " << diff << endl;
-							dec->SetDecalDim(diff, diff);
 
-							if (polyIntersect)
-							{
-								//cmd << "poly: " << diff << endl;
-								floorVob->SetHeadingAtWorld(polyIntersect->GetNormal());
-							}
-							else
-							{
-								floorVob->SetHeadingAtWorld(zVEC3(0, 1, 0));
-							}
+								zREAL diff = pVob->bbox3D.GetMaxExtent() / 1.75f;
 
+
+								if (diff == 0)
+								{
+									diff = 35;
+								}
+								//cmd << "diff: " << diff << endl;
+								dec->SetDecalDim(diff, diff);
+
+								if (polyIntersect)
+								{
+									//cmd << "poly: " << diff << endl;
+									floorVob->SetHeadingAtWorld(polyIntersect->GetNormal());
+								}
+								else
+								{
+									floorVob->SetHeadingAtWorld(zVEC3(0, 1, 0));
+								}
+
+							}
 						}
+						
 
 						//floorVob->RotateWorldY(ztimer->frameTimeFloat / 8);
 					}

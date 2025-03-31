@@ -9,7 +9,12 @@ namespace GOTHIC_ENGINE {
 	{
 		sides[index]->SetPositionWorld((points[a] + points[b] + points[c] + points[d]) / 4);
 
-		zCDecal* dec = ((zCDecal*)sides[index]->GetVisual());
+		if (!sides[index]->GetVisual())
+		{
+			return;
+		}
+
+		zCDecal* dec = ((zCDecal*)sides[index]->GetVisual()->CastTo<zCDecal>());
 
 		if (dec)
 		{
@@ -53,13 +58,16 @@ namespace GOTHIC_ENGINE {
 				pVob->SetShowVisual(FALSE);
 
 				//cmd << "ClearBboxDecal: " << GetVobNameSafe(pVob) << endl;
-
-				zCDecal* dec = ((zCDecal*)pVob->GetVisual());
-
-				if (dec)
+				if (pVob->visual)
 				{
-					dec->SetDecalDim(10, 10);
+					zCDecal* dec = ((zCDecal*)pVob->GetVisual()->CastTo<zCDecal>());
+
+					if (dec)
+					{
+						dec->SetDecalDim(10, 10);
+					}
 				}
+				
 			}
 		}
 	}
@@ -127,13 +135,17 @@ namespace GOTHIC_ENGINE {
 			side->SetVisual(textureName);
 			side->SetVobName("HELPER_SIDE_" + Z i);
 
-			if (auto decal = side->visual->CastTo<zCDecal>())
-			{
-				decal->SetDecalDim(0, 0);
-				decal->decal2Sided = true;
-				decal->decalMaterial = decalMat;
 
+			if (side->visual)
+			{
+				if (auto decal = side->visual->CastTo<zCDecal>())
+				{
+					decal->SetDecalDim(0, 0);
+					decal->decal2Sided = true;
+					decal->decalMaterial = decalMat;
+				}
 			}
+			
 
 			side->SetShowVisual(TRUE);
 			side->dontWriteIntoArchive = true;
