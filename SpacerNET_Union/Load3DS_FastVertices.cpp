@@ -19,13 +19,51 @@ namespace GOTHIC_ENGINE {
 	// Hash function
 	struct Point3Hasher {
 		size_t operator()(const zPOINT3& p) const {
-			
+			/*
 			int x = static_cast<int>(std::roundf(p.n[VX] * inv_grid));
 			int y = static_cast<int>(std::roundf(p.n[VY] * inv_grid));
 			int z = static_cast<int>(std::roundf(p.n[VZ] * inv_grid));
 			return ((x * 73856093) ^
 				(y * 19349663) ^
 				(z * 83492791));
+			*/
+
+			/*
+			const __m128 grid_inv = _mm_set1_ps(inv_grid);
+			const __m128 vec = _mm_loadu_ps(&p.n[VX]);
+
+			// Умножение и округление
+			const __m128 scaled = _mm_mul_ps(vec, grid_inv);
+			const __m128i rounded = _mm_cvtps_epi32(scaled);
+
+			// Извлечение целых значений
+			alignas(16) int32_t coords[4];
+			_mm_store_si128((__m128i*)coords, rounded);
+
+			// Хеширование
+			return (coords[0] * 73856093) ^
+				(coords[1] * 19349663) ^
+				(coords[2] * 83492791);
+				*/
+
+				// 1. Безопасная загрузка 3-х float через SSE (невыровненный доступ)
+			__m128 vec;
+			float temp[4] = { p.n[VX], p.n[VY], p.n[VZ], 0.0f }; // 4-й элемент = 0
+			vec = _mm_loadu_ps(temp); // _mm_loadu_ps = unaligned load
+
+			// 2. Квантование координат
+			const __m128 grid_inv = _mm_set1_ps(1.0f / HASH_GRID_SIZE);
+			__m128 scaled = _mm_mul_ps(vec, grid_inv);
+			__m128i rounded = _mm_cvtps_epi32(scaled); // float -> int32
+
+			// 3. Извлечение результатов
+			alignas(16) int32_t coords[4];
+			_mm_storeu_si128((__m128i*)coords, rounded); // unaligned store
+
+			// 4. Хеширование (используем только x, y, z)
+			return (coords[0] * 73856093) ^
+				(coords[1] * 19349663) ^
+				(coords[2] * 83492791);
 		}
 	};
 
@@ -33,12 +71,47 @@ namespace GOTHIC_ENGINE {
 	struct Point3Equal {
 		bool operator()(const zPOINT3& a, const zPOINT3& b) const 
 		{
+			/*
 			const float dx = std::abs(a.n[VX] - b.n[VX]);
 			const float dy = std::abs(a.n[VY] - b.n[VY]);
 			const float dz = std::abs(a.n[VZ] - b.n[VZ]);
 
 			const float eps = COMPARE_EPSILON + std::numeric_limits<float>::epsilon();
 			return (dx < eps) && (dy < eps) && (dz < eps);
+			*/
+			
+			/*
+			const __m128 eps = _mm_set1_ps(COMPARE_EPSILON);
+			const __m128 vec_a = _mm_loadu_ps(&a.n[VX]);
+			const __m128 vec_b = _mm_loadu_ps(&b.n[VX]);
+
+			// Вычисление абсолютной разницы
+			const __m128 diff = _mm_sub_ps(vec_a, vec_b);
+			const __m128 abs_diff = _mm_max_ps(_mm_sub_ps(_mm_setzero_ps(), diff), diff);
+
+			// Сравнение с epsilon
+			const __m128 cmp = _mm_cmplt_ps(abs_diff, eps);
+
+			// Проверка всех трех компонент
+			return (_mm_movemask_ps(cmp) & 0x7) == 0x7;
+			*/
+			// 1. Безопасная загрузка 3-х float
+			__m128 vec_a, vec_b;
+			float temp_a[4] = { a.n[VX], a.n[VY], a.n[VZ], 0.0f };
+			float temp_b[4] = { b.n[VX], b.n[VY], b.n[VZ], 0.0f };
+			vec_a = _mm_loadu_ps(temp_a);
+			vec_b = _mm_loadu_ps(temp_b);
+
+			// 2. Вычисление абсолютной разницы
+			__m128 diff = _mm_sub_ps(vec_a, vec_b);
+			__m128 abs_diff = _mm_max_ps(_mm_sub_ps(_mm_setzero_ps(), diff), diff);
+
+			// 3. Сравнение с epsilon
+			const __m128 eps = _mm_set1_ps(COMPARE_EPSILON);
+			__m128 cmp = _mm_cmplt_ps(abs_diff, eps);
+
+			// 4. Проверка результатов (первые 3 компонента)
+			return (_mm_movemask_ps(cmp) & 0x7) == 0x7;
 		}
 	};
 
@@ -97,6 +170,7 @@ namespace GOTHIC_ENGINE {
 
 			// debug function which compares engine / hasmap result
 			// seems good for now
+			
 			/*
 			auto vert2 = VertexInMesh(a); // original function
 
