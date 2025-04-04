@@ -932,7 +932,11 @@
       <SubType>
       </SubType>
     </ClInclude>
-    <ClInclude Include="Load3DS_Fast.cpp">
+    <ClInclude Include="Load3DS_FastBbox.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
+    <ClInclude Include="Load3DS_FastVertices.cpp">
       <SubType>
       </SubType>
     </ClInclude>

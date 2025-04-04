@@ -3053,7 +3053,7 @@
     <ClInclude Include="zCObjPresetLib.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="Load3DS_Fast.cpp">
+    <ClInclude Include="Load3DS_FastBbox.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Optimizations</Filter>
     </ClInclude>
     <ClInclude Include="MatManager_UV.cpp">
@@ -3061,6 +3061,9 @@
     </ClInclude>
     <ClInclude Include="DrawSphere.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Load3DS_FastVertices.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Optimizations</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

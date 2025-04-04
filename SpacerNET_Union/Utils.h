@@ -7,6 +7,9 @@
 #include <unordered_set>
 #include <algorithm>
 #include <map>
+#include <unordered_map>
+#include <tuple>
+#include <emmintrin.h>  // SSE2 intrinsics
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .

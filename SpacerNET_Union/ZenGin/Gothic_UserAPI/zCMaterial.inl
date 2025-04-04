@@ -12,7 +12,7 @@ zBOOL					GetNoCollDet(const zBOOL a_bIgnoreOverrides = FALSE) const
 };
 
 void					SetUsage(const zBYTE usage) { matUsage = usage; };
-
+void					SetUsageFromDefault() { matUsage = s_matUsageDefault; };
 zCOLOR					GetColor() const { return color; };
 zTRnd_AlphaBlendFunc	GetAlphaBlendFunc() const { return rndAlphaBlendFunc; };
 zBOOL					GetTexAniMapping() const { return texAniMap; };
@@ -35,3 +35,4 @@ void					SetEnvMapStrength(const zREAL a_bEnvMapStr) { m_bEnvironmentalMappingSt
 zREAL					GetEnvMapStrength()	const { return m_bEnvironmentalMappingStrength; };
 
 #endif
+

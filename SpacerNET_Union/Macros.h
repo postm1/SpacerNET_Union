@@ -70,6 +70,13 @@ namespace GOTHIC_ENGINE {
  |(((vertColor.GetGreenByte ()*matColor[1])>>8)<<8)		\
  |(((vertColor.GetBlueByte	()*matColor[2])>>8))
 
+
+#define zERR_MESSAGE(level, flag, text)		((level)<=zerr->GetFilterLevel()) ? zerr->Report(zERR_TYPE_INFO,  0, text, level, flag, __LINE__,  __FILE__, 0 ) : zERR_NONE
+#define zERR_WARNING(text)					zerr->Report(zERR_TYPE_WARN,  0, text, 0, 0, __LINE__,  __FILE__, 0 )
+#define zERR_FAULT(text)					zerr->Report(zERR_TYPE_FAULT, 0, text, 0, 0, __LINE__,  __FILE__, 0 )
+#define zERR_FATAL(text)					zerr->Report(zERR_TYPE_FATAL, 0, text, -1, 0, __LINE__,  __FILE__, 0 )
+
+
 	inline float zFloor(const float a) { return float(floor(a)); }
 	inline float zCeil(const float a) { return float(ceil(a)); }
 
