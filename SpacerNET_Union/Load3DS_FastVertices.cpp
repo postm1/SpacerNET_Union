@@ -12,29 +12,42 @@ namespace GOTHIC_ENGINE {
 	static TVertex3ds*& vertList = *(TVertex3ds**)0x8D85C0;
 	static TPoly3ds*& polyList = *(TPoly3ds**)0x8D85CC;
 
-	// HASH FUNCTION
+	constexpr float COMPARE_EPSILON = 0.01f; // Accuracy for comparison 1 cm
+	constexpr float HASH_GRID_SIZE = 0.5f;   // Hash size 50 cm
+	constexpr float inv_grid = 1.0f / HASH_GRID_SIZE;
+
+	// Hash function
 	struct Point3Hasher {
 		size_t operator()(const zPOINT3& p) const {
-			const float epsilon = 0.01f;
-			size_t h1 = std::hash<int>()(static_cast<int>(p.n[VX] / epsilon));
-			size_t h2 = std::hash<int>()(static_cast<int>(p.n[VY] / epsilon));
-			size_t h3 = std::hash<int>()(static_cast<int>(p.n[VZ] / epsilon));
-			return h1 ^ (h2 + 0x9e3779b9 + (h1 << 6) + (h1 >> 2));
+			
+			int x = static_cast<int>(std::roundf(p.n[VX] * inv_grid));
+			int y = static_cast<int>(std::roundf(p.n[VY] * inv_grid));
+			int z = static_cast<int>(std::roundf(p.n[VZ] * inv_grid));
+			return ((x * 73856093) ^
+				(y * 19349663) ^
+				(z * 83492791));
 		}
 	};
 
 	// Comparator
 	struct Point3Equal {
-		bool operator()(const zPOINT3& a, const zPOINT3& b) const {
-			const zVALUE ALMOST_ZERO = 0.01f;
-			return (fabs(a.n[VX] - b.n[VX]) < ALMOST_ZERO &&
-				fabs(a.n[VY] - b.n[VY]) < ALMOST_ZERO &&
-				fabs(a.n[VZ] - b.n[VZ]) < ALMOST_ZERO);
+		bool operator()(const zPOINT3& a, const zPOINT3& b) const 
+		{
+			const float dx = std::abs(a.n[VX] - b.n[VX]);
+			const float dy = std::abs(a.n[VY] - b.n[VY]);
+			const float dz = std::abs(a.n[VZ] - b.n[VZ]);
+
+			const float eps = COMPARE_EPSILON + std::numeric_limits<float>::epsilon();
+			return (dx < eps) && (dy < eps) && (dz < eps);
 		}
 	};
 
 	std::unordered_map<zPOINT3, zCVertex*, Point3Hasher, Point3Equal> vertexMap;
 	bool isNewMapActiveNow = false;
+	
+	//debug only
+	int counter0 = 0;
+	int counter1 = 0;
 
 	zCVertex* FindVertexFast(const zPOINT3& v)
 	{
@@ -56,7 +69,8 @@ namespace GOTHIC_ENGINE {
 
 	void zCMesh::BuildVertexMap()
 	{
-		vertexMap.clear();
+		ClearVertexMap();
+
 		vertexMap.reserve(numVert);
 
 		for (int i = 0; i < numVert; i++)
@@ -67,6 +81,7 @@ namespace GOTHIC_ENGINE {
 		isNewMapActiveNow = true;
 	}
 
+	
 
 	//0x00568B80 public: class zCVertex * __thiscall zCMesh::AddVertexSmart(class zVEC3 &)
 	HOOK Ivk_zCMesh_AddVertexSmart AS(&zCMesh::AddVertexSmart, &zCMesh::AddVertexSmart_Union);
@@ -79,6 +94,27 @@ namespace GOTHIC_ENGINE {
 		if (isNewMapActiveNow)
 		{
 			vert = FindVertexFast(a); // new system, find key in hashmap
+
+			// debug function which compares engine / hasmap result
+			// seems good for now
+			/*
+			auto vert2 = VertexInMesh(a); // original function
+
+			if (vert != vert2)
+			{
+				cmd << "Bad vec: " << a.ToString() <<  endl;
+
+				if (vert)
+				{
+					cmd << "New: " << (int)vert << " " << vert->position.ToString() << endl;
+				}
+
+				if (vert2)
+				{
+					cmd << "Old: " << (int)vert2 << " " << vert2->position.ToString() << endl;
+				}
+			}
+			*/
 		}
 		else
 		{
@@ -88,6 +124,7 @@ namespace GOTHIC_ENGINE {
 
 		if (vert)
 		{
+			counter0++;
 			return vert;
 		}
 
@@ -95,8 +132,11 @@ namespace GOTHIC_ENGINE {
 
 		if (result && isNewMapActiveNow)
 		{
+			
 			AddVertexToMap(result);
 		}
+
+		counter1++;
 
 		return result;
 	}
@@ -120,6 +160,8 @@ namespace GOTHIC_ENGINE {
 
 		targetMesh->BuildVertexMap(); // build new hash map from existring vertices
 
+		counter0 = 0;
+		counter1 = 0;
 		//RX_Begin(32);
 
 		for (i = 0; i < numVert; i++)
@@ -131,6 +173,8 @@ namespace GOTHIC_ENGINE {
 
 
 		ClearVertexMap();
+
+		//cmd << numVert << " " << counter0 << "/" << counter1 << endl;
 
 		//RX_End(32);
 
