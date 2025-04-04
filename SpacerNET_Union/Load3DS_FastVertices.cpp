@@ -33,7 +33,7 @@ namespace GOTHIC_ENGINE {
 	};
 
 	std::unordered_map<zPOINT3, zCVertex*, Point3Hasher, Point3Equal> vertexMap;
-
+	bool isNewMapActiveNow = false;
 
 	zCVertex* FindVertexFast(const zPOINT3& v)
 	{
@@ -41,9 +41,16 @@ namespace GOTHIC_ENGINE {
 		return (it != vertexMap.end()) ? it->second : nullptr;
 	}
 
-	void AddVertexToMap(zCVertex* vert) {
+	void AddVertexToMap(zCVertex* vert) 
+	{
 		if (!vert) return;
 		vertexMap[vert->position] = vert;
+	}
+
+	void ClearVertexMap() 
+	{
+		vertexMap.clear();
+		isNewMapActiveNow = false;
 	}
 
 	void zCMesh::BuildVertexMap()
@@ -55,6 +62,8 @@ namespace GOTHIC_ENGINE {
 		{
 			AddVertexToMap(vertList[i]);
 		}
+
+		isNewMapActiveNow = true;
 	}
 
 
@@ -64,8 +73,17 @@ namespace GOTHIC_ENGINE {
 	{
 		this->ArraysToLists();
 
-		//zCVertex* vert = VertexInMesh(a); // original function
-		zCVertex* vert = FindVertexFast(a); // new system, find key in hashmap
+		zCVertex* vert = NULL;
+
+		if (isNewMapActiveNow)
+		{
+			vert = FindVertexFast(a); // new system, find key in hashmap
+		}
+		else
+		{
+			vert = VertexInMesh(a); // original function
+		}
+
 
 		if (vert)
 		{
@@ -74,7 +92,7 @@ namespace GOTHIC_ENGINE {
 
 		auto result = AddVertex(a);
 
-		if (result)
+		if (result && isNewMapActiveNow)
 		{
 			AddVertexToMap(result);
 		}
@@ -109,6 +127,9 @@ namespace GOTHIC_ENGINE {
 			newVertList[i] = targetMesh->AddVertexSmart(vertList[i].position);
 			if ((i != 0) && ((i & 4095) == 0)) zERR_MESSAGE(3, 0, "D: ... still working (" + zSTRING(i) + " verts)");
 		};
+
+
+		ClearVertexMap();
 
 		//RX_End(32);
 
