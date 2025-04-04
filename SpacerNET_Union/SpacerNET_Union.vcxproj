@@ -1104,6 +1104,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="World_Compile.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="zCObjPresetLib.h">
       <SubType>
       </SubType>

@@ -471,13 +471,17 @@ namespace GOTHIC_ENGINE {
 	HOOK ivk_zERROR_Report AS(&zERROR::Report, &zERROR::Report_Union);
 	int zERROR::Report_Union(zERROR_TYPE type, int id, zSTRING const& str_text, signed char levelPrio, unsigned int flag, int line, char* file, char* function) {
 
-
+		
 		if (theApp.zSpyActive && theApp.spacerWasInit)
 		{
 			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddTextZSPY");
 
+			zSTRING newInfo = str_text;
 
-			Stack_PushString(str_text + "\n");
+
+			newInfo += globalTimeDebug.GetDelta();
+
+			Stack_PushString(newInfo + "\n");
 
 			if (type == zERR_TYPE_OK)
 			{

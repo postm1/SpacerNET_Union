@@ -3065,6 +3065,9 @@
     <ClInclude Include="Load3DS_FastVertices.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Optimizations</Filter>
     </ClInclude>
+    <ClInclude Include="World_Compile.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Optimizations</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

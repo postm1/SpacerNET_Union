@@ -53,6 +53,7 @@
 #include "Load3DS_FastVertices.cpp"
 #include "DrawSphere.cpp"
 #include "MatFilter_Render.cpp"
+#include "World_Compile.cpp"
 #include "TestLoop.cpp"
 #include "zCObjPresetLib.cpp"
 #include "Plugin.cpp"

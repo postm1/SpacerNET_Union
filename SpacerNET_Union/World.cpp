@@ -929,6 +929,8 @@ namespace GOTHIC_ENGINE {
 		treeIsReady = false;
 		world->DisposeStaticWorld();
 
+		globalTimeDebug.Start();
+
 		if (type == 0)
 		{
 			world->CompileWorld(zBSP_MODE_INDOOR, value, FALSE, 0, NULL);
@@ -940,7 +942,7 @@ namespace GOTHIC_ENGINE {
 
 		//cmd << "Leak Polys: " << leakPolyList->GetNumInList() << endl;
 
-
+		globalTimeDebug.Stop();
 
 		WorldAfterLoad();
 

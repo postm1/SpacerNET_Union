@@ -3,3 +3,4 @@
 // User API for zCCBspTree
 // Add your methods here
 
+void zCCBspTree::AddMesh_Union(zCMesh* inMesh, const zMAT4& trafoObjToWorld);

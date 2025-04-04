@@ -26,4 +26,49 @@ namespace GOTHIC_ENGINE {
 
 		map.Clear();
 	}
+
+    struct
+    {
+        std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
+        bool started = false;
+
+        void Start()
+        {
+            //cmd << "========== DEBUG TIMER START ============" << endl;
+
+            start_time = std::chrono::high_resolution_clock::now();
+            started = true;
+        }
+
+        void Stop()
+        {
+            started = false;
+            //cmd << "========== DEBUG TIMER STOPPED ============" << endl;
+        }
+
+        zSTRING GetDelta()
+        {
+            zSTRING info;
+
+            if (!started)
+            {
+                return info;
+            }
+
+            auto current_time = std::chrono::high_resolution_clock::now();
+
+            auto delta = std::chrono::duration_cast<std::chrono::milliseconds>(
+                current_time - start_time).count();
+
+            start_time = current_time;
+
+
+            info += " Delta: " + zSTRING((int)delta) + " ms";
+
+            return info;
+            
+        }
+
+    } globalTimeDebug;
+
 }
