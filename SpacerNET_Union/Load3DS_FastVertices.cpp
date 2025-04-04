@@ -3,6 +3,7 @@
 
 namespace GOTHIC_ENGINE {
 
+#if ENGINE == Engine_G2A
 	// global engine vars
 
 	int& numPoly = *(int*)0x8D85DC;
@@ -215,4 +216,5 @@ namespace GOTHIC_ENGINE {
 		};
 		return FALSE;
 	}
+#endif
 }
