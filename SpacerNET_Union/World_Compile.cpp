@@ -22,7 +22,7 @@ namespace GOTHIC_ENGINE {
 	void zCMesh::MergeMesh_Union(zCMesh* mesh, const zMAT4& trafo)
 	{
 		// in some special mod we use old funciton or if we use new hashlist already
-		if (s_bAddVobsToMesh || isNewMapActiveNow || trafo.GetTranslation().Length() > 0)
+		if (s_bAddVobsToMesh || isNewMapActiveNow || trafo.GetTranslation().Length() > 0 || (mesh && mesh->numVert == 0))
 		{
 			cmd << "Called MergeMesh old function..." << endl;
 
@@ -47,9 +47,9 @@ namespace GOTHIC_ENGINE {
 		zfpuControler->SaveCurrentControlWord();
 		zfpuControler->SetPrecision_64();
 
-		if (!s_bAddVobsToMesh) S_InitVertexMergeCache(this);
+		//if (!s_bAddVobsToMesh) S_InitVertexMergeCache(this);
 
-		zCVertex** newVert = zNEW(zCVertex*)[mesh->numVert];
+		
 
 		cmd << "MergeMesh_Union #2. Numvert: " << mesh->numVert 
 			<< " NumPoly: " << numPoly
@@ -64,73 +64,36 @@ namespace GOTHIC_ENGINE {
 
 		RX_Begin(41);
 
-		
-		//mesh->BuildVertexMap();
-		//cmd << "MergeMesh_Union #3" << endl;
+		zCVertex** newVert = zNEW(zCVertex*)[mesh->numVert];
 
-		for (i = 0; i < mesh->numVert; i++) {
+		std::unordered_map<zCVertex*, zCVertex*> vertexMap;
+
+		vertexMap.reserve(mesh->numVert);
+
+		for (i = 0; i < mesh->numVert; i++) 
+		{
 			zCVertex* vert = zNEW(zCVertex);
 			// Vert transformieren & kopieren 
 			*vert = (*(mesh->vertList[i]));
 			vert->position = mesh->vertList[i]->position;
 			newVert[i] = this->AddVertex(vert);
-		};
-		
 
-		/*
-		// Verts kopieren & einfügen
-		for (i = 0; i < mesh->numVert; i++) 
-		{
-			const zVEC3& newPos = trafo * mesh->vertList[i]->position;
-
-			zCVertex* vert = this->VertexInMesh(newPos);
-			zCVertex* vert2 = NULL;// FindVertexFast(newPos);
-
-
-
-
-			if (vert != vert2)
+			if (mesh->vertList[i] != NULL)
 			{
-				//cmd << "BAD POINTER: " << (int)vert << " " << (int)vert2 << endl;
-
-				//cmd << "BAD POINTER: " << vert->position.ToString() << " " << vert2->position.ToString() << endl;
+				vertexMap[mesh->vertList[i]] = newVert[i];
 			}
 			else
 			{
-				//cmd << "GOOD POINTER: " << (int)vert << " " << (int)vert2 << endl;
+				//cmd << "NewVert " << i << " is NULL" << endl;
 			}
-
-			if (vert) newVert[i] = vert;
-			else {
-				vert = zNEW(zCVertex);
-				// Vert transformieren & kopieren 
-				*vert = (*(mesh->vertList[i]));
-				vert->position = newPos;
-				newVert[i] = this->AddVertex(vert);
-				AddVertexToMap(vert);
-			};
-		};
-		*/
-		
+		}
 
 		RX_End(41);
 
 		cmd << "MergeMesh_Union #4 newVertList: " << RX_PerfString(41) << endl;
 
 		RX_Begin(41);
-		//ClearVertexMap();
 
-		std::unordered_map<zCVertex*, zCVertex*> vertMap;
-
-		vertMap.reserve(mesh->numVert);
-
-		for (int k = 0; k < mesh->numVert; k++)
-		{
-			vertMap[mesh->vertList[k]] = newVert[k];
-		}
-
-
-		// Polys kopieren & einfügen
 		for (i = 0; i < mesh->numPoly; i++) {
 
 			zCPolygon* poly = AddPoly();
@@ -142,31 +105,49 @@ namespace GOTHIC_ENGINE {
 			poly->AllocVerts(mesh->polyList[i]->polyNumVert);
 			mesh->polyList[i]->CopyValuesInto(poly);				// ACHTUNG, Material.AddRef impl. 
 
-			
 			// Alle Poly-Verts abgehen
-			for (int j = 0; j < poly->polyNumVert; j++) {
+			for (int j = 0; j < poly->polyNumVert; j++) 
+			{
 				zCVertex* vert = mesh->polyList[i]->vertex[j];
 				poly->vertex[j] = vert;
+				//			poly->vertex[j] = mesh->polyList[i]->vertex[j];
+				//			zCVertex* vert	= poly->vertex[j];
+
+							// Für jedes Poly-Vert passendes Vert aus Mesh-Liste finden
 
 				
-				auto it = vertMap.find(vert);
-				if (it != vertMap.end())
-				{
+				auto it = vertexMap.find(vert);
+
+				if (it != vertexMap.end()) {
+
+					//cmd << (int)poly->vertex[j] << " " << (int)it->second << " " << " " << (int)it->first << endl;
 					poly->vertex[j] = it->second;
-					break;
+					//break;
 				}
+				else
+				{
+					//if no found in map, not real case, it must be in the list
+					for (int k = 0; k < mesh->numVert; k++) {
+						if (vert == mesh->vertList[k]) {
+							cmd << (int)vert << " " << (int)mesh->vertList[k] << endl;
+							poly->vertex[j] = newVert[k];
+							break;
+						};
+					};
+				}
+
 			};
 
 			// MUSS hier gemacht werden !!!!!!
 			// Eine Normale ist definitiv eine *absolute* Angabe im jeweiligen Raum !
 			poly->CalcNormal();
 		};
+		delete[] newVert;
 		
 		RX_End(41);
 		cmd << "MergeMesh_Union #5 " << RX_PerfString(41) << endl;
-		delete[] newVert;
 
-		if (!s_bAddVobsToMesh) S_DeleteVertexMergeCache();
+		//if (!s_bAddVobsToMesh) S_DeleteVertexMergeCache();
 		zfpuControler->RestoreSavedControlWord();
 
 		RX_End(40);
