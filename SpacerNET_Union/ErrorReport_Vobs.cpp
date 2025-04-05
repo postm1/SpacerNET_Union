@@ -227,25 +227,27 @@ namespace GOTHIC_ENGINE {
 						{
 							zCTrigger* trigVob = vob->CastTo<zCTrigger>();
 
-							if (autoFix && !trigVob)
+							if (!trigVob)
 							{
-								cmd << "Fixing name == visual: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
-								vob->SetObjectName("");
-							}
-							else if (!trigVob)
-							{
-								auto entry = new ErrorReportEntry();
+								if (autoFix)
+								{
+									cmd << "Fixing name == visual: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
+									vob->SetObjectName("");
+								}
+								else
+								{
+									auto entry = new ErrorReportEntry();
 
-								entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
-								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NAME_IS_VISUAL);
-								entry->SetObject((uint)vob);
-								entry->SetVobName(name);
-								entry->SetMaterialName("");
-								entry->SetTextureName("");
+									entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
+									entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NAME_IS_VISUAL);
+									entry->SetObject((uint)vob);
+									entry->SetVobName(name);
+									entry->SetMaterialName("");
+									entry->SetTextureName("");
 
-								AddEntry(entry);
+									AddEntry(entry);
+								}
 							}
-							
 						}
 					}
 
