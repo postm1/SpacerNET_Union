@@ -225,13 +225,14 @@ namespace GOTHIC_ENGINE {
 
 						if (visName == name || name == rawname)
 						{
-							
-							if (autoFix && !vob->CastTo<zCTrigger>())
+							zCTrigger* trigVob = vob->CastTo<zCTrigger>();
+
+							if (autoFix && !trigVob)
 							{
 								cmd << "Fixing name == visual: " << WHEX32((int)vob) << " " << vob->GetVobName() << endl;
 								vob->SetObjectName("");
 							}
-							else
+							else if (!trigVob)
 							{
 								auto entry = new ErrorReportEntry();
 
