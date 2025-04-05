@@ -13,7 +13,7 @@ namespace GOTHIC_ENGINE {
 		// in some special cases we use old funciton
 		if (s_bAddVobsToMesh || isNewMapActiveNow || trafo.GetTranslation().Length() > 0 || (mesh && mesh->numVert == 0))
 		{
-			cmd << "Called MergeMesh old function..." << endl;
+			//cmd << "Called MergeMesh old function..." << endl;
 
 			THISCALL(Ivk_zCMesh_MergeMesh)(mesh, trafo);
 			return;
