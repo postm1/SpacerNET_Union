@@ -851,6 +851,7 @@ namespace GOTHIC_ENGINE {
 			bbox->Scale(radius);
 		}
 
+		globalTimeDebug.Start();
 
 		if (type == CompileLightMod::VertexOnly)
 		{
@@ -892,6 +893,8 @@ namespace GOTHIC_ENGINE {
 			delete bbox; 
 			bbox = nullptr;
 		}
+
+		globalTimeDebug.Stop();
 	}
 
 

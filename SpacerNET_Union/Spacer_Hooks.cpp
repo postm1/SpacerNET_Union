@@ -478,8 +478,10 @@ namespace GOTHIC_ENGINE {
 
 			zSTRING newInfo = str_text;
 
-
-			newInfo += globalTimeDebug.GetDelta();
+			if (globalTimeDebug.started)
+			{
+				newInfo += globalTimeDebug.GetDelta();
+			}
 
 			Stack_PushString(newInfo + "\n");
 
