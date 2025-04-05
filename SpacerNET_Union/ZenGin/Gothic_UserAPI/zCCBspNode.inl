@@ -3,3 +3,4 @@
 // User API for zCCBspNode
 // Add your methods here
 
+int zCCBspNode::OutdoorKillRedundantLeafs_Union();

@@ -128,5 +128,19 @@ namespace GOTHIC_ENGINE {
 
 		cmd << "MergeMesh_Union: " << RX_PerfString(40) << endl;
 	}
+
+	//int zCCBspNode::OutdoorKillRedundantLeafs () 
+	//0x0053FF80 public: int __thiscall zCCBspNode::OutdoorKillRedundantLeafs(void)
+
+	HOOK Ivk_zCCBspNode_OutdoorKillRedundantLeafs AS(&zCCBspNode::OutdoorKillRedundantLeafs, &zCCBspNode::OutdoorKillRedundantLeafs_Union);
+	int zCCBspNode::OutdoorKillRedundantLeafs_Union()
+	{
+		if (theApp.options.GetVal("bSkipPolysCut"))
+		{
+			return 0;
+		}
+		
+		return THISCALL(Ivk_zCCBspNode_OutdoorKillRedundantLeafs)();
+	}
 #endif
 }

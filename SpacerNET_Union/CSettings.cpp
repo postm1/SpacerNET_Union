@@ -493,6 +493,11 @@ namespace GOTHIC_ENGINE {
 		
 		set = new CSetting(TYPE_INT, "SPACER", "bShowAmbientLightDx11", "0");
 		list.Insert("bShowAmbientLightDx11", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "bSkipPolysCut", "1");
+		list.Insert("bSkipPolysCut", set);
+
+
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
