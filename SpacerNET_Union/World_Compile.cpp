@@ -135,7 +135,7 @@ namespace GOTHIC_ENGINE {
 	HOOK Ivk_zCCBspNode_OutdoorKillRedundantLeafs AS(&zCCBspNode::OutdoorKillRedundantLeafs, &zCCBspNode::OutdoorKillRedundantLeafs_Union);
 	int zCCBspNode::OutdoorKillRedundantLeafs_Union()
 	{
-		if (theApp.options.GetVal("bSkipPolysCut"))
+		if (theApp.options.GetIntVal("bSkipPolysCut"))
 		{
 			return 0;
 		}
