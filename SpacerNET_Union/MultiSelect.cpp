@@ -124,7 +124,7 @@ namespace GOTHIC_ENGINE {
 #else
 						int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE;
 #endif
-						if (world->TraceRayFirstHit(cameraPosition, direction, (zCVob*)Null, flags))
+						if (world->TraceRayNearestHit(cameraPosition, direction, (zCVob*)Null, flags))
 							continue;
 					}
 
@@ -165,7 +165,7 @@ namespace GOTHIC_ENGINE {
 #else
 						int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE;
 #endif
-						if (world->TraceRayFirstHit(cameraPosition, direction, (zCVob*)Null, flags))
+						if (world->TraceRayNearestHit(cameraPosition, direction, (zCVob*)Null, flags))
 							continue;
 					}
 

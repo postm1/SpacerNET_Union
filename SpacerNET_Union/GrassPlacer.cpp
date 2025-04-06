@@ -60,7 +60,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-				if (ogame->GetWorld()->TraceRayFirstHit(cam->GetVob()->GetPositionWorld(), ray * 25000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_VOB_IGNORE)) {
+				if (ogame->GetWorld()->TraceRayNearestHit(cam->GetVob()->GetPositionWorld(), ray * 25000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_VOB_IGNORE)) {
 
 					if (ogame->GetWorld()->traceRayReport.foundPoly) {
 
