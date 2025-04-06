@@ -63,7 +63,12 @@ namespace GOTHIC_ENGINE {
             start_time = current_time;
 
 
-            info += " Delta: " + zSTRING((int)delta) + " ms";
+            info += " (Delta: " + zSTRING((int)delta) + " ms)";
+
+            if (delta >= 75)
+            {
+                info += " <---- Long time";
+            }
 
             return info;
             
