@@ -188,7 +188,7 @@ namespace GOTHIC_ENGINE {
 
 			GetClipCursor(&rcOldClip);
 
-			auto call = (callIntFunc)GetProcAddress(theApp.module, "GameModeToggleInterface");
+			auto call = (callIntFunc)GetProcAddress(theApp.module, "ToggleMainMenuInterface");
 			call(0);
 
 			auto safePosPlayer = ogame->GetCamera()->connectedVob->GetPositionWorld();
@@ -433,7 +433,7 @@ namespace GOTHIC_ENGINE {
 			
 			ClipCursor(&rcOldClip);
 
-			auto call = (callIntFunc)GetProcAddress(theApp.module, "GameModeToggleInterface");
+			auto call = (callIntFunc)GetProcAddress(theApp.module, "ToggleMainMenuInterface");
 			call(1);
 
 			
