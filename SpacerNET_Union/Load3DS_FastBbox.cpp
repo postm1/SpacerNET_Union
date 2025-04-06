@@ -52,6 +52,9 @@ namespace GOTHIC_ENGINE {
 		// if dontCreateOBBOXOnLocationLoad => use usual AABB for fast loading a location
 		if (fastApprox || dontCreateOBBOXOnLocationLoad)
 		{
+
+			zERR_MESSAGE(3, 0, "D: ... CalcBBox3D_Union");
+
 			bbox3D.Init();
 			for (int vertCtr = 0; vertCtr < numVert; vertCtr++) {
 				zCVertex* vert = vertList[vertCtr];
@@ -60,6 +63,8 @@ namespace GOTHIC_ENGINE {
 					bbox3D.maxs[j] = zMax(bbox3D.maxs[j], vert->position.n[j]);
 				};
 			};
+
+			zERR_MESSAGE(3, 0, "D: ... CalcBBox3D_Union FINISHED...");
 		}
 		else {
 			obbox3D.BuildOBBTree(this, 3);
