@@ -91,7 +91,7 @@ namespace GOTHIC_ENGINE {
 
 
 		//cmd << "SaveCurrentFilter index: " << index  << endl;
-		RX_Begin(10);
+		RX_Begin(1);
 
 		if (index > 0)
 		{
@@ -214,13 +214,13 @@ namespace GOTHIC_ENGINE {
 				{
 					mat = dynamic_cast<zCMaterial*>(matDef->objectList[matz]);
 
-					RX_Begin(11);
+					RX_Begin(4);
 					if (mat && (mat->libFlag == index) /*&& (mat->matUsage == zCMaterial::zMAT_USAGE_LEVEL)*/)
 					{
 						arch->WriteObject(mat);
 						//cmd << "Write object: " << mat->GetName() << endl;
 					}
-					RX_End(11);
+					RX_End(4);
 					percent = matz * 100 / maxCount;
 
 					totalTime += (perf[11] / 1000);
@@ -291,7 +291,7 @@ namespace GOTHIC_ENGINE {
 			(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 		}
 
-		RX_End(10);
+		RX_End(1);
 		//cmd << "SaveCurrentFilter index: " << index << " " << RX_PerfString(10) << endl;
 	}
 

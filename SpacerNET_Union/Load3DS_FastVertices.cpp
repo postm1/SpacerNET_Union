@@ -195,7 +195,8 @@ namespace GOTHIC_ENGINE {
 
 		counter0 = 0;
 		counter1 = 0;
-		//RX_Begin(32);
+
+		//RX_Begin(5);
 
 		for (i = 0; i < numVert; i++)
 		{
@@ -205,11 +206,15 @@ namespace GOTHIC_ENGINE {
 		};
 
 
+		//RX_End(5);
+
+		//cmd << "AddVertexSmartAll time: " << RX_PerfString(5) << " Size: " << vertexMap.size() << endl;
+
 		ClearVertexMap();
 
 		//cmd << numVert << " " << counter0 << "/" << counter1 << endl;
 
-		//RX_End(32);
+		
 
 		zERR_MESSAGE(3, zERR_END, "");
 

@@ -19,7 +19,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		RX_Begin(40);
+		RX_Begin(2);
 
 		ArraysToLists();
 		UnshareFeatures();
@@ -124,7 +124,7 @@ namespace GOTHIC_ENGINE {
 
 		zfpuControler->RestoreSavedControlWord();
 
-		RX_End(40);
+		RX_End(2);
 
 		cmd << "MergeMesh_Union: " << RX_PerfString(40) << endl;
 	}
