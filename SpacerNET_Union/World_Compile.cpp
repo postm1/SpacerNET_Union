@@ -129,6 +129,9 @@ namespace GOTHIC_ENGINE {
 		cmd << "MergeMesh_Union: " << RX_PerfString(40) << endl;
 	}
 
+	
+#endif
+
 	//int zCCBspNode::OutdoorKillRedundantLeafs () 
 	//0x0053FF80 public: int __thiscall zCCBspNode::OutdoorKillRedundantLeafs(void)
 
@@ -139,8 +142,7 @@ namespace GOTHIC_ENGINE {
 		{
 			return 0;
 		}
-		
+
 		return THISCALL(Ivk_zCCBspNode_OutdoorKillRedundantLeafs)();
 	}
-#endif
 }
