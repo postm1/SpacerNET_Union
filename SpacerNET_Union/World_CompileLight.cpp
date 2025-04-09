@@ -216,5 +216,163 @@ namespace GOTHIC_ENGINE {
 		
 	}
 
+	static zCArray<zCPatchMap*>& patchMapList = *reinterpret_cast<zCArray<zCPatchMap*>*>(0x009A442C);
+
+
+	//void zCWorld::GenerateSurfaces (const zBOOL doRaytracing, zTBBox3D *updateBBox3D)
+	HOOK Ivk_zCWorld_GenerateSurfaces AS(&zCWorld::GenerateSurfaces, &zCWorld::GenerateSurfaces_Union);
+	void zCWorld::GenerateSurfaces_Union(const zBOOL doRaytracing, zTBBox3D* updateBBox3D)
+	{
+		int						numSurfaces = 0;
+		int						i;
+		zCMesh* mesh = bspTree.mesh;
+		zCArray<zCPolygon*>		polyList(mesh->numPoly);
+		zCArray<zCPolygon*>		surface;
+
+		// Polyliste kopieren
+		for (i = 0; i < mesh->numPoly; i++) {
+			zCPolygon* poly = mesh->Poly(i);
+			poly->flags.mustRelight = TRUE;						// dient als Markierung fuer Polys, die bereits mit einer LM versehen sind (=TRUE)..
+			// Polys rausfiltern, die keine Lightmaps bekommen sollen
+			if (poly->GetMaterial()->dontUseLightmaps) continue;
+			if (poly->GetMaterial()->GetTexture())
+			{
+				poly->GetMaterial()->GetTexture()->CacheIn(-1);				// Muss!!!
+				if (poly->GetMaterial()->GetTexture()->HasAlpha())			// Alpha-Texturen bekommen keine LMs!
+					continue;
+			}
+			if (GetBspTree()->bspTreeMode == zBSP_MODE_OUTDOOR) {
+				if (!poly->GetSectorFlag()) continue;
+				if (poly->IsPortal())		continue;
+			};
+			// Update Bereich durch eine BBox eingeschraenkt ?
+			if (updateBBox3D) {
+				if (!poly->GetBBox3D().IsIntersecting(*updateBBox3D)) continue;
+			};
+			poly->flags.mustRelight = FALSE;					// dient als Markierung fuer Polys, die bereits mit einer LM versehen sind (=TRUE)..
+			polyList.Insert(poly);
+		};
+
+
+		cmd << "GenerateSurfaces_Union #2" << endl;
+
+		zREAL numPolyTotal = polyList.GetNum();
+		while (polyList.GetNum() > 0)
+		{
+			// eine Surface wird eingesammelt
+			surface.EmptyList();
+			surface.Insert(polyList[0]);
+			polyList.RemoveIndex(0);
+
+			{
+				for (int l = 0; l < surface.GetNumInList(); l++) {
+					zCPolygon* poly = surface[l];
+
+					// alle Nachbarn des aktuellen Polys aus dem BSP ziehen
+					zCPolygon** foundPolyList = 0;
+					int			foundPolyNum = 0;
+					zTBBox3D	bbox3D;
+					bbox3D = poly->GetBBox3D();
+					bbox3D.Scale(zREAL(1.01F));
+					GetBspTree()->CollectPolysInBBox3D(bbox3D, foundPolyList, foundPolyNum);
+
+					for (int j = 0; j < foundPolyNum; j++) {
+						zCPolygon* poly2 = foundPolyList[j];
+
+						if (poly2->flags.mustRelight)	continue;
+						if (poly == poly2) 			continue;
+
+						// FIXME: eigentlich duerften hier auch nur Polys betrachtet werden, die zu dem aktuellen "smooth" 
+						//        geshadet werden sollen. Ein Aufnahme von Polys in dieselbe LM-Surface macht die Uebergaenge
+						//        immer "glatt".
+
+						const zREAL		EPSILON_PLANE_NORMAL = 0.70F;		// 0.95 / 0.7	0.707 = 45°
+						const zTPlane& p1 = surface[0]->GetPlane();
+						const zTPlane& p2 = poly2->GetPlane();
+						if (p1.normal.Dot(p2.normal) >= EPSILON_PLANE_NORMAL)
+						{
+							// teilen die 2 Polys ein Vertex ?
+							for (int k = 0; k < poly->polyNumVert; k++)
+							{
+								if (poly2->VertPartOfPoly(poly->GetVertexPtr(k)))
+								{
+									// Ist Poly bereits Teil einer Surface und hat bereits eine LM ?
+									int polyListIndex = polyList.Search(poly2);
+									if (polyListIndex >= 0)
+									{
+										// Falls das neue Polygon in der Projektion auf die Lightmap/Surface Ebene ein
+										// Polygon schneidet, das bereits Teil der Surface ist, dann darf dieses neue Poly
+										// nicht in die Surface aufgenommen werden. Wuerde Fehler ergeben, da die LM planar
+										// projeziert wird und fuer 1 Lighray mehrere Polygon-Orte existieren wuerden.
+										zBOOL intersectingProjection = FALSE;
+										for (int m = 0; m < surface.GetNum(); m++)
+										{
+											if (poly2->IsIntersectingProjection(surface[m], surface[0]->GetNormal()))
+											{
+												intersectingProjection = TRUE;
+												break;
+											};
+										};
+										if (!intersectingProjection)
+										{
+											zTBBox2D	lmBox;
+											int			realDim[2];
+											surface.InsertEnd(poly2);
+											if (!GetSurfaceLightmapBBox2D(surface, lmBox, realDim)) {
+												surface.RemoveIndex(surface.GetNumInList() - 1);
+											}
+											else {
+												poly2->flags.mustRelight = TRUE;
+												polyList.RemoveIndex(polyListIndex);
+												foundPolyList[j] = foundPolyList[foundPolyNum - 1];
+												foundPolyNum--;
+												j--;
+												break;
+											};
+										};
+									};
+								};
+							};
+						};
+					};
+				};
+			};
+
+			// ok, die Surface ist gefunden
+			// generate
+			zCPatchMap* patchMap = 0;
+			int currentPatchDim[2];
+			if (doRaytracing)
+			{
+				// Raytracing
+				patchMap = GeneratePatchMapFromSurface(surface);
+				LightPatchMap(patchMap);
+				GenerateLightmapFromPatchMap(patchMap);
+				currentPatchDim[0] = patchMap->xdim;
+				currentPatchDim[1] = patchMap->ydim;
+				delete patchMap;
+			}
+			else
+			{
+				// Radiosity
+				patchMap = GeneratePatchMapFromSurface(surface);
+				patchMapList.Insert(patchMap);
+				LightPatchMap(patchMap);
+			};
+			numSurfaces++;
+			if ((numSurfaces & 7) == 0)
+			{
+				zREAL perc = (zREAL(1) - (zREAL(polyList.GetNum()) / numPolyTotal)) * zREAL(100);
+				zERR_MESSAGE(3, 0, "D: ... working, numSurfaces: " + zSTRING(numSurfaces) + ", numPolys: " + zSTRING(surface.GetNum()) + ", dim: " + zSTRING(currentPatchDim[0]) + "x" + zSTRING(currentPatchDim[1]) + " (" + zSTRING(perc, 3) + "%) ...");
+			};
+		};
+
+		// Lightmaps in zCTexture Pages sammeln
+		mesh->CombineLightmaps();
+
+		zerr->Message("D: WORLD: LM: numPolys: " + zSTRING(mesh->numPoly) + ", numSurfaces: " + zSTRING(numSurfaces));
+	}
+
+
 #endif
 }

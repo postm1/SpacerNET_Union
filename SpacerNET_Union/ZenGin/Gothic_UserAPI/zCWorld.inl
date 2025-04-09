@@ -17,3 +17,5 @@ zBOOL zCWorld::SaveWorldNew(const zSTRING& fileName, const zTWorldSaveMode saveM
 BOOL zCWorld::LoadWorld_Union(const zSTRING& fileName, const zTWorldLoadMode loadMode);
 
 zBOOL __fastcall zCWorld::PickScene_Material(zCCamera& cam, int xscr, int yscr, zREAL rayLength);
+
+void zCWorld::GenerateSurfaces_Union(const zBOOL doRaytracing, zTBBox3D* updateBBox3D);

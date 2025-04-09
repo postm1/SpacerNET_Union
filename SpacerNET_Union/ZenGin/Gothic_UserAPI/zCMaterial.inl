@@ -26,7 +26,7 @@ void					SetMatGroup(const zTMat_Group group_) { matGroup = group_; };
 zCTexture*				GetDetailTexture() const { return detailTexture; }
 void					SetDetailTextureScale(const zREAL scale) { detailTextureScale = scale; }
 zREAL					GetDetailTextureScale() const { return detailTextureScale; }
-
+zCTexture*				GetTexture() const { return texture; };
 
 #if ENGINE >= Engine_G2
 zBOOL					GetEnvMapEnabled() const { return m_bEnvironmentalMapping; };
