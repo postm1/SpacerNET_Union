@@ -3,3 +3,5 @@
 // User API for zCVobLightData
 // Add your methods here
 
+zREAL				GetSpotConeAngle() const { return spotConeAngleDeg; };
+zTVobLightType		GetLightType()  const { return zTVobLightType(lightType); };

@@ -19,3 +19,4 @@ BOOL zCWorld::LoadWorld_Union(const zSTRING& fileName, const zTWorldLoadMode loa
 zBOOL __fastcall zCWorld::PickScene_Material(zCCamera& cam, int xscr, int yscr, zREAL rayLength);
 
 void zCWorld::GenerateSurfaces_Union(const zBOOL doRaytracing, zTBBox3D* updateBBox3D);
+void zCWorld::LightPatchMap_Union(zCPatchMap* patchMap);

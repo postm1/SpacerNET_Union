@@ -217,10 +217,170 @@ namespace GOTHIC_ENGINE {
 	}
 
 	static zCArray<zCPatchMap*>& patchMapList = *reinterpret_cast<zCArray<zCPatchMap*>*>(0x009A442C);
+	//zCList<zCVob>** lightVobList = reinterpret_cast<zCList<zCVob>**>(0x009A4440);
+
+
+	inline void zClamp01(float& f) {
+		if ((*(zDWORD*)&f) >= (zDWORD)0x80000000)	f = 0.f; else
+			if ((*(zDWORD*)&f) > (zDWORD)0x3f800000)	f = 1.0F;
+	}
+
+	static zCList<zCVob>*& GetLightVobList() {
+		return *reinterpret_cast<zCList<zCVob>**>(0x009A4440);
+	}
+
+	//void zCWorld::LightPatchMap (zCPatchMap *patchMap) 
+	//HOOK Ivk_zCWorld_LightPatchMap AS(&zCWorld::LightPatchMap, &zCWorld::LightPatchMap_Union);
+	void zCWorld::LightPatchMap_Union(zCPatchMap* patchMap)
+	{
+		zCList<zCVob>*& lightVobList = GetLightVobList();
+
+		zCList<zCVob>* item = lightVobList->GetNextInList();
+		zCPolygon* poly = patchMap->surface[0];
+
+		cmd << "LightPatchMap_Union: " << lightVobList->GetNumInList() << endl;
+
+		while (item)
+		{
+			// aktuelles Mesh mit jedem Licht aus Liste beleuchten
+			zCVobLight* light = ((zCVobLight*)item->GetData());
+
+			// Trivial rejection:
+			// Nur Lichter beruecksichtigen, die die minSurfacPlane schneiden und die BBox der Surface beruehren
+			zPOINT3 lightPos = light->GetPositionWorld();
+			//		zREAL	dist0		= zAbsApprox(patchMap->lightRejectPlane0.GetDistanceToPlane (lightPos));
+			//		zREAL	dist1		= zAbsApprox(patchMap->lightRejectPlane1.GetDistanceToPlane (lightPos));
+			zTBSphere3D lightSphere;
+			lightSphere.center = lightPos;
+			lightSphere.radius = light->GetRange();
+			if (
+				//			((dist0<=light->GetRange()) ||
+				//			 (dist1<=light->GetRange())) && 
+				(patchMap->bbox3D.IsIntersecting(lightSphere))
+				)
+			{
+				//
+				zCOLOR	col = light->GetColor();
+				zVEC3	lightColor = col.GetVEC3();
+				zREAL	range2 = light->GetRange() * light->GetRange();
+				zVALUE	rangeInv = light->GetRangeInv();
+				zREAL	spotDotMax = cosf((light->lightData.GetSpotConeAngle() / 180.0F) * 3.14159F);
+
+				for (int i = 0; i < patchMap->patchList.GetNumInList(); i++)
+				{
+					zCPatch* patch = patchMap->patchList[i];
+					zVEC3	view = (patch->centerLight - lightPos);
+					zREAL	dist = (view).Length_Sqr();
+					if (dist <= range2)
+					{
+						zREAL dot, i = 0;
+						dist = sqrt(dist);
+						view /= dist;
+						dot = -(view.Dot(patch->normal));
+
+						if (dot < 0) continue;
+
+						if (light->GetLightType() == zVOBLIGHT_TYPE_SPOT)
+						{
+							zREAL spotDot = view.Dot(light->GetAtVectorWorld());
+							if (spotDot <= spotDotMax) continue;
+						};
+
+						/*					// linear falloff
+											dist  = 1-(dist * rangeInv);
+											zClamp01 (dist);
+											i	  = dot;
+											i	 *= dist;
+						*/
+						// quadratic falloff
+						// (fuer einen helleren Gesamteindruck)
+						dist = (dist * rangeInv);
+						dist *= dist;
+						dist = 1 - dist;
+						zClamp01(dist);
+						i = dot;
+						i *= dist;
+
+						// Raytrace Occlusion Test
+						zVEC3		patchColor = lightColor;
+						zVEC3		inters;
+						zCPolygon* hitPoly = 0;
+						//					bspTree.TraceRay (lightPos, patch->center-patchMap->poly->polyPlane.normal, TRUE, FALSE, TRUE, inters, hitPoly, 0); 
+											// ignoreTranspPoly ? Farbaenderung bei Wasserdurchdringung ??
+						//					bspTree.TraceRay	(lightPos, patch->center, TRUE, TRUE, TRUE, inters, hitPoly, 0); 
+						/*					if ((bspTree.TraceRay (lightPos, patch->center, TRUE, FALSE, TRUE, inters, hitPoly, 0) &&
+												(hitPoly) &&
+												(hitPoly->GetMaterial()->GetAlpha()!=255)))
+											{
+												patchColor	= 0.5F*patchColor + 0.5F*zVEC3(0,0,GetColorIntensity(patchColor));
+												bspTree.TraceRay (lightPos, patch->center, TRUE, TRUE, TRUE, inters, hitPoly, 0);
+											};*/
+											//					if (LightingTestRay (lightPos, patch->center, inters, hitPoly)) 
+																// FIXME !!!   SURFACE !!!
+																// nichts getroffen => ok, der Licht Strahl kommt durch !
+																// etwas  getroffen => Strahl kommt nur durch, wenn das getroffene Poly eines der Surfae ist !
+											/*
+																zVEC3 ray = (patch->center-lightPos)*0.5F;
+																zBOOL res = LightingTestRay (lightPos, patch->center + ray, inters, hitPoly);
+											//					zBOOL res = LightingTestRay (lightPos, patch->center, inters, hitPoly);
+																if (res) {
+																	for (int i=0; i<patchMap->surface.GetNumInList(); i++)
+																		if (patchMap->surface[i]==hitPoly) { res = FALSE; break; };
+																	if ((inters-patch->center).Length2()<80.0F)	res = FALSE;
+																};
+																if (!res)
+											*/
+											// Vobs werfen Schatten
+						const zVEC3& rayLightToPatch = patch->centerLight - lightPos;
+						if (TraceRayNearestHit(lightPos, rayLightToPatch, light, zTRACERAY_STAT_IGNORE)) {
+							if (traceRayReport.foundVob)
+								if (traceRayReport.foundVob->staticVob)
+									goto leaveThis;
+						};
+
+						{
+
+							// Der ZielOrt ist ein wenig von dem Poly weggerueckt.
+							// Beachte: Die BSP-TraceRay Routine verlaengt den Ray minimal (ca. 1.001), wodurch ein hier
+							// weggerueckter EndPunkt trotzdem 'merkwuerdigerweise' das Ziel treffen wuerde.
+							// (=> zCBspTree::CheckRayAgainstPolys..())
+							zBOOL rayOccluded = bspTree.TraceRay(lightPos,
+								patch->center + poly->GetNormal() * 11,	// war: 9
+								zTRACERAY_STAT_POLY | zTRACERAY_POLY_IGNORE_TRANSP,
+								inters,
+								hitPoly,
+								0);
+
+							if (!rayOccluded)
+							{
+								//						if ((hitPoly==poly) || ((inters-patch->center).Length2()<80.0F))	// 9cm
+								{
+#ifdef zLIGHTMAP_COLOR_MARK
+									patch->radiosity = zVEC3(0, 255, 0);
+#else
+									patch->radiosity += patchColor * i;
+									//								patch->radiosity= zVEC3(255,0,0);
+#endif
+									patch->radToShoot += patchColor * i;
+									patchMap->hit = TRUE;
+								};
+							};
+						};
+
+						goto leaveThis;
+					leaveThis:;
+					};
+				};
+			};
+			item = item->GetNextInList();
+		};
+
+		//THISCALL(Ivk_zCWorld_LightPatchMap)(patchMap);
+	}
 
 
 	//void zCWorld::GenerateSurfaces (const zBOOL doRaytracing, zTBBox3D *updateBBox3D)
-	HOOK Ivk_zCWorld_GenerateSurfaces AS(&zCWorld::GenerateSurfaces, &zCWorld::GenerateSurfaces_Union);
+	//HOOK Ivk_zCWorld_GenerateSurfaces AS(&zCWorld::GenerateSurfaces, &zCWorld::GenerateSurfaces_Union);
 	void zCWorld::GenerateSurfaces_Union(const zBOOL doRaytracing, zTBBox3D* updateBBox3D)
 	{
 		int						numSurfaces = 0;
@@ -254,14 +414,22 @@ namespace GOTHIC_ENGINE {
 		};
 
 
-		cmd << "GenerateSurfaces_Union #2" << endl;
+		
 
 		zREAL numPolyTotal = polyList.GetNum();
+		const zREAL		EPSILON_PLANE_NORMAL = 0.70F;
+
+		cmd << "GenerateSurfaces_Union: " << numPolyTotal << endl;
+
+		
+
 		while (polyList.GetNum() > 0)
 		{
 			surface.EmptyList();
 			surface.Insert(polyList[0]);
 			polyList.RemoveIndex(0);
+
+			RX_Begin(11);
 
 			{
 				for (int l = 0; l < surface.GetNumInList(); l++) {
@@ -279,7 +447,7 @@ namespace GOTHIC_ENGINE {
 						if (poly2->flags.mustRelight)	continue;
 						if (poly == poly2) 			continue;
 
-						const zREAL		EPSILON_PLANE_NORMAL = 0.70F;
+						
 						const zTPlane& p1 = surface[0]->GetPlane();
 						const zTPlane& p2 = poly2->GetPlane();
 						if (p1.normal.Dot(p2.normal) >= EPSILON_PLANE_NORMAL)
@@ -324,25 +492,54 @@ namespace GOTHIC_ENGINE {
 					};
 				};
 			};
+			RX_End(11);
+
+			//zERR_MESSAGE(3, 0, "D: ... Light: " + RX_PerfString(11));
+
+
+			RX_Begin(12);
+
 
 			
 			zCPatchMap* patchMap = 0;
 			int currentPatchDim[2];
 			if (doRaytracing)
 			{
+				RX_Begin(13);
 				patchMap = GeneratePatchMapFromSurface(surface);
+				RX_End(13);
+				RX_Begin(14);
 				LightPatchMap(patchMap);
+				RX_End(14);
+				RX_Begin(15);
 				GenerateLightmapFromPatchMap(patchMap);
+				RX_End(15);
 				currentPatchDim[0] = patchMap->xdim;
 				currentPatchDim[1] = patchMap->ydim;
 				delete patchMap;
+
+				
+				
 			}
 			else
 			{
+				cmd << "!!!!!!!" << endl;
 				patchMap = GeneratePatchMapFromSurface(surface);
 				patchMapList.Insert(patchMap);
 				LightPatchMap(patchMap);
 			};
+
+			RX_End(12);
+
+			const int MIN_TIME_CHECK = 20;
+
+			if ((perf[13] / 1000.0f) >= MIN_TIME_CHECK || (perf[14] / 1000.0f) >= MIN_TIME_CHECK || (perf[15] / 1000.0f) >= MIN_TIME_CHECK || (perf[11] / 1000.0f) >= MIN_TIME_CHECK)
+			{
+				cmd << RX_PerfString(13) << " | " << RX_PerfString(14) << " | " << RX_PerfString(15) << " | -> " << RX_PerfString(12) << " | Prepare: " << RX_PerfString(11) << endl;
+			}
+
+			zERR_MESSAGE(3, 0, "D: ... Generate: " + RX_PerfString(12));
+
 			numSurfaces++;
 			if ((numSurfaces & 7) == 0)
 			{

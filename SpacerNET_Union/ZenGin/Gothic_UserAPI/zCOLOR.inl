@@ -25,3 +25,5 @@ static zCOLOR	FromARGB(zDWORD argb)
 
 	return result;
 }
+
+inline  zVEC3	GetVEC3() const { return zVEC3(r, g, b); };	/* range 0..255 */
