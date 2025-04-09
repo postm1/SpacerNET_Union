@@ -39,6 +39,21 @@ namespace GOTHIC_ENGINE {
 
 		if (mode == zMSH_VERTNORMAL_MAT) //LightWorldStaticCompiled
 		{
+
+			std::unordered_map<zCVertex*, std::vector<zCPolygon*>> vertexToPolygonsMap;
+
+			vertexToPolygonsMap.reserve(numPoly);
+
+			for (int i = 0; i < numPoly; i++)
+			{
+				zCPolygon* poly = polyList[i];
+
+				for (int j = 0; j < poly->polyNumVert; j++)
+				{
+					vertexToPolygonsMap[poly->vertex[j]].push_back(poly);
+				}
+			}
+
 			for (int i = 0; i < numPoly; i++) {
 				zCPolygon* poly = polyList[i];
 				if (bspTree) {
@@ -47,53 +62,52 @@ namespace GOTHIC_ENGINE {
 					const zREAL INC = zREAL(1.0F);
 					if (polyBBox.mins[VX] == polyBBox.maxs[VX]) { polyBBox.mins[VX] -= INC; polyBBox.maxs[VX] += INC; };
 					if (polyBBox.mins[VZ] == polyBBox.maxs[VZ]) { polyBBox.mins[VZ] -= INC; polyBBox.maxs[VZ] += INC; };
+
+					bspTree->bspRoot->CollectPolysInBBox3D(polyBBox, foundPolyList, foundPolyNum);
 				};
-				for (int j = 0; j < poly->polyNumVert; j++)
-				{
+				
+				for (int j = 0; j < poly->polyNumVert; j++) {
 					zCVertex* vert = poly->vertex[j];
 					zCVertFeature* feat = poly->feature[j];
 
 					feat->vertNormal = poly->GetNormal();
 
-					if (poly->material)
-						if (poly->material->smooth || poly->GetSectorFlag())
-						{
-							if (bspTree)
-							{
-								bspTree->bspRoot->CollectPolysInBBox3D(polyBBox, foundPolyList, foundPolyNum);
-								// welches Poly teilt noch dieses aktuelle Vert ?
-								for (int k = 0; k < foundPolyNum; k++)
-								{
-									zCPolygon* poly2 = foundPolyList[k];
+					if (poly->material && (poly->material->smooth || poly->GetSectorFlag())) {
+						// Используем карту для быстрого поиска полигонов, содержащих эту вершину
+						auto it = vertexToPolygonsMap.find(vert);
+						if (it != vertexToPolygonsMap.end()) {
+							const auto& sharingPolys = it->second;
 
-									if (poly2->material->smooth || poly2->GetSectorFlag())
-									{
-										if (poly2->VertPartOfPoly(vert))
-										{
-											if (poly2 == poly) continue;
-											zREAL angle1, angle2;
-											angle1 = poly->GetSectorFlag() ? 60 : poly->GetMaterial()->smoothAngle;
-											angle2 = poly2->GetSectorFlag() ? 60 : poly2->GetMaterial()->smoothAngle;
-											zREAL smoothRel = zMax(angle1, angle2);
-											zREAL polyRel = Alg_Rad2Deg(Alg_AngleUnitRad(poly->GetNormal(), poly2->GetNormal()));
-											if (smoothRel > polyRel)
-												feat->vertNormal += poly2->GetNormal();
-										};
-									};
-								};
+							for (zCPolygon* poly2 : sharingPolys) {
+								if (poly2 == poly) continue;
+
+								if (poly2->material && (poly2->material->smooth || poly2->GetSectorFlag())) {
+									zREAL angle1 = poly->GetSectorFlag() ? 60 : poly->GetMaterial()->smoothAngle;
+									zREAL angle2 = poly2->GetSectorFlag() ? 60 : poly2->GetMaterial()->smoothAngle;
+									zREAL smoothRel = zMax(angle1, angle2);
+									zREAL polyRel = Alg_Rad2Deg(Alg_AngleUnitRad(poly->GetNormal(), poly2->GetNormal()));
+
+									if (smoothRel > polyRel) {
+										feat->vertNormal += poly2->GetNormal();
+									}
+								}
 							}
-							// hier kann theoret. eine Normale aus obiger Berechnung mit Laenge 0 ankommen
-							// sollte man das anders behandeln .. ?
-							zREAL normalLen = feat->vertNormal.Length();
-							if (normalLen == 0)	feat->vertNormal = poly->GetNormal();
-							else				feat->vertNormal /= normalLen;
-						};
-				};
+						}
+
+						zREAL normalLen = feat->vertNormal.Length();
+						if (normalLen == 0) {
+							feat->vertNormal = poly->GetNormal();
+						}
+						else {
+							feat->vertNormal /= normalLen;
+						}
+					}
+				}
 			};
 		}
 		else if (mode == zMSH_VERTNORMAL_SMOOTH) // light
 		{
-			// Предварительно строим карту вершин
+			// Vertex map
 			std::unordered_map<zCVertex*, std::vector<zCPolygon*>> vertexToPolygonsMap;
 
 			vertexToPolygonsMap.reserve(numPoly);
@@ -201,7 +215,7 @@ namespace GOTHIC_ENGINE {
 		RX_End(10);
 
 
-		cmd << "CalcVertexNormals: " << (int)mode << " " << RX_PerfString(10) << endl;
+		cmd << "CalcVertexNormalsNew: " << (int)mode << " " << RX_PerfString(10) << " finished" << endl;
 
 		
 	}
