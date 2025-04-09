@@ -15,7 +15,6 @@ namespace GOTHIC_ENGINE {
 
 			RX_Begin(10);
 			THISCALL(Ivk_zCMesh_CalcVertexNormals)(mode, bspTree);
-
 			RX_End(10);
 
 
@@ -71,7 +70,7 @@ namespace GOTHIC_ENGINE {
 					feat->vertNormal = poly->GetNormal();
 
 					if (poly->material && (poly->material->smooth || poly->GetSectorFlag())) {
-						// Используем карту для быстрого поиска полигонов, содержащих эту вершину
+						// fast map
 						auto it = vertexToPolygonsMap.find(vert);
 						if (it != vertexToPolygonsMap.end()) {
 							const auto& sharingPolys = it->second;

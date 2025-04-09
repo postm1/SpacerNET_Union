@@ -6,12 +6,6 @@ namespace GOTHIC_ENGINE {
 #if ENGINE == Engine_G2A
 	// global engine vars
 
-	/*
-	static int& numPoly = *(int*)0x8D85DC;
-	static int& numVert = *(int*)0x8D85C8;
-	static zCMesh*& targetMesh = *(zCMesh**)0x8D85D8;
-	*/
-
 	static TVertex3ds*& vertList = *(TVertex3ds**)0x8D85C0;
 	static TPoly3ds*& polyList = *(TPoly3ds**)0x8D85CC;
 	
