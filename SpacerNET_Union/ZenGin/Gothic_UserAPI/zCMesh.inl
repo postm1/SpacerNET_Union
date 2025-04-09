@@ -18,3 +18,4 @@ zBOOL Render_Patch(zTRenderContext& renderContext, zCOLOR* vertexColor);
 void zCMesh::CalcBBox3D_Union(const zBOOL fastApprox);
 zCVertex* zCMesh::AddVertexSmart_Union(zVEC3& a);
 void BuildVertexMap();
+void zCMesh::CalcVertexNormals_Union(zTCalcVertNormalMode mode, zCBspTree* bspTree);

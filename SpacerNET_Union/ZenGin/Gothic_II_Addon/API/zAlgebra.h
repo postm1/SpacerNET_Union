@@ -422,6 +422,16 @@ namespace Gothic_II_Addon {
       RotAngle(n[1], n[2], YZ);
     }
 
+    zVEC3& NormalizeSafe()
+    {
+        zREAL len = Length();
+        if (len == 0) len = zREAL(0.000001F);
+        const zREAL d_inv = zREAL(1.0) / len;
+        n[VX] *= d_inv; n[VY] *= d_inv; n[VZ] *= d_inv;
+        return *this;
+    }
+    //0x00498A20 public: class zVEC3 & __thiscall zVEC3::NormalizeSafe(void)
+
     // user API
     #include "zVEC3.inl"
   };

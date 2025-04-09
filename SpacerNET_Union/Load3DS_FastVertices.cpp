@@ -6,11 +6,15 @@ namespace GOTHIC_ENGINE {
 #if ENGINE == Engine_G2A
 	// global engine vars
 
-	int& numPoly = *(int*)0x8D85DC;
-	int& numVert = *(int*)0x8D85C8;
+	/*
+	static int& numPoly = *(int*)0x8D85DC;
+	static int& numVert = *(int*)0x8D85C8;
 	static zCMesh*& targetMesh = *(zCMesh**)0x8D85D8;
+	*/
+
 	static TVertex3ds*& vertList = *(TVertex3ds**)0x8D85C0;
 	static TPoly3ds*& polyList = *(TPoly3ds**)0x8D85CC;
+	
 
 	constexpr float COMPARE_EPSILON = 0.01f; // Accuracy for comparison 1 cm
 	constexpr float HASH_GRID_SIZE = 0.5f;   // Hash size 50 cm
@@ -181,6 +185,8 @@ namespace GOTHIC_ENGINE {
 	{
 		//pFlushMeshBufferInv(); // original func
 
+		zERR_MESSAGE(3, 0, "D: FlushMeshBuffer_Union: " + Z numPoly + " polys");
+
 		if (numPoly == 0) return;
 
 		int i = 0;
@@ -196,7 +202,8 @@ namespace GOTHIC_ENGINE {
 		counter0 = 0;
 		counter1 = 0;
 
-		//RX_Begin(5);
+		RX_Begin(5);
+
 
 		for (i = 0; i < numVert; i++)
 		{
@@ -206,9 +213,9 @@ namespace GOTHIC_ENGINE {
 		};
 
 
-		//RX_End(5);
+		RX_End(5);
 
-		//cmd << "AddVertexSmartAll time: " << RX_PerfString(5) << " Size: " << vertexMap.size() << endl;
+		
 
 		ClearVertexMap();
 
@@ -216,9 +223,9 @@ namespace GOTHIC_ENGINE {
 
 		
 
-		zERR_MESSAGE(3, zERR_END, "");
+		zERR_MESSAGE(3, 0, "D: AddVertexSmartAll: " + RX_PerfString(5));
 
-
+		RX_Begin(6);
 		// Polys 
 		targetMesh->AllocPolys(numPoly);
 
@@ -256,6 +263,11 @@ namespace GOTHIC_ENGINE {
 		vertList = 0;
 		numVert = 0;
 		numPoly = 0;
+
+		RX_End(6);
+
+		zERR_MESSAGE(3, 0, "D: FlushMeshBuffer_Union: " + RX_PerfString(6));
+
 
 
 		/*

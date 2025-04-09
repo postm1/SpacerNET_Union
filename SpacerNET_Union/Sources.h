@@ -51,6 +51,7 @@
 #include "MatManager_UV.cpp"
 #include "Load3DS_FastBbox.cpp"
 #include "Load3DS_FastVertices.cpp"
+#include "World_CompileLight.cpp"
 #include "DrawSphere.cpp"
 #include "MatFilter_Render.cpp"
 #include "World_Compile.cpp"

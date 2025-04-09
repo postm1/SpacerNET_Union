@@ -385,7 +385,13 @@ namespace GOTHIC_ENGINE {
 		isLoadingMeshNow = true;
 
 		zoptions->ChangeDir(DIR_MESHES);
+
+		globalTimeDebug.Start();
+
 		ogame->GetGameWorld()->LoadWorld(worldName, zCWorld::zWLD_LOAD_EDITOR_UNCOMPILED);
+
+		globalTimeDebug.Stop();
+
 		isLoadingMeshNow = false;
 		oCNpc::SetNpcAIDisabled(TRUE);
 		dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
