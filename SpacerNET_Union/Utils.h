@@ -30,6 +30,7 @@ namespace GOTHIC_ENGINE {
     struct
     {
         std::chrono::time_point<std::chrono::high_resolution_clock> start_time;
+        std::chrono::time_point<std::chrono::high_resolution_clock> start_time_global;
         bool started = false;
 
         void Start()
@@ -37,6 +38,7 @@ namespace GOTHIC_ENGINE {
             //cmd << "========== DEBUG TIMER START ============" << endl;
 
             start_time = std::chrono::high_resolution_clock::now();
+            start_time_global = start_time;
             started = true;
         }
 
@@ -65,7 +67,12 @@ namespace GOTHIC_ENGINE {
 
             info += " (Delta: " + zSTRING((int)delta) + " ms)";
 
-            if (delta >= 75)
+            auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(
+                    current_time - start_time_global).count();
+
+            info += " (GlobalTime: " + Z (int)diff + " ms)";
+
+            if (delta >= 50)
             {
                 info += " <---- Long time";
             }
