@@ -4,6 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+#if ENGINE >= Engine_G2
 	void FlushMeshBuffer_Union();
 
 	// main pointers to engine's vars
@@ -50,7 +51,7 @@ namespace GOTHIC_ENGINE {
 
 	void zCFile3DS::Load3DS_Union(zSTRING const& fileName, zCMesh* tMesh)
 	{
-		bool debugInfo = false;
+		bool debugInfo = true;
 
 		if (debugInfo) cmd << "Load3DS_Union: " << fileName;
 
@@ -92,9 +93,8 @@ namespace GOTHIC_ENGINE {
 		FlushMeshBuffer_Union();
 
 		tMesh->CalcBBox3D(0);
-		{
-			tMesh->CalcVertexNormals(zCMesh::zMSH_VERTNORMAL_FACET, 0);
-		};
+		
+		tMesh->CalcVertexNormals(zCMesh::zMSH_VERTNORMAL_FACET, 0);
 
 		tMesh->PrelightMesh(0);
 
@@ -107,10 +107,12 @@ namespace GOTHIC_ENGINE {
 		zfpuControler->SetControlWord(fpuControlWord);
 		
 
+		cmd << "Load3DS_Union Completed" << endl;
+
 		dontCreateOBBOXOnLocationLoad = false;
 	}
 
-#if ENGINE >= Engine_G2
+
 
 	HOOK ivk_zCMesh_CalcBBox3D AS(&zCMesh::CalcBBox3D, &zCMesh::CalcBBox3D_Union);
 	void zCMesh::CalcBBox3D_Union(const zBOOL fastApprox)
@@ -149,6 +151,37 @@ namespace GOTHIC_ENGINE {
 #endif
 
 #if ENGINE == Engine_G1
+
+	HOOK ivk_zCFile3DS_Load3DS AS(&zCFile3DS::Load3DS, &zCFile3DS::Load3DS_Union);
+
+	void zCFile3DS::Load3DS_Union(zSTRING const& fileName, zCMesh* tMesh)
+	{
+		bool debugInfo = false;
+
+		if (debugInfo) cmd << "Load3DS_Union: " << fileName;
+
+
+		dontCreateOBBOXOnLocationLoad = theApp.options.GetIntVal("bFastLoad3DSLocation") && (theApp.isMergingMeshNow || theApp.isLoadingMeshNow);
+
+
+		if (dontCreateOBBOXOnLocationLoad)
+		{
+			(callVoidFunc)GetProcAddress(theApp.module, "ShowSkip3DSWarning")();
+
+			if (debugInfo)
+			{
+				cmd << " (--- Skip OBBOX)";
+			}
+		}
+
+
+		if (debugInfo) cmd << endl;
+
+		THISCALL(ivk_zCFile3DS_Load3DS)(fileName, tMesh);
+
+		dontCreateOBBOXOnLocationLoad = false;
+	}
+
 	HOOK ivk_zCMesh_CalcBBox3D AS(&zCMesh::CalcBBox3D, &zCMesh::CalcBBox3D_Union);
 	void zCMesh::CalcBBox3D_Union(const zBOOL bGreat)
 	{
