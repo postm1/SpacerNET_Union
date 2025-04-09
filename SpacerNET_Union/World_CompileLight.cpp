@@ -42,8 +42,6 @@ namespace GOTHIC_ENGINE {
 
 			std::unordered_map<zCVertex*, std::vector<zCPolygon*>> vertexToPolygonsMap;
 
-			vertexToPolygonsMap.reserve(numPoly);
-
 			for (int i = 0; i < numPoly; i++)
 			{
 				zCPolygon* poly = polyList[i];
@@ -109,8 +107,6 @@ namespace GOTHIC_ENGINE {
 		{
 			// Vertex map
 			std::unordered_map<zCVertex*, std::vector<zCPolygon*>> vertexToPolygonsMap;
-
-			vertexToPolygonsMap.reserve(numPoly);
 
 			for (int i = 0; i < numPoly; i++) 
 			{
