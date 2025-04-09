@@ -229,27 +229,27 @@ namespace GOTHIC_ENGINE {
 		zCArray<zCPolygon*>		polyList(mesh->numPoly);
 		zCArray<zCPolygon*>		surface;
 
-		// Polyliste kopieren
+	
 		for (i = 0; i < mesh->numPoly; i++) {
 			zCPolygon* poly = mesh->Poly(i);
-			poly->flags.mustRelight = TRUE;						// dient als Markierung fuer Polys, die bereits mit einer LM versehen sind (=TRUE)..
-			// Polys rausfiltern, die keine Lightmaps bekommen sollen
+			poly->flags.mustRelight = TRUE;	
+		
 			if (poly->GetMaterial()->dontUseLightmaps) continue;
 			if (poly->GetMaterial()->GetTexture())
 			{
-				poly->GetMaterial()->GetTexture()->CacheIn(-1);				// Muss!!!
-				if (poly->GetMaterial()->GetTexture()->HasAlpha())			// Alpha-Texturen bekommen keine LMs!
+				poly->GetMaterial()->GetTexture()->CacheIn(-1);		
+				if (poly->GetMaterial()->GetTexture()->HasAlpha())	
 					continue;
 			}
 			if (GetBspTree()->bspTreeMode == zBSP_MODE_OUTDOOR) {
 				if (!poly->GetSectorFlag()) continue;
 				if (poly->IsPortal())		continue;
 			};
-			// Update Bereich durch eine BBox eingeschraenkt ?
+
 			if (updateBBox3D) {
 				if (!poly->GetBBox3D().IsIntersecting(*updateBBox3D)) continue;
 			};
-			poly->flags.mustRelight = FALSE;					// dient als Markierung fuer Polys, die bereits mit einer LM versehen sind (=TRUE)..
+			poly->flags.mustRelight = FALSE;					
 			polyList.Insert(poly);
 		};
 
@@ -259,7 +259,6 @@ namespace GOTHIC_ENGINE {
 		zREAL numPolyTotal = polyList.GetNum();
 		while (polyList.GetNum() > 0)
 		{
-			// eine Surface wird eingesammelt
 			surface.EmptyList();
 			surface.Insert(polyList[0]);
 			polyList.RemoveIndex(0);
@@ -267,8 +266,6 @@ namespace GOTHIC_ENGINE {
 			{
 				for (int l = 0; l < surface.GetNumInList(); l++) {
 					zCPolygon* poly = surface[l];
-
-					// alle Nachbarn des aktuellen Polys aus dem BSP ziehen
 					zCPolygon** foundPolyList = 0;
 					int			foundPolyNum = 0;
 					zTBBox3D	bbox3D;
@@ -282,28 +279,18 @@ namespace GOTHIC_ENGINE {
 						if (poly2->flags.mustRelight)	continue;
 						if (poly == poly2) 			continue;
 
-						// FIXME: eigentlich duerften hier auch nur Polys betrachtet werden, die zu dem aktuellen "smooth" 
-						//        geshadet werden sollen. Ein Aufnahme von Polys in dieselbe LM-Surface macht die Uebergaenge
-						//        immer "glatt".
-
-						const zREAL		EPSILON_PLANE_NORMAL = 0.70F;		// 0.95 / 0.7	0.707 = 45°
+						const zREAL		EPSILON_PLANE_NORMAL = 0.70F;
 						const zTPlane& p1 = surface[0]->GetPlane();
 						const zTPlane& p2 = poly2->GetPlane();
 						if (p1.normal.Dot(p2.normal) >= EPSILON_PLANE_NORMAL)
 						{
-							// teilen die 2 Polys ein Vertex ?
 							for (int k = 0; k < poly->polyNumVert; k++)
 							{
 								if (poly2->VertPartOfPoly(poly->GetVertexPtr(k)))
 								{
-									// Ist Poly bereits Teil einer Surface und hat bereits eine LM ?
 									int polyListIndex = polyList.Search(poly2);
 									if (polyListIndex >= 0)
 									{
-										// Falls das neue Polygon in der Projektion auf die Lightmap/Surface Ebene ein
-										// Polygon schneidet, das bereits Teil der Surface ist, dann darf dieses neue Poly
-										// nicht in die Surface aufgenommen werden. Wuerde Fehler ergeben, da die LM planar
-										// projeziert wird und fuer 1 Lighray mehrere Polygon-Orte existieren wuerden.
 										zBOOL intersectingProjection = FALSE;
 										for (int m = 0; m < surface.GetNum(); m++)
 										{
@@ -338,13 +325,11 @@ namespace GOTHIC_ENGINE {
 				};
 			};
 
-			// ok, die Surface ist gefunden
-			// generate
+			
 			zCPatchMap* patchMap = 0;
 			int currentPatchDim[2];
 			if (doRaytracing)
 			{
-				// Raytracing
 				patchMap = GeneratePatchMapFromSurface(surface);
 				LightPatchMap(patchMap);
 				GenerateLightmapFromPatchMap(patchMap);
@@ -354,7 +339,6 @@ namespace GOTHIC_ENGINE {
 			}
 			else
 			{
-				// Radiosity
 				patchMap = GeneratePatchMapFromSurface(surface);
 				patchMapList.Insert(patchMap);
 				LightPatchMap(patchMap);
@@ -367,7 +351,6 @@ namespace GOTHIC_ENGINE {
 			};
 		};
 
-		// Lightmaps in zCTexture Pages sammeln
 		mesh->CombineLightmaps();
 
 		zerr->Message("D: WORLD: LM: numPolys: " + zSTRING(mesh->numPoly) + ", numSurfaces: " + zSTRING(numSurfaces));
