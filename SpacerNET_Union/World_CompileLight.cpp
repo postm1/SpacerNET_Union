@@ -11,14 +11,11 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!bspTree)
 		{
-			cmd << "CalcVertexNormals: original" << endl;
-
-			RX_Begin(10);
+			//RX_Begin(10);
 			THISCALL(Ivk_zCMesh_CalcVertexNormals)(mode, bspTree);
-			RX_End(10);
+			//RX_End(10);
 
-
-			cmd << "CalcVertexNormals: " << (int)mode << " " << RX_PerfString(10) << endl;
+			//cmd << "CalcVertexNormalsOriginal: " << (int)mode << " " << RX_PerfString(10) << endl;
 
 			return;
 		}
@@ -28,7 +25,7 @@ namespace GOTHIC_ENGINE {
 		int			foundPolyNum;
 
 
-		cmd << "CalcVertexNormalsNew: Mode: " << (int)mode << " BSP: " << (int)bspTree << " started..." << endl;
+		//cmd << "CalcVertexNormalsNew: Mode: " << (int)mode << " BSP: " << (int)bspTree << " started..." << endl;
 
 		ArraysToLists();
 		UnshareFeatures();
@@ -210,7 +207,7 @@ namespace GOTHIC_ENGINE {
 		RX_End(10);
 
 
-		cmd << "CalcVertexNormalsNew: " << (int)mode << " " << RX_PerfString(10) << " finished" << endl;
+		//cmd << "CalcVertexNormalsNew: " << (int)mode << " " << RX_PerfString(10) << " finished" << endl;
 
 		
 	}
