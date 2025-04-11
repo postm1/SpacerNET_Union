@@ -126,7 +126,7 @@ namespace GOTHIC_ENGINE {
 
 		RX_End(2);
 
-		cmd << "MergeMesh_Union: " << RX_PerfString(40) << endl;
+		cmd << "MergeMesh_Union: " << RX_PerfString(2) << endl;
 	}
 
 	
