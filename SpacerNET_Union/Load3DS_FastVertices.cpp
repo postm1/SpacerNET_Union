@@ -26,6 +26,7 @@ namespace GOTHIC_ENGINE {
 				(z * 83492791));
 			*/
 
+			/*
 			__m128 vec;
 			float temp[4] = { p.n[VX], p.n[VY], p.n[VZ], 0.0f };
 			vec = _mm_loadu_ps(temp); // _mm_loadu_ps = unaligned load
@@ -41,6 +42,47 @@ namespace GOTHIC_ENGINE {
 			return (coords[0] * 73856093) ^
 				(coords[1] * 19349663) ^
 				(coords[2] * 83492791);
+				*/
+
+			/*
+				// «агружаем только x,y,z, игнориру€ w компонент
+			__m128 vec = _mm_set_ps(0.0f, p.n[VZ], p.n[VY], p.n[VX]);
+
+			const __m128 grid_inv = _mm_set1_ps(1.0f / HASH_GRID_SIZE);
+			__m128 scaled = _mm_mul_ps(vec, grid_inv);
+
+			// явное округление к ближайшему целому (как std::roundf)
+			scaled = _mm_add_ps(scaled, _mm_set1_ps(0.5f));
+			scaled = _mm_sub_ps(scaled, _mm_and_ps(_mm_cmplt_ps(scaled, _mm_setzero_ps()), _mm_set1_ps(1.0f)));
+
+			__m128i rounded = _mm_cvtps_epi32(scaled);
+
+			// —охран€ем результаты
+			int32_t coords[4];  // alignas не нужен дл€ _mm_storeu_si128
+			_mm_storeu_si128(reinterpret_cast<__m128i*>(coords), rounded);
+
+			return (coords[0] * 73856093) ^
+				(coords[1] * 19349663) ^
+				(coords[2] * 83492791);
+
+			*/
+
+			// Load XYZ components directly (W=0)
+			__m128 vec = _mm_set_ps(0.0f, p.n[VZ], p.n[VY], p.n[VX]);
+
+			// Scale and round to nearest integer
+			const __m128 grid_inv = _mm_set1_ps(inv_grid);
+			__m128 scaled = _mm_mul_ps(vec, grid_inv);
+			__m128i rounded = _mm_cvtps_epi32(_mm_round_ps(scaled, _MM_FROUND_TO_NEAREST_INT));
+
+			// Store and hash coordinates
+			alignas(16) int32_t coords[4];
+			_mm_store_si128(reinterpret_cast<__m128i*>(coords), rounded);
+
+			// Better hash mixing
+			return (coords[0] * 73856093u) ^
+				(coords[1] * 19349663u) ^
+				(coords[2] * 83492791u);
 		}
 	};
 
@@ -57,14 +99,14 @@ namespace GOTHIC_ENGINE {
 			return (dx < eps) && (dy < eps) && (dz < eps);
 			*/
 			
-			__m128 vec_a, vec_b;
-			float temp_a[4] = { a.n[VX], a.n[VY], a.n[VZ], 0.0f };
-			float temp_b[4] = { b.n[VX], b.n[VY], b.n[VZ], 0.0f };
-			vec_a = _mm_loadu_ps(temp_a);
-			vec_b = _mm_loadu_ps(temp_b);
+			__m128 vec_a = _mm_set_ps(0.0f, a.n[VZ], a.n[VY], a.n[VX]);
+			__m128 vec_b = _mm_set_ps(0.0f, b.n[VZ], b.n[VY], b.n[VX]);
+
+			// Calculate absolute differences
 			__m128 diff = _mm_sub_ps(vec_a, vec_b);
 			__m128 abs_diff = _mm_max_ps(_mm_sub_ps(_mm_setzero_ps(), diff), diff);
 
+			// Compare with epsilon (masking out W component)
 			const __m128 eps = _mm_set1_ps(COMPARE_EPSILON);
 			__m128 cmp = _mm_cmplt_ps(abs_diff, eps);
 
@@ -133,7 +175,7 @@ namespace GOTHIC_ENGINE {
 
 			if (vert != vert2)
 			{
-				cmd << "Bad vec: " << a.ToString() <<  endl;
+				cmd << "\nBad vec: " << a.ToString() <<  endl;
 
 				if (vert)
 				{
@@ -146,6 +188,8 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 			*/
+			
+			
 		}
 		else
 		{
