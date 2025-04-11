@@ -6,10 +6,11 @@ namespace GOTHIC_ENGINE {
 #if ENGINE == Engine_G2A
 	//void zCMesh::CalcVertexNormals (zTCalcVertNormalMode mode, zCBspTree* bspTree)
 
+
 	HOOK Ivk_zCMesh_CalcVertexNormals AS(&zCMesh::CalcVertexNormals, &zCMesh::CalcVertexNormals_Union);
 	void zCMesh::CalcVertexNormals_Union(zTCalcVertNormalMode mode, zCBspTree* bspTree)
 	{
-		if (!bspTree)
+		if (!bspTree || mode == zTCalcVertNormalMode::zMSH_VERTNORMAL_FACET)
 		{
 			//RX_Begin(10);
 			THISCALL(Ivk_zCMesh_CalcVertexNormals)(mode, bspTree);
@@ -20,10 +21,6 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		zTBBox3D	polyBBox;
-		zCPolygon** foundPolyList;
-		int			foundPolyNum;
-
 
 		//cmd << "CalcVertexNormalsNew: Mode: " << (int)mode << " BSP: " << (int)bspTree << " started..." << endl;
 
@@ -31,108 +28,76 @@ namespace GOTHIC_ENGINE {
 		UnshareFeatures();
 
 		RX_Begin(10);
-		//
+
+		//RX_Begin(11);
+		// creating vertex -> polys map
+		std::unordered_map<zCVertex*, std::vector<zCPolygon*>> vertexToPolygonsMap;
+
+		for (int i = 0; i < numPoly; i++)
+		{
+			zCPolygon* poly = polyList[i];
+
+			for (int j = 0; j < poly->polyNumVert; j++)
+			{
+				vertexToPolygonsMap[poly->vertex[j]].push_back(poly);
+			}
+		}
+
+		//RX_End(11);
+
+		//cmd << "vertexToPolygonsMap: " << (int)mode << " " << RX_PerfString(11) << endl;
 
 		if (mode == zMSH_VERTNORMAL_MAT) //LightWorldStaticCompiled
 		{
-
-			std::unordered_map<zCVertex*, std::vector<zCPolygon*>> vertexToPolygonsMap;
-
-			for (int i = 0; i < numPoly; i++)
-			{
+			for (int i = 0; i < numPoly; i++) {
 				zCPolygon* poly = polyList[i];
 
 				for (int j = 0; j < poly->polyNumVert; j++)
 				{
-					vertexToPolygonsMap[poly->vertex[j]].push_back(poly);
-				}
-			}
-
-			for (int i = 0; i < numPoly; i++) {
-				zCPolygon* poly = polyList[i];
-				if (bspTree) {
-					polyBBox = poly->GetBBox3D();
-					polyBBox.Scale(1.5F);
-					const zREAL INC = zREAL(1.0F);
-					if (polyBBox.mins[VX] == polyBBox.maxs[VX]) { polyBBox.mins[VX] -= INC; polyBBox.maxs[VX] += INC; };
-					if (polyBBox.mins[VZ] == polyBBox.maxs[VZ]) { polyBBox.mins[VZ] -= INC; polyBBox.maxs[VZ] += INC; };
-
-					bspTree->bspRoot->CollectPolysInBBox3D(polyBBox, foundPolyList, foundPolyNum);
-				};
-				
-				for (int j = 0; j < poly->polyNumVert; j++) {
 					zCVertex* vert = poly->vertex[j];
 					zCVertFeature* feat = poly->feature[j];
 
 					feat->vertNormal = poly->GetNormal();
 
-					if (poly->material && (poly->material->smooth || poly->GetSectorFlag())) {
-						// fast map
-						auto it = vertexToPolygonsMap.find(vert);
-						if (it != vertexToPolygonsMap.end()) {
-							const auto& sharingPolys = it->second;
+					if (poly->material && (poly->material->GetSmooth() || poly->GetSectorFlag())) 
+					{
+						
+						auto& sharingPolys = vertexToPolygonsMap[vert];
 
-							for (zCPolygon* poly2 : sharingPolys) {
-								if (poly2 == poly) continue;
+						for (zCPolygon* poly2 : sharingPolys) 
+						{
+							if (poly2 == poly) continue;
 
-								if (poly2->material && (poly2->material->smooth || poly2->GetSectorFlag())) {
-									zREAL angle1 = poly->GetSectorFlag() ? 60 : poly->GetMaterial()->smoothAngle;
-									zREAL angle2 = poly2->GetSectorFlag() ? 60 : poly2->GetMaterial()->smoothAngle;
-									zREAL smoothRel = zMax(angle1, angle2);
-									zREAL polyRel = Alg_Rad2Deg(Alg_AngleUnitRad(poly->GetNormal(), poly2->GetNormal()));
+							if (poly2->material && (poly2->material->GetSmooth() || poly2->GetSectorFlag())) 
+							{
+							
+								zREAL angle1 = poly->GetSectorFlag() ? 60 : poly->material->smoothAngle;
+								zREAL angle2 = poly2->GetSectorFlag() ? 60 : poly2->material->smoothAngle;
+								zREAL maxAngle = zMax(angle1, angle2);
 
-									if (smoothRel > polyRel) {
-										feat->vertNormal += poly2->GetNormal();
-									}
+								
+								zREAL angleBetween = Alg_Rad2Deg(Alg_AngleUnitRad(poly->GetNormal(), poly2->GetNormal()));
+
+								if (maxAngle > angleBetween) 
+								{
+									feat->vertNormal += poly2->GetNormal();
 								}
 							}
 						}
 
 						zREAL normalLen = feat->vertNormal.Length();
-						if (normalLen == 0) {
-							feat->vertNormal = poly->GetNormal();
-						}
-						else {
-							feat->vertNormal /= normalLen;
-						}
+						if (normalLen == 0)	feat->vertNormal = poly->GetNormal();
+						else				feat->vertNormal /= normalLen;
 					}
 				}
 			};
 		}
 		else if (mode == zMSH_VERTNORMAL_SMOOTH) // light
 		{
-			// Vertex map
-			std::unordered_map<zCVertex*, std::vector<zCPolygon*>> vertexToPolygonsMap;
 
-			for (int i = 0; i < numPoly; i++) 
+			for (int i = 0; i < numPoly; i++)
 			{
 				zCPolygon* poly = polyList[i];
-
-				for (int j = 0; j < poly->polyNumVert; j++) 
-				{
-					vertexToPolygonsMap[poly->vertex[j]].push_back(poly);
-				}
-			}
-
-			for (int i = 0; i < numPoly; i++) 
-			{
-				zCPolygon* poly = polyList[i];
-
-
-				if (bspTree)
-				{
-					polyBBox = poly->GetBBox3D();
-					polyBBox.Scale(1.5F);
-					const zREAL INC = zREAL(1.0F);
-					if (polyBBox.mins[VX] == polyBBox.maxs[VX]) { polyBBox.mins[VX] -= INC; polyBBox.maxs[VX] += INC; };
-					if (polyBBox.mins[VY] == polyBBox.maxs[VY]) { polyBBox.mins[VY] -= INC; polyBBox.maxs[VY] += INC; };
-					if (polyBBox.mins[VZ] == polyBBox.maxs[VZ]) { polyBBox.mins[VZ] -= INC; polyBBox.maxs[VZ] += INC; };
-				};
-
-				bspTree->bspRoot->CollectPolysInBBox3D(polyBBox, foundPolyList, foundPolyNum);
-
-				int saveNum = foundPolyNum;
-				//cmd << "CommonResult: " << polyBBox.mins.ToString() + "/" + polyBBox.maxs.ToString() << " foundPolyNum: " << foundPolyNum << endl;
 
 				for (int j = 0; j < poly->polyNumVert; j++)
 				{
@@ -140,76 +105,28 @@ namespace GOTHIC_ENGINE {
 					zCVertFeature* feat = poly->feature[j];
 
 					feat->vertNormal = poly->GetNormal();
-					if (bspTree)
+
+					auto& sharingPolys = vertexToPolygonsMap[vert];
+
+					for (zCPolygon* poly2 : sharingPolys) 
 					{
-						
-						//bspTree->bspRoot->CollectPolysInBBox3D(polyBBox, foundPolyList, foundPolyNum);
-
-						//cmd << "\tPartResult: [" << j << "] " << " foundPolyNum: " << foundPolyNum << endl;
-
-						/*if (foundPolyNum != saveNum)
-						{
-							cmd << "!!!!!!!!!!!!! " << foundPolyNum << " / " << saveNum << endl;
-						}*/
-						
-
-						// welches Poly teilt noch dieses aktuelle Vert ?
-						for (int k = 0; k < foundPolyNum; k++)
-						{
-							zCPolygon* poly2 = foundPolyList[k];
-
-							//some debug test code
-							//bool flagFound = false;
-							//bool flagFound2 = false;
-
-							/*
-							if (poly2->VertPartOfPoly(vert))
-							{
-								if (poly2 != poly)
-								{
-									//feat->vertNormal += poly2->GetNormal();
-									flagFound = true;
-								}
-							};
-							*/
-							
-
-							if (poly2 != poly && std::find(poly2->vertex, poly2->vertex + poly2->polyNumVert, vert) != poly2->vertex + poly2->polyNumVert)
-							{
-								feat->vertNormal += poly2->GetNormal();
-								//flagFound2 = true;
-							}
-
-							/*if (flagFound != flagFound2)
-							{
-								cmd << "flagFound fail! " << flagFound << "/" << flagFound2 << endl;
-							}*/
-						};
+						if (poly2 != poly) 
+						{  
+							feat->vertNormal += poly2->GetNormal();
+						}
 					}
 
-					feat->vertNormal.NormalizeSafe();
-				};
-			};
+					feat->vertNormal.NormalizeSafe(); 
+				}
+			}
+			
+			
 		}
-		else if (mode == zMSH_VERTNORMAL_FACET) //3DS
-		{
-			
-			for (int i = 0; i < numPoly; i++)
-			{
-				zCPolygon* poly = polyList[i];
-				for (int j = 0; j < poly->polyNumVert; j++)
-					poly->feature[j]->vertNormal = poly->GetNormal();
-			};
-			
-		};
-		
 		
 		RX_End(10);
 
+		cmd << "CalcVertexNormalsNew: " << (int)mode << " " << RX_PerfString(10) << " finished" << endl;
 
-		//cmd << "CalcVertexNormalsNew: " << (int)mode << " " << RX_PerfString(10) << " finished" << endl;
-
-		
 	}
 
 	static zCArray<zCPatchMap*>& patchMapList = *reinterpret_cast<zCArray<zCPatchMap*>*>(0x009A442C);
