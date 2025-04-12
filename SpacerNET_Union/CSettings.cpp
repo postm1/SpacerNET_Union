@@ -467,7 +467,7 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "showSpawnListRadius", "4500");
 		list.Insert("showSpawnListRadius", set);
 
-		set = new CSetting(TYPE_INT, "SPACER", "bFastLoad3DSLocation", "0");
+		set = new CSetting(TYPE_INT, "SPACER", "bFastLoad3DSLocation", "1");
 		list.Insert("bFastLoad3DSLocation", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "intPfxEditorHighlightValues", "2");

@@ -6,6 +6,7 @@ namespace GOTHIC_ENGINE {
 
 #if ENGINE >= Engine_G2
 	void FlushMeshBuffer_Union();
+	extern void ClearVertexMap();
 
 	// main pointers to engine's vars
 	static zCOLOR*& actColor = *(zCOLOR**)0x8D85E0;
@@ -17,6 +18,8 @@ namespace GOTHIC_ENGINE {
 	//pointer for ChunkReader = loading 3ds function, reading from the disk
 	typedef void (*ChunkReaderFunc)(zFILE*, int, long);
 	ChunkReaderFunc ChunkReader = (ChunkReaderFunc)0x55CBC0;
+
+	bool isLoading3DSNow = false;
 
 	static void Load3dsFile(const zSTRING& fileName) {
 		long	p;
@@ -86,11 +89,17 @@ namespace GOTHIC_ENGINE {
 		numPoly = 0;
 		actColor = &dummyCol;
 
+		ClearVertexMap();
+		isLoading3DSNow = true;
 		cmd << "Load 3ds from disk..." << endl;
 		Load3dsFile(fileName);
 		cmd << "Load 3ds end..." << endl;
 
 		FlushMeshBuffer_Union();
+
+		ClearVertexMap();
+
+		isLoading3DSNow = false;
 
 		tMesh->CalcBBox3D(0);
 		

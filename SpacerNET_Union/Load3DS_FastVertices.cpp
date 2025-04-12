@@ -116,6 +116,7 @@ namespace GOTHIC_ENGINE {
 
 	std::unordered_map<zPOINT3, zCVertex*, Point3Hasher, Point3Equal> vertexMap;
 	bool isNewMapActiveNow = false;
+	extern bool isLoading3DSNow;
 	
 	//debug only
 	int counter0 = 0;
@@ -137,11 +138,13 @@ namespace GOTHIC_ENGINE {
 	{
 		vertexMap.clear();
 		isNewMapActiveNow = false;
+
+		cmd << "ClearVertexMap" << endl;
 	}
 
 	void zCMesh::BuildVertexMap()
 	{
-		ClearVertexMap();
+		//ClearVertexMap();
 
 		vertexMap.reserve(numVert);
 
@@ -237,6 +240,14 @@ namespace GOTHIC_ENGINE {
 
 		targetMesh->BuildVertexMap(); // build new hash map from existring vertices
 
+		/*
+		cmd << "numVert: " << targetMesh->numVert
+			<< " numPoly: " << targetMesh->numPoly
+			<< " | numVert_3ds_chunk: " << numVert
+			<< " | vertexMapSize: " << vertexMap.size()
+			<< endl;
+		*/
+
 		counter0 = 0;
 		counter1 = 0;
 
@@ -253,9 +264,13 @@ namespace GOTHIC_ENGINE {
 
 		RX_End(5);
 
-		
+		if (!isLoading3DSNow)
+		{
+			cmd << "Clear Vertex not 3ds" << endl;
+			ClearVertexMap();
+		}
 
-		ClearVertexMap();
+		//ClearVertexMap();
 
 		//cmd << numVert << " " << counter0 << "/" << counter1 << endl;
 
