@@ -1265,6 +1265,20 @@ namespace GOTHIC_ENGINE {
 		vobFoundStruct.Print();
 	}
 
+	bool CheckIfVobBlocked(zCVob* pVob)
+	{
+		if (theApp.options.GetIntVal("checkBoxBlockComplexVob"))
+		{
+			if (pVob->HasChildren())
+			{
+				print.PrintRed(GetLang("VOB_CHANGE_POS_BLOCKED"));
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	void VobKeys()
 	{
 		
@@ -1581,6 +1595,11 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("VOB_NEAR_CAM", true))
 		{
+			if (CheckIfVobBlocked(theApp.pickedVob))
+			{
+				return;
+			}
+
 			if (theApp.pickedVob)
 			{
 				if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
@@ -1630,6 +1649,11 @@ namespace GOTHIC_ENGINE {
 
 			if (keys.KeyPressed("VOB_FLOOR", true))
 			{
+				if (CheckIfVobBlocked(theApp.pickedVob))
+				{
+					return;
+				}
+
 				print.PrintRed(GetLang("TOOL_FLOOR"));
 				SetOnFloor(pickedVob);
 			}
@@ -1801,6 +1825,10 @@ namespace GOTHIC_ENGINE {
 
 				if (keys.KeyPressed("VOB_TRANS_UP", false, true))
 				{
+					if (CheckIfVobBlocked(theApp.pickedVob))
+					{
+						return;
+					}
 
 					if (pickMode == SWM_VOBS)
 					{
@@ -1825,6 +1853,11 @@ namespace GOTHIC_ENGINE {
 
 				if (keys.KeyPressed("VOB_TRANS_DOWN", false, true))
 				{
+					if (CheckIfVobBlocked(theApp.pickedVob))
+					{
+						return;
+					}
+
 					if (pickMode == SWM_VOBS)
 					{
 						pos.n[1] -= speedTranslation * ztimer->frameTimeFloat;
@@ -1849,11 +1882,21 @@ namespace GOTHIC_ENGINE {
 
 				if (keys.KeyPressed("VOB_ROT_VERT_RIGHT", false, true))
 				{
+					if (CheckIfVobBlocked(theApp.pickedVob))
+					{
+						return;
+					}
+
 					HandleVobRotation(pickedVob, 3, ztimer->frameTimeFloat * rotSpeed);
 				}
 
 				if (keys.KeyPressed("VOB_ROT_VERT_LEFT", false, true))
 				{
+					if (CheckIfVobBlocked(theApp.pickedVob))
+					{
+						return;
+					}
+
 					HandleVobRotation(pickedVob, 3, -ztimer->frameTimeFloat * rotSpeed);
 				}
 
@@ -1865,6 +1908,11 @@ namespace GOTHIC_ENGINE {
 
 				if (keys.KeyPressed("VOB_RESET_AXIS", true))
 				{
+					if (CheckIfVobBlocked(theApp.pickedVob))
+					{
+						return;
+					}
+
 					HandleVobRotation(pickedVob, rotType, 0);
 
 					rotType++;
@@ -1889,6 +1937,11 @@ namespace GOTHIC_ENGINE {
 
 					if (keys.KeyPressed("VOB_TRANS_FORWARD", false, true))
 					{
+						if (CheckIfVobBlocked(theApp.pickedVob))
+						{
+							return;
+						}
+
 						pos += unit * speedTranslation * ztimer->frameTimeFloat;
 						//pos.n[1] = y;
 						HandleVobTranslation(pickedVob, pos);
@@ -1905,6 +1958,11 @@ namespace GOTHIC_ENGINE {
 
 					if (keys.KeyPressed("VOB_TRANS_BACKWARD", false, true))
 					{
+						if (CheckIfVobBlocked(theApp.pickedVob))
+						{
+							return;
+						}
+
 						pos -= unit * speedTranslation * ztimer->frameTimeFloat;
 						//pos.n[1] = y;
 						HandleVobTranslation(pickedVob, pos);
@@ -1922,6 +1980,11 @@ namespace GOTHIC_ENGINE {
 
 					if (keys.KeyPressed("VOB_TRANS_LEFT", false, true))
 					{
+						if (CheckIfVobBlocked(theApp.pickedVob))
+						{
+							return;
+						}
+
 						zVEC3 left = camUnit.Cross(zVEC3(0, 1, 0));
 						pos += left * speedTranslation * ztimer->frameTimeFloat;
 						//pos.n[1] = y;
@@ -1939,6 +2002,11 @@ namespace GOTHIC_ENGINE {
 
 					if (keys.KeyPressed("VOB_TRANS_RIGHT", false, true))
 					{
+						if (CheckIfVobBlocked(theApp.pickedVob))
+						{
+							return;
+						}
+
 						zVEC3 right = camUnit.Cross(zVEC3(0, -1, 0));
 						pos += right * speedTranslation * ztimer->frameTimeFloat;
 						//pos.n[1] = y;
@@ -1964,22 +2032,45 @@ namespace GOTHIC_ENGINE {
 
 					if (keys.KeyPressed("VOB_ROT_BACK", false, true))
 					{
+						if (CheckIfVobBlocked(theApp.pickedVob))
+						{
+							return;
+						}
+
 						HandleVobRotation(pickedVob, 1, ztimer->frameTimeFloat * rotSpeed);
 					}
 
 					if (keys.KeyPressed("VOB_ROT_FORWARD", false, true))
 					{
+
+						if (CheckIfVobBlocked(theApp.pickedVob))
+						{
+							return;
+						}
+
 						HandleVobRotation(pickedVob, 1, -ztimer->frameTimeFloat * rotSpeed);
 					}
 
 
 					if (keys.KeyPressed("VOB_ROT_RIGHT", false, true))
 					{
+
+						if (CheckIfVobBlocked(theApp.pickedVob))
+						{
+							return;
+						}
+
 						HandleVobRotation(pickedVob, 2, ztimer->frameTimeFloat * rotSpeed);
 					}
 
 					if (keys.KeyPressed("VOB_ROT_LEFT", false, true))
 					{
+
+						if (CheckIfVobBlocked(theApp.pickedVob))
+						{
+							return;
+						}
+
 						HandleVobRotation(pickedVob, 2, -ztimer->frameTimeFloat * rotSpeed);
 					}
 				}
