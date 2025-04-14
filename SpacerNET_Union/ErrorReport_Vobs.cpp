@@ -1216,7 +1216,7 @@ namespace GOTHIC_ENGINE {
 							{
 								auto entry = new ErrorReportEntry();
 
-								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+								entry->SetErrorType(ERROR_REPORT_TYPE_INFO);
 								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_STATIC_LIGHT_NO_PORTAL);
 								entry->SetObject((uint)pLight);
 								entry->SetVobName("");
