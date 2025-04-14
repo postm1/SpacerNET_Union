@@ -165,7 +165,7 @@ namespace GOTHIC_ENGINE {
 					}
 					else
 					{
-						..cmd << "#1" << endl;
+						//cmd << "#1" << endl;
 						auto entry = new ErrorReportEntry();
 
 						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
