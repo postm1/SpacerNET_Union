@@ -1341,7 +1341,28 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		
+		if (keys.KeyPressed("CHANGE_VOB_COMPLEX_MOVE", true))
+		{
+			
+
+			int value = theApp.options.GetIntVal("checkBoxBlockComplexVob");
+			
+			value = !value;
+
+			if (value)
+			{
+				print.PrintGreen(GetLang("CHANGE_VOB_COMPLEX_MOVE") + " " + GetLang("COMMON_TURN_ON"));
+			}
+			else
+			{
+				print.PrintRed(GetLang("CHANGE_VOB_COMPLEX_MOVE") + " " + GetLang("COMMON_TURN_OFF"));
+			}
+
+			theApp.options.SetIntVal("checkBoxBlockComplexVob", value);
+			theApp.options.Apply();
+
+		}
+
 
 		if (keys.KeyPressed("VOB_TRANSLATE", true))
 		{
