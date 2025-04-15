@@ -4,6 +4,10 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+	// This code allows to skip creating OBBOX tree for 3ds LOCATION file, it saves about ~30% of 3ds load time
+	// don't use for vobs! 3DS mesh location only!
+	bool dontCreateOBBOXOnLocationLoad = false;
+
 #if ENGINE >= Engine_G2
 	void FlushMeshBuffer_Union();
 	extern void ClearVertexMap();
@@ -46,9 +50,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-	// This code allows to skip creating OBBOX tree for 3ds LOCATION file, it saves about ~30% of 3ds load time
-	// don't use for vobs! 3DS mesh location only!
-	bool dontCreateOBBOXOnLocationLoad = false;
+	
 
 	HOOK ivk_zCFile3DS_Load3DS AS(&zCFile3DS::Load3DS, &zCFile3DS::Load3DS_Union);
 
