@@ -85,7 +85,7 @@ namespace GOTHIC_ENGINE {
 					{
 						auto entry = new ErrorReportEntry();
 
-						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
 						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_ITEM_NO_VISUAL);
 						entry->SetObject((uint)vob);
 						entry->SetVobName(pItem->GetInstanceName());
