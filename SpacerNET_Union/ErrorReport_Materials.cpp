@@ -129,62 +129,6 @@ namespace GOTHIC_ENGINE {
 
 			}
 		}
-
-		return;
-
-		// check matlist
-		zCClassDef* classDef = zCMaterial::classDef;
-		zCMaterial* mat = 0;
-		int numOfMats = classDef->objectList.GetNum();
-
-
-		zCArray<zCMaterial*> pList;
-		std::unordered_set<std::string> noCatalogVobsNames;
-
-
-		auto matNew = new zCMaterial();
-		matNew->SetName("NW_NATURE_WALDBODEN_03");
-		matNew->SetTexture(Z "NW_Nature_Waldboden_02.TGA");
-		matNew->AddRef();
-
-		for (int i = 0; i < numOfMats; i++)
-		{
-			mat = dynamic_cast<zCMaterial*>(classDef->objectList[i]);
-
-			if (mat /*&& mat->matUsage == zCMaterial::zMAT_USAGE_LEVEL*/)
-			{
-				if (mat->GetName().Length() > 0)
-				{
-					char* name = mat->GetName().ToChar();
-
-					//cmd << "NameMat: " << name << endl;
-
-					if (noCatalogVobsNames.find(name) == noCatalogVobsNames.end())
-					{
-						noCatalogVobsNames.insert(name);
-					}
-					else
-					{
-						//cmd << "#1" << endl;
-						auto entry = new ErrorReportEntry();
-
-						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
-						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_MAT_NOT_UNIQ_MAT);
-						entry->SetObject((uint)mat);
-						entry->SetVobName(mat->GetName());
-						entry->SetMaterialName(mat->GetName());
-						entry->SetTextureName(mat->texture->GetObjectName());
-
-						AddEntry(entry);
-					}
-				}
-				else
-				{
-
-				}
-				
-			}
-		}
 	}
 
 }
