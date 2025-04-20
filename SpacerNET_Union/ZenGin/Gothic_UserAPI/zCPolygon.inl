@@ -39,5 +39,5 @@ zBOOL			GetGhostOccluder() const { return flags.ghostOccluder; };
 zBOOL			GetOccluder() const { return flags.occluder; };
 void			SetOccluder(const zBOOL p) { flags.occluder = p; };
 zBOOL			IsOccluder() const { return flags.occluder; };
-
+int __fastcall zCPolygon::IsIntersectingProjection_Union(zCPolygon* poly2, const zVEC3& projNormal);
 

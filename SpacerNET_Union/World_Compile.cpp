@@ -143,9 +143,9 @@ namespace GOTHIC_ENGINE {
 	void zCCBspTree::GetPolyNeighbours_Union(zCPolygon* sourcePoly, zCPolygon**& foundPolyList, int& foundPolyNum)
 	{
 
+#ifdef GETPOLYS_TEST
 		RX_Begin(3);
 
-#ifdef GETPOLYS_TEST
 		THISCALL(Ivk_zCCBspTree_GetPolyNeighbours)(sourcePoly, foundPolyList, foundPolyNum);
 
 		int savefoundPolyNum = foundPolyNum;
@@ -194,6 +194,7 @@ namespace GOTHIC_ENGINE {
 #endif
 
 
+
 	static int Compare_Occluder(const void* arg1, const void* arg2)
 	{
 		int poly1 = int(*((zCPolygon**)arg1));
@@ -202,11 +203,33 @@ namespace GOTHIC_ENGINE {
 		return (poly1 - poly2);
 	};
 
-	//void zCBspTree::MarkOccluderPolys () 
+	int staticTime = 0;
+	//0x00534210 private: float __thiscall zCBspTree::GetOccluderAreaRec(class zCPolygon const *,class zCArray<class zCPolygon *> &)
+	/*
+	HOOK Ivk_zCCBspTree_GetOccluderAreaRec AS(&zCBspTree::GetOccluderAreaRec, &zCBspTree::GetOccluderAreaRec_Union);
+	float zCBspTree::GetOccluderAreaRec_Union(const zCPolygon* rootPoly, zCArray<zCPolygon*>& nearOccluderPolys)
+	{
+		RX_Begin(5);
+		auto result = THISCALL(Ivk_zCCBspTree_GetOccluderAreaRec)(rootPoly, nearOccluderPolys);
+		RX_End(5);
+
+		staticTime += perf[5];
+
+		return result;
+	}
+	*/
 
 	//HOOK Ivk_zCCBspTree_MarkOccluderPolys AS(&zCBspTree::MarkOccluderPolys, &zCBspTree::MarkOccluderPolys_Union);
 	void zCBspTree::MarkOccluderPolys_Union()
 	{
+		//THISCALL(Ivk_zCCBspTree_MarkOccluderPolys)();
+
+		/*cmd << (staticTime / 1000.0f)
+			<< " 5#: "
+			<< endl;*/
+
+		return;
+
 		zERR_MESSAGE(3, 0, "D: RBSP: Marking Occluder Polys...");
 		RX_Begin(4);
 
@@ -332,13 +355,14 @@ namespace GOTHIC_ENGINE {
 		// a) occluder ohne occluder nachbarn die sehr klein sind
 		// b) occluder polys mit occluder nachbarn, dessen flдchen-summe zu klein ist
 		zCArray<zCPolygon*>		occluderNeighbours;
-		//zCArraySort<zCPolygon*> occluderTested;
-		//occluderTested.SetCompare(Compare_Occluder);
+		zCArraySort<zCPolygon*> occluderTested;
+		occluderTested.SetCompare(Compare_Occluder);
 
-		std::unordered_set<zCPolygon*> occluderTested;
+		//std::unordered_set<zCPolygon*> occluderTested;
 
 		int maxNeighbourOccluders = 0;
 		int maxArea = 0;
+		int staticTime = 0;
 
 		//zCMaterial *mat = zNEW(zCMaterial("Occluder_Poly_Mat"));  
 		//mat->SetColor (0,255,0);
@@ -352,21 +376,27 @@ namespace GOTHIC_ENGINE {
 			{
 				count = 0;
 				zERR_MESSAGE(5, 0, "C: unmarking inefficient occluders, still working: " + zSTRING((float(i) / float(mesh->numPoly)) * 100));
-				cmd << occluderTested.size() << "|" << occluderNeighbours.GetNumInList() << endl;
+				//cmd << occluderTested.size() << "|" << occluderNeighbours.GetNumInList() << endl;
 			}
 
 			if (!poly->IsOccluder())				 continue;
 			if (poly->GetGhostOccluder())			 continue;
-			//if (occluderTested.IsInList(poly))		 continue;
-			if (occluderTested.find(poly) != occluderTested.end()) continue;
+			if (occluderTested.IsInList(poly))		 continue;
+			//if (occluderTested.find(poly) != occluderTested.end()) continue;
 
-			//occluderTested.InsertSort(poly);
-			occluderTested.insert(poly);
+			occluderTested.InsertSort(poly);
+			//occluderTested.insert(poly);
 			occluderNeighbours.InsertEnd(poly);
 
 			//0x00534210 private: float __thiscall zCBspTree::GetOccluderAreaRec(class zCPolygon const *,class zCArray<class zCPolygon *> &)
 			
+			RX_Begin(5);
 			zREAL sumOccluderArea = GetOccluderAreaRec(poly, occluderNeighbours);
+			RX_End(5);
+
+			staticTime += perf[5];
+			
+			//cmd << "occluderNeighbours: " << occluderNeighbours.GetNumInList() << endl;
 
 			
 			if (sumOccluderArea > maxArea)
@@ -394,23 +424,25 @@ namespace GOTHIC_ENGINE {
 			
 				for (int j = 0; j < occluderNeighbours.GetNum(); j++)
 				{
-					if (occluderTested.find(occluderNeighbours[j]) == occluderTested.end())
+					/*if (occluderTested.find(occluderNeighbours[j]) == occluderTested.end())
 					{
 						occluderTested.insert(occluderNeighbours[j]);
-					}
+					}*/
 
-					//if (!occluderTested.IsInList(occluderNeighbours[j]))
-						//occluderTested.InsertSort(occluderNeighbours[j]);
+					if (!occluderTested.IsInList(occluderNeighbours[j]))
+						occluderTested.InsertSort(occluderNeighbours[j]);
 				}
 
 				
 
 			}
 
+			
+
 			occluderNeighbours.DeleteList();
 
 		}
-		//occluderTested.DeleteList();
+		occluderTested.DeleteList();
 
 		RX_End(4);
 
@@ -418,6 +450,10 @@ namespace GOTHIC_ENGINE {
 			<< " 2#: "
 			<< endl;
 
+
+		cmd << (staticTime / 1000.0f)
+			<< " 5#: "
+			<< endl;
 
 		zERR_MESSAGE(3, 0, "D: RBSP: ... numOccluder: " + zSTRING(numOccluder) + " of " + zSTRING(mesh->numPoly));
 		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderSize: " + zSTRING(maxArea));
