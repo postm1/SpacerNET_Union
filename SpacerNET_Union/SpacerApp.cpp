@@ -2231,7 +2231,7 @@ namespace GOTHIC_ENGINE {
 
 			if (vob)
 			{
-				//cmd << "Apply " << vob->GetVobName() << endl;
+				cmd << "Apply " << vob->GetVobName() << " posChanged: " << posChanged << endl;
 
 
 				if (posChanged == 0 && lastPos != vob->GetPositionWorld())
@@ -2252,6 +2252,12 @@ namespace GOTHIC_ENGINE {
 
 					(callVoidFunc)GetProcAddress(theApp.module, "CleanPropWindow")();
 					SelectObject(current_object);
+				}
+
+				// fix not updating dx11 render position
+				if (posChanged && IsDx11Active())
+				{
+					HandleVobTranslation(vob, vob->GetPositionWorld());
 				}
 				
 				/*
