@@ -14,7 +14,12 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+    const zREAL zALG_EQUAL_EPSILON = zREAL(0.001);
 
+    inline float zAbs(const float a)
+    {
+        return fabs(a);
+    }
 
 	template<typename Key, typename Value>
 	void DeleteAndClearMap(Common::Map<Key, Value*>& map)

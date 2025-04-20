@@ -33,3 +33,11 @@ const zVEC3& GetNormal() const { return polyPlane.normal; };
 zBOOL			IsPortal() const { return flags.portalPoly != zPORTAL_TYPE_NONE; };
 const zTPlane& GetPlane() const { return polyPlane; };
 //void			SetLightmap(zCLightMap* lm) { if (lightmap == lm) return; if (lightmap) lightmap->Release(); lightmap = lm; if (lm) lm->AddRef(); };
+
+zBOOL			GetGhostOccluder() const { return flags.ghostOccluder; };
+
+zBOOL			GetOccluder() const { return flags.occluder; };
+void			SetOccluder(const zBOOL p) { flags.occluder = p; };
+zBOOL			IsOccluder() const { return flags.occluder; };
+
+

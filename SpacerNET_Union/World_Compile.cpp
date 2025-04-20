@@ -194,6 +194,249 @@ namespace GOTHIC_ENGINE {
 #endif
 
 
+	static int Compare_Occluder(const void* arg1, const void* arg2)
+	{
+		int poly1 = int(*((zCPolygon**)arg1));
+		int poly2 = int(*((zCPolygon**)arg2));
+
+		return (poly1 - poly2);
+	};
+
+	//void zCBspTree::MarkOccluderPolys () 
+
+	//HOOK Ivk_zCCBspTree_MarkOccluderPolys AS(&zCBspTree::MarkOccluderPolys, &zCBspTree::MarkOccluderPolys_Union);
+	void zCBspTree::MarkOccluderPolys_Union()
+	{
+		zERR_MESSAGE(3, 0, "D: RBSP: Marking Occluder Polys...");
+		RX_Begin(4);
+
+		int numOccluder = 0;
+		for (int i = 0; i < mesh->numPoly; i++) 
+		{
+			zCPolygon* poly = mesh->SharePoly(i);
+
+			// Ghost-Occluder ?
+			if (poly->GetGhostOccluder())
+			{
+				poly->SetOccluder(TRUE);
+				continue;
+			};
+
+			// [EDENFELD] 1.09 Alle Polys, die ein Material mit noCollDet Flag 
+			// auf TRUE gesetzt haben, sind _immer_ nicht-occluder
+			// ausserdem: neue Material Eigenschaft "forceOccluder" eingefьhrt,
+			// die alle Polys, die dieses Material benutzen automatisch zum Occluder 
+			// werden lдsst
+			if (poly->GetMaterial())
+			{
+				if (poly->GetMaterial()->GetNoCollDet(TRUE))
+				{
+					poly->SetOccluder(FALSE);
+					continue;
+				}
+				else if (poly->GetMaterial()->GetOccluder())
+				{
+					poly->SetOccluder(TRUE);
+					//continue;
+				};
+			};
+
+
+			if ((poly->polyPlane.normal[VY] < -0.01F) || (poly->polyPlane.normal[VY] > 0.8F))
+			{
+				poly->SetOccluder(FALSE);
+				continue;
+			};
+
+			if (poly->GetMaterial()->GetTexture())
+				poly->GetMaterial()->GetTexture()->CacheIn(-1);
+
+			if (poly->GetMaterial()->GetTexture() && poly->GetMaterial()->GetTexture()->HasAlpha())
+			{
+				poly->SetOccluder(FALSE);
+				continue;
+			}
+
+			if (poly->GetMaterial()->GetAlpha() < 255)
+			{
+				poly->SetOccluder(FALSE);
+				continue;
+			}
+
+			if (poly->GetMaterial()->GetAlphaBlendFunc() > zRND_ALPHA_FUNC_NONE)
+			{
+				poly->SetOccluder(FALSE);
+				continue;
+			}
+
+			if (poly->GetMaterial()->GetMatGroup() == zMAT_GROUP_WATER)
+			{
+				poly->SetOccluder(FALSE);
+				continue;
+			}
+
+			zCPolygon** foundPolyList;
+			int			foundPolyNum;
+			zTBBox3D	polyBBox = poly->GetBBox3D();
+
+			// Alle Polys aus der nahen Umgebung einsammeln
+			zTBBox3D searchBox = polyBBox;
+			const zREAL INC = zREAL(1.0F);
+			if (searchBox.mins[VX] == searchBox.maxs[VX]) { searchBox.mins[VX] -= INC; searchBox.maxs[VX] += INC; };
+			if (searchBox.mins[VZ] == searchBox.maxs[VZ]) { searchBox.mins[VZ] -= INC; searchBox.maxs[VZ] += INC; };
+			searchBox.Scale(zREAL(1.2F));		// scale x/z
+			searchBox.mins[VY] = -999999;
+			searchBox.maxs[VY] = +999999;
+
+			zBOOL		occluder = TRUE;
+			{
+				bspRoot->CollectPolysInBBox3D(searchBox, foundPolyList, foundPolyNum);
+				for (int j = 0; j < foundPolyNum; j++) {
+					zCPolygon* poly2 = foundPolyList[j];
+					if (poly == poly2) continue;
+
+					// Sector-Poly Handling
+
+					if (poly2->GetSectorFlag()) continue;
+
+					if (poly2->polyPlane.normal[VY] < zREAL(0.0001F)) continue;
+
+					// Wasser ?
+					if (poly2->GetMaterial()->GetMatGroup() == zMAT_GROUP_WATER) continue;
+
+					// haben beide Polys fast identische Normalen ?
+					if (poly->polyPlane.normal.IsEqualEps(poly2->polyPlane.normal)) continue;
+
+					// Das zweite Poly darf nicht ueber dem ersten liegen
+					zTBBox3D poly2BBox = poly2->GetBBox3D();
+					if (poly2BBox.maxs[VY] > polyBBox.mins[VY]) continue;
+
+					if (polyBBox.IsIntersecting(poly2BBox) && poly->IsIntersectingProjection(poly2, zVEC3(0, 1, 0))) { occluder = FALSE; break; };
+
+				};
+			};
+
+			poly->SetOccluder(occluder);
+			numOccluder += int(occluder);
+		};
+
+		RX_End(4);
+
+		cmd << RX_PerfString(4)
+			<< " 1#: "
+			<< endl;
+
+		RX_Begin(4);
+		// zweiter pass: alle occluder rausschmeissen, die ineffizient sind.
+		// dazu gehцren: 
+		// a) occluder ohne occluder nachbarn die sehr klein sind
+		// b) occluder polys mit occluder nachbarn, dessen flдchen-summe zu klein ist
+		zCArray<zCPolygon*>		occluderNeighbours;
+		//zCArraySort<zCPolygon*> occluderTested;
+		//occluderTested.SetCompare(Compare_Occluder);
+
+		std::unordered_set<zCPolygon*> occluderTested;
+
+		int maxNeighbourOccluders = 0;
+		int maxArea = 0;
+
+		//zCMaterial *mat = zNEW(zCMaterial("Occluder_Poly_Mat"));  
+		//mat->SetColor (0,255,0);
+
+		for (int i = 0; i < mesh->numPoly; i++)
+		{
+			zCPolygon* poly = mesh->SharePoly(i);
+
+			static int count = 0;
+			if ((count++ == 10000))
+			{
+				count = 0;
+				zERR_MESSAGE(5, 0, "C: unmarking inefficient occluders, still working: " + zSTRING((float(i) / float(mesh->numPoly)) * 100));
+				cmd << occluderTested.size() << "|" << occluderNeighbours.GetNumInList() << endl;
+			}
+
+			if (!poly->IsOccluder())				 continue;
+			if (poly->GetGhostOccluder())			 continue;
+			//if (occluderTested.IsInList(poly))		 continue;
+			if (occluderTested.find(poly) != occluderTested.end()) continue;
+
+			//occluderTested.InsertSort(poly);
+			occluderTested.insert(poly);
+			occluderNeighbours.InsertEnd(poly);
+
+			//0x00534210 private: float __thiscall zCBspTree::GetOccluderAreaRec(class zCPolygon const *,class zCArray<class zCPolygon *> &)
+			
+			zREAL sumOccluderArea = GetOccluderAreaRec(poly, occluderNeighbours);
+
+			
+			if (sumOccluderArea > maxArea)
+			{
+				maxArea = sumOccluderArea;
+			}
+			if (occluderNeighbours.GetNum() > maxNeighbourOccluders)
+			{
+				maxNeighbourOccluders = occluderNeighbours.GetNum();
+			}
+
+			const zBOOL big = (sumOccluderArea > (300 * 300));
+
+			if (!big)
+			{
+				for (int j = 0; j < occluderNeighbours.GetNum(); j++)
+				{
+					occluderNeighbours[j]->SetOccluder(FALSE);
+					//occluderNeighbours[j]->SetMaterial(mat);
+					numOccluder--;
+				}
+			}
+			else
+			{
+			
+				for (int j = 0; j < occluderNeighbours.GetNum(); j++)
+				{
+					if (occluderTested.find(occluderNeighbours[j]) == occluderTested.end())
+					{
+						occluderTested.insert(occluderNeighbours[j]);
+					}
+
+					//if (!occluderTested.IsInList(occluderNeighbours[j]))
+						//occluderTested.InsertSort(occluderNeighbours[j]);
+				}
+
+				
+
+			}
+
+			occluderNeighbours.DeleteList();
+
+		}
+		//occluderTested.DeleteList();
+
+		RX_End(4);
+
+		cmd << RX_PerfString(4)
+			<< " 2#: "
+			<< endl;
+
+
+		zERR_MESSAGE(3, 0, "D: RBSP: ... numOccluder: " + zSTRING(numOccluder) + " of " + zSTRING(mesh->numPoly));
+		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderSize: " + zSTRING(maxArea));
+		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderNeighbours: " + zSTRING(maxNeighbourOccluders));
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	//int zCCBspNode::OutdoorKillRedundantLeafs () 
 	//0x0053FF80 public: int __thiscall zCCBspNode::OutdoorKillRedundantLeafs(void)
 

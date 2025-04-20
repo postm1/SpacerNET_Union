@@ -285,6 +285,9 @@ namespace Gothic_II_Addon {
 		return *this;
 	};
 
+
+    zBOOL IsEqualEps(const zVEC3& b) const;
+
     float Distance( const zVEC3& a0 ) const
     {
       return ( a0 - *this ).Length();
