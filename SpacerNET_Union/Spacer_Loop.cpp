@@ -619,9 +619,12 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+
+		
 		debug.Loop();
 		RenderVobsLoop();
 
+		theApp.updateMatrix.UpdateTimers();
 		theApp.OnLevelReady();
 
 		nograss.Loop();

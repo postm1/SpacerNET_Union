@@ -134,6 +134,7 @@ namespace GOTHIC_ENGINE {
 			// selected current vob
 			zCVob* pickedVob;
 			zCVob* globalParent;
+			
 
 			zCVob* currentVobRender;
 			zCVob* currenItemRender;
@@ -264,6 +265,32 @@ namespace GOTHIC_ENGINE {
 			
 		} exports;
 
+
+		struct UpdateMatrix
+		{
+			zCVob* lastSelectedVob;
+			int timeSince;
+			bool active;
+
+			void ResetMatrixUpdate()
+			{
+				active = false;
+				timeSince = 0;
+				lastSelectedVob = NULL;
+			}
+
+			void OnUpdateMatrix(zCVob* pVob)
+			{
+				timeSince = 1000;
+				active = true;
+				lastSelectedVob = pVob;
+			}
+
+			void UpdateTimers();
+			void CallUpdate();
+
+		} updateMatrix;
+
 		void BlockMouseClick(int time);
 		bool IsClicksBlocked();
 		void PluginLoop();
@@ -339,7 +366,7 @@ namespace GOTHIC_ENGINE {
 		void AddVobToFavorite(zCVob* pVob);
 		void SetProperties(zSTRING & propString, zSTRING classNameVob);
 
-		void SelectObject(zCObject * object, bool clearInput = true);
+		void SelectObject(zCObject * object, bool clearInput = true, bool isMatrixUpdate = false);
 
 		void ApplyProps(CString str, CString nameCurrent, CString visualStr, int posChanged);
 

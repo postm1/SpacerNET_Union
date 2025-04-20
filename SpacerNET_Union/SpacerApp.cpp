@@ -95,6 +95,8 @@ namespace GOTHIC_ENGINE {
 		this->isNewBalanceMod = false;
 
 		this->pLightDx11 = NULL;
+
+		updateMatrix.ResetMatrixUpdate();
 		
 	}
 
@@ -161,6 +163,8 @@ namespace GOTHIC_ENGINE {
 		}
 
 		pickedVob = vob;
+
+		
 
 		if (vob == NULL)
 		{
@@ -373,7 +377,8 @@ namespace GOTHIC_ENGINE {
 			
 		}
 		
-		
+		updateMatrix.ResetMatrixUpdate();
+
 		RenderDX11_RemoveAmbientLight();
 
 		debug.CleanLines();
@@ -381,6 +386,7 @@ namespace GOTHIC_ENGINE {
 		compareDynList.DeleteList();
 		compareVobsAll.DeleteList();
 		theApp.compareCatalogVisualsMap.clear();
+
 
 		pickedVob = NULL;
 		vobToCopy = NULL;
@@ -2068,7 +2074,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	void SpacerApp::SelectObject(zCObject* object, bool clearInput)
+	void SpacerApp::SelectObject(zCObject* object, bool clearInput, bool isMatrixUpdate)
 	{
 		OutFile("SelectObject: object " + AHEX32((uint)object), true);
 
@@ -2099,8 +2105,23 @@ namespace GOTHIC_ENGINE {
 			zCVob* vob = (zCVob*)(object);
 			zSTRING className = vob->_GetClassDef()->className;
 
-			//std::cout << "Get Props: " << arcString << std::endl;
-			SetProperties(arcString, className);
+
+			//cmd << "Get Props: " << arcString << endl;
+
+			if (isMatrixUpdate)
+			{
+				char* str = arcString.ToChar();
+
+				Stack_PushString(str);
+
+				static auto updateMatrixVob = (callVoidFunc)GetProcAddress(theApp.module, "UpdateMatrixVob");
+				updateMatrixVob();
+			}
+			else
+			{
+				SetProperties(arcString, className);
+			}
+			
 
 
 
@@ -2567,5 +2588,45 @@ namespace GOTHIC_ENGINE {
 			}
 			
 		}
+	}
+
+	// update matrix after we change vob matrix via controls
+	void SpacerApp::UpdateMatrix::UpdateTimers()
+	{
+		if (!active)
+		{
+			return;
+		}
+
+		if (!theApp.GetSelectedVob())
+		{
+			//print.PrintRed("NULL VOB");
+			ResetMatrixUpdate();
+			return;
+		}
+
+		timeSince -= ztimer->frameTimeFloat;
+
+		if (timeSince < 0) timeSince = 0;
+
+		if (timeSince == 0)
+		{
+			CallUpdate();
+			ResetMatrixUpdate();
+		}
+	}
+
+	void SpacerApp::UpdateMatrix::CallUpdate()
+	{
+		auto pVob = theApp.GetSelectedVob();
+
+		if (pVob != lastSelectedVob || !lastSelectedVob || !theApp.GetSelectedVob())
+		{
+			//print.PrintRed("BAD VOB!!!");
+			return;
+		}
+
+		theApp.SelectObject(pVob, true, true);
+		
 	}
 }

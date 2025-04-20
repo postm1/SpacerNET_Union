@@ -61,6 +61,7 @@ namespace GOTHIC_ENGINE {
 			list = list->next;
 		}
 
+		theApp.updateMatrix.OnUpdateMatrix(pVob);
 		//cmd << "RestoreVobPos: pList size: " << pList.GetNum() << endl;
 	}
 

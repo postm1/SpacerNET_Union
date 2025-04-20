@@ -267,6 +267,8 @@ namespace GOTHIC_ENGINE {
 	void HandleVobRotation(zCVob* pickedVob, int type, float angle)
 	{
 
+		theApp.updateMatrix.OnUpdateMatrix(pickedVob);
+
 		if (IsVobMover(pickedVob))
 		{
 			HandleVobRotationMover(pickedVob, type, angle);
@@ -389,6 +391,7 @@ namespace GOTHIC_ENGINE {
 
 		//bool parentAlone = theApp.options.GetIntVal("translateParentAlone");
 
+		theApp.updateMatrix.OnUpdateMatrix(pickedVob);
 
 		//collision check for mover
 		if (IsVobMover(pickedVob))
