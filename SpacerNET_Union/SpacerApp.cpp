@@ -2231,7 +2231,7 @@ namespace GOTHIC_ENGINE {
 
 			if (vob)
 			{
-				cmd << "Apply " << vob->GetVobName() << " posChanged: " << posChanged << endl;
+				//cmd << "Apply " << vob->GetVobName() << " posChanged: " << posChanged << endl;
 
 
 				if (posChanged == 0 && lastPos != vob->GetPositionWorld())
