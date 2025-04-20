@@ -1,8 +1,13 @@
-// Supported with union (c) 2020 Union team
+﻿// Supported with union (c) 2020 Union team
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
+
+
+	static float GetPolyNeighbourPerfCounter = 0;
+
+//#define GETPOLYS_TEST
 
 #if ENGINE == Engine_G2A
 	int& s_bAddVobsToMesh = *(int*)0x008D8870;
@@ -127,10 +132,67 @@ namespace GOTHIC_ENGINE {
 		RX_End(2);
 
 		cmd << "MergeMesh_Union: " << RX_PerfString(2) << endl;
+
+		GetPolyNeighbourPerfCounter = 0;
 	}
 
+
+	//void zCCBspTree::GetPolyNeighbours(zCPolygon* sourcePoly, zCPolygon**& foundPolyList, int& foundPolyNum) {
+	HOOK Ivk_zCCBspTree_GetPolyNeighbours AS(&zCCBspTree::GetPolyNeighbours, &zCCBspTree::GetPolyNeighbours_Union);
+
+	void zCCBspTree::GetPolyNeighbours_Union(zCPolygon* sourcePoly, zCPolygon**& foundPolyList, int& foundPolyNum)
+	{
+
+		RX_Begin(3);
+
+#ifdef GETPOLYS_TEST
+		THISCALL(Ivk_zCCBspTree_GetPolyNeighbours)(sourcePoly, foundPolyList, foundPolyNum);
+
+		int savefoundPolyNum = foundPolyNum;
+#endif // GETPOLYS_TEST
+
+
+		zTBBox3D searchBox = sourcePoly->GetBBox3D();
+		searchBox.Scale(1.1F);
+		bspRoot.CollectPolysInBBox3D(searchBox, foundPolyList, foundPolyNum);
+
+		std::sort(foundPolyList, foundPolyList + foundPolyNum);
+
+		int writeIndex = 0;
+		zCPolygon* lastPoly = nullptr;
+
+		for (int i = 0; i < foundPolyNum; ++i) {
+			zCPolygon* poly = foundPolyList[i];
+
+			if (poly == sourcePoly || poly == lastPoly ||
+				(poly->GetSectorFlag() && !poly->IsPortal())
+				) {
+				continue;
+			}
+
+			foundPolyList[writeIndex++] = poly;
+			lastPoly = poly;
+		}
+
+		foundPolyNum = writeIndex;
+
+#ifdef GETPOLYS_TEST
+
+		if (savefoundPolyNum != foundPolyNum)
+		{
+			cmd << "WRONG!!!: " << savefoundPolyNum << " | " << foundPolyNum << endl;
+		}
+
+		RX_End(3);
+
+		GetPolyNeighbourPerfCounter += perf[3];
+#endif // GETPOLYS_TEST		
+
+
+	}
 	
 #endif
+
 
 	//int zCCBspNode::OutdoorKillRedundantLeafs () 
 	//0x0053FF80 public: int __thiscall zCCBspNode::OutdoorKillRedundantLeafs(void)
@@ -138,6 +200,9 @@ namespace GOTHIC_ENGINE {
 	HOOK Ivk_zCCBspNode_OutdoorKillRedundantLeafs AS(&zCCBspNode::OutdoorKillRedundantLeafs, &zCCBspNode::OutdoorKillRedundantLeafs_Union);
 	int zCCBspNode::OutdoorKillRedundantLeafs_Union()
 	{
+#ifdef GETPOLYS_TEST
+		cmd << "GetPolyNeighbours: " << (GetPolyNeighbourPerfCounter / 1000.0f) << " ms" << endl;
+#endif
 		if (theApp.options.GetIntVal("bSkipPolysCut"))
 		{
 			return 0;
@@ -145,4 +210,5 @@ namespace GOTHIC_ENGINE {
 
 		return THISCALL(Ivk_zCCBspNode_OutdoorKillRedundantLeafs)();
 	}
+
 }
