@@ -493,8 +493,8 @@ namespace GOTHIC_ENGINE {
 
 		if (theApp.pickedVob)
 		{
-			if (dynamic_cast<zCMover*>(theApp.pickedVob)
-				|| dynamic_cast<zCVobSpot*>(theApp.pickedVob)
+			if (/*dynamic_cast<zCMover*>(theApp.pickedVob)*/
+				dynamic_cast<zCVobSpot*>(theApp.pickedVob)
 				|| dynamic_cast<zCVobWaypoint*>(theApp.pickedVob))
 			{
 
