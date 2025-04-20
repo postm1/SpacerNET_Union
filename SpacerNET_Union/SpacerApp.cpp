@@ -480,11 +480,32 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void SpacerApp::CallUIAction(SpacerNetInterfaceAction action)
+	{
+		static auto callUIFunc = (callIntFunc)GetProcAddress(theApp.module, "CallUIAction");
 
+		callUIFunc((int)action);
+	}
+	void SpacerApp::SpecialWindowsKeys()
+	{
+		//cmd << inputKey << endl;
+
+		if (keys.KeyPressed("FASTKEY_OPEN_ZEN", true))
+		{
+			CallUIAction(SPACER_UI_ACTION_OPEN_ZEN);
+		}
+
+		if (keys.KeyPressed("FASTKEY_OPEN_MESH", true))
+		{
+			CallUIAction(SPACER_UI_ACTION_OPEN_MESH);
+		}
+	}
 	void SpacerApp::Loop()
 	{
 		isGrattControlActive = theApp.options.GetIntVal("bToggleNewController");
 		
+		SpecialWindowsKeys();
+
 		if (ogame && ogame->GetWorld() && ogame->GetCamera() && !isExit && !g_bIsPlayingGame)
 		{
 			

@@ -322,6 +322,8 @@ namespace GOTHIC_ENGINE {
 		void UpdateLightPresetView(zCVobLightData& lightData);
 		zSTRING GenerateWPName(zSTRING baseName);
 		void Loop();
+		void SpecialWindowsKeys();
+		void CallUIAction(SpacerNetInterfaceAction action);
 		void SetMover();
 		bool GameFocused();
 		void ToggleWindowsVisible();

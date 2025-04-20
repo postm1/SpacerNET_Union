@@ -34,6 +34,10 @@ namespace GOTHIC_ENGINE {
 			code = foundPair.GetValue()->keyCode;
 			mod = foundPair.GetValue()->modifier;
 
+
+			//cmd << "Pressed: code: " << code << " mod: " << mod << endl;
+
+			
 			//if (found != 0)
 			{
 				//foundKey.GetKey();
@@ -193,6 +197,10 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("ROT_MOD_CHANGE", "8_20");//SHIFT+T
 		defaultValues.Insert("FAST_FILTER_IGNOREPFX", "8_47");//SHIFT+V
 		defaultValues.Insert("CHANGE_VOB_COMPLEX_MOVE", "8_7");//SHIFT+6
+
+		defaultValues.Insert("FASTKEY_OPEN_ZEN", "2_24");//CTRL+O
+		defaultValues.Insert("FASTKEY_OPEN_MESH", "2_50");//CTRL+M
+		
 		
 		auto arr = defaultValues.GetArray();
 

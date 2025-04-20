@@ -223,6 +223,12 @@ namespace GOTHIC_ENGINE {
 
 	enum TMatLibFlag { NullLib = 0 };
 
+
+	enum SpacerNetInterfaceAction
+	{
+		SPACER_UI_ACTION_OPEN_ZEN = 0,
+		SPACER_UI_ACTION_OPEN_MESH = 1
+	};
 }
 
 #if ENGINE == Engine_G1
