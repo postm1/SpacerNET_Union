@@ -488,6 +488,11 @@ namespace GOTHIC_ENGINE {
 	}
 	void SpacerApp::SpecialWindowsKeys()
 	{
+		if (!spacerWasInit || g_bIsPlayingGame)
+		{
+			return;
+		}
+
 		//cmd << inputKey << endl;
 
 		if (keys.KeyPressed("FASTKEY_OPEN_ZEN", true))
@@ -504,7 +509,6 @@ namespace GOTHIC_ENGINE {
 	{
 		isGrattControlActive = theApp.options.GetIntVal("bToggleNewController");
 		
-		SpecialWindowsKeys();
 
 		if (ogame && ogame->GetWorld() && ogame->GetCamera() && !isExit && !g_bIsPlayingGame)
 		{

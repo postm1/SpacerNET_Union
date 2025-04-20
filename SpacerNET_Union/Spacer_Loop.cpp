@@ -106,6 +106,7 @@ namespace GOTHIC_ENGINE {
 				GetCursorPos(&mPos);
 				zCView::GetInput();
 
+				theApp.SpecialWindowsKeys();
 
 				if (GetGame() && gameSession && ogame->GetWorld() && ogame->GetCamera() && theApp.IsAWorldLoaded() && ogame->GetWorld()->compiled)
 				{
@@ -584,9 +585,6 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 		// MessageBox(0, "Game_Loop", 0, 0);
-
-
-
 		
 		
 		ResetPrintDebug();
@@ -603,12 +601,17 @@ namespace GOTHIC_ENGINE {
 
 		//print.PrintRed(Z(int)player);
 
+		
+
 		if (theApp.g_bIsPlayingGame)
 		{
 
 			GameLoop();
 			return;
 		}
+
+
+		
 
 		if (GetForegroundWindow() == hWndApp || GetForegroundWindow() == theApp.mainWin || GetForegroundWindow() == theApp.vobsWin)
 		{
