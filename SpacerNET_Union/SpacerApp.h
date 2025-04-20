@@ -281,7 +281,7 @@ namespace GOTHIC_ENGINE {
 
 			void OnUpdateMatrix(zCVob* pVob)
 			{
-				timeSince = 1000;
+				timeSince = 300;
 				active = true;
 				lastSelectedVob = pVob;
 			}

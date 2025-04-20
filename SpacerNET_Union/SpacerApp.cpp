@@ -2618,7 +2618,6 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::UpdateMatrix::CallUpdate()
 	{
-		return;
 
 		auto pVob = theApp.GetSelectedVob();
 
