@@ -125,7 +125,7 @@ namespace GOTHIC_ENGINE {
 		
 		RX_End(10);
 
-		cmd << "CalcVertexNormalsNew: " << (int)mode << " " << RX_PerfString(10) << " finished" << endl;
+		cmd << "CalcVertexNormals (Light): " << (int)mode << " " << RX_PerfString(10) << " completed" << endl;
 
 	}
 
