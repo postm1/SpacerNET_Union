@@ -1552,12 +1552,13 @@ namespace GOTHIC_ENGINE {
 
 		return text;
 	}
-
+#if ENGINE >= Engine_G2
 	zBOOL zVEC3::IsEqualEps(const zVEC3& b) const {								// fuzzy compare with small epsilon
 		return ((zAbs(zREAL(n[0] - b.n[0])) < zALG_EQUAL_EPSILON) &&
 			(zAbs(zREAL(n[1] - b.n[1])) < zALG_EQUAL_EPSILON) &&
 			(zAbs(zREAL(n[2] - b.n[2])) < zALG_EQUAL_EPSILON));
 	};
+#endif
 
 	std::string zMAT4::ToString()
 	{

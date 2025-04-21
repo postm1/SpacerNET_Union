@@ -29,8 +29,7 @@ zREAL					GetDetailTextureScale() const { return detailTextureScale; }
 zCTexture*				GetTexture() const { return texture; };
 zBOOL					GetSmooth() const { return smooth; };
 
-zBOOL					GetOccluder() const { return forceOccluder; };
-void					SetOccluder(const zBOOL b) { forceOccluder = b; };
+
 
 void					SetAlpha(const zBYTE a) { color.alpha = a; };
 zBYTE					GetAlpha() const { return color.alpha; };
@@ -40,6 +39,9 @@ zBOOL					GetEnvMapEnabled() const { return m_bEnvironmentalMapping; };
 void					SetEnvMapEnabled(const zBOOL a_bEnEnvMap) { m_bEnvironmentalMapping = a_bEnEnvMap; };
 void					SetEnvMapStrength(const zREAL a_bEnvMapStr) { m_bEnvironmentalMappingStrength = a_bEnvMapStr; };
 zREAL					GetEnvMapStrength()	const { return m_bEnvironmentalMappingStrength; };
+
+zBOOL					GetOccluder() const { return forceOccluder; };
+void					SetOccluder(const zBOOL b) { forceOccluder = b; };
 
 #endif
 

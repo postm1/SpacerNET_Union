@@ -191,7 +191,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 	
-#endif
+
 
 
 
@@ -460,7 +460,7 @@ namespace GOTHIC_ENGINE {
 		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderNeighbours: " + zSTRING(maxNeighbourOccluders));
 	}
 
-
+#endif
 
 
 
