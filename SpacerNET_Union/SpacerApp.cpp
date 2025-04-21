@@ -2078,8 +2078,11 @@ namespace GOTHIC_ENGINE {
 	{
 		OutFile("SelectObject: object " + AHEX32((uint)object), true);
 
-		theApp.CollectTargetListTrigger();
-		
+		if (!isMatrixUpdate)
+		{
+			theApp.CollectTargetListTrigger();
+		}
+
 
 		if (object)
 		{
@@ -2149,7 +2152,7 @@ namespace GOTHIC_ENGINE {
 
 		zinput->ClearLeftMouse();
 
-		if (clearInput)
+		if (clearInput && !isMatrixUpdate)
 		{
 			//cmd << "clear" << endl;
 			zinput->ClearKeyBuffer();
