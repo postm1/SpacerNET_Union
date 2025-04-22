@@ -240,24 +240,32 @@ namespace GOTHIC_ENGINE {
 	{
 		zCWorld* world = ogame->GetWorld();
 
+		cmd << "[Union: BuildTree]" << endl;
+
 		exports.toggleUIElement(UIElementType::UI_ALL_VOBS_TREE_LIST, FALSE);
 
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearAllEntries")();
-
-
+	
 		zCTree<zCVob>* tree = world->globalVobTree.GetFirstChild();
 		while (tree)
 		{
 			CreateBaseVobTree(tree);
 			tree = tree->GetNextChild();
 		}
+
+
 		treeIsReady = true;
-		std::cout << "Union: Creating TreeView in C#..." << std::endl;
+
+		
+
+		RX_Begin(8);
+
 		CreateTree();
 
+		RX_End(8);
+		cmd << "[CreateTree Completed in " << RX_PerfString(8) << "]" << endl;
+
 		exports.toggleUIElement(UIElementType::UI_ALL_VOBS_TREE_LIST, TRUE);
-
-
 
 	}
 

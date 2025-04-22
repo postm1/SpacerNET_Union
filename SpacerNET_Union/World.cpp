@@ -668,9 +668,7 @@ namespace GOTHIC_ENGINE {
 			dataFilled = true;
 
 
-			std::cout << "Union: Creating PFX/Items/Sounds/Visuals lists..." << std::endl;
-
-
+			cmd << "Union: Creating PFX/Items/Sounds/Visuals lists..." << endl;
 
 			BuildClassHierarchy();
 
@@ -683,15 +681,14 @@ namespace GOTHIC_ENGINE {
 
 		}
 
-		std::cout << "Union: BuildTree..." << std::endl;
+		RX_Begin(7);
 		BuildTree();
-	
+		RX_End(7);
 
+		
 		restorator.GenerateVobsPos();
-
 		//mm.CreateMatTree();
 		mf.FillInterfaceData();
-		
 
 
 		if (options.GetIntVal("soundZenOff"))
