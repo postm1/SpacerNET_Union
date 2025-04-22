@@ -263,7 +263,7 @@ namespace GOTHIC_ENGINE {
 		CreateTree();
 
 		RX_End(8);
-		cmd << "[CreateTree Completed in " << RX_PerfString(8) << "]" << endl;
+		cmd << "[CreateTree UI List finished] " << RX_PerfString(8) << endl;
 
 		exports.toggleUIElement(UIElementType::UI_ALL_VOBS_TREE_LIST, TRUE);
 
