@@ -14,17 +14,16 @@ namespace GOTHIC_ENGINE {
 		int currentId;
 		zCView * pView;
 		zCArray<PrintWinMessage> arrMsgs;
-		int pwMaxTime;
 		int pwMaxMsgs;
 
 	public:
 
 		void Init();
 		void Loop();
-		void PrintWin(zSTRING text, zCOLOR color = zCOLOR(255, 255, 255));
+		void PrintWin(zSTRING text, zCOLOR color = zCOLOR(255, 255, 255), int maxTime = 3);
 		void CheckMsgs();
 		void ClearMsgs();
-		void PrintRed(zSTRING text);
-		void PrintGreen(zSTRING text);
+		void PrintRed(zSTRING text, int time = 3);
+		void PrintGreen(zSTRING text, int time = 3);
 	};
 }

@@ -9,7 +9,6 @@ namespace GOTHIC_ENGINE {
 		pView->SetFont("FONT_OLD_10_WHITE.TGA");
 		pView->SetFontColor(zCOLOR(15, 255, 15));
 		pView->SetAlphaBlendFunc(zRND_ALPHA_FUNC_BLEND);
-		pwMaxTime = 3;
 		pwMaxMsgs = 6;
 	}
 
@@ -78,10 +77,10 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void MyPrint::PrintWin(zSTRING text, zCOLOR color) {
+	void MyPrint::PrintWin(zSTRING text, zCOLOR color, int maxTime) {
 		PrintWinMessage msg;
 		msg.msg = text;
-		msg.amountMillisec = pwMaxTime * 1000;
+		msg.amountMillisec = maxTime * 1000;
 		msg.id = currentId++;
 		msg.color = color;
 		if (arrMsgs.GetNum() < pwMaxMsgs) {
@@ -93,13 +92,13 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void MyPrint::PrintRed(zSTRING text) {
+	void MyPrint::PrintRed(zSTRING text, int time) {
 		zCOLOR color = zCOLOR(255, 15, 15);
-		PrintWin(text, color);
+		PrintWin(text, color, time);
 	}
 
-	void MyPrint::PrintGreen(zSTRING text) {
+	void MyPrint::PrintGreen(zSTRING text, int time) {
 		zCOLOR color = zCOLOR(0, 255, 0);
-		PrintWin(text, color);
+		PrintWin(text, color, time);
 	}
 }

@@ -263,6 +263,7 @@ namespace GOTHIC_ENGINE {
 
 		if (theApp.globalParent) parent = theApp.globalParent;
 
+
 		if (parent && parent->IsPFX())
 		{
 			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
@@ -295,6 +296,17 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		//check zCVob no 3DS or TGA
+		if (className != "zCVob")
+		{
+			if (!visualVob.EndWith(".3DS") || !visualVob.EndWith(".TGA"))
+			{
+				if (theApp.options.GetIntVal("bShowVobVisualWarn"))
+				{
+					print.PrintRed(GetLang("COMMON_WARN_NOT_USUAL_VISUAL"), 7);
+				}
+			}
+		}
 		
 			
 		bool flag = nextInsertBlocked;

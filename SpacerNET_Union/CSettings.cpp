@@ -499,7 +499,9 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "checkBoxBlockComplexVob", "0");
 		list.Insert("checkBoxBlockComplexVob", set);
-		
+
+		set = new CSetting(TYPE_INT, "SPACER", "bShowVobVisualWarn", "1");
+		list.Insert("bShowVobVisualWarn", set);
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
