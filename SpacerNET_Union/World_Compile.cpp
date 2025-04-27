@@ -15,15 +15,20 @@ namespace GOTHIC_ENGINE {
 	HOOK Ivk_zCMesh_MergeMesh AS(&zCMesh::MergeMesh, &zCMesh::MergeMesh_Union);
 	void zCMesh::MergeMesh_Union(zCMesh* mesh, const zMAT4& trafo)
 	{
+		
+
 		// in some special cases we use old funciton
 		if (s_bAddVobsToMesh || isNewMapActiveNow || trafo.GetTranslation().Length() > 0 || (mesh && mesh->numVert == 0))
 		{
-			//cmd << "Called MergeMesh old function..." << endl;
-
+			zERR_MESSAGE(3, zERR_BEGIN, "D: MergeMesh_Union OLD CALLED ");
+			RX_Begin(2);
 			THISCALL(Ivk_zCMesh_MergeMesh)(mesh, trafo);
+			RX_End(2);
+			zERR_MESSAGE(3, zERR_END, "");
 			return;
 		}
 
+		zERR_MESSAGE(3, zERR_BEGIN, "D: MergeMesh_Union NEW CALLED ");
 		RX_Begin(2);
 
 		ArraysToLists();
@@ -132,7 +137,7 @@ namespace GOTHIC_ENGINE {
 		RX_End(2);
 
 		cmd << "MergeMesh_Union: " << RX_PerfString(2) << endl;
-
+		zERR_MESSAGE(3, zERR_END, "");
 		GetPolyNeighbourPerfCounter = 0;
 	}
 
