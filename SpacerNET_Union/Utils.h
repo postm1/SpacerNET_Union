@@ -20,6 +20,16 @@ namespace GOTHIC_ENGINE {
         return fabs(a);
     }
 
+    inline float zAbsApprox(const float a) {
+        int tmp = *(int*)&a;
+        tmp &= 0x7FFFFFFF;
+        return *(float*)&tmp;
+    };
+
+    inline zBOOL zIsSmallerPositive(const float f1, const float f2) {
+        return ((*(zDWORD*)&f1) < (*(zDWORD*)&f2));
+    }
+
 	template<typename Key, typename Value>
 	void DeleteAndClearMap(Common::Map<Key, Value*>& map)
 	{

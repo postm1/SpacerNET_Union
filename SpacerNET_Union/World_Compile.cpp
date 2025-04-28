@@ -239,14 +239,139 @@ namespace GOTHIC_ENGINE {
 
 		return localArea;
 	}
+
+	// new functions, but sometimes it has wrong results, so just skip this optimization...
+	zBOOL __fastcall zCPolygon::IsIntersectingProjectionNew(zCPolygon* poly2, const zVEC3& projNormal)
+	{
+		zCPolygon* polyA = this;
+		zCPolygon* polyB = poly2;
+
+		// Determine projection axes using SSE for faster comparisons
+		__m128 absNormal = _mm_set_ps(0.0f,
+			zAbsApprox(projNormal[2]),
+			zAbsApprox(projNormal[1]),
+			zAbsApprox(projNormal[0]));
+
+		int vz;
+		if (zIsSmallerPositive(absNormal.m128_f32[0], absNormal.m128_f32[1])) {
+			vz = zIsSmallerPositive(absNormal.m128_f32[1], absNormal.m128_f32[2]) ? 2 : 1;
+		}
+		else {
+			vz = zIsSmallerPositive(absNormal.m128_f32[0], absNormal.m128_f32[2]) ? 2 : 0;
+		}
+
+		int vx = vz + 1; if (vx > 2) vx = 0;
+		int vy = vx + 1; if (vy > 2) vy = 0;
+
+		// Point-in-poly test
+		for (int k = 0; k < 1; k++) {
+			zPOINT3 polyACenter = polyA->GetCenter();
+			__m128 center = _mm_loadu_ps(&polyACenter[0]);
+			const float scale = 0.2f;
+			__m128 scaleVec = _mm_set1_ps(scale);
+			__m128 normalVec = _mm_loadu_ps(&polyA->polyPlane.normal[0]);
+
+			for (int l = 0; l < polyA->polyNumVert; l++) {
+				__m128 vertex = _mm_loadu_ps(&polyA->vertex[l]->position[0]);
+				__m128 diff = _mm_sub_ps(center, vertex);
+				__m128 scaled = _mm_mul_ps(diff, scaleVec);
+				__m128 inters = _mm_add_ps(vertex, scaled);
+				inters = _mm_sub_ps(inters, normalVec);
+
+				float intersection[3];
+				_mm_storeu_ps(intersection, inters);
+
+				zBOOL inside = FALSE;
+				for (int i = 0, j = polyB->polyNumVert - 1; i < polyB->polyNumVert; j = i++) {
+					const zPOINT3& u = polyB->vertex[i]->position;
+					const zPOINT3& v = polyB->vertex[j]->position;
+
+					if ((u[vy] >= intersection[vy]) != (v[vy] >= intersection[vy])) {
+						zBOOL right = u[vx] >= intersection[vx];
+						if (right != (v[vx] >= intersection[vx])) {
+							zREAL t = (u[vy] - intersection[vy]) / (u[vy] - v[vy]);
+							if (u[vx] + (v[vx] - u[vx]) * t >= intersection[vx]) inside = !inside;
+						}
+						else if (right) inside = !inside;
+					}
+				}
+				if (inside) return TRUE;
+			}
+		}
+
+		// Edge-edge intersection test
+		for (int k = 0; k < 1; k++) {
+			zPOINT3 polyACenter = polyA->GetCenter();
+			__m128 center = _mm_loadu_ps(&polyACenter[0]);
+			const float scale = 0.1f;
+			__m128 scaleVec = _mm_set1_ps(scale);
+			__m128 normalVec = _mm_loadu_ps(&polyA->polyPlane.normal[0]);
+			__m128 normalScale = _mm_set1_ps(2.0f);
+
+			for (int l = 0; l < polyA->polyNumVert; l++) {
+				int lnext = l + 1;
+				if (lnext >= polyA->polyNumVert) lnext = 0;
+
+				__m128 vertex1 = _mm_loadu_ps(&polyA->vertex[l]->position[0]);
+				__m128 diff1 = _mm_sub_ps(center, vertex1);
+				__m128 scaled1 = _mm_mul_ps(diff1, scaleVec);
+				__m128 p1 = _mm_add_ps(vertex1, scaled1);
+				p1 = _mm_sub_ps(p1, _mm_mul_ps(normalVec, normalScale));
+
+				__m128 vertex2 = _mm_loadu_ps(&polyA->vertex[lnext]->position[0]);
+				__m128 diff2 = _mm_sub_ps(center, vertex2);
+				__m128 scaled2 = _mm_mul_ps(diff2, scaleVec);
+				__m128 p2 = _mm_add_ps(vertex2, scaled2);
+				p2 = _mm_sub_ps(p2, _mm_mul_ps(normalVec, normalScale));
+
+				float p1_arr[3], p2_arr[3];
+				_mm_storeu_ps(p1_arr, p1);
+				_mm_storeu_ps(p2_arr, p2);
+
+				for (int i = 0; i < polyB->polyNumVert; i++) {
+					int inext = i + 1;
+					if (inext >= polyB->polyNumVert) inext = 0;
+
+					const zPOINT3& p3 = polyB->vertex[i]->position;
+					const zPOINT3& p4 = polyB->vertex[inext]->position;
+
+					zREAL b = (p4[vy] - p3[vy]) * (p2_arr[vx] - p1_arr[vx]) -
+						(p4[vx] - p3[vx]) * (p2_arr[vy] - p1_arr[vy]);
+					if (b == 0) continue;
+
+					zREAL a = (p4[vx] - p3[vx]) * (p1_arr[vy] - p3[vy]) -
+						(p4[vy] - p3[vy]) * (p1_arr[vx] - p3[vx]);
+					zREAL c = (p2_arr[vx] - p1_arr[vx]) * (p1_arr[vy] - p3[vy]) -
+						(p2_arr[vy] - p1_arr[vy]) * (p1_arr[vx] - p3[vx]);
+
+					zREAL ua = a / b;
+					if ((ua < 0.0f) || (ua > 1.0f)) continue;
+					zREAL ub = c / b;
+					if ((ub < 0.0f) || (ub > 1.0f)) continue;
+					return TRUE;
+				}
+			}
+		}
+
+		return FALSE;
+	}
 	
+	//zBOOL zCCFASTCALL	zCPolygon::IsIntersectingProjection (zCPolygon *poly2, const zVEC3& projNormal) 
+	//HOOK Ivk_zCPolygon_IsIntersectingProjection AS(&zCPolygon::IsIntersectingProjection, &zCPolygon::IsIntersectingProjection_Union);
+	zBOOL __fastcall zCPolygon::IsIntersectingProjection_Union(zCPolygon* poly2, const zVEC3& projNormal)
+	{
+		return IsIntersectingProjectionNew(poly2, projNormal);
+	}
+
+
+
 	// unordered_set instead of old zCArray/zCArraySort, much faster
 	HOOK Ivk_zCCBspTree_MarkOccluderPolys AS(&zCBspTree::MarkOccluderPolys, &zCBspTree::MarkOccluderPolys_Union);
 	void zCBspTree::MarkOccluderPolys_Union()
 	{
 		//THISCALL(Ivk_zCCBspTree_MarkOccluderPolys)();
 
-		zERR_MESSAGE(3, 0, "D: RBSP: Marking Occluder Polys...");
+		zERR_MESSAGE(3, 0, "D: RBSP: Marking Occluder Polys... PolysCount: " + Z mesh->numPoly);
 		RX_Begin(4);
 
 		int numOccluder = 0;
@@ -338,7 +463,28 @@ namespace GOTHIC_ENGINE {
 					zTBBox3D poly2BBox = poly2->GetBBox3D();
 					if (poly2BBox.maxs[VY] > polyBBox.mins[VY]) continue;
 
-					if (polyBBox.IsIntersecting(poly2BBox) && poly->IsIntersectingProjection(poly2, zVEC3(0, 1, 0))) { occluder = FALSE; break; };
+					auto resultOriginal = poly->IsIntersectingProjection(poly2, zVEC3(0, 1, 0));
+					//auto result2 = poly->IsIntersectingProjectionNew(poly2, zVEC3(0, 1, 0));
+
+					/*if (resultOriginal != result2)
+					{
+						cmd << "BAD RESULT -> ";
+
+						if (resultOriginal)
+						{
+							cmd << "Old function result: TRUE";
+						}
+						else
+						{
+							cmd << "Old function result: FALSE";
+						}
+
+						for (int i = 0; i < poly2->polyNumVert; i++)
+						{
+							cmd << "\t" << i << ": " << poly2->vertex[i]->position.ToString() << endl;
+						}
+					}*/
+					if (resultOriginal) { occluder = FALSE; break; };
 
 				};
 			};
@@ -364,9 +510,6 @@ namespace GOTHIC_ENGINE {
 
 		int maxNeighbourOccluders = 0;
 		int maxArea = 0;
-
-		cmd << "NumPolys: " << mesh->numPoly << endl;
-
 
 		zERR_MESSAGE(3, 0, "D: RBSP: Marking Occluder Polys = START CYCLE");
 
