@@ -495,9 +495,7 @@ namespace GOTHIC_ENGINE {
 
 		RX_End(4);
 
-		cmd << RX_PerfString(4)
-			<< " FirstPart: "
-			<< endl;
+		cmd << "MarkOccluderPolys #1: " << RX_PerfString(4) << endl;
 
 		RX_Begin(4);
 
@@ -603,9 +601,7 @@ namespace GOTHIC_ENGINE {
 		occluderTested.clear();
 		RX_End(4);
 
-		cmd << RX_PerfString(4)
-			<< " SecondPart: "
-			<< endl;
+		cmd << "MarkOccluderPolys #2: " << RX_PerfString(4) << endl;
 
 
 		zERR_MESSAGE(3, 0, "D: RBSP: ... numOccluder: " + zSTRING(numOccluder) + " of " + zSTRING(mesh->numPoly));
