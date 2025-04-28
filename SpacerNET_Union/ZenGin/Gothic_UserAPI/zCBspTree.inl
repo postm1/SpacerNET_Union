@@ -10,3 +10,4 @@ zBOOL					CollectPolysInBBox3D(const zTBBox3D& testbbox3D, zCPolygon**& foundPol
 
 void zCBspTree::MarkOccluderPolys_Union();
 float zCBspTree::GetOccluderAreaRec_Union(const zCPolygon* rootPoly, zCArray<zCPolygon*>& nearOccluderPolys);
+float zCBspTree::GetOccluderAreaRec_UnionMyNew(const zCPolygon* rootPoly, std::unordered_set<zCPolygon*>& nearOccluderPolys);

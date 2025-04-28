@@ -17,6 +17,7 @@ extern "C" {
   #include <time.h>
 }
 
+#include <unordered_set>
 
 #pragma comment (lib, "Psapi.lib")
 #pragma comment (lib, "Shw32.lib")
