@@ -308,8 +308,8 @@ namespace GOTHIC_ENGINE {
 		Array<uint> arr;
 
 
-		cmd << "SearchFillVobClass: derived " << derived << " hasChildren " << hasChildren << " type: " << type 
-			<< " sel: " << selectedCount << " onlyVisOrName: " << onlyVisualOrName << endl;
+		//cmd << "SearchFillVobClass: derived " << derived << " hasChildren " << hasChildren << " type: " << type 
+			//<< " sel: " << selectedCount << " onlyVisOrName: " << onlyVisualOrName << endl;
 
 		SearchVobType searchType = (SearchVobType)type;
 
@@ -342,7 +342,7 @@ namespace GOTHIC_ENGINE {
 		std::unordered_set<zCVob*> pHashVobs;
 		int dub = 0;
 
-		RX_Begin(9);
+
 		for (int i = 0; i < result.GetNumInList(); i++)
 		{
 			auto pVob = result.GetSafe(i);
@@ -915,17 +915,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-
-		RX_End(9);
-
-		cmd << "Main search func: " << RX_PerfString(9) << endl;
-
-		RX_Begin(9);
 		callFuncOnEnd();
-
-		RX_End(9);
-
-		cmd << "callFuncOnEnd: " << RX_PerfString(9) << endl;
 
 		exports.toggleUIElement(UIElementType::UI_LIST_SEARCH_RESULT, TRUE);
 
