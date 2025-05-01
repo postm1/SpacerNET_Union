@@ -343,6 +343,13 @@ namespace GOTHIC_ENGINE {
 		for (int i = 0; i < result.GetNumInList(); i++)
 		{
 			auto pVob = result.GetSafe(i);
+
+			// don't add SpacerNET vobs in search result
+			if (IsSpacerVob(pVob))
+			{
+				continue;
+			}
+
 			auto it = pHashVobs.find(pVob);
 
 			if (it == pHashVobs.end())
@@ -387,10 +394,7 @@ namespace GOTHIC_ENGINE {
 			if (dynamic_cast<zCVobLevelCompo*>(pVobCur))	continue;
 			if (pVobCur == ogame->GetCamera()->GetVob())	continue;
 
-			if (pVobCur == currentVobRender || pVobCur == currenItemRender || pVobCur == floorVob || pVobCur == bboxMaxsVob || pVobCur == bboxMinsVob || IsSpacerVob(pVobCur))
-			{
-				continue;
-			}
+			
 
 			// поиск дублей имен
 			if (matchNames)
