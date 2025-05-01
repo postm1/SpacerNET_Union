@@ -99,10 +99,10 @@ namespace GOTHIC_ENGINE {
 				if (classDef->GetBaseClassDef())
 				{
 					baseName = A classDef->GetBaseClassDef()->GetClassName_();
-					baseOK = (baseName == A classDef->GetBaseClassName());
+baseOK = (baseName == A classDef->GetBaseClassName());
 				}
 				else {
-					baseOK = (classDef->GetBaseClassName() == "NULL");
+				baseOK = (classDef->GetBaseClassName() == "NULL");
 				};
 
 				s = A classDef->GetClassName_();
@@ -110,7 +110,7 @@ namespace GOTHIC_ENGINE {
 
 				if (classDef->IsAbstractClass()) s = s + A LIST_POSTFIX + A LIST_ABSTRACT;
 				if (classDef->IsScriptedClass()) s = s + A LIST_POSTFIX + A LIST_SCRIPTED;
-	
+
 				s = A Characters(LIST_PREFIX, depth * 2 - 2) + s;
 
 
@@ -187,7 +187,7 @@ namespace GOTHIC_ENGINE {
 	zCArray<zCVob*> resultFound;
 	zCVob* currentConvertVob = NULL;
 
-	bool SpacerApp::SearchHandleVob(zCVob*& vob, int selectedCount, int onlyVisualOrName)
+	bool SpacerApp::SearchHandleVob(zCVob*& vob, int selectedCount, int fastSearchTypeMask)
 	{
 
 		static auto compare = (compareVobs)GetProcAddress(theApp.module, "CompareVobs");
@@ -196,8 +196,12 @@ namespace GOTHIC_ENGINE {
 		if (!vob) return false;
 
 		//if 1 field is selected, then do a quick search first
-		if (onlyVisualOrName > 0)
+		if (fastSearchTypeMask > 0)
 		{
+			if ((fastSearchTypeMask & FAST_SEARCH_FIELD_NAME) != 0)
+			{
+				//cmd << "Name ok: " << fastSearchTypeMask << endl;
+			}
 			zSTRING vobName = vob->GetVobName();
 			zSTRING visualName = vob->GetVisual() ? vob->GetVisual()->GetVisualName() : "";
 
@@ -298,7 +302,7 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames, int searchOCItem, int radius)
+	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int fastSearchTypeMask, int matchNames, int searchOCItem, int radius)
 	{
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
 		static auto callFuncOnEnd = (callVoidFunc)GetProcAddress(theApp.module, "OnSearchResultEnd");
@@ -429,13 +433,13 @@ namespace GOTHIC_ENGINE {
 				{
 					if (result[i]->HasChildren())
 					{
-						SearchHandleVob(result[i], selectedCount, onlyVisualOrName);
+						SearchHandleVob(result[i], selectedCount, fastSearchTypeMask);
 						
 					}
 				}
 				else
 				{
-					SearchHandleVob(result[i], selectedCount, onlyVisualOrName);
+					SearchHandleVob(result[i], selectedCount, fastSearchTypeMask);
 				}
 				
 			}
