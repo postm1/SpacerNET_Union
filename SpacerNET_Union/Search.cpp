@@ -336,9 +336,39 @@ namespace GOTHIC_ENGINE {
 			ogame->GetWorld()->SearchVobListByBaseClass(curTempVob->GetClassDef(), result, 0);
 		}
 
+		std::unordered_set<zCVob*> pHashVobs;
+		int dub = 0;
+
+		//RX_Begin(9);
+		for (int i = 0; i < result.GetNumInList(); i++)
+		{
+			auto pVob = result.GetSafe(i);
+			auto it = pHashVobs.find(pVob);
+
+			if (it == pHashVobs.end())
+			{
+				pHashVobs.insert(pVob);
+			}
+			else
+			{
+				//cmd << "Found dublicate: " << (dub++) << endl;
+			}
+		}
+
+		result.DeleteList();
+
+		for (auto& entry : pHashVobs)
+		{
+			result.InsertEnd(entry);
+		}
+
+		//RX_End(9);
+
+		//cmd << "Dublicates remove: " << RX_PerfString(9) << endl;
+
 		//cmd << "result: " << result.GetNum() << endl;
 
-		result.RemoveDoubles();
+		//result.RemoveDoubles();
 		int num = result.GetNumInList();
 
 		auto camPos = ogame->GetCameraVob()->GetPositionWorld();
