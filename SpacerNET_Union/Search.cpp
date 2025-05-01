@@ -301,12 +301,15 @@ namespace GOTHIC_ENGINE {
 	int SpacerApp::SearchFillVobClass(bool derived, bool hasChildren, int type, int selectedCount, int onlyVisualOrName, int matchNames, int searchOCItem, int radius)
 	{
 		static auto callFunc = (addToVobList)GetProcAddress(theApp.module, "AddSearchVobResult");
+		static auto callFuncOnEnd = (callVoidFunc)GetProcAddress(theApp.module, "OnSearchResultEnd");
+
+		
 		int resultCount = 0;
 		Array<uint> arr;
 
 
-		//cmd << "SearchFillVobClass: derived " << derived << " hasChildren " << hasChildren << " type: " << type 
-		//	<< " sel: " << selectedCount << " onlyVisOrName: " << onlyVisualOrName << endl;
+		cmd << "SearchFillVobClass: derived " << derived << " hasChildren " << hasChildren << " type: " << type 
+			<< " sel: " << selectedCount << " onlyVisOrName: " << onlyVisualOrName << endl;
 
 		SearchVobType searchType = (SearchVobType)type;
 
@@ -339,7 +342,7 @@ namespace GOTHIC_ENGINE {
 		std::unordered_set<zCVob*> pHashVobs;
 		int dub = 0;
 
-		//RX_Begin(9);
+		RX_Begin(9);
 		for (int i = 0; i < result.GetNumInList(); i++)
 		{
 			auto pVob = result.GetSafe(i);
@@ -369,9 +372,6 @@ namespace GOTHIC_ENGINE {
 			result.InsertEnd(entry);
 		}
 
-		//RX_End(9);
-
-		//cmd << "Dublicates remove: " << RX_PerfString(9) << endl;
 
 		//cmd << "result: " << result.GetNum() << endl;
 
@@ -529,39 +529,36 @@ namespace GOTHIC_ENGINE {
 		// search
 		if (searchType == SearchVobType::Search)
 		{
-			std::vector<zCVob*> vobsVector;
 
-			vobsVector.reserve(resultFound.GetNum());
-
-
-			// creating vector for future sorting
-			for (int i = 0; i < resultFound.GetNum(); i++) 
+			//RX_Begin(10);
+			
+			// sorting search result by vob names
+			std::vector<std::pair<std::string, zCVob*>> vobsWithNames;
+			vobsWithNames.reserve(resultFound.GetNumInList());
+			
+			for (int i = 0; i < resultFound.GetNumInList(); i++)
 			{
-				zCVob* vob = resultFound[i];
-
-				if (vob && arr.SearchEqual((uint)vob) == Invalid)
+				if (auto pVob = resultFound.GetSafe(i))
 				{
-					vobsVector.push_back(vob);
-					arr.Insert((uint)vob);
+					zSTRING name = GetVobName(pVob);
+					vobsWithNames.emplace_back(name, pVob);
 				}
+				
 			}
 
 			resultFound.DeleteList();
 
+			std::sort(vobsWithNames.begin(), vobsWithNames.end(),
+				[](const auto& a, const auto& b) { return a.first < b.first; });
 
-			std::sort(vobsVector.begin(), vobsVector.end(), [](zCVob* a, zCVob* b) {
-
-				std::string aStr = GetVobName(a);
-				std::string bStr = GetVobName(b);
-				return aStr < bStr;
-				});
-
-
-			for (auto& entry: vobsVector)
-			{
-				resultFound.InsertEnd(entry);
+			
+			for (size_t i = 0; i < vobsWithNames.size(); ++i) {
+				resultFound.InsertEnd(vobsWithNames[i].second);
 			}
+		
+			//RX_End(10);
 
+			//cmd << "SORT: " << RX_PerfString(10) << endl;
 
 			for (int i = 0; i < resultFound.GetNum(); i++)
 			{
@@ -916,6 +913,19 @@ namespace GOTHIC_ENGINE {
 
 			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 		}
+
+
+
+		RX_End(9);
+
+		cmd << "Main search func: " << RX_PerfString(9) << endl;
+
+		RX_Begin(9);
+		callFuncOnEnd();
+
+		RX_End(9);
+
+		cmd << "callFuncOnEnd: " << RX_PerfString(9) << endl;
 
 		exports.toggleUIElement(UIElementType::UI_LIST_SEARCH_RESULT, TRUE);
 
