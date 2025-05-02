@@ -198,7 +198,7 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 	{
 		searchEntries.clear();
 		regExOn = regExOnFromUI;
-		cmd << "=== PrepareSearchEntries. Regex: " << regExOn << endl;
+		//cmd << "=== PrepareSearchEntries. Regex: " << regExOn << endl;
 	}
 
 	void SpacerApp::AddSearchEntry(CString fieldName, CString groupName, TPropEditType type, CString value)
@@ -213,15 +213,18 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 		newEntry.fastCheckValueInt = 0;
 		newEntry.fastCheckValueFloat = 0.0f;
 
+		// if we have bool or int, just convert input value (string) for real value (int) for fast checking in future
 		if (type == PETbool || type == PETint)
 		{
 			newEntry.fastCheckValueInt = newEntry.value.ToInt32();
 		}
 
+		/*
 		cmd << fieldName << " | " << groupName << " | TPropEditType: " << type 
 			<< " | Value: " << value 
 			<< " | FastValueInt: " << newEntry.fastCheckValueInt
 			<< endl;
+		*/
 
 		searchEntries[fieldName] = newEntry;
 	}
