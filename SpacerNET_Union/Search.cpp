@@ -13,6 +13,10 @@ namespace GOTHIC_ENGINE {
 	const char		LIST_PREFIX = '.';
 	const char		LIST_POSTFIX = ' ';
 
+	
+
+	std::map<CString, SearchVobEntry> searchEntries;
+	bool regExOn = false;
 
 	void SpacerApp::SearchSelectVob(zCVob* pickedVob)
 	{
@@ -187,6 +191,136 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 	zCArray<zCVob*> resultFound;
 	zCVob* currentConvertVob = NULL;
 
+
+
+
+	void SpacerApp::PrepareSearchEntries(int regExOnFromUI)
+	{
+		searchEntries.clear();
+		regExOn = regExOnFromUI;
+		cmd << "=== PrepareSearchEntries. Regex: " << regExOn << endl;
+	}
+
+	void SpacerApp::AddSearchEntry(CString fieldName, CString groupName, TPropEditType type, CString value)
+	{
+		SearchVobEntry newEntry;
+
+		newEntry.fieldName = fieldName;
+		newEntry.groupName = groupName;
+		newEntry.type = type;
+		newEntry.value = value;
+		newEntry.patternSearch = std::regex(value, std::regex_constants::icase | std::regex_constants::optimize);
+		newEntry.fastCheckValueInt = 0;
+		newEntry.fastCheckValueFloat = 0.0f;
+
+		if (type == PETbool || type == PETint)
+		{
+			newEntry.fastCheckValueInt = newEntry.value.ToInt32();
+		}
+
+		cmd << fieldName << " | " << groupName << " | TPropEditType: " << type 
+			<< " | Value: " << value 
+			<< " | FastValueInt: " << newEntry.fastCheckValueInt
+			<< endl;
+
+		searchEntries[fieldName] = newEntry;
+	}
+
+	bool SpacerApp::FastSearchVob_String(SearchVobEntry& entry, std::string value)
+	{
+		std::string valueSearch = entry.value;
+
+		if (regExOn)
+		{
+			if (!std::regex_search(value, entry.patternSearch))
+			{
+				return false;
+			}
+		}
+		else
+		{
+			//cmd << "'" << vobName.c_str() << "' | '" << valueSearch.c_str() << "'" << endl;
+
+			if (value != valueSearch)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	// Fast checking of MOST usable fields in Search
+	bool SpacerApp::SearchHandleVobByFastMethod(zCVob*& vob, int selectedCount, int fastSearchTypeMask)
+	{
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_NAME) != 0)
+		{
+			auto& entry = searchEntries["vobName"];
+			std::string value = vob->GetVobName();
+
+			if (!FastSearchVob_String(entry, value))
+			{
+				return false;
+			}
+		}
+
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_VISUAL) != 0)
+		{
+			auto& entry = searchEntries["visual"];
+			std::string value = vob->GetVisual() ? vob->GetVisual()->GetVisualName() : "";
+
+			if (!FastSearchVob_String(entry, value))
+			{
+				return false;
+			}
+		}
+
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_SHOW_VISUAL) != 0)
+		{
+			auto& entry = searchEntries["showVisual"];
+			
+			if (vob->showVisual != entry.fastCheckValueInt)
+			{
+				return false;
+			}
+		}
+
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_CD_STATIC) != 0)
+		{
+			auto& entry = searchEntries["cdStatic"];
+
+			if (vob->collDetectionStatic != entry.fastCheckValueInt)
+			{
+				return false;
+			}
+		}
+
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_CD_DYNYAMIC) != 0)
+		{
+			auto& entry = searchEntries["cdDyn"];
+
+			if (vob->collDetectionDynamic != entry.fastCheckValueInt)
+			{
+				return false;
+			}
+		}
+
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_STATIC_VOB) != 0)
+		{
+			auto& entry = searchEntries["statciVob"];
+
+			if (vob->staticVob != entry.fastCheckValueInt)
+			{
+				return false;
+			}
+		}
+		
+
+		resultFound.Insert(vob);
+		return true;
+
+	}
+
 	bool SpacerApp::SearchHandleVob(zCVob*& vob, int selectedCount, int fastSearchTypeMask)
 	{
 
@@ -198,28 +332,16 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 		//if 1 field is selected, then do a quick search first
 		if (fastSearchTypeMask > 0)
 		{
-			if ((fastSearchTypeMask & FAST_SEARCH_FIELD_NAME) != 0)
-			{
-				//cmd << "Name ok: " << fastSearchTypeMask << endl;
-			}
-			zSTRING vobName = vob->GetVobName();
-			zSTRING visualName = vob->GetVisual() ? vob->GetVisual()->GetVisualName() : "";
-
-
-			//cmd << vobName << "|" << visualName << endl;
+			return SearchHandleVobByFastMethod(vob, selectedCount, fastSearchTypeMask);
 			
-			Stack_PushString(vobName);
+			/*Stack_PushString(vobName);
 			Stack_PushString(visualName);
 
 			if (compareByNameOrVisual())
 			{
 				resultFound.Insert(vob);
 				return true;
-			}
-				
-			
-
-			return false;
+			}*/
 		}
 
 		zCArchiver* arch = zarcFactory->CreateArchiverWrite(zARC_MODE_ASCII_PROPS, 0, 0);

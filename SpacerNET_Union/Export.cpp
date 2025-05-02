@@ -783,6 +783,22 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+		__declspec(dllexport) void Extern_PrepareSearchEntry(int regExOn) {
+			theApp.PrepareSearchEntries(regExOn);
+		}
+
+		__declspec(dllexport) void Extern_AddSearchEntry() {
+			
+			CString value = Stack_PeekString();
+			TPropEditType type = (TPropEditType)Stack_PeekInt();
+
+			CString groupName = Stack_PeekString();
+			CString fieldName = Stack_PeekString();
+
+			theApp.AddSearchEntry(fieldName, groupName, type, value);
+
+		}
+
 		__declspec(dllexport) int Extern_SearchVobs(bool derived, bool hasChildren, int type, int fastSearchTypeMask) {
 
 			int radius = Stack_PeekInt();

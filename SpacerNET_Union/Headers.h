@@ -7,6 +7,7 @@
 #include "Utils.h"
 #include "Macros.h"
 #include "Enums.h"
+#include "Structures.h"
 #include "TSTACKTYPE.h"
 #include "MyPrint.h"
 #include "CSettings.h"
@@ -25,7 +26,6 @@
 #include "ErrorReport.h"
 #include "MatManager.h"
 #include "Externals.h"
-#include "Structures.h"
 #include "Plugin.h"
 #pragma endregion
 

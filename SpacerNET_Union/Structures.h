@@ -11,4 +11,14 @@ namespace GOTHIC_ENGINE {
 		int R, G, B, Alpha;
 	};
 
+	struct SearchVobEntry
+	{
+		CString fieldName;
+		CString groupName;
+		TPropEditType type;
+		CString value;
+		int fastCheckValueInt;
+		float fastCheckValueFloat;
+		std::regex patternSearch;
+	};
 }

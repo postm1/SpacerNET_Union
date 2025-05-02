@@ -18,6 +18,7 @@ extern "C" {
 }
 
 #include <unordered_set>
+#include <regex>
 
 #pragma comment (lib, "Psapi.lib")
 #pragma comment (lib, "Shw32.lib")
