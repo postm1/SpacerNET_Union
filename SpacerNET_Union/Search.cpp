@@ -307,7 +307,7 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 
 		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_STATIC_VOB) != 0)
 		{
-			auto& entry = searchEntries["statciVob"];
+			auto& entry = searchEntries["staticVob"];
 
 			if (vob->staticVob != entry.fastCheckValueInt)
 			{
@@ -329,7 +329,7 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 
 		if (!vob) return false;
 
-		//if 1 field is selected, then do a quick search first
+		//if fastSearchTypeMask exists => Fast search
 		if (fastSearchTypeMask > 0)
 		{
 			return SearchHandleVobByFastMethod(vob, selectedCount, fastSearchTypeMask);
