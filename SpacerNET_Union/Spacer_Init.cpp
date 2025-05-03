@@ -159,7 +159,8 @@ namespace GOTHIC_ENGINE {
 		camMan.Init();
 
 
-		
+		LoadCustomLocationSettings();
+
 		mf.Init();
 
 		//presetsLib.Load();

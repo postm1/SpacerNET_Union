@@ -3071,6 +3071,9 @@
     <ClInclude Include="World_CompileLight.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Optimizations</Filter>
     </ClInclude>
+    <ClInclude Include="CustomLocationSettings.cpp">
+      <Filter>Plugin\Workspace\Plugin\Main\SpacerApp\Misc</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

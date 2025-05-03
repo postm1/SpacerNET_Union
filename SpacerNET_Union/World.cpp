@@ -398,8 +398,14 @@ namespace GOTHIC_ENGINE {
 
 		if (theApp.options.GetIntVal("autoCompileWorldAfterLoad"))
 		{
-			DoCompileWorld(1);
-			DoCompileLight(2, 0);
+			int worldCompileType = 1;
+			CompileLightMod lightCompileType = CompileLightMod::Mid;
+			GetThisLocationTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), worldCompileType);
+			GetLightTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), lightCompileType);
+
+			
+			DoCompileWorld(worldCompileType);
+			DoCompileLight(lightCompileType, 0);
 		}
 
 		mf.worldWasLoadedOnce = true; 
@@ -438,12 +444,20 @@ namespace GOTHIC_ENGINE {
 
 		if (theApp.options.GetIntVal("autoCompileWorldLight") && !isMacro)
 		{
-			int light = theApp.options.GetIntVal("lightCompileType");
-			int world = theApp.options.GetIntVal("worldCompileType");
+			//int light = theApp.options.GetIntVal("lightCompileType");
+			//int world = theApp.options.GetIntVal("worldCompileType");
+
+			int worldCompileType = 1;
+			CompileLightMod lightCompileType = CompileLightMod::Mid;
+
 
 			auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 			load(1);
-			theApp.DoCompileWorld(world);
+
+			GetThisLocationTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), worldCompileType);
+			GetLightTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), lightCompileType);
+
+			theApp.DoCompileWorld(worldCompileType);
 
 			(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 
@@ -453,7 +467,7 @@ namespace GOTHIC_ENGINE {
 			load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 			load(2);
 
-			theApp.DoCompileLight(light, 0);
+			theApp.DoCompileLight(lightCompileType, 0);
 
 			(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 

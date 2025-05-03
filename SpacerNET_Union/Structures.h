@@ -21,4 +21,16 @@ namespace GOTHIC_ENGINE {
 		float fastCheckValueFloat;
 		std::regex patternSearch;
 	};
+
+	struct CustomLocSettings 
+	{
+		CString locationName;
+		bool isOutdoor;
+		CompileLightMod lightMod;
+
+		void Print()
+		{
+			cmd << "Name: " << locationName << " OutDoor: " << isOutdoor << " Light: " << lightMod << endl;
+		}
+	};
 }

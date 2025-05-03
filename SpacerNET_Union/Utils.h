@@ -13,6 +13,12 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+    enum CompileLightMod;
+
+    void LoadCustomLocationSettings();
+    void GetThisLocationTypeByCustomFile(CString checkName, int& worldCompileType);
+    void GetLightTypeByCustomFile(CString checkName, CompileLightMod& lightType);
+
     const zREAL zALG_EQUAL_EPSILON = zREAL(0.001);
 
     inline float zAbs(const float a)

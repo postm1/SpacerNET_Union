@@ -55,6 +55,7 @@
 #include "DrawSphere.cpp"
 #include "MatFilter_Render.cpp"
 #include "World_Compile.cpp"
+#include "CustomLocationSettings.cpp"
 #include "TestLoop.cpp"
 #include "zCObjPresetLib.cpp"
 #include "Plugin.cpp"
