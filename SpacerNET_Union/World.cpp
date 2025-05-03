@@ -555,12 +555,17 @@ namespace GOTHIC_ENGINE {
 		{
 			if (theApp.options.GetIntVal("autoCompileWorldLightForUnc") && !useMacros)
 			{
-				int light = theApp.options.GetIntVal("lightCompileType");
-				int world = theApp.options.GetIntVal("worldCompileType");
+
+				int worldCompileType = 1;
+				CompileLightMod lightCompileType = CompileLightMod::Mid;
+
+				GetThisLocationTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), worldCompileType);
+				GetLightTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), lightCompileType);
+
 
 				auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 				load(1);
-				theApp.DoCompileWorld(world);
+				theApp.DoCompileWorld(worldCompileType);
 
 				(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 
@@ -570,7 +575,7 @@ namespace GOTHIC_ENGINE {
 				load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 				load(2);
 
-				theApp.DoCompileLight(light, 0);
+				theApp.DoCompileLight(lightCompileType, 0);
 
 				(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 

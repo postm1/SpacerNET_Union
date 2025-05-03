@@ -232,7 +232,9 @@ namespace GOTHIC_ENGINE {
 
 			if (dynLightCompile)
 			{
-				theApp.DoCompileLight(1, 15);
+				int light = theApp.options.GetIntVal("lightCompileType");
+
+				theApp.DoCompileLight(light, 15);
 				PlaySoundGame(ToStr "CS_IAI_ME_ME");
 			}
 		}

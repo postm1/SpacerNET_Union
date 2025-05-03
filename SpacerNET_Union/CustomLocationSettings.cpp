@@ -36,10 +36,12 @@ namespace GOTHIC_ENGINE {
 			if (checkName.HasWord(entry.locationName))
 			{
 				worldCompileType = entry.isOutdoor;
-				cmd << "!!! FOUND: " << worldCompileType << endl;
+				//cmd << "!!! FOUND: " << worldCompileType << endl;
 				return;
 			}
 		}
+
+		worldCompileType = theApp.options.GetIntVal("worldCompileType");
 	}
 
 	void GetLightTypeByCustomFile(CString checkName, CompileLightMod& lightType)
@@ -51,10 +53,12 @@ namespace GOTHIC_ENGINE {
 			if (checkName.HasWord(entry.locationName))
 			{
 				lightType = entry.lightMod;
-				cmd << "!!! FOUND_Light: " << entry.lightMod << endl;
+				//cmd << "!!! FOUND_Light: " << entry.lightMod << endl;
 				return;
 			}
 		}
+
+		lightType = (CompileLightMod)theApp.options.GetIntVal("lightCompileType");
 	}
 
 
