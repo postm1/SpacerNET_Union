@@ -745,7 +745,13 @@ namespace GOTHIC_ENGINE {
 
 		};
 
-		if (dynamic_cast<zCVobWaypoint*>(vob) || dynamic_cast<zCVobLevelCompo*>(vob) || dynamic_cast<zCZone*>(vob) && (!dynamic_cast<zCVobSound*>(vob)))
+		if (dynamic_cast<zCVobWaypoint*>(vob) 
+			|| dynamic_cast<zCVobLevelCompo*>(vob) 
+			|| dynamic_cast<oCZoneMusicDefault*>(vob) 
+			|| dynamic_cast<zCZoneZFogDefault*>(vob)
+			|| dynamic_cast<zCZoneReverbDefault*>(vob)
+			|| dynamic_cast<zCZoneVobFarPlaneDefault*>(vob)
+			)
 		{
 
 			print.PrintRed(GetLang("CANT_APPLY_PARENT"));
