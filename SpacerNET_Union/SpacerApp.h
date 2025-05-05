@@ -476,9 +476,11 @@ namespace GOTHIC_ENGINE {
 		void SearchFillVobClass(CString vobClass, bool isNewType=false);
 
 		void PrepareSearchEntries(int regExOnFromUI);
-		void AddSearchEntry(CString fieldName, CString groupName, TPropEditType type, CString value, TSearchNumberType numberSearchTyp);
+		void AddSearchEntry(CString fieldName, CString groupName, TPropEditType type, CString value, TSearchNumberType numberSearchTyp, int checkMoreThanZero);
 
 		bool FastSearchVob_String(SearchVobEntry& entry, std::string value);
+		bool SpacerApp::FastSearch_CheckIntValue(SearchVobEntry& entry, int& value);
+		bool SpacerApp::FastSearch_CheckFloatValue(SearchVobEntry& entry, float& value);
 
 		void SearchGetSubClasses(CString className);
 

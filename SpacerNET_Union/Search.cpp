@@ -201,7 +201,7 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 		//cmd << "=== PrepareSearchEntries. Regex: " << regExOn << endl;
 	}
 
-	void SpacerApp::AddSearchEntry(CString fieldName, CString groupName, TPropEditType type, CString value, TSearchNumberType numberSearchType)
+	void SpacerApp::AddSearchEntry(CString fieldName, CString groupName, TPropEditType type, CString value, TSearchNumberType numberSearchType, int checkMoreThanZero)
 	{
 		SearchVobEntry newEntry;
 
@@ -213,6 +213,7 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 		newEntry.fastCheckValueInt = 0;
 		newEntry.fastCheckValueFloat = 0.0f;
 		newEntry.numberSearchType = numberSearchType;
+		newEntry.checkMoreThanZero = checkMoreThanZero;
 
 		// if we have bool or int, just convert input value (string) for real value (int) for fast checking in future
 		if (type == PETbool || type == PETint || type == PETenum)
@@ -229,6 +230,7 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 			<< " | FastValueInt: " << newEntry.fastCheckValueInt
 			<< " | FastValueFloat: " << newEntry.fastCheckValueFloat
 			<< " | numberSearchType: " << newEntry.numberSearchType
+			<< " | checkMoreThanZero: " << newEntry.checkMoreThanZero
 			<< endl;*/
 		
 
@@ -251,6 +253,72 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 			//cmd << "'" << vobName.c_str() << "' | '" << valueSearch.c_str() << "'" << endl;
 
 			if (value != valueSearch)
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool SpacerApp::FastSearch_CheckIntValue(SearchVobEntry& entry, int& value)
+	{
+		if (entry.numberSearchType == TS_EQUALS)
+		{
+			if (value != entry.fastCheckValueInt)
+			{
+				return false;
+			}
+		}
+		// <=
+		else if (entry.numberSearchType == TS_LESSTHAN)
+		{
+
+			if (value >= entry.fastCheckValueInt ||
+				(entry.checkMoreThanZero && value <= 0))
+			{
+				return false;
+			}
+		}
+		//>=
+		else if (entry.numberSearchType == TS_MORETHAN)
+		{
+
+			if (value < entry.fastCheckValueInt ||
+				(entry.checkMoreThanZero && value <= 0))
+			{
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	bool SpacerApp::FastSearch_CheckFloatValue(SearchVobEntry& entry, float& value)
+	{
+		if (entry.numberSearchType == TS_EQUALS)
+		{
+			if (value != entry.fastCheckValueFloat)
+			{
+				return false;
+			}
+		}
+		// <=
+		else if (entry.numberSearchType == TS_LESSTHAN)
+		{
+
+			if (value >= entry.fastCheckValueFloat ||
+				(entry.checkMoreThanZero && value <= 0))
+			{
+				return false;
+			}
+		}
+		//>=
+		else if (entry.numberSearchType == TS_MORETHAN)
+		{
+
+			if (value < entry.fastCheckValueFloat ||
+				(entry.checkMoreThanZero && value <= 0))
 			{
 				return false;
 			}
@@ -338,62 +406,20 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 		{
 			auto& entry = searchEntries["visualAniModeStrength"];
 
-			// ==
-			if (entry.numberSearchType == TS_EQUALS) 
+			if (!FastSearch_CheckFloatValue(entry, vob->m_aniModeStrength))
 			{
-				if (vob->m_aniModeStrength != entry.fastCheckValueFloat)
-				{
-					return false;
-				}
+				return false;
 			}
-			// <=
-			else if (entry.numberSearchType == TS_LESSTHAN)
-			{
-				if (vob->m_aniModeStrength >= entry.fastCheckValueFloat)
-				{
-					return false;
-				}
-			}
-			//>=
-			else if (entry.numberSearchType == TS_MORETHAN)
-			{
-				if (vob->m_aniModeStrength < entry.fastCheckValueFloat)
-				{
-					return false;
-				}
-			}
-				
 		}
 
 		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_FAR_CLIP_ZSCALE) != 0)
 		{
 			auto& entry = searchEntries["vobFarClipZScale"];
 
-			// ==
-			if (entry.numberSearchType == TS_EQUALS)
+			if (!FastSearch_CheckFloatValue(entry, vob->m_fVobFarClipZScale))
 			{
-				if (vob->m_fVobFarClipZScale != entry.fastCheckValueFloat)
-				{
-					return false;
-				}
+				return false;
 			}
-			// <=
-			else if (entry.numberSearchType == TS_LESSTHAN)
-			{
-				if (vob->m_fVobFarClipZScale >= entry.fastCheckValueFloat)
-				{
-					return false;
-				}
-			}
-			//>=
-			else if (entry.numberSearchType == TS_MORETHAN)
-			{
-				if (vob->m_fVobFarClipZScale < entry.fastCheckValueFloat)
-				{
-					return false;
-				}
-			}
-
 		}
 
 		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_VISUAL_CAM_ALIGN) != 0)

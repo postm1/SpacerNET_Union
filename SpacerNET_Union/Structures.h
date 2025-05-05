@@ -21,6 +21,7 @@ namespace GOTHIC_ENGINE {
 		float fastCheckValueFloat;
 		std::regex patternSearch;
 		TSearchNumberType numberSearchType;
+		int checkMoreThanZero;
 	};
 
 	struct CustomLocSettings 

@@ -789,6 +789,7 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_AddSearchEntry() {
 			
+			int checkMoreThanZero = Stack_PeekInt();
 			TSearchNumberType numberType = (TSearchNumberType)Stack_PeekInt();
 
 			CString value = Stack_PeekString();
@@ -797,7 +798,7 @@ namespace GOTHIC_ENGINE {
 			CString groupName = Stack_PeekString();
 			CString fieldName = Stack_PeekString();
 
-			theApp.AddSearchEntry(fieldName, groupName, type, value, numberType);
+			theApp.AddSearchEntry(fieldName, groupName, type, value, numberType, checkMoreThanZero);
 
 		}
 
