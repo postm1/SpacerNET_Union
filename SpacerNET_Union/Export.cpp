@@ -789,13 +789,15 @@ namespace GOTHIC_ENGINE {
 
 		__declspec(dllexport) void Extern_AddSearchEntry() {
 			
+			TSearchNumberType numberType = (TSearchNumberType)Stack_PeekInt();
+
 			CString value = Stack_PeekString();
 			TPropEditType type = (TPropEditType)Stack_PeekInt();
 
 			CString groupName = Stack_PeekString();
 			CString fieldName = Stack_PeekString();
 
-			theApp.AddSearchEntry(fieldName, groupName, type, value);
+			theApp.AddSearchEntry(fieldName, groupName, type, value, numberType);
 
 		}
 

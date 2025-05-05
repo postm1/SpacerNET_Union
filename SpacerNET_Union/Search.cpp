@@ -201,7 +201,7 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 		//cmd << "=== PrepareSearchEntries. Regex: " << regExOn << endl;
 	}
 
-	void SpacerApp::AddSearchEntry(CString fieldName, CString groupName, TPropEditType type, CString value)
+	void SpacerApp::AddSearchEntry(CString fieldName, CString groupName, TPropEditType type, CString value, TSearchNumberType numberSearchType)
 	{
 		SearchVobEntry newEntry;
 
@@ -212,19 +212,25 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 		newEntry.patternSearch = std::regex(value, std::regex_constants::icase | std::regex_constants::optimize);
 		newEntry.fastCheckValueInt = 0;
 		newEntry.fastCheckValueFloat = 0.0f;
+		newEntry.numberSearchType = numberSearchType;
 
 		// if we have bool or int, just convert input value (string) for real value (int) for fast checking in future
-		if (type == PETbool || type == PETint)
+		if (type == PETbool || type == PETint || type == PETenum)
 		{
 			newEntry.fastCheckValueInt = newEntry.value.ToInt32();
 		}
-
-		/*
+		else if (type == PETfloat)
+		{
+			newEntry.fastCheckValueFloat = newEntry.value.ToReal32();
+		}
+		
 		cmd << fieldName << " | " << groupName << " | TPropEditType: " << type 
 			<< " | Value: " << value 
 			<< " | FastValueInt: " << newEntry.fastCheckValueInt
+			<< " | FastValueFloat: " << newEntry.fastCheckValueFloat
+			<< " | numberSearchType: " << newEntry.numberSearchType
 			<< endl;
-		*/
+		
 
 		searchEntries[fieldName] = newEntry;
 	}
@@ -318,6 +324,46 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 			}
 		}
 		
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_ANI_MODE) != 0)
+		{
+			auto& entry = searchEntries["visualAniMode"];
+
+			if (vob->m_AniMode != entry.fastCheckValueInt)
+			{
+				return false;
+			}
+		}
+
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_ANI_MODE_STR) != 0)
+		{
+			auto& entry = searchEntries["visualAniModeStrength"];
+
+			// ==
+			if (entry.numberSearchType == TS_EQUALS) 
+			{
+				if (vob->m_aniModeStrength != entry.fastCheckValueFloat)
+				{
+					return false;
+				}
+			}
+			// <=
+			else if (entry.numberSearchType == TS_LESSTHAN)
+			{
+				if (vob->m_aniModeStrength >= entry.fastCheckValueFloat)
+				{
+					return false;
+				}
+			}
+			//>=
+			else if (entry.numberSearchType == TS_MORETHAN)
+			{
+				if (vob->m_aniModeStrength < entry.fastCheckValueFloat)
+				{
+					return false;
+				}
+			}
+				
+		};
 
 		resultFound.Insert(vob);
 		return true;
