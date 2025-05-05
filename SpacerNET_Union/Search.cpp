@@ -224,12 +224,12 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 			newEntry.fastCheckValueFloat = newEntry.value.ToReal32();
 		}
 		
-		cmd << fieldName << " | " << groupName << " | TPropEditType: " << type 
+		/*cmd << fieldName << " | " << groupName << " | TPropEditType: " << type 
 			<< " | Value: " << value 
 			<< " | FastValueInt: " << newEntry.fastCheckValueInt
 			<< " | FastValueFloat: " << newEntry.fastCheckValueFloat
 			<< " | numberSearchType: " << newEntry.numberSearchType
-			<< endl;
+			<< endl;*/
 		
 
 		searchEntries[fieldName] = newEntry;
@@ -363,7 +363,49 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 				}
 			}
 				
-		};
+		}
+
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_FAR_CLIP_ZSCALE) != 0)
+		{
+			auto& entry = searchEntries["vobFarClipZScale"];
+
+			// ==
+			if (entry.numberSearchType == TS_EQUALS)
+			{
+				if (vob->m_fVobFarClipZScale != entry.fastCheckValueFloat)
+				{
+					return false;
+				}
+			}
+			// <=
+			else if (entry.numberSearchType == TS_LESSTHAN)
+			{
+				if (vob->m_fVobFarClipZScale >= entry.fastCheckValueFloat)
+				{
+					return false;
+				}
+			}
+			//>=
+			else if (entry.numberSearchType == TS_MORETHAN)
+			{
+				if (vob->m_fVobFarClipZScale < entry.fastCheckValueFloat)
+				{
+					return false;
+				}
+			}
+
+		}
+
+		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_VISUAL_CAM_ALIGN) != 0)
+		{
+			auto& entry = searchEntries["visualCamAlign"];
+
+			if (vob->m_AniMode != entry.fastCheckValueInt)
+			{
+				return false;
+			}
+		}
+
 
 		resultFound.Insert(vob);
 		return true;
