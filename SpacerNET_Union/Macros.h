@@ -83,6 +83,7 @@ namespace GOTHIC_ENGINE {
 	const uint TIMER_ID_OBJECTS_SEWER = 0;
 	const uint TIMER_ID_SHUTDOWN_SOUNDS = 1;
 	const uint TIMER_ID_PFX_UPDATE_BBOX = 2;
+	const uint TIMER_ID_CHECK_RAM = 3;
 
 #if ENGINE == Engine_G1
 #define zERR_NONE 0

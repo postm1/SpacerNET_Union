@@ -597,8 +597,13 @@ namespace GOTHIC_ENGINE {
 				if (zsound) zsound->StopAllSounds();
 			}
 		}
-		
 
+		if (mainTimer[TIMER_ID_CHECK_RAM].Await(5000))
+		{
+			CheckRamUsage();
+		}
+		
+		
 		//print.PrintRed(Z(int)player);
 
 		

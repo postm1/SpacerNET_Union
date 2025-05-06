@@ -1674,5 +1674,32 @@ namespace GOTHIC_ENGINE {
 		return mesh;
 	}
 #endif
+
+
+	int RAMUsed() {
+		int nRam;
+
+		PROCESS_MEMORY_COUNTERS pmc;
+
+		GetProcessMemoryInfo(GetCurrentProcess(), &pmc, sizeof(pmc));
+		nRam = pmc.WorkingSetSize / 1000;
+		return nRam;
+	}
+
+	void CheckRamUsage()
+	{
+		if (theApp.options.GetIntVal("bCheckRamMemory"))
+		{
+			if (theApp.IsDx11Active() && RAMUsed() >= 2500000)
+			{
+				print.PrintRed(GetLang("COMMON_WARN_MEMORY_FULL"), 5);
+
+			}
+			else if (!theApp.IsDx11Active() && RAMUsed() >= 2650000)
+			{
+				print.PrintRed(GetLang("COMMON_WARN_MEMORY_FULL"), 5);
+			}
+		}
+	}
 }
 
