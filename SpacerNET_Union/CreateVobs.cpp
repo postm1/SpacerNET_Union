@@ -297,9 +297,9 @@ namespace GOTHIC_ENGINE {
 		}
 
 		//check zCVob no 3DS or TGA
-		if (className != "zCVob")
+		if (className != "zCVob" && className != "zCMover")
 		{
-			if (!visualVob.EndWith(".3DS") || !visualVob.EndWith(".TGA"))
+			if (visualVob.Length() > 0 && (visualVob.EndWith(".3DS") || visualVob.EndWith(".TGA")))
 			{
 				if (theApp.options.GetIntVal("bShowVobVisualWarn"))
 				{
