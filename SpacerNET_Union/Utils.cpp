@@ -771,6 +771,30 @@ namespace GOTHIC_ENGINE {
 
 		//ogame->GetWorld()->SearchVobListByBaseClass(lightClassdef, resVobList, 0);
 
+		// sorting by names
+		std::vector<std::pair<std::string, zCVob*>> vobsWithNames;
+		vobsWithNames.reserve(finalResultList.GetNumInList());
+
+		for (int i = 0; i < finalResultList.GetNumInList(); i++)
+		{
+			if (auto pVob = finalResultList.GetSafe(i))
+			{
+				zSTRING name = GetVobName(pVob);
+				vobsWithNames.emplace_back(name, pVob);
+			}
+
+		}
+
+		finalResultList.DeleteList();
+
+		std::sort(vobsWithNames.begin(), vobsWithNames.end(),
+			[](const auto& a, const auto& b) { return a.first < b.first; });
+
+
+		for (size_t i = 0; i < vobsWithNames.size(); ++i) {
+			finalResultList.InsertEnd(vobsWithNames[i].second);
+		}
+
 		for (int i = 0; i < finalResultList.GetNumInList(); i++)
 		{
 			zCVob* nextVob = finalResultList.GetSafe(i);
