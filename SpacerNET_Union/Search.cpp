@@ -391,7 +391,9 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 				return false;
 			}
 		}
-		
+#if ENGINE >= Engine_G2
+
+
 		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_ANI_MODE) != 0)
 		{
 			auto& entry = searchEntries["visualAniMode"];
@@ -421,12 +423,13 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 				return false;
 			}
 		}
+#endif
 
 		if ((fastSearchTypeMask & FAST_SEARCH_FIELD_VISUAL_CAM_ALIGN) != 0)
 		{
 			auto& entry = searchEntries["visualCamAlign"];
 
-			if (vob->m_AniMode != entry.fastCheckValueInt)
+			if (vob->visualCamAlign != entry.fastCheckValueInt)
 			{
 				return false;
 			}
