@@ -659,13 +659,40 @@ namespace GOTHIC_ENGINE {
 
 		if (vob)
 		{
-			
+			zSTRING info = "-> OnRemoveVob: " + Z AHEX32((uint)vob) + " Name: " + vob->GetVobName();
+
+			info += " (";
+			info = info + vob->_GetClassDef()->GetClassName_();
+			info += ")";
+
+			info += " Visual: ";
+
+			if (auto pVisual = vob->GetVisual())
+			{
+				info += pVisual->GetVisualName();
+			}
+
+			info += " ChildrenVobs: ";
+
+			if (vob->HasChildren())
+			{
+				info += " YES";
+			} 
+			else
+			{
+				info += " NO";
+			}
+
+			cmd << info << endl;
+
 
 			CALL_OnDeleteVob(vob);
 
 			//OutFile("OnRemoveVob: vob: " + AHEX32((uint)vob), true);
 			static auto onRemove = (onVobRemove)GetProcAddress(theApp.module, "OnVobRemove");
 			onRemove((uint)vob);
+
+			
 
 			if (auto pCam = dynamic_cast<zCCSCamera*>(vob))
 			{
