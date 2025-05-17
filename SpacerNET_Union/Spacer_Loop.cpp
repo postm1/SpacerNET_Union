@@ -606,7 +606,20 @@ namespace GOTHIC_ENGINE {
 		
 		//print.PrintRed(Z(int)player);
 
-		
+		/*if (ogame->GetCamera())
+		{
+			cmd << "\n==================\nCam: " << (int)ogame->GetCamera()
+				<< " | CamVob: " << (int)ogame->GetCamera()->GetVob()
+				<< endl;
+		}
+
+		if (ogame->GetCameraAI())
+		{
+			cmd << "CamAI: " << (int)ogame->GetCameraAI()
+				<< " | CamAIVob: " << (int)ogame->GetCameraAI()->camVob
+				<< endl;
+		}*/
+
 
 		if (theApp.g_bIsPlayingGame)
 		{

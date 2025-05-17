@@ -187,6 +187,11 @@ namespace GOTHIC_ENGINE {
 		
 		if (!g_bIsPlayingGame)
 		{
+			if (IsDx11Active())
+			{
+				print.PrintRed("Game mod works bad with DX11!", 6);
+			}
+			
 
 			cmd << "*** ENTERING GAME MODE ***" << endl;
 
@@ -196,7 +201,7 @@ namespace GOTHIC_ENGINE {
 
 			call(0);
 
-			auto safePosPlayer = ogame->GetCamera()->connectedVob->GetPositionWorld();
+			auto safeCamPosition = ogame->GetCamera()->connectedVob->GetPositionWorld();
 
 			g_bIsPlayingGame = true;
 			RenderDX11_RemoveAmbientLight();
@@ -247,29 +252,32 @@ namespace GOTHIC_ENGINE {
 			if (!player)
 			{
 				oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
-			}
 
-			player->showVisual = 1;
-			player->variousFlags = 2;
+				cmd << "->Creating a new player..." << endl;
+			}
+			
+			cmd << "Player pointer: " << (int)player << endl;
+
+			player->showVisual = TRUE;
+			player->dontWriteIntoArchive = TRUE;
+			player->variousFlags = NPC_FLAG_IMMORTAL;
 			player->SetAttribute(NPC_ATR_HITPOINTSMAX, 100000);
 			player->CompleteHeal();
 			
-
 			ogame->EnterWorld(oCNpc::player, TRUE, "EDITOR_CAMERA_VOB");
-
-
-			player->dontWriteIntoArchive = true;
+			player->GetModel();
 			ogame->InitNpcAttitudes();
-			player->ai_disabled = false;
 			
+			player->ai_disabled = FALSE;
 			player->human_ai->PC_Turnings(1);
 			player->human_ai->StopTurnAnis();
 
 			player->SetCollDet(FALSE);
-			player->SetPositionWorld(safePosPlayer);
+			player->SetPositionWorld(safeCamPosition);
 			player->SetCollDet(TRUE);
 
 			player->GetModel()->SetRandAnisEnabled(FALSE);
+
 
 			if (!hideWindows)
 			{
@@ -334,8 +342,65 @@ namespace GOTHIC_ENGINE {
 
 			ogame->ClearObjectRoutineList();
 
+			// Removing player if there is no bAddPlayerForPlugins active
+			if (!theApp.options.GetIntVal("bAddPlayerForPlugins"))
+			{
+				player->dontWriteIntoArchive = true;
+				player->showVisual = 0;
+				theApp.OnRemoveVob(player);
+				ogame->RemovePlayerFromWorld();
+
+				cmd << "Player pointer: " << (int)player << endl;
+			}
+
+			if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
+			{
+				parser->SetScriptInt("RX_IsSpacetNet", 1);
+			}
+
+			// REMOVE PLAYER AI CAMERAS
+			zCArray<zCVob*> targetList;
+			ogame->world->SearchVobListByName("ZCAICAMERA", targetList);
+
+			for (int i = 0; i < targetList.GetNumInList(); i++)
+			{
+				auto pVob = targetList.GetSafe(i);
 
 
+				if (pVob)
+				{
+					pVob->dontWriteIntoArchive = true;
+					theApp.OnRemoveVob(pVob);
+				}
+
+			}
+
+			oCNpc::SetNpcAIDisabled(TRUE);
+			dynamic_cast<oCGame*>(gameMan->gameSession)->GetSpawnManager()->SetSpawningEnabled(FALSE);
+
+
+			auto originalCam = ogame->world->SearchVobByName("EDITOR_CAMERA_VOB");
+
+			if (!originalCam)
+			{
+				cmd << "No EDITOR_CAMERA_VOB found. Creating new camera..." << endl;
+				ogame->CamInit();
+				ogame->GetGameWorld()->AddVob(ogame->GetCamera()->connectedVob);
+			}
+
+			if (auto cam = ogame->GetCamera())
+			{
+				if (auto camVob = ogame->GetCamera()->connectedVob)
+				{
+					camVob->SetAI(0);
+					camVob->dontWriteIntoArchive = true;
+					camVob->SetPositionWorld(camFuturePos);
+				}
+
+				cam->Activate();
+			}
+
+			/*
 			auto originalCam = ogame->world->SearchVobByName("EDITOR_CAMERA_VOB");
 
 			if (originalCam) theApp.RemoveVob(originalCam);
@@ -409,7 +474,7 @@ namespace GOTHIC_ENGINE {
 			}
 			//ogame->CamInit();
 			//ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
-
+			*/
 
 			g_bIsPlayingGame = false;
 
