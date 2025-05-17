@@ -178,6 +178,23 @@ namespace GOTHIC_ENGINE {
 	}
 
 
+	// Call it instead of ogame->EnterWorld(oCNpc::player, TRUE, "EDITOR_CAMERA_VOB") due to DX11 hook
+	void OnPlayerEnterWorld()
+	{
+		ogame->SetupPlayers(player, "EDITOR_CAMERA_VOB");
+
+		ogame->CamInit();
+
+		player->SetAsPlayer();
+
+		if (player && player->GetAnictrl()) {
+			player->GetAnictrl()->SetFightAnis(player->GetWeaponMode());
+		};
+
+		ogame->EnvironmentInit();
+		ogame->NpcInit();
+	}
+
 	void SpacerApp::ToggleGame()
 	{
 		static auto call = (callIntFunc)GetProcAddress(theApp.module, "ToggleMainMenuInterface");
@@ -187,11 +204,6 @@ namespace GOTHIC_ENGINE {
 		
 		if (!g_bIsPlayingGame)
 		{
-			if (IsDx11Active())
-			{
-				print.PrintRed("Game mod works bad with DX11!", 6);
-			}
-			
 
 			cmd << "*** ENTERING GAME MODE ***" << endl;
 
@@ -202,6 +214,7 @@ namespace GOTHIC_ENGINE {
 			call(0);
 
 			auto safeCamPosition = ogame->GetCamera()->connectedVob->GetPositionWorld();
+			auto safeCamDir = ogame->GetCamera()->connectedVob->GetAtVectorWorld();
 
 			g_bIsPlayingGame = true;
 			RenderDX11_RemoveAmbientLight();
@@ -264,7 +277,8 @@ namespace GOTHIC_ENGINE {
 			player->SetAttribute(NPC_ATR_HITPOINTSMAX, 100000);
 			player->CompleteHeal();
 			
-			ogame->EnterWorld(oCNpc::player, TRUE, "EDITOR_CAMERA_VOB");
+			
+			OnPlayerEnterWorld();
 			player->GetModel();
 			ogame->InitNpcAttitudes();
 			
@@ -274,10 +288,12 @@ namespace GOTHIC_ENGINE {
 
 			player->SetCollDet(FALSE);
 			player->SetPositionWorld(safeCamPosition);
+			player->SetHeadingAtWorld(safeCamDir);
 			player->SetCollDet(TRUE);
 
 			player->GetModel()->SetRandAnisEnabled(FALSE);
 
+			ogame->GetCamera()->GetVob()->SetPositionWorld(safeCamPosition);
 
 			if (!hideWindows)
 			{
