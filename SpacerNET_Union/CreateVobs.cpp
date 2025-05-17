@@ -422,7 +422,7 @@ namespace GOTHIC_ENGINE {
 				newvob->SetVisual(visualVob);
 			}
 
-
+			// Decals init settings
 			if (newvob->GetVisual())
 			{
 				if (auto dec = newvob->GetVisual()->CastTo<zCDecal>())
@@ -431,7 +431,7 @@ namespace GOTHIC_ENGINE {
 					newvob->RotateLocalY(180);
 					dec->decal2Sided = true;
 					dec->SetDecalDim(150, 150);
-					dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
+					dec->decalMaterial->rndAlphaBlendFunc = zRND_ALPHA_FUNC_BLEND;
 
 				}
 			}
