@@ -366,29 +366,12 @@ namespace GOTHIC_ENGINE {
 				theApp.OnRemoveVob(player);
 				ogame->RemovePlayerFromWorld();
 
-				cmd << "Player pointer: " << (int)player << endl;
+				//cmd << "Player pointer: " << (int)player << endl;
 			}
 
 			if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
 			{
 				parser->SetScriptInt("RX_IsSpacetNet", 1);
-			}
-
-			// REMOVE PLAYER AI CAMERAS
-			zCArray<zCVob*> targetList;
-			ogame->world->SearchVobListByName("ZCAICAMERA", targetList);
-
-			for (int i = 0; i < targetList.GetNumInList(); i++)
-			{
-				auto pVob = targetList.GetSafe(i);
-
-
-				if (pVob)
-				{
-					pVob->dontWriteIntoArchive = true;
-					theApp.OnRemoveVob(pVob);
-				}
-
 			}
 
 			oCNpc::SetNpcAIDisabled(TRUE);
@@ -401,6 +384,7 @@ namespace GOTHIC_ENGINE {
 			{
 				cmd << "No EDITOR_CAMERA_VOB found. Creating new camera..." << endl;
 				ogame->CamInit();
+				ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
 				ogame->GetGameWorld()->AddVob(ogame->GetCamera()->connectedVob);
 			}
 
@@ -415,82 +399,6 @@ namespace GOTHIC_ENGINE {
 
 				cam->Activate();
 			}
-
-			/*
-			auto originalCam = ogame->world->SearchVobByName("EDITOR_CAMERA_VOB");
-
-			if (originalCam) theApp.RemoveVob(originalCam);
-
-			
-
-
-			ogame->CamInit();
-			//ogame->EnvironmentInit();
-			ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
-			ogame->GetCamera()->connectedVob->SetAI(0);
-			//ogame->GetCamera()->connectedVob->bbox3D.mins = zVEC3(5, 5, 5);
-			//ogame->GetCamera()->connectedVob->bbox3D.maxs = zVEC3(5, 5, 5);
-			ogame->GetGameWorld()->AddVob(ogame->GetCamera()->connectedVob);
-			ogame->GetCamera()->connectedVob->dontWriteIntoArchive = true;
-
-			originalCam = ogame->GetCamera()->connectedVob;
-
-			zCArray<zCVob*> targetList;
-
-			ogame->world->SearchVobListByName("ZCAICAMERA", targetList);
-
-			ogame->GetCamera()->SetVob(originalCam);
-
-			player->dontWriteIntoArchive = true;
-			player->showVisual = 0;
-			theApp.OnRemoveVob(player);
-
-			ogame->RemovePlayerFromWorld();
-
-			for (int i = 0; i < targetList.GetNumInList(); i++)
-			{
-				auto pVob = targetList.GetSafe(i);
-
-
-				if (pVob)
-				{
-					pVob->dontWriteIntoArchive = true;
-					theApp.OnRemoveVob(pVob);
-				}
-
-			}
-
-
-			if (auto sym = parser->GetSymbol("RX_IsSpacetNet"))
-			{
-				parser->SetScriptInt("RX_IsSpacetNet", 1);
-			}
-
-
-			if (theApp.options.GetIntVal("bAddPlayerForPlugins"))
-			{
-				oCNpc::player = (oCNpc*)ogame->GetGameWorld()->CreateVob(zVOB_TYPE_NSC, parser->GetIndex("PC_HERO"));
-
-				oCNpc::player->GetModel();
-				player->dontWriteIntoArchive = true;
-				player->showVisual = 0;
-			}
-			
-			if (originalCam)
-			{
-				//ogame->GetCamera()->SetVob(originalCam);
-				ogame->GetCamera()->connectedVob->SetAI(0);
-
-				//ogame->GetGameWorld()->AddVob(ogame->GetCamera()->connectedVob);
-				ogame->GetCamera()->connectedVob->dontWriteIntoArchive = true;
-				ogame->GetCamera()->connectedVob->SetPositionWorld(camFuturePos);
-				ogame->GetCamera()->connectedVob->dontWriteIntoArchive = true;
-				//ogame->GetCamera()->SetVob(NULL);
-				//theApp.RemoveVob(camVob);
-			}
-			//ogame->CamInit();
-			//ogame->GetCamera()->connectedVob->SetVobName("EDITOR_CAMERA_VOB");
-			*/
 
 			g_bIsPlayingGame = false;
 
