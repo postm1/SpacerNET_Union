@@ -8,8 +8,9 @@ namespace GOTHIC_ENGINE {
 	int oCMobInter::CanInteractWith_Union(oCNpc* npc) {
 
 		auto ladder = this->CastTo<oCMobLadder>();
+		auto bed = this->CastTo<oCMobBed>();
 
-		if (!ladder && theApp.options.GetIntVal("bBlockPlayerUseMobInter"))
+		if (!ladder && !bed && theApp.options.GetIntVal("bBlockPlayerUseMobInter"))
 		{
 			return FALSE;
 		}
