@@ -122,6 +122,10 @@ namespace GOTHIC_ENGINE {
 		//cmd << "options" << endl;
 		options.Init();
 		options.Load();
+
+		//
+		options.SetIntVal("itemLocatorOnlyByName", 0);
+
 		visualEditorActive = false;
 
 		//cmd << "InitValues" << endl;
