@@ -180,15 +180,20 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::ToggleGame()
 	{
+		static auto call = (callIntFunc)GetProcAddress(theApp.module, "ToggleMainMenuInterface");
+
 		//print.PrintRed("Playing the game...");
+
+		
 		if (!g_bIsPlayingGame)
 		{
+
+			cmd << "*** ENTERING GAME MODE ***" << endl;
 
 			lightRadiusSafe = playerLightInt;
 
 			GetClipCursor(&rcOldClip);
 
-			auto call = (callIntFunc)GetProcAddress(theApp.module, "ToggleMainMenuInterface");
 			call(0);
 
 			auto safePosPlayer = ogame->GetCamera()->connectedVob->GetPositionWorld();
@@ -283,6 +288,7 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
+			cmd << "*** LEAVING GAME MODE ***" << endl;
 
 			if (fastMode)
 			{
@@ -433,7 +439,6 @@ namespace GOTHIC_ENGINE {
 			
 			ClipCursor(&rcOldClip);
 
-			auto call = (callIntFunc)GetProcAddress(theApp.module, "ToggleMainMenuInterface");
 			call(1);
 
 			
