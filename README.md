@@ -45,7 +45,7 @@ You can download the latest release of Spacer.NET from [worldofplayers.de](https
 Or you can use Google drive: [Link](https://drive.google.com/drive/folders/1shwV7oFBP2vQfxZkBCw9KjScDlx-Wueq)
 
 ## Manual (SpacerNET lessons)
-It is in Russian, but all screenshot are English, so just use translator
+It is in Russian, but all the screenshots are English, so just use any browser translator
 
 https://worldofplayers.ru/forums/1179/?order=title&direction=asc
 
