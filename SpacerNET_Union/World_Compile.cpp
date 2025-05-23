@@ -506,7 +506,7 @@ namespace GOTHIC_ENGINE {
 		//zCArraySort<zCPolygon*> occluderTested;
 		//occluderTested.SetCompare(Compare_Occluder);
 
-		int maxNeighbourOccluders = 0;
+		size_t maxNeighbourOccluders = 0;
 		int maxArea = 0;
 
 		zERR_MESSAGE(3, 0, "D: RBSP: Marking Occluder Polys = START CYCLE");
@@ -606,7 +606,7 @@ namespace GOTHIC_ENGINE {
 
 		zERR_MESSAGE(3, 0, "D: RBSP: ... numOccluder: " + zSTRING(numOccluder) + " of " + zSTRING(mesh->numPoly));
 		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderSize: " + zSTRING(maxArea));
-		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderNeighbours: " + zSTRING(maxNeighbourOccluders));
+		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderNeighbours: " + zSTRING((int)maxNeighbourOccluders));
 	}
 
 #endif
