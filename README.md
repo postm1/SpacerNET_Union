@@ -44,6 +44,11 @@ The **Spacer.NET** contains also two additional files that can be only obtained 
 You can download the latest release of Spacer.NET from [worldofplayers.de](https://forum.worldofplayers.de/forum/threads/1557793-WORLD-EDITOR-Spacer-NET) forum.  
 Or you can use Google drive: [Link](https://drive.google.com/drive/folders/1shwV7oFBP2vQfxZkBCw9KjScDlx-Wueq)
 
+## Manual (SpacerNET lessons)
+It is in Russian, but all the screenshots are English, so just use any browser translator
+
+https://worldofplayers.ru/forums/1179/?order=title&direction=asc
+
 ## Usage requirements
 
 In order to use this project you need'll to install:
