@@ -93,7 +93,7 @@ namespace GOTHIC_ENGINE {
 	// test loop, some test code always here...
 	void SpacerApp::TestLoop()
 	{
-
+		/*
 		if (zinput->KeyPressed(KEY_F1))
 		{
 			zinput->ClearKeyBuffer();
@@ -178,6 +178,7 @@ namespace GOTHIC_ENGINE {
 				ScaleVob(pVob, 1.10f);
 			}
 		}*/
+		
 		return;
 	}
 	
