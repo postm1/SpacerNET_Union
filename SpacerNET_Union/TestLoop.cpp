@@ -93,7 +93,7 @@ namespace GOTHIC_ENGINE {
 	// test loop, some test code always here...
 	void SpacerApp::TestLoop()
 	{
-		/*
+		
 		if (zinput->KeyPressed(KEY_F1))
 		{
 			zinput->ClearKeyBuffer();
@@ -124,7 +124,12 @@ namespace GOTHIC_ENGINE {
 					{
 						if (pVob->GetVisual()->GetVisualName().Contains(".3DS"))
 						{
-							if (mapValues.find(pVob->GetVisual()->GetVisualName().ToChar()) != mapValues.end())
+							auto visualNameCheck = pVob->GetVisual()->GetVisualName();
+
+							visualNameCheck.TrimLeft(' ');
+							visualNameCheck.TrimRight(' ');
+
+							if (mapValues.find(visualNameCheck.ToChar()) != mapValues.end())
 							{
 								RemoveVob(pVob);
 								countRemoved++;
