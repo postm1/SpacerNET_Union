@@ -93,6 +93,7 @@ namespace GOTHIC_ENGINE {
 	// test loop, some test code always here...
 	void SpacerApp::TestLoop()
 	{
+		return;
 		
 		if (zinput->KeyPressed(KEY_F1))
 		{
