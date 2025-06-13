@@ -205,7 +205,7 @@ namespace GOTHIC_ENGINE {
 
 		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title><style type=\"text/css\" media=\"screen\">html,body{font-family:serif;,sans-serif;\
 color:#222222;}p{font-size:20px}table{border-collapse:collapse;border:1px solid grey;font-size:14px;}th{font-size:bold;background-color:#E1E15D;}td,th{border:1px solid grey;padding:5px}\
-tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_orange{color:#FF9900;} .texture_word_red{color:#FF001E;} #table_report tr:nth-child(odd) { background-color: #E4E4E4; color: #222222;}</style></head><body><p>\
+tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_orange{color:#FF9900;} .texture_word_red{color:#FF001E;} #table_report tr:nth-child(odd) { background-color: #E4E4E4; color: #222222;} td.high-poly {color: #FD7228; font-weight: bold; }</style></head><body><p>\
 <b>There is a list of all vobs' visuals in the location.</b></p>";
 
 		const CString endFile = "</body></html>";
@@ -371,7 +371,13 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 
 				outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
 				outfile << "<td>" << pair->GetValue()->amount << "</td>";
-				outfile << "<td>" << pair->GetValue()->polygons << "</td>";
+
+				if (pair->GetValue()->polygons >= 2000) {
+					outfile << "<td class='high-poly'>" << pair->GetValue()->polygons << "</td>";
+				}
+				else {
+					outfile << "<td>" << pair->GetValue()->polygons << "</td>";
+				}
 				outfile << "<td>" << pair->GetValue()->vdfOrWork << "</td>";
 				outfile << "<td>" << pair->GetValue()->vdfName << "</td>";
 				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
@@ -503,7 +509,12 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 
 				outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
 				outfile << "<td>" << pair->GetValue()->amount << "</td>";
-				outfile << "<td>" << pair->GetValue()->polygons << "</td>";
+				if (pair->GetValue()->polygons >= 2000) {
+					outfile << "<td class='high-poly'>" << pair->GetValue()->polygons << "</td>";
+				}
+				else {
+					outfile << "<td>" << pair->GetValue()->polygons << "</td>";
+				}
 				outfile << "<td>" << pair->GetValue()->vdfOrWork << "</td>";
 				outfile << "<td>" << pair->GetValue()->vdfName << "</td>";
 				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
