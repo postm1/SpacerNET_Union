@@ -20,10 +20,12 @@ namespace GOTHIC_ENGINE {
 		CString fileType;
 		zCArray<CString> texturesNames;
 		zCVob* pVob;
+		int polygons;
 
 		VisualReportEntry::VisualReportEntry()
 		{
 			amount = 0;
+			polygons = 0;
 			vdf = false;
 			work = false;
 			workOnly = false;
@@ -120,6 +122,8 @@ namespace GOTHIC_ENGINE {
 		if (auto pProgMesh = visual->CastTo<zCProgMeshProto>())
 		{
 			//cmd << "mesh! " << curVob->GetVobName() << " visual: " << visual->GetVisualName() << endl;
+
+			pair->GetValue()->polygons += pProgMesh->GetNumTri();
 
 			for (int i = 0; i < pProgMesh->numSubMeshes; i++)
 			{
@@ -340,7 +344,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 					{
 						foundAnyBadEntry = true;
 
-						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
+						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\"><tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
 					}
 
 					outfile << "<tr class=\"error\">";
@@ -351,7 +355,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 					{
 						foundAnyBadEntry = true;
 
-						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
+						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\"><tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
 					}
 
 					outfile << "<tr class=\"warning\">";
@@ -367,6 +371,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 
 				outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
 				outfile << "<td>" << pair->GetValue()->amount << "</td>";
+				outfile << "<td>" << pair->GetValue()->polygons << "</td>";
 				outfile << "<td>" << pair->GetValue()->vdfOrWork << "</td>";
 				outfile << "<td>" << pair->GetValue()->vdfName << "</td>";
 				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
@@ -471,7 +476,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 
 
 		//=====================================================================
-		outfile << "<p><b>Normal visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>_WORK/VDF</th><th>\
+		outfile << "<p><b>Normal visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>\
 VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 
 		for (uint i = 0; i < arr.GetNum(); i++)
@@ -498,6 +503,7 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 
 				outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
 				outfile << "<td>" << pair->GetValue()->amount << "</td>";
+				outfile << "<td>" << pair->GetValue()->polygons << "</td>";
 				outfile << "<td>" << pair->GetValue()->vdfOrWork << "</td>";
 				outfile << "<td>" << pair->GetValue()->vdfName << "</td>";
 				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
