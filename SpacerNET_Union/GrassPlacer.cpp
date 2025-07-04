@@ -62,14 +62,16 @@ namespace GOTHIC_ENGINE {
 
 				if (ogame->GetWorld()->TraceRayNearestHit(cam->GetVob()->GetPositionWorld(), ray * 30000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_IGNORE_TRANSP)) {
 
-					if (ogame->GetWorld()->traceRayReport.foundPoly) {
+					auto& report = ogame->GetWorld()->traceRayReport;
 
-						auto poly = ogame->GetWorld()->traceRayReport.foundPoly;
-						auto posToPlace = ogame->GetWorld()->traceRayReport.foundIntersection;
+					if (report.foundHit) {
 
+						auto poly = report.foundPoly;
+						auto posToPlace = report.foundIntersection;
+						auto foundVob = report.foundVob;
 						//cmd << posToPlace.ToString() << endl;
 
-						if (poly)
+						if (poly || foundVob)
 						{
 							//GeneratePointsCircle(posToPlace, 10, 2000);
 
@@ -278,10 +280,14 @@ namespace GOTHIC_ENGINE {
 								InsertIntoWorld(newVob, NULL, false);
 							}
 
+							zVEC3 newDir = zVEC3(0, 1, 0);
 
-							poly->CalcNormal();
-
-							zVEC3 newDir = (poly->polyPlane.normal);
+							if (poly)
+							{
+								poly->CalcNormal();
+								(poly->polyPlane.normal);
+							}
+							
 
 
 							if (grassToolSetNormal)
