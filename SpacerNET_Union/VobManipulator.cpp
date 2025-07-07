@@ -736,7 +736,9 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-		if (vob->HasChildrenRec(newParent))
+		//print.PrintRed(Z(int)newParent);
+
+		if (newParent && vob->HasChildrenRec(newParent))
 		{
 			print.PrintRed(GetLang("CANT_CHANGE_PARENT_INTO_ITSELF"));
 			return;
@@ -1605,7 +1607,7 @@ namespace GOTHIC_ENGINE {
 						return;
 					}
 
-					if (theApp.vobToCopy && theApp.vobToCopy->HasChildrenRec(pickedVob))
+					if (theApp.vobToCopy && pickedVob && theApp.vobToCopy->HasChildrenRec(pickedVob))
 					{
 						print.PrintRed(GetLang("CANT_COPY_INITSELF_USUAL_VOB"));
 						theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
