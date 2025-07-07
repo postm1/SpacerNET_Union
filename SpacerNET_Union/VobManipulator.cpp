@@ -732,7 +732,13 @@ namespace GOTHIC_ENGINE {
 
 		if (vob == newParent)
 		{
-			print.PrintRed(GetLang("CANT_CHANGE_PARENT_INTO_INSELF"));
+			print.PrintRed(GetLang("CANT_CHANGE_PARENT_INTO_ITSELF"));
+			return;
+		}
+
+		if (vob->HasChildrenRec(newParent))
+		{
+			print.PrintRed(GetLang("CANT_CHANGE_PARENT_INTO_ITSELF"));
 			return;
 		}
 

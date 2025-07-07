@@ -45,6 +45,40 @@ zCVob* GetParentVob()
 	return NULL;
 }
 
+bool zCVob::HasChildrenRec(zCVob* pVobFutureParent, int maxDepth = 100)
+{
+    // Защита от nullptr и проверка на самого себя
+    if (!pVobFutureParent || pVobFutureParent == this)
+        return true; // Нельзя перемещать в себя или в nullptr
+
+    if (maxDepth <= 0)
+        return false; // Защита от бесконечной рекурсии (на случай циклов)
+
+    auto node = this->globalVobTreeNode;
+    if (!node)
+        return false; // Нет детей - pVobFutureParent не может быть ребенком
+
+    // Обходим всех детей текущего воба
+    zCTree<zCVob>* childNode = node->GetFirstChild();
+    while (childNode)
+    {
+        zCVob* childVob = childNode->GetData();
+
+        // Если нашли pVobFutureParent среди детей
+        if (childVob == pVobFutureParent)
+            return true;
+
+        // Рекурсивно проверяем поддерево этого ребенка
+        if (childVob && childVob->HasChildrenRec(pVobFutureParent, maxDepth - 1))
+            return true;
+
+        // Переходим к следующему ребенку на том же уровне
+        childNode = childNode->GetNextChild();
+    }
+
+    return false; // pVobFutureParent не найден в поддереве
+}
+
 zCEventManager*		GetEventManager(const zBOOL dontCreateIfNotPresent = FALSE) { return GetEM(dontCreateIfNotPresent); };
 
 
