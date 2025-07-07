@@ -1605,6 +1605,11 @@ namespace GOTHIC_ENGINE {
 						return;
 					}
 
+					if (theApp.vobToCopy && theApp.vobToCopy->HasChildrenRec(pickedVob))
+					{
+						print.PrintRed(GetLang("CANT_COPY_INITSELF"));
+						return;
+					};
 
 					if (theApp.options.GetIntVal("selectMoveWhenVobInsert"))
 					{
