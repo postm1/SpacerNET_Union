@@ -1607,7 +1607,8 @@ namespace GOTHIC_ENGINE {
 
 					if (theApp.vobToCopy && theApp.vobToCopy->HasChildrenRec(pickedVob))
 					{
-						print.PrintRed(GetLang("CANT_COPY_INITSELF"));
+						print.PrintRed(GetLang("CANT_COPY_INITSELF_USUAL_VOB"));
+						theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 						return;
 					};
 
