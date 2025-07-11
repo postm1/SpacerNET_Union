@@ -1233,6 +1233,26 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
+		if (ogame->GetWorld()->wayNet)
+		{
+			auto wpTot = ogame->GetWorld()->wayNet->GetWaypoint("TOT");
+
+			if (!wpTot)
+			{
+				auto entry = new ErrorReportEntry();
+
+				entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+				entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_WP_NO_TOT);
+				entry->SetObject((uint)NULL);
+				entry->SetVobName("");
+				entry->SetMaterialName("");
+				entry->SetTextureName("");
+
+				AddEntry(entry);
+			}
+		}
+		
+
 		if (autoFix)
 		{
 			cmd << endl << "<AUTO FIX MOD END>" << endl;
