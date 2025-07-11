@@ -25,7 +25,7 @@ namespace GOTHIC_ENGINE {
 				waynet->DeleteWay(wp1, wp2);
 			}
 
-			print.PrintWin("Toggle waynet...", GFX_RED);
+			//print.PrintWin("Toggle waynet...", GFX_RED);
 		}
 	}
 	void SpacerApp::ConnectWP()
