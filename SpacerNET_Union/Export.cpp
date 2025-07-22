@@ -1826,42 +1826,37 @@ namespace GOTHIC_ENGINE {
 
 			if (theApp.IsAWorldLoaded())
 			{
+
+				zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
+
+				if (!skyCtrl) return;
+
 				switch (rainType)
 				{
 				case SpacerRainType::SPACER_RAIN_TYPE_STOP: {
-					zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
-
-					if (skyCtrl)
-					{
-						skyCtrl->rainFX.timeStopRain = skyCtrl->masterTime;
-					};
+					
+					skyCtrl->rainFX.timeStopRain = skyCtrl->masterTime;
+					
 				}; break;
 
 				case SpacerRainType::SPACER_RAIN_TYPE_SMOOTH: {
-					zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
 
-					if (skyCtrl)
-					{
 #if ENGINE == Engine_G2A
 						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
 #endif
 						zREAL weight = 0.0f;
 						skyCtrl->SetRainFXWeight(weight, 0.1F);
-					};
+					
 				}; break;
 
 
 				case SpacerRainType::SPACER_RAIN_TYPE_FULL: {
-					zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
 
-					if (skyCtrl)
-					{
 #if ENGINE == Engine_G2A
 						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
 #endif
 						zREAL weight = 0.5f;
 						skyCtrl->SetRainFXWeight(weight, 0.1F);
-					};
 				}; break;
 
 				}
