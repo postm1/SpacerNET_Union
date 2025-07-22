@@ -285,7 +285,7 @@ namespace GOTHIC_ENGINE {
 							if (poly)
 							{
 								poly->CalcNormal();
-								(poly->polyPlane.normal);
+								newDir = (poly->polyPlane.normal);
 							}
 							
 
