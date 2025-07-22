@@ -90,6 +90,13 @@ namespace GOTHIC_ENGINE {
 	};
 
 
+	enum SpacerRainType
+	{
+		SPACER_RAIN_TYPE_STOP = 0,
+		SPACER_RAIN_TYPE_SMOOTH,
+		SPACER_RAIN_TYPE_FULL
+	};
+
 	enum zEVobMotionMode {
 		zMM_NONE,
 		zMM_MOVE,

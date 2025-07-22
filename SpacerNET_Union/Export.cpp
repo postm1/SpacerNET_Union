@@ -1818,6 +1818,51 @@ namespace GOTHIC_ENGINE {
 			addPFXNew();
 			*/
 		}
+
+
+		__declspec(dllexport) void Extern_ChangeRain(int type)
+		{
+			SpacerRainType rainType = (SpacerRainType)type;
+
+			if (theApp.IsAWorldLoaded())
+			{
+				switch (rainType)
+				{
+				case SpacerRainType::SPACER_RAIN_TYPE_STOP: {
+					zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
+
+					if (skyCtrl)
+					{
+						skyCtrl->rainFX.timeStopRain = skyCtrl->masterTime;
+					};
+				}; break;
+
+				case SpacerRainType::SPACER_RAIN_TYPE_SMOOTH: {
+					zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
+
+					if (skyCtrl)
+					{
+						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
+						zREAL weight = 0.0f;
+						skyCtrl->SetRainFXWeight(weight, 0.1F);
+					};
+				}; break;
+
+
+				case SpacerRainType::SPACER_RAIN_TYPE_FULL: {
+					zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
+
+					if (skyCtrl)
+					{
+						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
+						zREAL weight = 0.5f;
+						skyCtrl->SetRainFXWeight(weight, 0.1F);
+					};
+				}; break;
+
+				}
+			}
+		}
 		
 	}
 
