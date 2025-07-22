@@ -1842,7 +1842,9 @@ namespace GOTHIC_ENGINE {
 
 					if (skyCtrl)
 					{
+#if ENGINE == Engine_G2A
 						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
+#endif
 						zREAL weight = 0.0f;
 						skyCtrl->SetRainFXWeight(weight, 0.1F);
 					};
@@ -1854,7 +1856,9 @@ namespace GOTHIC_ENGINE {
 
 					if (skyCtrl)
 					{
+#if ENGINE == Engine_G2A
 						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
+#endif
 						zREAL weight = 0.5f;
 						skyCtrl->SetRainFXWeight(weight, 0.1F);
 					};
