@@ -201,6 +201,8 @@ namespace GOTHIC_ENGINE {
 
 		//print.PrintRed("Playing the game...");
 
+
+		SetCollisionsFixForRayCast(g_bIsPlayingGame);
 		
 		if (!g_bIsPlayingGame)
 		{

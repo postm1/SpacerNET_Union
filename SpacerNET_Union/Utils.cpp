@@ -36,7 +36,53 @@ namespace GOTHIC_ENGINE {
 #endif
 
 	
+	void PatchSecuredMem(LPCVOID pDst, const void* pSrc, size_t Size, BYTE* originalBytes = nullptr)
+	{
+		BOOL bProtect;
+		DWORD flOldProtect;
+		_MEMORY_BASIC_INFORMATION Buffer;
 
+		VirtualQuery(pDst, &Buffer, sizeof(Buffer));
+
+		bProtect = VirtualProtect(Buffer.BaseAddress, Buffer.RegionSize, PAGE_READWRITE, &flOldProtect);
+
+		if (bProtect)
+		{
+			// saving original data
+			if (originalBytes != nullptr)
+			{
+				memcpy(originalBytes, pDst, Size);
+			}
+
+			memcpy((void*)pDst, pSrc, Size);
+
+			VirtualProtect(Buffer.BaseAddress, Buffer.RegionSize, flOldProtect, &flOldProtect);
+		}
+	}
+
+	void SetCollisionsFixForRayCast(bool toggle)
+	{
+		static BYTE patchRayCast[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
+		static BYTE original[6];
+
+#if ENGINE == Engine_G1
+		static uint addrPatch = 0x005A6327;
+#elif ENGINE == Engine_G1A
+		static uint addrPatch = 0x005C2C21;
+#else
+		static uint addrPatch = 0x005C8237;
+#endif
+		if (toggle)
+		{
+			PatchSecuredMem((void*)addrPatch, patchRayCast, sizeof(patchRayCast), original);
+			
+		}
+		else
+		{
+			PatchSecuredMem((void*)addrPatch, original, sizeof(original), NULL);
+		}
+
+	}
 
 	double GetAngleBetweenVobs(zCVob* vob, zCVob* target, zVEC3 realUnit)
 	{
