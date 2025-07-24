@@ -64,6 +64,7 @@ namespace GOTHIC_ENGINE {
 	{
 		static BYTE patchRayCast[] = { 0x90, 0x90, 0x90, 0x90, 0x90, 0x90 };
 		static BYTE original[6];
+		static bool saveOriginalData = true;
 
 #if ENGINE == Engine_G1
 		static uint addrPatch = 0x005A6327;
@@ -74,8 +75,8 @@ namespace GOTHIC_ENGINE {
 #endif
 		if (toggle)
 		{
-			PatchSecuredMem((void*)addrPatch, patchRayCast, sizeof(patchRayCast), original);
-			
+			PatchSecuredMem((void*)addrPatch, patchRayCast, sizeof(patchRayCast), saveOriginalData ? original : NULL);
+			saveOriginalData = false;
 		}
 		else
 		{
