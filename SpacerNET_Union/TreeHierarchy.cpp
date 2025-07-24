@@ -15,7 +15,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-	void CreateBaseVobTree(zCTree<zCVob>* node)
+	void CreateBaseVobTreeBuildTree(zCTree<zCVob>* node, bool& foundBadItem)
 	{
 		zCVob* vob = node->GetData();
 
@@ -34,6 +34,7 @@ namespace GOTHIC_ENGINE {
 			if (pItem && (pItem->GetInstanceName() == "" || pItem->GetInstance() == -1))
 			{
 				Stack_PushString("oCItem (Broken)");
+				foundBadItem = true;
 			}
 			else
 			{
@@ -64,7 +65,7 @@ namespace GOTHIC_ENGINE {
 		node = node->GetFirstChild();
 		while (node != NULL)
 		{
-			CreateBaseVobTree(node);
+			CreateBaseVobTreeBuildTree(node, foundBadItem);
 			node = node->GetNextChild();
 		}
 	}

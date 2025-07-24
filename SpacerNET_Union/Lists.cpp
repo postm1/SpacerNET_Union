@@ -2,6 +2,9 @@
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
+
+	void CreateBaseVobTreeBuildTree(zCTree<zCVob>* node, bool& foundBadItem);
+
 	// Add your code here . . .
 	// список итемов в окно
 	void SpacerApp::CreateItemsList()
@@ -247,14 +250,22 @@ namespace GOTHIC_ENGINE {
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearAllEntries")();
 	
 		zCTree<zCVob>* tree = world->globalVobTree.GetFirstChild();
+
+		bool foundBadItem = false;
+
 		while (tree)
 		{
-			CreateBaseVobTree(tree);
+			CreateBaseVobTreeBuildTree(tree, foundBadItem);
 			tree = tree->GetNextChild();
 		}
 
 
 		treeIsReady = true;
+
+		if (foundBadItem)
+		{
+			print.PrintRed("Found Broken Item (No script found)", 12);
+		}
 
 		
 
