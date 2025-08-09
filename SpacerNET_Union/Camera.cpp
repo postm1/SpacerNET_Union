@@ -128,6 +128,10 @@ namespace GOTHIC_ENGINE {
 		}
 		else
 		{
+
+#if ENGINE == Engine_G1
+			theApp.mouseWheelKeyCodeG1 = 0;
+#endif
 			if (camMov.hideCursor)
 			{
 				camMov.hideCursor = false;
