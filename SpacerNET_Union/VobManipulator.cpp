@@ -263,7 +263,7 @@ namespace GOTHIC_ENGINE {
 
 			float saveAngle = pickedVob->trafoObjToWorld.GetEulerAngles()[1]; // around vertical axis
 
-			print.PrintRed(pickedVob->trafoObjToWorld.GetEulerAngles().ToString());
+			//print.PrintRed(pickedVob->trafoObjToWorld.GetEulerAngles().ToString());
 
 			pickedVob->ResetRotationsWorld();
 			pickedVob->RotateLocalX(180.0f);
@@ -383,7 +383,7 @@ namespace GOTHIC_ENGINE {
 
 			float saveAngle = pickedVob->trafoObjToWorld.GetEulerAngles()[1]; // around vertical axis
 
-			print.PrintRed(pickedVob->trafoObjToWorld.GetEulerAngles().ToString());
+			//print.PrintRed(pickedVob->trafoObjToWorld.GetEulerAngles().ToString());
 
 			pickedVob->ResetRotationsWorld();
 			pickedVob->RotateLocalX(180.0f);
