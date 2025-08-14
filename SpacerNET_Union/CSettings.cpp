@@ -630,6 +630,9 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "GRASS", "grassToolStaticVobValue", "0");
 		list.Insert("grassToolStaticVobValue", set);
+
+		set = new CSetting(TYPE_INT, "GRASS", "grassToolSetOnVob", "0");
+		list.Insert("grassToolSetOnVob", set);
 	}	
 
 	CSettings::~CSettings()

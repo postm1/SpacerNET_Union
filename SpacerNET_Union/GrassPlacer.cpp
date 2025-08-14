@@ -58,9 +58,17 @@ namespace GOTHIC_ENGINE {
 
 				ogame->GetWorld()->PickScene(*ogame->GetCamera(), ax, ay, -1);
 
+				bool setOnVob = theApp.options.GetIntVal("grassToolSetOnVob");
 
+				int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_IGNORE_TRANSP;
 
-				if (ogame->GetWorld()->TraceRayNearestHit(cam->GetVob()->GetPositionWorld(), ray * 30000, (zCVob*)NULL, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_IGNORE_TRANSP)) {
+				if (!setOnVob)
+				{
+					//print.PrintRed("NO VOBS");
+					flags |= zTRACERAY_VOB_IGNORE;
+				}
+
+				if (ogame->GetWorld()->TraceRayNearestHit(cam->GetVob()->GetPositionWorld(), ray * 50000, (zCVob*)NULL, flags)) {
 
 					auto& report = ogame->GetWorld()->traceRayReport;
 
@@ -107,7 +115,7 @@ namespace GOTHIC_ENGINE {
 							int grassToolcdStaticValue = theApp.options.GetIntVal("grassToolcdStaticValue");
 							int grassToolstaticVobValue = theApp.options.GetIntVal("grassToolStaticVobValue");
 
-
+							
 
 							if (modelName.Length() == 0) {
 								return;
