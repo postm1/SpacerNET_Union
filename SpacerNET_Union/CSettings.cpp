@@ -505,6 +505,9 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "bCheckRamMemory", "1");
 		list.Insert("bCheckRamMemory", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "ignorePathWorkCheck", "0");
+		list.Insert("ignorePathWorkCheck", set);
 		
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
