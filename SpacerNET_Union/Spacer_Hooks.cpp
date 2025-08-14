@@ -18,6 +18,14 @@ namespace GOTHIC_ENGINE {
 		return THISCALL(ivk_oCMobInter_CanInteractWith)(npc);
 	}
 
+	// no hero effect while game mod, so empty hook function
+	HOOK ivk_zCAIPlayer_UpdateEffects AS(&zCAIPlayer::UpdateEffects, &zCAIPlayer::UpdateEffects_Union);
+	void zCAIPlayer::UpdateEffects_Union()
+	{
+
+	}
+
+
 	// ESC key crashfix
 	HOOK Ivk_CGameManager_HandleEvent AS(&CGameManager::HandleEvent, &CGameManager::HandleEvent_Hook);
 	int CGameManager::HandleEvent_Hook(int key)

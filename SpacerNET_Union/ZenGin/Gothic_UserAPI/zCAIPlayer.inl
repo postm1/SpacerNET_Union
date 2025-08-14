@@ -3,3 +3,4 @@
 // User API for zCAIPlayer
 // Add your methods here
 
+void zCAIPlayer::UpdateEffects_Union();
