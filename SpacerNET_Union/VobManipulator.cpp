@@ -257,6 +257,19 @@ namespace GOTHIC_ENGINE {
 			pickedVob->SetHeadingAtWorld(zVEC3(0, 0, 1));
 		}
 
+		if (type == 7)
+		{
+			print.PrintRed(GetLang("UNION_VOB_UPSIDE_DOWN"));
+
+			float saveAngle = pickedVob->trafoObjToWorld.GetEulerAngles()[1]; // around vertical axis
+
+			print.PrintRed(pickedVob->trafoObjToWorld.GetEulerAngles().ToString());
+
+			pickedVob->ResetRotationsWorld();
+			pickedVob->RotateLocalX(180.0f);
+			pickedVob->RotateWorldY(-DEGREE * saveAngle);
+		}
+
 
 		if (dynamic_cast<zCVobWaypoint*>(pickedVob))
 		{
@@ -362,6 +375,20 @@ namespace GOTHIC_ENGINE {
 		{
 			print.PrintRed(GetLang("UNION_VOB_AXIS_RESET"));
 			pickedVob->SetHeadingAtWorld(zVEC3(0, 0, 1));
+		}
+
+		if (type == 7)
+		{
+			print.PrintRed(GetLang("UNION_VOB_UPSIDE_DOWN"));
+
+			float saveAngle = pickedVob->trafoObjToWorld.GetEulerAngles()[1]; // around vertical axis
+
+			print.PrintRed(pickedVob->trafoObjToWorld.GetEulerAngles().ToString());
+
+			pickedVob->ResetRotationsWorld();
+			pickedVob->RotateLocalX(180.0f);
+			pickedVob->RotateWorldY(-DEGREE * saveAngle);
+
 		}
 
 
@@ -1949,6 +1976,18 @@ namespace GOTHIC_ENGINE {
 				
 
 				static int rotType = 4;
+
+
+				// ROTATE UPSIDE DOWN VOB
+				if (keys.KeyPressed("VOB_SET_UPSIDE_DOWN", true))
+				{
+					if (CheckIfVobBlocked(theApp.pickedVob))
+					{
+						return;
+					}
+
+					HandleVobRotation(pickedVob, 7, 0);
+				}
 
 				if (keys.KeyPressed("VOB_RESET_AXIS", true))
 				{
