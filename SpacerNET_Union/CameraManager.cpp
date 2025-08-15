@@ -533,6 +533,8 @@ namespace GOTHIC_ENGINE {
 
 		GetProcAddress(theApp.module, "OnCameraClear_Interface")();
 
+		bool autoRename = theApp.options.GetIntVal("bCameraAutoRenameKeys");
+
 		bool renameFound = false;
 
 		for (int i = 0; i < cur_cam->GetNumCamKeys(); i++)
@@ -543,9 +545,9 @@ namespace GOTHIC_ENGINE {
 			{
 				zSTRING name = key->GetVobName();
 
-				if (name.Length() == 0)
+				if (name.Length() == 0 && autoRename)
 				{
-					cmd << "Found bad name POS: " + i << endl;
+					//cmd << "Found bad name POS: " + i << endl;
 
 					name = "KEY_POS_" + Z(i + 1);
 					key->SetVobName(name);
@@ -556,6 +558,11 @@ namespace GOTHIC_ENGINE {
 					Stack_PushString(name);
 					updateName((uint)key);
 					
+				}
+
+				if (name.Length() == 0)
+				{
+					name = "KEY_POS_" + Z(i + 1);
 				}
 
 				Stack_PushString(name);
@@ -573,9 +580,9 @@ namespace GOTHIC_ENGINE {
 			{
 				zSTRING name = key->GetVobName();
 
-				if (name.Length() == 0)
+				if (name.Length() == 0 && autoRename)
 				{
-					cmd << "Found bad name TARGET: " + i << endl;
+					//cmd << "Found bad name TARGET: " + i << endl;
 
 					name = "KEY_TARGET_" + Z(i + 1);
 					key->SetVobName(name);
@@ -585,6 +592,12 @@ namespace GOTHIC_ENGINE {
 					renameFound = true;
 					blockRename = true;
 				}
+
+				if (name.Length() == 0)
+				{
+					name = "KEY_TARGET_" + Z(i + 1);
+				}
+
 				Stack_PushString(name);
 				GetProcAddress(theApp.module, "OnInsertTargetKey_Interface")();
 
