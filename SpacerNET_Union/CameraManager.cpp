@@ -374,6 +374,11 @@ namespace GOTHIC_ENGINE {
 					auto end = start + zVEC3(0, 50, 0);
 					auto text = key->GetVobName();
 
+					if (text.Length() == 0)
+					{
+						text = "KEY_POS_" + Z (i+1);
+					}
+
 					endOrStartIndex = false;
 
 					if (i == 0)
@@ -436,6 +441,11 @@ namespace GOTHIC_ENGINE {
 
 
 					endOrStartIndex = false;
+
+					if (text.Length() == 0)
+					{
+						text = "KEY_TARGET_" + Z (i+1);
+					}
 
 					if (i == 0)
 					{
