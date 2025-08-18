@@ -115,6 +115,10 @@ namespace GOTHIC_ENGINE {
 							int grassToolcdStaticValue = theApp.options.GetIntVal("grassToolcdStaticValue");
 							int grassToolstaticVobValue = theApp.options.GetIntVal("grassToolStaticVobValue");
 
+							int autoHeightType = theApp.options.GetIntVal("grassToolAutoHeightType");
+							bool autoHeightEnabled = theApp.options.GetIntVal("grassToolAutoHeightEnable");
+							
+
 							
 
 							if (modelName.Length() == 0) {
@@ -270,9 +274,74 @@ namespace GOTHIC_ENGINE {
 							bool collDetDyn = newVob->GetCollDetDyn();
 							bool collDetStat = newVob->GetCollDetStat();
 
+
+
+							zVEC3 finalPos = posToPlace;
+							if (autoHeightEnabled)
+							{
+								switch (autoHeightType)
+								{
+								case 0: {
+
+									finalPos.n[VY] = posToPlace.n[VY] - newVob->bbox3D.GetHeight() * 0.20f;
+
+								}; break;
+								case 1: {
+
+									finalPos.n[VY] = posToPlace.n[VY] - newVob->bbox3D.GetHeight() * 0.15f;
+								}; break;
+
+								case 2: {
+
+									finalPos.n[VY] = posToPlace.n[VY] - newVob->bbox3D.GetHeight() * 0.10f;
+								}; break;
+
+								case 3: {
+
+									finalPos.n[VY] = posToPlace.n[VY] - newVob->bbox3D.GetHeight() * 0.05f;
+								}; break;
+
+								case 4: {
+
+									finalPos.n[VY] = posToPlace.n[VY];
+								}; break;
+
+								case 5: {
+
+									finalPos.n[VY] = posToPlace.n[VY] + newVob->bbox3D.GetHeight() * 0.05f;
+								}; break;
+
+								case 6: {
+
+									finalPos.n[VY] = posToPlace.n[VY] + newVob->bbox3D.GetHeight() * 0.10f;
+								}; break;
+
+								case 7: {
+
+									finalPos.n[VY] = posToPlace.n[VY] + newVob->bbox3D.GetHeight() * 0.15f;
+								}; break;
+
+								case 8: {
+
+									finalPos.n[VY] = posToPlace.n[VY] + newVob->bbox3D.GetHeight() * 0.20f;
+								}; break;
+								
+								}
+							}
+							else
+							{
+								finalPos.n[VY] -= offsetVert;
+							}
+							
+
+							
+
+							
+
+
 							newVob->SetCollDet(FALSE);
 
-							newVob->SetPositionWorld(posToPlace + zVEC3(0, offsetVert, 0) + point);
+							newVob->SetPositionWorld(finalPos);
 
 							newVob->SetCollDetDyn(collDetDyn);
 							newVob->SetCollDetStat(collDetStat);

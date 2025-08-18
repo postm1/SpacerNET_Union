@@ -16,6 +16,10 @@ zVEC3 GetCenterTop()
     );
 }
 
+float GetHeight() const {
+    return maxs.n[VY] - mins.n[VY];
+}
+
 #if ENGINE == Engine_G1
 //FIXME_G1
 //zBOOL IsIntersecting(const zPOINT3& rayOrigin, const zVEC3& rayDirection, zREAL& scaleMin, zREAL& scaleMax);
