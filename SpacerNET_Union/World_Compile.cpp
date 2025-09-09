@@ -639,4 +639,24 @@ namespace GOTHIC_ENGINE {
 		return THISCALL(Ivk_zCCBspNode_OutdoorKillRedundantLeafs)();
 	}
 
+
+	//ConvertTrisToNPolys
+	//0x0056CBA0 public: static void __cdecl zCMesh::ConvertTrisToNPolys(class zCPolygon * *,int,class zCMesh *,int)
+
+#if ENGINE == Engine_G2A
+
+	void __cdecl ConvertTrisToNPolys_Hooked(zCPolygon** inPolyList, int inPolyNum, zCMesh* homeMesh, const zBOOL onlySectorPolys);
+
+	CInvoke <void(__cdecl*) (zCPolygon**, int, zCMesh*, const zBOOL)> ivk_ConvertTrisToNPolys(0x0056CBA0, ConvertTrisToNPolys_Hooked, IVK_AUTO);
+
+	void __cdecl ConvertTrisToNPolys_Hooked(zCPolygon** inPolyList, int inPolyNum, zCMesh* homeMesh, const zBOOL onlySectorPolys)
+	{
+		if (theApp.options.GetIntVal("bSkipConvertToNPolys"))
+		{
+			return;
+		}
+
+		ivk_ConvertTrisToNPolys(inPolyList, inPolyNum, homeMesh, onlySectorPolys);
+	}
+#endif
 }

@@ -517,7 +517,10 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "grassToolAutoHeightEnable", "0");
 		list.Insert("grassToolAutoHeightEnable", set);
-		
+
+		set = new CSetting(TYPE_INT, "SPACER", "bSkipConvertToNPolys", "0");
+		list.Insert("bSkipConvertToNPolys", set);
+
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
