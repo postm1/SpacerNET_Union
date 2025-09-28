@@ -2169,7 +2169,6 @@ namespace GOTHIC_ENGINE {
 		zSTRING name = zSTRING(nameCurrent);
 		zSTRING visual = zSTRING(visualStr);
 
-
 		
 		//cmd << "Player: " << AHEX32((uint)player) << endl;
 
@@ -2233,6 +2232,14 @@ namespace GOTHIC_ENGINE {
 
 			zSTRING lastName = current_object->GetObjectName();
 			zSTRING lastVisual = oldVob && oldVob->GetVisual() ? oldVob->GetVisual()->GetVisualName() : "";
+
+			zCWaypoint* wpObj = NULL;
+
+			if (ogame->GetWorld()->wayNet) 
+			{
+				wpObj = ogame->GetWorld()->wayNet->GetWaypoint(lastName);
+			}
+
 
 			zVEC3 lastPos = oldVob->GetPositionWorld();
 			auto rotRight = oldVob->trafoObjToWorld.GetRightVector();
@@ -2331,13 +2338,13 @@ namespace GOTHIC_ENGINE {
 
 					if (auto wp = dynamic_cast<zCVobWaypoint*>(vob))
 					{
-						wp->SetVobName(name);
-						auto wpObj = ogame->GetWorld()->wayNet->GetWaypoint(lastName);
+						cmd << "Rename WP: " << lastName << " -> " << name << endl;
 
 						if (wpObj)
 						{
 							wpObj->SetName(name);
 						}
+
 					}
 
 					if (auto pKey = dynamic_cast<zCCamTrj_KeyFrame*>(vob))
