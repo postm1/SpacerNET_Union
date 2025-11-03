@@ -33,6 +33,7 @@ namespace GOTHIC_ENGINE {
 
 			if (!theApp.TryPickMouse())
 			{
+				//print.PrintGreen("#1");
 				return;
 			}
 
@@ -60,7 +61,7 @@ namespace GOTHIC_ENGINE {
 
 				bool setOnVob = theApp.options.GetIntVal("grassToolSetOnVob");
 
-				int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_IGNORE_TRANSP;
+				int flags = zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN /*| zTRACERAY_POLY_IGNORE_TRANSP*/;
 
 				if (!setOnVob)
 				{
@@ -68,11 +69,21 @@ namespace GOTHIC_ENGINE {
 					flags |= zTRACERAY_VOB_IGNORE;
 				}
 
-				if (ogame->GetWorld()->TraceRayNearestHit(cam->GetVob()->GetPositionWorld(), ray * 50000, (zCVob*)NULL, flags)) {
+				auto result = ogame->GetWorld()->TraceRayNearestHit(cam->GetVob()->GetPositionWorld(), ray * 50000, (zCVob*)NULL, flags);
+
+				if (!result)
+				{
+					//print.PrintGreen("#2");
+				}
+
+				if (result) {
 
 					auto& report = ogame->GetWorld()->traceRayReport;
 
 					if (report.foundHit) {
+
+						
+						theApp.debug.AddLine(report.foundIntersection, report.foundIntersection + zVEC3(0, 200, 0), GFX_RED, 5000);
 
 						auto poly = report.foundPoly;
 						auto posToPlace = report.foundIntersection;
