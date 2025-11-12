@@ -545,7 +545,7 @@ namespace GOTHIC_ENGINE {
 
 		zBOOL oldRemoveAllLevelCompos = zCVobLevelCompo::unarcIgnoreVisuals;
 
-		zCVobLevelCompo::unarcIgnoreVisuals = theApp.options.GetIntVal("removeAllLevelCompos");
+		zCVobLevelCompo::unarcIgnoreVisuals = false; // theApp.options.GetIntVal("removeAllLevelCompos");
 		ogame->LoadGame(-2, worldName);
 		zCVobLevelCompo::unarcIgnoreVisuals = oldRemoveAllLevelCompos;
 		
