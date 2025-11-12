@@ -4,7 +4,7 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	bool GetWayPointInfo(Common::string& name, uint& index) {
+	bool FetchNameFromString(Common::string& name, uint& index) {
 		Common::string baseName = name;
 		Common::string index_s = baseName.GetWord("_", -1);
 		if (index_s.IsNumber()) {
@@ -18,24 +18,33 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	Common::Array<zCWaypoint*> CollectWaypointsByName(Common::string baseName) {
-		Common::Array<zCWaypoint*> wayPoints;
+	void CollectWaypointsByName(Common::string baseName, uint& startIndex) {
+		
 		if (baseName.IsEmpty())
-			return wayPoints;
+		{
+			return;
+		}
 
 		auto* list = ogame->GetGameWorld()->wayNet->wplist.next;
 		while (list) {
 			zCWaypoint* wp = list->data;
 			Common::string name = wp->name;
 			uint index;
-			if (GetWayPointInfo(name, index))
+			if (FetchNameFromString(name, index))
 				if (name == baseName)
-					wayPoints += wp;
+				{
+					if (index > startIndex)
+					{
+						startIndex = index;
+					}
+				}
+					
 
 			list = list->next;
 		}
 
-		return wayPoints;
+		// set new next index
+		startIndex++;
 	}
 
 	// Checks whether the collection of waypoints has the same index
@@ -43,7 +52,7 @@ namespace GOTHIC_ENGINE {
 		for (uint i = 0; i < wayPoints.GetNum(); i++) {
 			Common::string baseName = wayPoints[i]->name;
 			uint index;
-			if (GetWayPointInfo(baseName, index))
+			if (FetchNameFromString(baseName, index))
 				if (index == targetIndex)
 					return true;
 		}
@@ -62,26 +71,36 @@ namespace GOTHIC_ENGINE {
 	Common::string GetNextWayPointName(Common::string copiedName) {
 		Common::string baseName = copiedName;
 		uint index;
-		GetWayPointInfo(baseName, index);
+		FetchNameFromString(baseName, index);
 
 		uint nextIndex = 0;
 
-		Common::Array<zCWaypoint*> wayPoints = CollectWaypointsByName(baseName);
+		CollectWaypointsByName(baseName, nextIndex);
 
-		for (nextIndex = 0; nextIndex < wayPoints.GetNum(); nextIndex++)
+
+	/*	for (nextIndex = 0; nextIndex < wayPoints.GetNum(); nextIndex++)
 			if (!HasWayPointInCollection(nextIndex, wayPoints))
-				break;
+				break;*/
 
 		Common::string nextName = baseName + "_" + FormatIndex(nextIndex);
+
+		if (ogame->GetWorld()->wayNet->GetWaypoint(nextName))
+		{
+			static int errIndex = 0;
+
+			Message::Box("ERROR: Such WP already exists!");
+			nextName = "ERR_NAME_CHANGE_IT_" + Common::string(errIndex);
+		}
+
 		return nextName;
 	}
 
 
 	//======================================================================
-	Common::Array<zCVobSpot*> CollectFreepointsByName(Common::string baseName) {
+	void CollectFreepointsByName(Common::string baseName, uint& nextIndex) {
 		Common::Array<zCVobSpot*> freePoints;
 		if (baseName.IsEmpty())
-			return freePoints;
+			return;
 
 		zCArray<zCVob*> vobList;
 
@@ -97,21 +116,27 @@ namespace GOTHIC_ENGINE {
 				Common::string name = vob->GetVobName();
 				uint index;
 
-				if (GetWayPointInfo(name, index))
+				if (FetchNameFromString(name, index))
 					if (name == baseName)
-						freePoints += spot;
+					{
+						if (index > nextIndex)
+						{
+							nextIndex = index;
+						}
+					}
 
 			}
 		}
 
-		return freePoints;
+		nextIndex++;
+
 	}
 
 	bool HasFreepointInCollection(uint targetIndex, Common::Array<zCVobSpot*> freePoints) {
 		for (uint i = 0; i < freePoints.GetNum(); i++) {
 			Common::string baseName = freePoints[i]->GetVobName();
 			uint index;
-			if (GetWayPointInfo(baseName, index))
+			if (FetchNameFromString(baseName, index))
 				if (index == targetIndex)
 					return true;
 		}
@@ -122,15 +147,17 @@ namespace GOTHIC_ENGINE {
 	Common::string GetNextFreePointName(Common::string copiedName) {
 		Common::string baseName = copiedName;
 		uint index;
-		GetWayPointInfo(baseName, index);
+		FetchNameFromString(baseName, index);
 
 		uint nextIndex = 0;
 
-		Common::Array<zCVobSpot*> freePoints = CollectFreepointsByName(baseName);
+		CollectFreepointsByName(baseName, nextIndex);
 
+		/*
 		for (nextIndex = 0; nextIndex < freePoints.GetNum(); nextIndex++)
 			if (!HasFreepointInCollection(nextIndex, freePoints))
 				break;
+		*/
 
 		Common::string nextName = baseName + "_" + FormatIndex(nextIndex);
 		return nextName;
