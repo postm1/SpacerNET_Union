@@ -1233,6 +1233,7 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
+#if ENGINE >= Engine_G2
 		if (ogame->GetWorld()->wayNet)
 		{
 			auto wpTot = ogame->GetWorld()->wayNet->GetWaypoint("TOT");
@@ -1252,6 +1253,7 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 		
+#endif
 
 		if (autoFix)
 		{
