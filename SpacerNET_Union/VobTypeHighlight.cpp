@@ -49,6 +49,8 @@ namespace GOTHIC_ENGINE {
 		{
 			auto pVob = resVobList.GetSafe(i);
 
+			if (!pVob) continue;
+
 			if (pVob == theApp.currentVobRender
 				|| pVob == theApp.currenItemRender
 				|| pVob == theApp.floorVob
@@ -100,7 +102,6 @@ namespace GOTHIC_ENGINE {
 				if (pVob->GetVisual()->GetVisualName().Upper().Search(".TGA", 1) != -1)
 				{
 					finalList.push_back(pVob);
-					isFakeBbox = true;
 				}
 
 			}
@@ -154,6 +155,9 @@ namespace GOTHIC_ENGINE {
 
 		//print.PrintRed(Z (int) finalList.size());
 		
+		
+
+
 		for (auto& it : finalList)
 		{
 
@@ -169,8 +173,21 @@ namespace GOTHIC_ENGINE {
 
 			if (viewPos[2] > cam->nearClipZ) 
 			{
-				it->bbox3D.Draw(GFX_YELLOW);
+				if (isFakeBbox)
+				{
 
+					zTBBox3D bboxFake;
+
+					bboxFake.Init();
+					bboxFake.AddPoint(zVEC3(-50, 0, -50) + vobPos);
+					bboxFake.AddPoint(zVEC3(50, 215, 50) + vobPos);
+					bboxFake.Draw(GFX_GREEN);
+				}
+				else
+				{
+					it->bbox3D.Draw(GFX_RED);
+				}
+				
 			}
 		}
 	}

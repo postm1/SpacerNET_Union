@@ -641,6 +641,8 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+		theApp.VobTypeHighLight_Loop();
+
 		THISCALL(ivk_zCBspTree_RenderVobList)();
 	}
 
