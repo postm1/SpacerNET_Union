@@ -521,6 +521,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "bSkipConvertToNPolys", "0");
 		list.Insert("bSkipConvertToNPolys", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "renderOnlySelectedVobType", "0");
+		list.Insert("renderOnlySelectedVobType", set);
+		
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);

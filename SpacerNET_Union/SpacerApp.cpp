@@ -1081,8 +1081,10 @@ namespace GOTHIC_ENGINE {
 
 		ClearBboxDecal();
 		BBoxDecal_Render();
-
+		VobTypeHighLight_Loop();
 		RenderSelectedVobBbox();
+
+
 
 	}
 

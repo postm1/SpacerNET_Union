@@ -1109,6 +1109,10 @@
       </SubType>
     </ClInclude>
     <ClInclude Include="Utils.h" />
+    <ClInclude Include="VobTypeHighlight.cpp">
+      <SubType>
+      </SubType>
+    </ClInclude>
     <ClInclude Include="World_Compile.cpp">
       <SubType>
       </SubType>

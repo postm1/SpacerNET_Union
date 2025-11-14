@@ -523,6 +523,10 @@ namespace GOTHIC_ENGINE {
 		zVEC3 points[8];
 		bool sidesInit = false;
 		zCMaterial* decalMat = NULL;
+
+		// highlight vob type
+
+		void VobTypeHighLight_Loop();
 	};
 
 }

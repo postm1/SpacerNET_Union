@@ -53,6 +53,7 @@
 #include "Load3DS_FastVertices.cpp"
 #include "World_CompileLight.cpp"
 #include "DrawSphere.cpp"
+#include "VobTypeHighlight.cpp"
 #include "MatFilter_Render.cpp"
 #include "World_Compile.cpp"
 #include "CustomLocationSettings.cpp"

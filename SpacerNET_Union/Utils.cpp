@@ -687,7 +687,7 @@ namespace GOTHIC_ENGINE {
 		theApp.exports.toggleUIElement(UIElementType::UI_WIN_VOBLIST, FALSE);
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearVobList")();
 
-		auto GetSearchRadius = (voidFuncPointer)GetProcAddress(theApp.module, "GetSearchRadius");
+		static auto GetSearchRadius = (voidFuncPointer)GetProcAddress(theApp.module, "GetSearchRadius");
 
 
 		int radius = GetSearchRadius();
@@ -767,27 +767,23 @@ namespace GOTHIC_ENGINE {
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
 			}
-			else if (type == 8 && dynamic_cast<zCVobSpot*>(resVobList.GetSafe(i)))
+			else if (type == 8 && dynamic_cast<oCMOB*>(resVobList.GetSafe(i)))
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
 			}
-			else if (type == 9 && dynamic_cast<oCMOB*>(resVobList.GetSafe(i)))
-			{
-				finalResultList.Insert(resVobList.GetSafe(i));
-			}
-			else if (type == 10 && pVob && !pVob->GetShowVisual() && pVob->GetVisual())
+			else if (type == 9 && pVob && !pVob->GetShowVisual() && pVob->GetVisual())
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
 			}
 			// PFX
-			else if (type == 12 && pVob && pVob->GetVisual() && (pVob->GetVisual()->GetVisualName().EndWith(".pfx") || pVob->GetVisual()->GetVisualName().EndWith(".PFX")))
+			else if (type == 11 && pVob && pVob->GetVisual() && (pVob->GetVisual()->GetVisualName().EndWith(".pfx") || pVob->GetVisual()->GetVisualName().EndWith(".PFX")))
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
 
 				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
 			}
 			// zones
-			else if (type == 13 && pVob && pVob->CastTo<zCZone>())
+			else if (type == 12 && pVob && pVob->CastTo<zCZone>())
 			{
 				finalResultList.Insert(resVobList.GetSafe(i));
 
@@ -796,7 +792,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 		//zCVobLight
-		if (type == 0 || type == 11)
+		if (type == 0 || type == 10)
 		{
 			auto pos = camVob->GetPositionWorld();
 			zCArray<zCVob*> lightList;
