@@ -83,7 +83,7 @@ namespace GOTHIC_ENGINE {
 					if (report.foundHit) {
 
 						
-						theApp.debug.AddLine(report.foundIntersection, report.foundIntersection + zVEC3(0, 200, 0), GFX_RED, 5000);
+						//theApp.debug.AddLine(report.foundIntersection, report.foundIntersection + zVEC3(0, 200, 0), GFX_RED, 5000);
 
 						auto poly = report.foundPoly;
 						auto posToPlace = report.foundIntersection;
