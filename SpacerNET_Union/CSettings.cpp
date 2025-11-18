@@ -564,7 +564,7 @@ namespace GOTHIC_ENGINE {
 		list.Insert("vobRotSpeed", set);
 
 
-		set = new CSetting(TYPE_INT, "CONTROLS", "vobInsertItemLevel", "1");
+		set = new CSetting(TYPE_INT, "CONTROLS", "vobInsertItemLevel", "0");
 		list.Insert("vobInsertItemLevel", set);
 
 		set = new CSetting(TYPE_INT, "CONTROLS", "vobInsertVobRotRand", "0");
