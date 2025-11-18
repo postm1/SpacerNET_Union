@@ -264,7 +264,16 @@ namespace GOTHIC_ENGINE {
 
 		if (foundBadItem)
 		{
-			print.PrintRed("Found Broken Item (No script found)", 12);
+			auto text = GetLang("MSG_ERR_BROKEN_ITEM");
+
+			print.PrintRed(text, 12);
+
+			static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddText");
+
+			Stack_PushString("\n" + text + "\n");
+			Stack_PushString("#FF00000");
+			pointer();
+
 		}
 
 		
