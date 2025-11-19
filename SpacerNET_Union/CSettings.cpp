@@ -524,6 +524,8 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "renderOnlySelectedVobType", "0");
 		list.Insert("renderOnlySelectedVobType", set);
 		
+		set = new CSetting(TYPE_INT, "SPACER", "warnLastSaveMsg", "1");
+		list.Insert("warnLastSaveMsg", set);
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);

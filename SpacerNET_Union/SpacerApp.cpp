@@ -96,6 +96,8 @@ namespace GOTHIC_ENGINE {
 
 		this->pLightDx11 = NULL;
 
+		this->timeNotSaved = 0;
+
 		updateMatrix.ResetMatrixUpdate();
 		
 	}
@@ -384,6 +386,8 @@ namespace GOTHIC_ENGINE {
 		RenderDX11_RemoveAmbientLight();
 
 		debug.CleanLines();
+
+		timeNotSaved = 0;
 
 		compareDynList.DeleteList();
 		compareVobsAll.DeleteList();
@@ -1035,9 +1039,46 @@ namespace GOTHIC_ENGINE {
 
 
 	
+	
 
 	void SpacerApp::PreRender()
 	{
+
+		if (mainTimer[TIMER_ID_CHECK_NOSAVE_TIME].Await(1000))
+		{
+			if (options.GetIntVal("warnLastSaveMsg"))
+			{
+
+
+				timeNotSaved += 1;
+
+				const int INTERVAL_MINUTES = 15;
+				const int TICKS_PER_MINUTE = 60;
+
+				if (timeNotSaved % (INTERVAL_MINUTES * TICKS_PER_MINUTE) == 0)
+				{
+
+					cmd << "###############" << endl;
+
+					auto textOriginal = GetLang("MSG_NOT_SAVED_WARN");
+					int minutes = timeNotSaved / TICKS_PER_MINUTE;
+
+					std::string textInsert = textOriginal.ToChar();
+
+					size_t pos = textInsert.find("{0}");
+					if (pos != std::string::npos) {
+						textInsert.replace(pos, 3, std::to_string(minutes));
+					}
+
+					CString textFinal = textInsert.c_str();
+
+					print.PrintRed(textFinal, 10);
+					PrintInfoWinMessage(textFinal);
+				}
+			}
+		}
+
+
 		if (g_bIsPlayingGame)
 		{
 			return;

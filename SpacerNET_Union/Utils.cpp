@@ -1768,5 +1768,15 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 	}
+
+	void PrintInfoWinMessage(zSTRING text, zSTRING color = "#FF00000")
+	{
+		static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddText");
+
+		Stack_PushString("\n" + text + "\n");
+		Stack_PushString(color);
+
+		pointer();
+	}
 }
 

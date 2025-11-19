@@ -116,6 +116,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SaveFile(zSTRING worldName, int type)
 	{
+		timeNotSaved = 0;
+
 		nograss.PrepareObjectsSaveGame();
 
 		switch (type)
@@ -374,7 +376,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::LoadMesh(zSTRING worldName)
 	{
-		
+		timeNotSaved = 0;
+
 		mm.CleanSelection();
 
 		Reset();
@@ -704,7 +707,7 @@ namespace GOTHIC_ENGINE {
 		BuildTree();
 		RX_End(7);
 
-		
+		timeNotSaved = 0;
 		restorator.GenerateVobsPos();
 		//mm.CreateMatTree();
 		mf.FillInterfaceData();

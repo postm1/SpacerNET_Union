@@ -218,6 +218,7 @@ namespace GOTHIC_ENGINE {
 			{
 				bool g_bIsPlayingGame;
 				bool g_bInsertNPCs;
+				int timeNotSaved;
 			};
 
 
