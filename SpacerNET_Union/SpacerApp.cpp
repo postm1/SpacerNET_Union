@@ -1058,7 +1058,7 @@ namespace GOTHIC_ENGINE {
 				if (timeNotSaved % (INTERVAL_MINUTES * TICKS_PER_MINUTE) == 0)
 				{
 
-					cmd << "###############" << endl;
+					//cmd << "###############" << endl;
 
 					auto textOriginal = GetLang("MSG_NOT_SAVED_WARN");
 					int minutes = timeNotSaved / TICKS_PER_MINUTE;
