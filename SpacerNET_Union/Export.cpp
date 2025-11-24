@@ -1863,6 +1863,19 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 		
+
+
+		__declspec(dllexport) void Extern_SetVisualVobContainerActive(int active) {
+
+			theApp.vobListVisualActive = active;
+		}
+
+		__declspec(dllexport) void Extern_SetVisualVobContainer() {
+
+			CString visualName = Stack_PeekString();
+
+			theApp.vobListVisualStr = visualName.Upper();
+		}
 	}
 
 }

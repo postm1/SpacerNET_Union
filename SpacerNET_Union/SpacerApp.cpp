@@ -72,6 +72,7 @@ namespace GOTHIC_ENGINE {
 		this->showVobVisualInfo = false;
 		this->holdTime = false;
 		this->showAfterWorldCompileMessage = false;
+		this->vobListVisualActive = false;
 
 		this->rotMod = zMH_VIEW;
 

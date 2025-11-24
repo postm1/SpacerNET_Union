@@ -173,6 +173,8 @@ namespace GOTHIC_ENGINE {
 			bool firstZenLoad;
 			bool firstTimeZenSaved;
 			int vobListSelectedIndex;
+			bool vobListVisualActive;
+			CString vobListVisualStr;
 			bool isGrattControlActive;
 			bool isNextCopyVobInsertNear;
 			bool nextInsertionIsTempPfx;
@@ -528,6 +530,7 @@ namespace GOTHIC_ENGINE {
 		// highlight vob type
 
 		void VobTypeHighLight_Loop();
+		void VobTypeHighLight_Visual_Loop();
 	};
 
 }
