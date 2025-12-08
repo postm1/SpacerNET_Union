@@ -445,6 +445,23 @@ namespace GOTHIC_ENGINE {
 						}
 						
 					}
+
+					if (pMob->locked)
+					{
+						if (pMob->pickLockStr.Length() == 0 && pMob->keyInstance.Length() == 0)
+						{
+							auto entry = new ErrorReportEntry();
+
+							entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_MOBCONT_NOT_CLOSED);
+							entry->SetObject((uint)vob);
+							entry->SetVobName(vob->_GetClassDef()->className);
+							entry->SetMaterialName("");
+							entry->SetTextureName("");
+
+							AddEntry(entry);
+						}
+					}
 				}
 
 				if (auto pMobInter = vob->CastTo<oCMobInter>())
