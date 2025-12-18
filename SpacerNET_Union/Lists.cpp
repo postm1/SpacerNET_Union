@@ -272,6 +272,13 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+		if (foundBadVisualNoExist)
+		{
+			auto text = GetLang("MSG_ERR_BROKEN_VISUAL_FILE");
+
+			print.PrintRed(text, 12);
+		}
+
 		
 
 		RX_Begin(8);

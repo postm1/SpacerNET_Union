@@ -105,3 +105,5 @@ bool HasChildren()
 }
 
 BOOL __fastcall Render_Union(zTRenderContext &renderContext);
+
+void zCVob::SetVisual_Union(const zSTRING& visualFileName);

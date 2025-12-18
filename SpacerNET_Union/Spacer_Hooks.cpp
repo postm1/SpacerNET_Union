@@ -887,4 +887,89 @@ namespace GOTHIC_ENGINE {
 
 		return vis;
 	}
+
+#if ENGINE == Engine_G1
+
+	HOOK ivk_zCVob_SetVisual AS(&zCVob::SetVisual, &zCVob::SetVisual_Union);
+	void zCVob::SetVisual_Union(const zSTRING& name)
+	{
+		if (!name.Length() || s_ignoreVisuals)
+			return;
+		zSTRING sName = name;
+		sName.Upper();
+		if (visual && !visual->GetVisualName().Compare(sName))
+			return;
+
+		zCVisual* pVisual = zCVisual::LoadVisual(sName);
+		if (!pVisual)
+		{
+			zerr->Fault("D: (zCVob::SetVisual): could not load visual '" + name +
+				"' for vobName '" + GetObjectName() + "' of class '" + _GetClassDef()->className + "'");
+
+			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT)
+			{
+				PrintInfoWinMessage("(zCVob::SetVisual) : could not load visual '"
+					+ name
+					+ "' for vobName '"
+					+ GetVobName()
+					+ "' of class '"
+					+ GetClassDef()->className
+					+ "'");
+			}
+			return;
+		}
+		if (pVisual != visual)
+			SetVisual(pVisual);
+		pVisual->Release();
+	}
+#elif ENGINE == Engine_G2A
+
+	// Checks if a visual exists and outputs the error in Info Windows
+	HOOK ivk_zCVob_SetVisual AS(&zCVob::SetVisual, &zCVob::SetVisual_Union);
+	void zCVob::SetVisual_Union(const zSTRING& visualFileName)
+	{
+		if (visualFileName.IsEmpty())	return;
+		if (GetIgnoreVisuals())			return;
+
+		zSTRING s(visualFileName);
+		s.Upper();
+
+		if (GetVisual())
+			if (GetVisual()->GetVisualName() == s)
+				return;
+
+		zCVisual* newVisual = zCVisual::LoadVisual(s);
+
+		if (!newVisual)
+		{
+			
+			zERR_FAULT("D: (zCVob::SetVisual): could not load visual '" + visualFileName + "' for vobName '" + GetVobName() + "' of class '" + GetClassDef()->className + "'");
+
+
+			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT)
+			{
+				theApp.foundBadVisualNoExist = true;
+
+				PrintInfoWinMessage("(zCVob::SetVisual) : could not load visual '"
+					+ visualFileName
+					+ "' for vobName '"
+					+ GetVobName()
+					+ "' of class '"
+					+ GetClassDef()->className
+					+ "'");
+			}
+		};
+
+		// ein bereits vorhandenes Visual nicht loeschen, falls kein neues da ist
+		if (newVisual)
+		{
+			if (newVisual != GetVisual())
+			{
+				SetVisual(newVisual);
+			};
+
+			newVisual->Release();
+		};
+	}
+#endif
 }

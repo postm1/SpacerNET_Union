@@ -54,6 +54,7 @@ namespace GOTHIC_ENGINE {
 		this->bDebugSpacerLoadMesh = false;
 		this->globalParent = NULL;
 		this->isBboxChangeMod = false;
+		this->foundBadVisualNoExist = false;
 
 		this->floorVob = NULL;
 		this->s_pLightSphereMesh = NULL;
@@ -399,6 +400,7 @@ namespace GOTHIC_ENGINE {
 		vobToCopy = NULL;
 		globalParent = NULL;
 		pickedWaypoint2nd = NULL;
+		foundBadVisualNoExist = false;
 
 		pickedWaypoint = NULL;
 		selectedWaypointForNet = NULL;

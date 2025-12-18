@@ -163,6 +163,7 @@ namespace GOTHIC_ENGINE {
 			bool pickUnshareShow;
 			
 			bool spacerWasInit;
+			bool foundBadVisualNoExist;
 
 			bool useSortPolys;
 			bool dataFilled;
