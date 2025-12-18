@@ -934,48 +934,49 @@ namespace GOTHIC_ENGINE {
 		zSTRING s(visualFileName);
 		s.Upper();
 
-
-		if (s.Contains(' '))
+		if (s.Length() > 0)
 		{
-			cmd << "Remove symbol 'space' in name: '" << s << "'" << endl;
-
-			CString text = GetLang("MSG_LOAD_AUTOFIX_SPACE_IN_NAME");
-
-			text += "'" + A s.ToChar() + "'";
-
-			PrintInfoWinMessage(text, "#0000FF");
-
-			s.TrimLeft(' ');
-			s.TrimRight(' ');
-		}
-
-		if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT && s.Contains(".3DS"))
-		{
-			if (!s.EndWith(".3DS"))
+			if (s.Contains(' '))
 			{
-				
-				int pos = s.Search(".3DS");
+				cmd << "Remove symbol 'space' in name: '" << s << "'" << endl;
 
-				cmd << "Fix .3DS in : '" << s << "'";
+				CString text = GetLang("MSG_LOAD_AUTOFIX_SPACE_IN_NAME");
 
-				CString originalName = s;
-
-				if (pos != -1)
-				{
-					s.Delete(pos + 4, s.Length() - (pos + 4));
-				}
-
-				cmd << " => Result: '" << s << "'" << endl;
-
-				CString text = GetLang("MSG_LOAD_AUTOFIX_3DS_END");
-
-				text += "'" + originalName + "' => '" + s.ToChar() + "'";
+				text += "'" + A s.ToChar() + "'";
 
 				PrintInfoWinMessage(text, "#0000FF");
+
+				s.TrimLeft(' ');
+				s.TrimRight(' ');
+			}
+
+			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT && s.Contains(".3DS"))
+			{
+				if (!s.EndWith(".3DS"))
+				{
+
+					int pos = s.Search(".3DS");
+
+					cmd << "Fix .3DS in : '" << s << "'";
+
+					CString originalName = s;
+
+					if (pos != -1)
+					{
+						s.Delete(pos + 4, s.Length() - (pos + 4));
+					}
+
+					cmd << " => Result: '" << s << "'" << endl;
+
+					CString text = GetLang("MSG_LOAD_AUTOFIX_3DS_END");
+
+					text += "'" + originalName + "' => '" + s.ToChar() + "'";
+
+					PrintInfoWinMessage(text, "#0000FF");
+				}
 			}
 		}
 		
-
 		/*if (GetVisual())
 		{
 			cmd << "'" << s << "'" << " -> '" << GetVisual()->GetVisualName() << "'" << endl;
