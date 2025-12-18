@@ -112,7 +112,7 @@ namespace Gothic_II_Addon {
     int Search( zSTRING const&, unsigned int ) const                              zCall( 0x00492680 );
     float ToFloat() const                                                         zCall( 0x004936C0 );
     long ToInt() const                                                            zCall( 0x0059D0F0 );
-    int Search( char const*, unsigned int ) const                                 zCall( 0x0059D110 );
+    int Search( char const*, unsigned int num = 1 ) const                         zCall( 0x0059D110 );
     void Init()                                                                   zCall( 0x006D9B80 );
 
   public:

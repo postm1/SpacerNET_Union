@@ -934,6 +934,34 @@ namespace GOTHIC_ENGINE {
 		zSTRING s(visualFileName);
 		s.Upper();
 
+
+		if (s.Contains(' '))
+		{
+			cmd << "Remove symbol 'space' in name: '" << s << "'" << endl;
+
+			s.TrimLeft(' ');
+			s.TrimRight(' ');
+		}
+
+		if (s.Contains(".3DS"))
+		{
+			if (!s.EndWith(".3DS"))
+			{
+				
+				int pos = s.Search(".3DS");
+
+				cmd << "Fix .3DS in : '" << s << "'";
+
+				if (pos != -1)
+				{
+					s.Delete(pos + 4, s.Length() - (pos + 4));
+				}
+
+				cmd << " => Result: '" << s << "'" << endl;
+			}
+		}
+		
+
 		/*if (GetVisual())
 		{
 			cmd << "'" << s << "'" << " -> '" << GetVisual()->GetVisualName() << "'" << endl;
