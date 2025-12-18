@@ -939,11 +939,17 @@ namespace GOTHIC_ENGINE {
 		{
 			cmd << "Remove symbol 'space' in name: '" << s << "'" << endl;
 
+			CString text = GetLang("MSG_LOAD_AUTOFIX_SPACE_IN_NAME");
+
+			text += "'" + A s.ToChar() + "'";
+
+			PrintInfoWinMessage(text, "#0000FF");
+
 			s.TrimLeft(' ');
 			s.TrimRight(' ');
 		}
 
-		if (s.Contains(".3DS"))
+		if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT && s.Contains(".3DS"))
 		{
 			if (!s.EndWith(".3DS"))
 			{
@@ -952,12 +958,20 @@ namespace GOTHIC_ENGINE {
 
 				cmd << "Fix .3DS in : '" << s << "'";
 
+				CString originalName = s;
+
 				if (pos != -1)
 				{
 					s.Delete(pos + 4, s.Length() - (pos + 4));
 				}
 
 				cmd << " => Result: '" << s << "'" << endl;
+
+				CString text = GetLang("MSG_LOAD_AUTOFIX_3DS_END");
+
+				text += "'" + originalName + "' => '" + s.ToChar() + "'";
+
+				PrintInfoWinMessage(text, "#0000FF");
 			}
 		}
 		
