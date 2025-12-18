@@ -934,6 +934,11 @@ namespace GOTHIC_ENGINE {
 		zSTRING s(visualFileName);
 		s.Upper();
 
+		/*if (GetVisual())
+		{
+			cmd << "'" << s << "'" << " -> '" << GetVisual()->GetVisualName() << "'" << endl;
+		}*/
+		
 		if (GetVisual())
 			if (GetVisual()->GetVisualName() == s)
 				return;
