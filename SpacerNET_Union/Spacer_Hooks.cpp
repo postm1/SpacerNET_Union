@@ -934,7 +934,7 @@ namespace GOTHIC_ENGINE {
 		zSTRING s(visualFileName);
 		s.Upper();
 
-		if (s.Length() > 0)
+		if (theApp.options.GetIntVal("bFixBadNamesOnLoad") && s.Length() > 0)
 		{
 			if (s.Contains(' '))
 			{
