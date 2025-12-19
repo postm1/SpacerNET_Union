@@ -908,11 +908,13 @@ namespace GOTHIC_ENGINE {
 
 			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT)
 			{
-				PrintInfoWinMessage("(zCVob::SetVisual) : could not load visual '"
+				zSTRING message = GetLang("MSG_LOAD_NO_VISUAL_FOUND") + ": '";
+
+				PrintInfoWinMessage(message
 					+ name
-					+ "' for vobName '"
+					+ "' | vobName '"
 					+ GetVobName()
-					+ "' of class '"
+					+ "' | class '"
 					+ GetClassDef()->className
 					+ "'");
 			}
@@ -998,11 +1000,13 @@ namespace GOTHIC_ENGINE {
 			{
 				theApp.foundBadVisualNoExist = true;
 
-				PrintInfoWinMessage("(zCVob::SetVisual) : could not load visual '"
+				zSTRING message = GetLang("MSG_LOAD_NO_VISUAL_FOUND") + ": '";
+
+				PrintInfoWinMessage(message
 					+ visualFileName
-					+ "' for vobName '"
+					+ "' | vobName '"
 					+ GetVobName()
-					+ "' of class '"
+					+ "' | class '"
 					+ GetClassDef()->className
 					+ "'");
 			}
