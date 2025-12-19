@@ -527,7 +527,7 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "SPACER", "warnLastSaveMsg", "1");
 		list.Insert("warnLastSaveMsg", set);
 
-		set = new CSetting(TYPE_INT, "SPACER", "bFixBadNamesOnLoad", "0");
+		set = new CSetting(TYPE_INT, "SPACER", "bFixBadNamesOnLoad", "1");
 		list.Insert("bFixBadNamesOnLoad", set);
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
