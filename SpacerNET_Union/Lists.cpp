@@ -277,6 +277,8 @@ namespace GOTHIC_ENGINE {
 			auto text = GetLang("MSG_ERR_BROKEN_VISUAL_FILE");
 
 			print.PrintRed(text, 12);
+
+			PrintInfoWinMessage(text);
 		}
 
 		
