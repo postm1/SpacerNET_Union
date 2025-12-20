@@ -897,6 +897,53 @@ namespace GOTHIC_ENGINE {
 			return;
 		zSTRING sName = name;
 		sName.Upper();
+
+
+		if (theApp.options.GetIntVal("bFixBadNamesOnLoad") && sName.Length() > 0)
+		{
+			if (sName.Contains(' '))
+			{
+				cmd << "Remove symbol 'space' in name: '" << sName << "'" << endl;
+
+				CString text = GetLang("MSG_LOAD_AUTOFIX_SPACE_IN_NAME");
+
+				text += "'" + A sName.ToChar() + "'";
+
+				PrintInfoWinMessage(text, "#0000FF");
+
+				sName.TrimLeft(' ');
+				sName.TrimRight(' ');
+			}
+
+			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT && sName.Contains(".3DS"))
+			{
+				if (!sName.EndWith(".3DS"))
+				{
+
+					int pos = sName.Search(".3DS", 1);
+
+					//cmd << "Fix .3DS in : '" << s << "'";
+
+					CString originalName = sName;
+
+					if (pos != -1)
+					{
+						sName.Delete(pos + 4, sName.Length() - (pos + 4));
+					}
+
+					//cmd << " => Result: '" << s << "'" << endl;
+
+					CString text = GetLang("MSG_LOAD_AUTOFIX_3DS_END");
+
+					text += "'" + originalName + "' => '" + sName.ToChar() + "'";
+
+					PrintInfoWinMessage(text, "#0000FF");
+
+					cmd << text << endl;
+				}
+			}
+		}
+
 		if (visual && !visual->GetVisualName().Compare(sName))
 			return;
 
