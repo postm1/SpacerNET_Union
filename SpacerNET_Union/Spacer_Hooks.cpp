@@ -959,7 +959,7 @@ namespace GOTHIC_ENGINE {
 
 					int pos = s.Search(".3DS");
 
-					cmd << "Fix .3DS in : '" << s << "'";
+					//cmd << "Fix .3DS in : '" << s << "'";
 
 					CString originalName = s;
 
@@ -968,13 +968,15 @@ namespace GOTHIC_ENGINE {
 						s.Delete(pos + 4, s.Length() - (pos + 4));
 					}
 
-					cmd << " => Result: '" << s << "'" << endl;
+					//cmd << " => Result: '" << s << "'" << endl;
 
 					CString text = GetLang("MSG_LOAD_AUTOFIX_3DS_END");
 
 					text += "'" + originalName + "' => '" + s.ToChar() + "'";
 
 					PrintInfoWinMessage(text, "#0000FF");
+
+					cmd << text << endl;
 				}
 			}
 		}
