@@ -635,6 +635,7 @@ namespace GOTHIC_ENGINE {
 				}
 
 
+				auto pSoundDayTime = vob->CastTo<zCVobSoundDaytime>();
 
 				if (auto pSound = vob->CastTo<zCVobSound>())
 				{
@@ -665,6 +666,23 @@ namespace GOTHIC_ENGINE {
 							entry->SetTextureName("");
 
 							AddEntry(entry);
+						}
+
+						if (pSoundDayTime)
+						{
+							if (!parserSoundFX->GetSymbol(pSoundDayTime->soundName2))
+							{
+								auto entry = new ErrorReportEntry();
+
+								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SOUNDNAMEDAYTIME_NOINST);
+								entry->SetObject((uint)vob);
+								entry->SetVobName(pSoundDayTime->soundName2);
+								entry->SetMaterialName("");
+								entry->SetTextureName("");
+
+								AddEntry(entry);
+							}
 						}
 					}
 				}
