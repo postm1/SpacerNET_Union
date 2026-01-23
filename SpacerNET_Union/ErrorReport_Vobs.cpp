@@ -827,6 +827,20 @@ namespace GOTHIC_ENGINE {
 						AddEntry(entry);
 					}
 
+					if (wp->HasChildren())
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_WP_HAS_CHILDREN);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(wpName);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+
 					if (waynet)
 					{
 						zCWaypoint* wpNet = waynet->SearchWaypoint(wp);
