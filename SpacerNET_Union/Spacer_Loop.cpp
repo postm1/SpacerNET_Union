@@ -562,7 +562,7 @@ namespace GOTHIC_ENGINE {
 
 				const char* output = textToCopy.ToChar();
 
-				Clipboard(output);
+				CopyToClipboard(output);
 
 				wasCopiedPressed = false;
 			}

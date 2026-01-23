@@ -1465,16 +1465,66 @@ namespace GOTHIC_ENGINE {
 
 	}
 
-	void Clipboard(const char* output)
+	// Helper function to copy raw C-string to Windows Clipboard
+	void CopyToClipboard(const char* output)
 	{
+		// 1. Basic validation
+		if (!output)
+		{
+			return;
+		}
+
+		// 2. Allocate global memory (GMEM_MOVEABLE is required for clipboard)
 		const size_t len = strlen(output) + 1;
 		HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
-		memcpy(GlobalLock(hMem), output, len);
+
+		// Check if allocation succeeded
+		if (!hMem)
+		{
+			return;
+		}
+
+		// 3. Lock memory and copy data
+		void* ptr = GlobalLock(hMem);
+		if (!ptr)
+		{
+			// If lock fails, free memory and exit
+			GlobalFree(hMem);
+			return;
+		}
+
+		memcpy(ptr, output, len);
 		GlobalUnlock(hMem);
-		OpenClipboard(0);
+
+		// 4. Open Clipboard
+		// Passing 0 (NULL) implies the current task owns the clipboard
+		if (!OpenClipboard(NULL))
+		{
+			// CRITICAL: If we cannot open clipboard, we MUST free the memory ourselves
+			GlobalFree(hMem);
+			return;
+		}
+
+		// 5. Clear and Set Data
 		EmptyClipboard();
-		SetClipboardData(CF_TEXT, hMem);
+
+		// SetClipboardData transfers ownership of hMem to the system
+		if (SetClipboardData(CF_TEXT, hMem) == NULL)
+		{
+			// If setting data failed, the system did NOT take ownership.
+			// We must free the memory to avoid leaks.
+			GlobalFree(hMem);
+		}
+
+		// 6. Close
 		CloseClipboard();
+	}
+
+	// Wrapper for zSTRING (keeps code DRY - Don't Repeat Yourself)
+	void CopyClipBoard(zSTRING str)
+	{
+		// Use the safe implementation above
+		CopyToClipboard(str.ToChar());
 	}
 
 	void PrintMobName(oCMOB* pMob)

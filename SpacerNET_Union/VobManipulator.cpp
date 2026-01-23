@@ -871,18 +871,7 @@ namespace GOTHIC_ENGINE {
 		return selectedTool;
 	}
 
-	void CopyClipBoard(zSTRING str)
-	{
-		const char* output = str.ToChar();
-		const size_t len = strlen(output) + 1;
-		HGLOBAL hMem = GlobalAlloc(GMEM_MOVEABLE, len);
-		memcpy(GlobalLock(hMem), output, len);
-		GlobalUnlock(hMem);
-		OpenClipboard(0);
-		EmptyClipboard();
-		SetClipboardData(CF_TEXT, hMem);
-		CloseClipboard();
-	}
+	
 
 	
 	void MarkAlhpa()
