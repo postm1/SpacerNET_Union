@@ -399,45 +399,56 @@ namespace GOTHIC_ENGINE {
 
 	void CreateFileList()
 	{
-		char** fileList = Null;
+		char** fileList = nullptr;
 
 		uint numInList = Vdfs32::vdf_filelist_virtual(fileList);
 
 
 		for (size_t i = 0; i < numInList; i++)
 		{
-			std::string str(fileList[i]);
-			theApp.modelsStrVDF.InsertEnd(&zSTRING(str.c_str()));
+			if (fileList[i])
+			{
+				theApp.modelsStrVDF.InsertEnd(zSTRING(fileList[i]));
+			}
+			
+		}
+
+		//cmd << "FileList: " << numInList << endl;
+
+		if (fileList)
+		{
+			for (long i = 0; i < numInList; i++)
+			{
+				delete[] fileList[i];
+			}
+
+			delete[] fileList;
 		}
 
 
-
-		for (size_t i = 0; i < numInList; i++)
-			delete fileList[i];
-
-		delete fileList;
-
-
-
-
-		char** fileListWork = Null;
+		char** fileListWork = nullptr;
 
 		numInList = Vdfs32::vdf_filelist_physical(fileListWork);
 
+		//cmd << "fileListWork: " << numInList << endl;
 
-		for (size_t i = 0; i < numInList; i++)
+		for (long i = 0; i < numInList; i++)
 		{
-			std::string str(fileListWork[i]);
-			theApp.modelsStrWORK.InsertEnd(&zSTRING(str.c_str()));
-
+			if (fileListWork[i])
+			{
+				theApp.modelsStrWORK.InsertEnd(zSTRING(fileListWork[i]));
+			}
 		}
 
-		for (size_t i = 0; i < numInList; i++)
-			delete fileListWork[i];
+		if (fileListWork)
+		{
+			for (long i = 0; i < numInList; i++)
+			{
+				delete[] fileListWork[i];
+			}
+			delete[] fileListWork;
+		}
 
-		delete fileListWork;
-
-		//MessageBox(0, zSTRING("Ńďčńîę ńîçäŕí!").ToChar(), 0, 0);
 	}
 
 
