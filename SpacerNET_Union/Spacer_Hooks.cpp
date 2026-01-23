@@ -1045,7 +1045,7 @@ namespace GOTHIC_ENGINE {
 			zERR_FAULT("D: (zCVob::SetVisual): could not load visual '" + visualFileName + "' for vobName '" + GetVobName() + "' of class '" + GetClassDef()->className + "'");
 
 
-			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT)
+			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT && this->GetVobType() != zTVobType::zVOB_TYPE_ITEM)
 			{
 				theApp.foundBadVisualNoExist = true;
 
