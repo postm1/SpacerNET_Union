@@ -1547,7 +1547,28 @@ namespace GOTHIC_ENGINE {
 			zPOINT3	  ProjPoint1 = zCCamera::activeCam->Transform(focusNamePosWS);
 			if (ProjPoint1[VZ] > 0.0f)
 			{
-				auto text = parser->GetScriptString(pMob->name);
+				auto symbolCheck = parser->GetSymbol(pMob->name);
+
+				zSTRING text = "";
+
+				// if found a proper string in scripts
+				if (symbolCheck)
+				{
+					if (symbolCheck->type == zPAR_TYPE_STRING)
+					{
+						text = parser->GetScriptString(pMob->name);
+					}
+					else
+					{
+						text = "ERROR: focusName const is not a STRING in scripts!";
+					}
+					
+				}
+				else
+				{
+					text = "ERROR: No such focusName const in scripts!";
+				}
+				
 				auto scene = "ScemeName: " + pMob->GetScemeName();
 				
 
