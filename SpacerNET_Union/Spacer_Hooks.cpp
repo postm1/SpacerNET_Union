@@ -901,7 +901,7 @@ namespace GOTHIC_ENGINE {
 
 		if (theApp.options.GetIntVal("bFixBadNamesOnLoad") && sName.Length() > 0)
 		{
-			if (s.EndWith(' ') || s.StartWith(' '))
+			if (sName.EndWith(' ') || sName.StartWith(' '))
 			{
 				cmd << "Remove symbol 'space' in name: '" << sName << "'" << endl;
 
