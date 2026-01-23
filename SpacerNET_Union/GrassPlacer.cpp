@@ -341,7 +341,7 @@ namespace GOTHIC_ENGINE {
 							}
 							else
 							{
-								finalPos.n[VY] -= offsetVert;
+								finalPos.n[VY] += offsetVert;
 							}
 							
 
