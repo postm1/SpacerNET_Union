@@ -1550,6 +1550,7 @@ namespace GOTHIC_ENGINE {
 				auto symbolCheck = parser->GetSymbol(pMob->name);
 
 				zSTRING text = "";
+				bool errorFound = false;
 
 				// if found a proper string in scripts
 				if (symbolCheck)
@@ -1560,13 +1561,15 @@ namespace GOTHIC_ENGINE {
 					}
 					else
 					{
-						text = "ERROR: focusName const is not a STRING in scripts!";
+						text = Z GetLang("MSG_ERR_FOCUSNAME_BAD_TYPE") + pMob->name;
+						errorFound = true;
 					}
 					
 				}
 				else
 				{
-					text = "ERROR: No such focusName const in scripts!";
+					text = Z GetLang("MSG_ERR_NO_SUCH_VAR_ATALL") + pMob->name;
+					errorFound = true;
 				}
 				
 				auto scene = "ScemeName: " + pMob->GetScemeName();
@@ -1586,13 +1589,23 @@ namespace GOTHIC_ENGINE {
 				// [Ulf] Clampen auch in X-Richtung
 				zClamp(nX, 0, 8191 - screen->FontSize(text));
 
-				screen->Print(nX, nY, text);
 
+				if (errorFound)
+				{
+					zCOLOR safeCol = screen->fontColor;
+					screen->SetFontColor(GFX_RED);
+					screen->Print(nX, nY, text);
+					screen->SetFontColor(safeCol);
+				}
+				else
+				{
+					screen->Print(nX, nY, text);
+				}
+			
 				if (theApp.options.GetIntVal("bShowMobScheme"))
 				{
 					screen->Print(nX, nY + 220, scene);
 				}
-
 				
 			};
 		}
