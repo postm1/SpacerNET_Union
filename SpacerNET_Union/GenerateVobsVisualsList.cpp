@@ -268,12 +268,11 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 				{
 					auto curVob = pair->GetValue()->pVob;
 
-
 					ExtractVisualInfo(curVob->GetVisual(), pair);
 				}
 
 				// VDF NAME
-				char* volumeNamePtr;
+				char* volumeNamePtr = NULL;
 				long length = vdf_getvolumename(searchName.ToChar(), volumeNamePtr);
 				string volumeNameVdf = volumeNamePtr;
 
@@ -281,7 +280,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 
 				if (volumeNamePtr)
 				{
-					delete volumeNamePtr;
+					delete[] volumeNamePtr;
 				}
 
 				
@@ -716,13 +715,14 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 		}
 
 
-		char* volumeNamePtr;
+		char* volumeNamePtr = NULL;
+
 		long length = vdf_getvolumename(searchName.ToChar(), volumeNamePtr);
 		string volumeNameVdf = volumeNamePtr;
 
 		if (volumeNamePtr)
 		{
-			delete volumeNamePtr;
+			delete[] volumeNamePtr;
 		}
 
 		return (volumeNameVdf.Upper() == vdfName);
