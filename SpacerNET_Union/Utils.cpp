@@ -404,7 +404,7 @@ namespace GOTHIC_ENGINE {
 		uint numInList = Vdfs32::vdf_filelist_virtual(fileList);
 
 
-		for (size_t i = 0; i < numInList; i++)
+		for (uint i = 0; i < numInList; i++)
 		{
 			if (fileList[i])
 			{
@@ -432,7 +432,7 @@ namespace GOTHIC_ENGINE {
 
 		//cmd << "fileListWork: " << numInList << endl;
 
-		for (long i = 0; i < numInList; i++)
+		for (uint i = 0; i < numInList; i++)
 		{
 			if (fileListWork[i])
 			{
@@ -442,7 +442,7 @@ namespace GOTHIC_ENGINE {
 
 		if (fileListWork)
 		{
-			for (long i = 0; i < numInList; i++)
+			for (uint i = 0; i < numInList; i++)
 			{
 				delete[] fileListWork[i];
 			}

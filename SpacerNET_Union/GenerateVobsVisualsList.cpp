@@ -274,15 +274,20 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 				// VDF NAME
 				char* volumeNamePtr = NULL;
 				long length = vdf_getvolumename(searchName.ToChar(), volumeNamePtr);
-				string volumeNameVdf = volumeNamePtr;
-
-				pair->GetValue()->vdfName = volumeNameVdf;
 
 				if (volumeNamePtr)
 				{
+					string volumeNameVdf = volumeNamePtr;
+
+					pair->GetValue()->vdfName = volumeNameVdf;
+
 					delete[] volumeNamePtr;
 				}
-
+				else
+				{
+					//cmd << "NoName: " << searchName << endl;
+					continue;
+				}
 				
 
 
@@ -718,12 +723,15 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 		char* volumeNamePtr = NULL;
 
 		long length = vdf_getvolumename(searchName.ToChar(), volumeNamePtr);
-		string volumeNameVdf = volumeNamePtr;
+
+		string volumeNameVdf = "";
 
 		if (volumeNamePtr)
 		{
+			volumeNameVdf = volumeNamePtr;
 			delete[] volumeNamePtr;
 		}
+
 
 		return (volumeNameVdf.Upper() == vdfName);
 	}
