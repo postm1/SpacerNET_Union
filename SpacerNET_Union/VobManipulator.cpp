@@ -152,6 +152,71 @@ namespace GOTHIC_ENGINE {
 		vobsToMove.DeleteListDatas();
 	}
 
+	// align a Vob according to the ground normal
+	bool AlignVobToGround(zCVob* vob)
+	{
+		if (!vob || !vob->GetHomeWorld())
+		{
+			return false;
+		}
+
+		const zVEC3 currentPosition = vob->GetPositionWorld();
+
+		zCPolygon* polyIntersect = NULL;
+		bool foundVob = false;
+
+		zVEC3 currentPositionOnGround = currentPosition;
+
+		if (GetFloorPositionForVobHelper(vob, currentPositionOnGround, polyIntersect, foundVob))
+		{
+			if (polyIntersect)
+			{
+				zVEC3 groundNormal = polyIntersect->GetNormal();
+
+				zMAT4 newMatrix;
+
+				newMatrix.SetTranslation(currentPosition);
+
+				// align to the ground by using the ground normal as up-vector
+				zVEC3 newUp = groundNormal.Normalize();
+
+				// use the current at-vector but project it orthogonal to the normal
+				zVEC3 currentAt = -vob->GetAtVectorWorld();
+				zVEC3 newAt = (currentAt - (zVEC3(currentAt.Dot(newUp)) * newUp));
+
+				// if the at-vector was parallel to the normal, choose an arbitrary orthogonal vector
+				if (newAt.Length() < 0.001f)
+				{
+					if (fabs(newUp.n[0]) < 0.999f)
+					{
+						newAt = zVEC3(1, 0, 0).Cross(newUp).Normalize();
+					}
+					else
+					{
+						newAt = zVEC3(0, 0, 1).Cross(newUp).Normalize();
+					}
+				}
+				else
+				{
+					newAt.Normalize();
+				}
+
+				zVEC3 newRight = newAt.Cross(newUp).Normalize();
+
+				newAt = newRight.Cross(newUp).Normalize();
+
+				newMatrix.SetRightVector(newRight);
+				newMatrix.SetUpVector(newUp);
+				newMatrix.SetAtVector(newAt);
+
+				HandleVobRotationMatrix(vob, newMatrix);
+
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	bool IsVobMover(zCVob* pVob)
 	{
@@ -1724,7 +1789,25 @@ namespace GOTHIC_ENGINE {
 				SetOnFloor(pickedVob);
 			}
 
+			if (keys.KeyPressed("VOB_ALIGN_TO_GROUND", true))
+			{
+				if (pickedVob)
+				{
+					if (CheckIfVobBlocked(theApp.pickedVob))
+					{
+						return;
+					}
 
+					if (AlignVobToGround(pickedVob))
+					{
+						print.PrintGreen(GetLang("VOB_ALIGNED_TO_GROUND"));
+					}
+					else
+					{
+						print.PrintRed(GetLang("VOB_ALIGN_TO_GROUND_FAILED"));
+					}
+				}
+			}
 
 			if (keys.KeyPressed("VOB_DELETE", true))
 			{
