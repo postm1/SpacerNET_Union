@@ -90,9 +90,44 @@ namespace GOTHIC_ENGINE {
 		*/
 	}
 
+	void PrintMusicInfo()
+	{
+		zCArray<zCVob*> pList;
+
+		ogame->GetWorld()->SearchVobListByClass(oCZoneMusicDefault::classDef, pList, 0);
+		ogame->GetWorld()->SearchVobListByClass(oCZoneMusic::classDef, pList, 0);
+
+		cmd << "\nLocation: " << ogame->GetWorld()->m_strlevelName << endl;
+
+		for (int i = 0; i < pList.GetNumInList(); i++)
+		{
+			if (auto pMusic = pList.GetSafe(i)->CastTo<oCZoneMusic>())
+			{
+				cmd << "Music: " << pMusic->GetVobName()
+					<< " Loop: " << pMusic->loop
+					<< " Priority: " << pMusic->priority
+					<< " Default: " << bool(pMusic->CastTo<oCZoneMusicDefault>())
+					<< endl
+					;
+			}
+		}
+
+	
+
+		cmd << "=============================" << endl;
+	}
+
 	// test loop, some test code always here...
 	void SpacerApp::TestLoop()
 	{
+		return;
+		if (zinput->KeyPressed(KEY_F1))
+		{
+			zinput->ClearKeyBuffer();
+
+			PrintMusicInfo();
+		}
+
 		return;
 		
 		if (zinput->KeyPressed(KEY_F1))
