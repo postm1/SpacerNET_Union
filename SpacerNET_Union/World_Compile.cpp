@@ -7,6 +7,72 @@ namespace GOTHIC_ENGINE {
 
 	static float GetPolyNeighbourPerfCounter = 0;
 
+	const float VERTEX_GRID_CELL_SIZE = 50.0f;
+
+	//epsilon
+	const float WELD_EPSILON_SQ = 0.01f * 0.01f;
+
+	struct zVertexKey {
+		int x, y, z;
+
+		zVertexKey(const zPOINT3& p) {
+			x = (int)std::floor(p[0] / VERTEX_GRID_CELL_SIZE);
+			y = (int)std::floor(p[1] / VERTEX_GRID_CELL_SIZE);
+			z = (int)std::floor(p[2] / VERTEX_GRID_CELL_SIZE);
+		}
+
+		// Key map ==
+		bool operator==(const zVertexKey& other) const {
+			return x == other.x && y == other.y && z == other.z;
+		}
+	};
+
+	struct zVertexKeyHasher {
+		std::size_t operator()(const zVertexKey& k) const {
+			// Fast hash for 3 int
+			size_t h1 = std::hash<int>{}(k.x);
+			size_t h2 = std::hash<int>{}(k.y);
+			size_t h3 = std::hash<int>{}(k.z);
+			return h1 ^ (h2 << 1) ^ (h3 << 2);
+		}
+	};
+
+	using VertexGridMap = std::unordered_map<zVertexKey, std::vector<zCVertex*>, zVertexKeyHasher>;
+
+	zCVertex* FindVertexInGrid(VertexGridMap& grid, const zPOINT3& pos) {
+		zVertexKey centerKey(pos);
+
+		for (int dx = -1; dx <= 1; ++dx) {
+			for (int dy = -1; dy <= 1; ++dy) {
+				for (int dz = -1; dz <= 1; ++dz) {
+
+					zVertexKey key = centerKey;
+					key.x += dx;
+					key.y += dy;
+					key.z += dz;
+
+					auto it = grid.find(key);
+					if (it != grid.end()) {
+						
+						const std::vector<zCVertex*>& verts = it->second;
+						for (auto vIt = verts.rbegin(); vIt != verts.rend(); ++vIt) {
+							zCVertex* v = *vIt;
+
+							// Squared Distance
+							zVEC3 dist = v->position - pos;
+							if (dist.LengthApprox() < 0.1f) { 
+								if (dist.Length_Sqr() < WELD_EPSILON_SQ) {
+									return v; // Found
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		return nullptr;
+	}
+
 //#define GETPOLYS_TEST
 
 #if ENGINE == Engine_G2A
@@ -52,10 +118,106 @@ namespace GOTHIC_ENGINE {
 
 			<< endl;
 		*/
+	
+		VertexGridMap uniqueVerts;
+
+	
+		uniqueVerts.reserve((this->numVert + mesh->numVert) / 4);
 
 		
+		if (!s_bAddVobsToMesh && this->numVert > 0) {
+			for (int k = 0; k < this->numVert; k++) {
+				if (this->vertList[k]) {
+					zVertexKey key(this->vertList[k]->position);
+					uniqueVerts[key].push_back(this->vertList[k]);
+				}
+			}
+		}
 
 
+		std::unordered_map<zCVertex*, zCVertex*> vertexSourceToDestMap;
+		vertexSourceToDestMap.reserve(mesh->numVert);
+
+		zCVertex** newVertTemp = zNEW(zCVertex*)[mesh->numVert];
+
+
+		for (int i = 0; i < mesh->numVert; i++)
+		{
+			const zPOINT3 newPos = trafo * mesh->vertList[i]->position;
+
+			zCVertex* vert = nullptr;
+
+
+			if (!s_bAddVobsToMesh) {
+				vert = FindVertexInGrid(uniqueVerts, newPos);
+			}
+
+
+			if (!vert) {
+				vert = zNEW(zCVertex);
+				*vert = (*(mesh->vertList[i]));
+				vert->position = newPos;
+
+				this->AddVertex(vert);
+
+
+				if (!s_bAddVobsToMesh) {
+					zVertexKey key(newPos);
+					uniqueVerts[key].push_back(vert);
+				}
+			}
+
+			newVertTemp[i] = vert;
+
+			if (mesh->vertList[i] != NULL) {
+				vertexSourceToDestMap[mesh->vertList[i]] = vert;
+			}
+		}
+
+
+		for (int i = 0; i < mesh->numPoly; i++) {
+
+			zCPolygon* poly = AddPoly();
+			(*poly) = *(mesh->polyList[i]); 
+
+			poly->vertex = 0;
+			poly->polyNumVert = 0;
+
+			poly->AllocVerts(mesh->polyList[i]->polyNumVert);
+			mesh->polyList[i]->CopyValuesInto(poly);
+
+			for (int j = 0; j < poly->polyNumVert; j++)
+			{
+				zCVertex* oldVert = mesh->polyList[i]->vertex[j];
+
+				auto it = vertexSourceToDestMap.find(oldVert);
+				if (it != vertexSourceToDestMap.end()) {
+					poly->vertex[j] = it->second;
+				}
+				else {
+					
+					for (int k = 0; k < mesh->numVert; k++) {
+						if (oldVert == mesh->vertList[k]) {
+							poly->vertex[j] = newVertTemp[k];
+							break;
+						};
+					};
+				}
+			};
+
+			poly->CalcNormal();
+		};
+
+		delete[] newVertTemp;
+
+		zfpuControler->RestoreSavedControlWord();
+		RX_End(2);
+
+		cmd << "MergeMesh_Union: " << RX_PerfString(2) << endl;
+
+		GetPolyNeighbourPerfCounter = 0;
+
+		/*
 		zCVertex** newVert = zNEW(zCVertex*)[mesh->numVert];
 
 		std::unordered_map<zCVertex*, zCVertex*> vertexMap;
@@ -139,6 +301,7 @@ namespace GOTHIC_ENGINE {
 		cmd << "MergeMesh_Union: " << RX_PerfString(2) << endl;
 		zERR_MESSAGE(3, zERR_END, "");
 		GetPolyNeighbourPerfCounter = 0;
+		*/
 	}
 
 
