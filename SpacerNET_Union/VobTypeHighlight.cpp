@@ -246,6 +246,12 @@ namespace GOTHIC_ENGINE {
 
 				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
 			}
+			else if (type == 13 && pVob && pVob->CastTo<oCZoneMusic>())
+			{
+				finalList.push_back(pVob);
+
+				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
+			}
 		}
 
 		//zCVobLight

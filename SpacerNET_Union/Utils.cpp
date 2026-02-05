@@ -718,7 +718,9 @@ namespace GOTHIC_ENGINE {
 		{
 			auto pVob = resVobList.GetSafe(i);
 
-			if (pVob == theApp.currentVobRender 
+			if (
+				!pVob 
+				|| pVob == theApp.currentVobRender 
 				|| pVob == theApp.currenItemRender 
 				|| pVob == theApp.floorVob 
 				|| pVob == theApp.bboxMaxsVob
@@ -731,74 +733,82 @@ namespace GOTHIC_ENGINE {
 
 			if (type == 0)
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 			}
-			else if (type == 1 && resVobList.GetSafe(i)->_GetClassDef()->GetClassName_() == "zCVob")
+			else if (type == 1 && pVob->_GetClassDef()->GetClassName_() == "zCVob")
 			{
-				if (resVobList.GetSafe(i)->GetVisual())
+				if (pVob->GetVisual())
 				{
-					if (resVobList.GetSafe(i)->GetVisual()->GetVisualName().Upper().Search(".TGA", 1) == -1)
+					if (pVob->GetVisual()->GetVisualName().Upper().Search(".TGA", 1) == -1)
 					{
-						finalResultList.Insert(resVobList.GetSafe(i));
+						finalResultList.Insert(pVob);
 					}
 				}
 				else
 				{
-					finalResultList.Insert(resVobList.GetSafe(i));
+					finalResultList.Insert(pVob);
 				}
 					
 					
 				
 			}
-			else if (type == 2 && dynamic_cast<oCItem*>(resVobList.GetSafe(i)))
+			else if (type == 2 && dynamic_cast<oCItem*>(pVob))
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 			}
-			else if (type == 3 && dynamic_cast<zCVobSpot*>(resVobList.GetSafe(i)))
+			else if (type == 3 && dynamic_cast<zCVobSpot*>(pVob))
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 			}
-			else if (type == 4 && dynamic_cast<zCVobWaypoint*>(resVobList.GetSafe(i)))
+			else if (type == 4 && dynamic_cast<zCVobWaypoint*>(pVob))
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 			}
-			else if (type == 5 && dynamic_cast<zCVobSound*>(resVobList.GetSafe(i)))
+			else if (type == 5 && dynamic_cast<zCVobSound*>(pVob))
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 			}
-			else if (type == 6 && resVobList.GetSafe(i)->GetVisual())
+			else if (type == 6 && pVob->GetVisual())
 			{
-				if (resVobList.GetSafe(i)->GetVisual()->GetVisualName().Upper().Search(".TGA", 1) != -1 )
+				if (pVob->GetVisual()->GetVisualName().Upper().Search(".TGA", 1) != -1 )
 				{
-					finalResultList.Insert(resVobList.GetSafe(i));
+					finalResultList.Insert(pVob);
 				}
 				
 			}
-			else if (type == 7 && dynamic_cast<zCTrigger*>(resVobList.GetSafe(i)))
+			else if (type == 7 && dynamic_cast<zCTrigger*>(pVob))
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 			}
-			else if (type == 8 && dynamic_cast<oCMOB*>(resVobList.GetSafe(i)))
+			else if (type == 8 && dynamic_cast<oCMOB*>(pVob))
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 			}
-			else if (type == 9 && pVob && !pVob->GetShowVisual() && pVob->GetVisual())
+			else if (type == 9 && !pVob->GetShowVisual() && pVob->GetVisual())
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 			}
 			// PFX
-			else if (type == 11 && pVob && pVob->GetVisual() && (pVob->GetVisual()->GetVisualName().EndWith(".pfx") || pVob->GetVisual()->GetVisualName().EndWith(".PFX")))
+			else if (type == 11 && pVob->GetVisual() && (pVob->GetVisual()->GetVisualName().EndWith(".pfx") || pVob->GetVisual()->GetVisualName().EndWith(".PFX")))
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 
 				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
 			}
 			// zones
-			else if (type == 12 && pVob && pVob->CastTo<zCZone>())
+			else if (type == 12 && pVob->CastTo<zCZone>())
 			{
-				finalResultList.Insert(resVobList.GetSafe(i));
+				finalResultList.Insert(pVob);
 
 				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
+			}
+			else if (type == 13)
+			{
+				if (pVob->CastTo<oCZoneMusic>())
+				{
+					finalResultList.Insert(pVob);
+				}
+
 			}
 		}
 
