@@ -246,7 +246,7 @@ namespace GOTHIC_ENGINE {
 
 				//cmd << "GetVobName: " << GetVobName(resVobList.GetSafe(i)) << endl;
 			}
-			else if (type == 13 && pVob && pVob->CastTo<oCZoneMusic>())
+			else if (type == 13 && pVob && (pVob->CastTo<oCZoneMusic>() && !pVob->CastTo<oCZoneMusicDefault>()))
 			{
 				finalList.push_back(pVob);
 
