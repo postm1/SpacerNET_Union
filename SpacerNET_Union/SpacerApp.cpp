@@ -815,15 +815,13 @@ namespace GOTHIC_ENGINE {
 		auto camPos = ogame->GetCameraVob()->GetPositionWorld();
 		auto camDir = ogame->GetCameraVob()->GetAtVectorWorld();
 
-		pLightDx11->SetPositionWorld(camPos - camDir * 100);
-
 		if (pLightDx11->lightData.range != range)
 		{
 			pLightDx11->SetRange(range, 1);
 			ogame->GetCameraVob()->SetPositionWorld(ogame->GetCameraVob()->GetPositionWorld());
-			pLightDx11->SetPositionWorld(camPos - camDir * 100);
 		}
 		
+		pLightDx11->SetPositionWorld(camPos + ogame->GetCameraVob()->GetUpVectorWorld() * 50);
 
 		
 	}
