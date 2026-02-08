@@ -89,7 +89,7 @@ namespace GOTHIC_ENGINE {
 		}
 		*/
 	}
-
+#if ENGINE == Engine_G2A
 	void PrintMusicInfo()
 	{
 		zCArray<zCVob*> pList;
@@ -116,6 +116,7 @@ namespace GOTHIC_ENGINE {
 
 		cmd << "=============================" << endl;
 	}
+#endif
 
 	// test loop, some test code always here...
 	void SpacerApp::TestLoop()
@@ -125,7 +126,7 @@ namespace GOTHIC_ENGINE {
 		{
 			zinput->ClearKeyBuffer();
 
-			PrintMusicInfo();
+			//PrintMusicInfo();
 		}
 
 		return;
