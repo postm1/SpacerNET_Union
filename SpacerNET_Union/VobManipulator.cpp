@@ -24,7 +24,6 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!vob->GetHomeWorld()) return FALSE;
 
-		zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
 		zCWorld* wld = vob->GetHomeWorld();
 
 		vob->ignoredByTraceRay = true;
@@ -49,17 +48,21 @@ namespace GOTHIC_ENGINE {
 		return FALSE;
 	}
 
-	bool GetFloorPosition(zCVob* vob, zVEC3& centerPos)
+	bool GetFloorPosition(zCVob* vob, zVEC3& centerPos, bool ignoreBBox)
 	{
 		if (!vob->GetHomeWorld()) return FALSE;
 
-		zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
 		zCWorld* wld = vob->GetHomeWorld();
 
 		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -5000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN)) {
 			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
 				zVEC3 newpos = wld->traceRayReport.foundIntersection;
-				newpos[VY] += diff + 2;
+				if (!ignoreBBox)
+				{
+					zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
+					newpos[VY] += diff;
+				}
+				newpos[VY] += 2;
 				centerPos = newpos;
 				return TRUE;
 			}
@@ -68,12 +71,12 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	void SetOnFloor(zCVob* vob)
+	void SetOnFloor_impl(zCVob* vob, bool ignoreBBox)
 	{
 
 		zVEC3 newPos = vob->GetPositionWorld();
 
-		if (GetFloorPosition(vob, newPos)) {
+		if (GetFloorPosition(vob, newPos, ignoreBBox)) {
 			HandleVobTranslation(vob, newPos);
 		}
 
@@ -83,6 +86,11 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+	}
+
+	void SetOnFloor(zCVob* vob)
+	{
+		SetOnFloor_impl(vob, false);
 	}
 
 
@@ -1786,9 +1794,19 @@ namespace GOTHIC_ENGINE {
 				}
 
 				print.PrintRed(GetLang("TOOL_FLOOR"));
-				SetOnFloor(pickedVob);
+				SetOnFloor_impl(pickedVob, false);
 			}
 
+			if (keys.KeyPressed("VOB_FLOOR_IGNORE_BBOX", true))
+			{
+				if (CheckIfVobBlocked(theApp.pickedVob))
+				{
+					return;
+				}
+
+				print.PrintRed(GetLang("TOOL_FLOOR_IGNORE_BBOX"));
+				SetOnFloor_impl(pickedVob, true);
+			}
 			if (keys.KeyPressed("VOB_ALIGN_TO_GROUND", true))
 			{
 				if (pickedVob)
