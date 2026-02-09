@@ -28,44 +28,95 @@ namespace GOTHIC_ENGINE {
 
 		vob->ignoredByTraceRay = true;
 
-		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -10000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_TEST_WATER)) {
-			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
-				zVEC3 newpos = wld->traceRayReport.foundIntersection;
+		struct TraceResult
+		{
+			zVEC3 newPos;
+			zCPolygon* polyIntersect = nullptr;
+			bool foundVob = false;
+			bool hit = false;
+		};
 
-				if (wld->traceRayReport.foundPoly)
-				{
-					polyIntersect = wld->traceRayReport.foundPoly;
+		auto traceHit = [&](const zVEC3& dir, int additionalFlags) {
+			TraceResult result;
+
+			if (wld->TraceRayNearestHit(centerPos, dir, vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_TEST_WATER | additionalFlags)) {
+				if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
+					result.hit = true;
+					result.newPos = wld->traceRayReport.foundIntersection;
+
+					if (wld->traceRayReport.foundPoly)
+					{
+						result.polyIntersect = wld->traceRayReport.foundPoly;
+					}
+
+					result.foundVob = wld->traceRayReport.foundVob ? foundVob = true : foundVob = false;
 				}
+			}
 
-				foundVob = wld->traceRayReport.foundVob ? foundVob = true : foundVob = false;
+			return result;
+		};
 
-				centerPos = newpos;
+		// trace a ray upwards from the Vob to the current height of the camera
+
+		zREAL upDistance = 0.0f;
+		if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
+		{
+			zREAL camY = ogame->GetCamera()->connectedVob->GetPositionWorld()[VY];
+			upDistance = camY - centerPos[VY];
+		}
+
+		TraceResult upTrace;
+		if (upDistance > 0.0f)
+		{
+			upTrace = traceHit(zVEC3(0, upDistance, 0), zTRACERAY_POLY_2SIDED);
+		}
+
+		auto applyTraceResult = [&](const TraceResult& traceResult) {
+			centerPos = traceResult.newPos;
+			polyIntersect = traceResult.polyIntersect;
+			foundVob = traceResult.foundVob;
+		};
+
+		if (upTrace.hit && upTrace.polyIntersect)
+		{
+			zVEC3 faceNormal = upTrace.polyIntersect->GetNormal();
+			// respect only upward facing polygons
+			if (faceNormal[VY] > 0.0f)
+			{
+				applyTraceResult(upTrace);
 				vob->ignoredByTraceRay = false;
-				return TRUE;
+				return true;
 			}
 		}
+
+		// if there was no hit (or it was a ceiling polygon) trace a ray downwards
+
+		TraceResult downTrace = traceHit(zVEC3(0, -5000, 0), 0);
+
 		vob->ignoredByTraceRay = false;
-		return FALSE;
+
+		if (downTrace.hit)
+		{
+			applyTraceResult(downTrace);
+			return true;
+		}
+
+		return false;
 	}
 
 	bool GetFloorPosition(zCVob* vob, zVEC3& centerPos, bool ignoreBBox)
 	{
-		if (!vob->GetHomeWorld()) return FALSE;
-
-		zCWorld* wld = vob->GetHomeWorld();
-
-		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -5000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN)) {
-			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
-				zVEC3 newpos = wld->traceRayReport.foundIntersection;
-				if (!ignoreBBox)
-				{
-					zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
-					newpos[VY] += diff;
-				}
-				newpos[VY] += 2;
-				centerPos = newpos;
-				return TRUE;
+		zCPolygon* polyIntersect;
+		bool foundVob;
+		if (GetFloorPositionForVobHelper(vob, centerPos, polyIntersect, foundVob))
+		{
+			if (!ignoreBBox)
+			{
+				zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
+				centerPos[VY] += diff;
 			}
+			centerPos[VY] += 2;
+			return TRUE;
 		}
 		return FALSE;
 	}
