@@ -406,8 +406,10 @@ namespace GOTHIC_ENGINE {
 			GetThisLocationTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), worldCompileType);
 			GetLightTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), lightCompileType);
 
-			
+			PrintInfoWinMessage(GetLang("compileZen"));
 			DoCompileWorld(worldCompileType);
+
+			PrintInfoWinMessage(GetLang("compileLight"));
 			DoCompileLight(lightCompileType, 0);
 		}
 
@@ -460,6 +462,8 @@ namespace GOTHIC_ENGINE {
 			GetThisLocationTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), worldCompileType);
 			GetLightTypeByCustomFile(ogame->GetGameWorld()->GetWorldName(), lightCompileType);
 
+			PrintInfoWinMessage(GetLang("compileZen"));
+
 			theApp.DoCompileWorld(worldCompileType);
 
 			(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
@@ -470,6 +474,7 @@ namespace GOTHIC_ENGINE {
 			load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 			load(2);
 
+			PrintInfoWinMessage(GetLang("compileLight"));
 			theApp.DoCompileLight(lightCompileType, 0);
 
 			(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
@@ -568,6 +573,8 @@ namespace GOTHIC_ENGINE {
 
 				auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 				load(1);
+
+				PrintInfoWinMessage(GetLang("compileZen"));
 				theApp.DoCompileWorld(worldCompileType);
 
 				(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
@@ -578,6 +585,7 @@ namespace GOTHIC_ENGINE {
 				load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 				load(2);
 
+				PrintInfoWinMessage(GetLang("compileLight"));
 				theApp.DoCompileLight(lightCompileType, 0);
 
 				(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();

@@ -1878,7 +1878,7 @@ namespace GOTHIC_ENGINE {
 	{
 		static auto pointer = (callVoidFunc)GetProcAddress(theApp.module, "InfoWin_AddText");
 
-		Stack_PushString("\n" + text + "\n");
+		Stack_PushString(text + "\n");
 		Stack_PushString(color);
 
 		pointer();
