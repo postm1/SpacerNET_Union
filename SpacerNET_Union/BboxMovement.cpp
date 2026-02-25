@@ -291,22 +291,6 @@ namespace GOTHIC_ENGINE {
 					HandleVobTranslation(bboxCurrentVob, pos);
 				}
 
-				if (keys.KeyPressed("VOB_NEAR_CAM", true))
-				{
-					if (theApp.pickedVob)
-					{
-						if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
-						{
-							HandleVobTranslation(bboxCurrentVob, ogame->GetCamera()->connectedVob->GetPositionWorld() +
-
-								ogame->GetCamera()->connectedVob->GetAtVectorWorld() * 200);
-
-							print.PrintRed(GetLang("VOB_NEAR_CAMERA"));
-						}
-					}
-
-
-				}
 
 
 
