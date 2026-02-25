@@ -200,6 +200,69 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	std::vector<std::string> GetLocationMeshTexturesList()
+	{
+		zCPolygon**& trisList = ogame->GetWorld()->bspTree.treePolyList;
+		int numPolys = ogame->GetWorld()->bspTree.numPolys;
+
+		std::unordered_set<zCMaterial*> checkedMaterials;
+		std::unordered_set<std::string> uniqueTextures;
+		std::vector<std::string> result;
+
+		for (int i = 0; i < numPolys; i++)
+		{
+			zCPolygon* poly = trisList[i];
+			if (poly->flags.ghostOccluder != 0) continue;
+
+			zCMaterial* mat = poly->material;
+
+			// Пропускаем если нет материала или текстуры
+			if (!mat || !mat->texture) continue;
+
+			// Проверяем не обрабатывали ли уже этот материал
+			if (checkedMaterials.find(mat) != checkedMaterials.end())
+				continue;
+
+			checkedMaterials.insert(mat);
+
+			// Получаем имя текстуры и формируем имя для проверки
+			std::string texName = mat->texture->GetObjectName().ToChar();
+
+			// Проверяем есть ли текстура вообще в uniqueTextures
+			if (uniqueTextures.find(texName) != uniqueTextures.end())
+				continue;
+
+			// Формируем имя для проверки физического файла
+			std::string originalName = texName.substr(0, texName.length() - 4) + "-C.TEX";
+			const char* checkName = originalName.c_str();
+
+			// Проверяем наличие текстуры
+			bool hasVirtual = (vdf_fexists(const_cast<char*>(checkName), VDF_VIRTUAL) & VDF_VIRTUAL) == VDF_VIRTUAL;
+			bool hasPhysical = (vdf_fexists(const_cast<char*>(checkName), VDF_PHYSICAL) & VDF_PHYSICAL) == VDF_PHYSICAL;
+
+			// Добавляем в результат если:
+			// 1. Текстура есть только физически (hasPhysical && !hasVirtual)
+			// 2. Текстура не найдена вообще (!hasPhysical && !hasVirtual)
+			if ((hasPhysical && !hasVirtual) || (!hasPhysical && !hasVirtual))
+			{
+				uniqueTextures.insert(texName);
+				result.push_back(texName);
+
+				// Логирование для отладки
+				if (hasPhysical && !hasVirtual)
+				{
+					cmd << "PHYS only: " << texName.c_str() << endl;
+				}
+				else if (!hasPhysical && !hasVirtual)
+				{
+					cmd << "NOT FOUND: " << texName.c_str() << endl;
+				}
+			}
+		}
+
+		return result;
+	}
+
 	void CreateHtmlReport(CString path)
 	{
 
@@ -400,6 +463,71 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 		}
 
 		outfile << "<p><b>Not found or _WORK textures</b></p><table id=\"table_bad_tex\"><tr><th>Visual name</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
+
+		auto meshTexturesProblems = GetLocationMeshTexturesList();
+
+		//print.PrintGreen(Z (int)meshTexturesProblems.size());
+
+		for (auto& entry : meshTexturesProblems)
+		{
+			auto originalName = entry;
+
+			if (entry.size() >= 4 && entry.substr(entry.size() - 4) == ".TGA") {
+				entry = entry.substr(0, entry.size() - 4);
+			}
+
+			zSTRING nameTexture = entry.c_str();
+			
+
+
+			//cmd << "Replace: " << nameTexture  << endl;
+
+			nameTexture += "-C";
+			nameTexture += ".TEX";
+
+			int fileTypeExist = Union_FileExists(nameTexture);
+
+			//cmd << "File: " << nameTexture << " -> " << fileTypeExist << endl;
+
+			if (fileTypeExist == 2)
+			{
+				//outfile << originalName << "<br>";
+			}
+			else if (fileTypeExist == 1)
+			{
+				outfile << "<tr>";
+				outfile << "<td>Location mesh</td>";
+
+
+
+
+				outfile << "<td>";
+				outfile << "<span class=\"texture_word_orange\">" << nameTexture << "</span>";
+				outfile << "</td>";
+				outfile << "<td>";
+				outfile << "<span class=\"texture_word_orange\">" << originalName << "</span>";
+				outfile << "</td>";
+				outfile << "</tr>";
+
+			}
+			else
+			{
+				outfile << "<tr>";
+				outfile << "<td>Location mesh</td>";
+
+
+				outfile << "<td>";
+				outfile << "<span class=\"texture_word_red\">" << nameTexture << "</span>";
+				outfile << "</td>";
+				outfile << "<td>";
+				outfile << "<span class=\"texture_word_red\">" << originalName << "</span>";
+				outfile << "</td>";
+				outfile << "</tr>";
+			}
+
+
+			//cmd << entry.c_str() << endl;
+		}
 
 		//auto arrBad = badTextures.GetArray();
 

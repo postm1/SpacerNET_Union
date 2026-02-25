@@ -6,6 +6,7 @@
 #include <chrono>
 #include <algorithm>
 #include <map>
+#include <vector>
 #include <unordered_map>
 #include <tuple>
 #include <emmintrin.h>  // SSE2 intrinsics
