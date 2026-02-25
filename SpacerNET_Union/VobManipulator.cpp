@@ -1660,6 +1660,12 @@ namespace GOTHIC_ENGINE {
 				return;
 			}
 
+			// Set vob to camera is blocked while bbox mod
+			if (GetSelectedTool() == TM_BBOXEDIT)
+			{
+				return;
+			}
+
 			if (theApp.pickedVob)
 			{
 				if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
