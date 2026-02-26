@@ -44,12 +44,14 @@ namespace GOTHIC_ENGINE {
 		else
 		{
 
-			zCVobWaypoint* pickedVobWaypont = dynamic_cast<zCVobWaypoint*>(parentVobBase);
+			zCVobWaypoint* pickedVobWaypoint = dynamic_cast<zCVobWaypoint*>(parentVobBase);
+			zCVobSpot* pickedVobFreepoint = dynamic_cast<zCVobSpot*>(parentVobBase);
 			oCItem* pItemParent = dynamic_cast<oCItem*>(parentVobBase);
 
 
-			// We insert it into the parent only if it is not a Waypoint or an item, otherwise we look for compoLevel and it will be the parent of the new vob
-			if (parentVobBase && !pickedVobWaypont && !pItemParent)
+			// We insert it into the parent only if it is not a Waypoint, Freepoint or an item,
+			// otherwise we look for compoLevel and it will be the parent of the new vob
+			if (parentVobBase && !pickedVobWaypoint && !pickedVobFreepoint && !pItemParent)
 			{
 				ogame->GetGameWorld()->AddVobAsChild(newVob, parentVobBase->globalVobTreeNode);
 				//std::cout << "Union: Add new vob INTO parent: " << (uint)pickedVob << " Name: " << GetVobName(pickedVob) << std::endl;
