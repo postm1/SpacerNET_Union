@@ -31,6 +31,8 @@ namespace GOTHIC_ENGINE {
 		Stack_PushString("#FF00000");
 		pointer();
 
+		int saveValue = options.GetIntVal("g1SkipLod");
+
 		for (int i = 0; i < pList.GetNumInList(); i++)
 		{
 			auto entry = pList.GetSafe(i);
@@ -54,8 +56,33 @@ namespace GOTHIC_ENGINE {
 					case MacrosType::MT_COMPILE_LIGHT_LOW: this->DoCompileLight(1, 0); break;
 					case MacrosType::MT_COMPILE_LIGHT_VERTEX: this->DoCompileLight(0, 0); break;
 
-					case MacrosType::MT_COMPILE_WORLD_OUTDOOR: this->DoCompileWorld(1); break;
-					case MacrosType::MT_COMPILE_WORLD_INDOOR: this->DoCompileWorld(0); break;
+					case MacrosType::MT_COMPILE_WORLD_OUTDOOR_NOLOD: 
+					{
+				
+						options.SetIntVal("g1SkipLod", 1);
+						this->DoCompileWorld(1); 
+						break;
+					}
+					case MacrosType::MT_COMPILE_WORLD_INDOOR_NOLOD:
+					{
+
+						options.SetIntVal("g1SkipLod", 1);
+						this->DoCompileWorld(0);
+						break;
+					}
+					case MacrosType::MT_COMPILE_WORLD_OUTDOOR: 
+					{
+						options.SetIntVal("g1SkipLod", 0);
+						this->DoCompileWorld(1); 
+						break;
+					}
+						
+					case MacrosType::MT_COMPILE_WORLD_INDOOR:
+					{
+						options.SetIntVal("g1SkipLod", 0);
+						this->DoCompileWorld(0); 
+						break;
+					}
 
 					case MacrosType::MT_LOAD_MESH:
 					{
@@ -119,6 +146,8 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 		}
+
+		options.SetIntVal("g1SkipLod", saveValue);
 
 		if (ogame->GetWorld())
 		{
