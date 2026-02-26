@@ -215,6 +215,8 @@ namespace GOTHIC_ENGINE {
 
 		cmd << "MergeMesh_Union: " << RX_PerfString(2) << endl;
 
+		zERR_MESSAGE(3, zERR_END, "");
+
 		GetPolyNeighbourPerfCounter = 0;
 
 		/*
@@ -534,7 +536,7 @@ namespace GOTHIC_ENGINE {
 	{
 		//THISCALL(Ivk_zCCBspTree_MarkOccluderPolys)();
 
-		zERR_MESSAGE(3, 0, "D: RBSP: Marking Occluder Polys... PolysCount: " + Z mesh->numPoly);
+		zERR_MESSAGE(3, zERR_BEGIN, "D: RBSP: Marking Occluder Polys... PolysCount: " + Z mesh->numPoly);
 		RX_Begin(4);
 
 		int numOccluder = 0;
@@ -770,6 +772,7 @@ namespace GOTHIC_ENGINE {
 		zERR_MESSAGE(3, 0, "D: RBSP: ... numOccluder: " + zSTRING(numOccluder) + " of " + zSTRING(mesh->numPoly));
 		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderSize: " + zSTRING(maxArea));
 		zERR_MESSAGE(3, 0, "D: RBSP: ... maxOccluderNeighbours: " + zSTRING((int)maxNeighbourOccluders));
+		zERR_MESSAGE(3, zERR_END, "");
 	}
 
 #endif

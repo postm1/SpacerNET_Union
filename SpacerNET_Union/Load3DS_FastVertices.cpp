@@ -321,7 +321,7 @@ namespace GOTHIC_ENGINE {
 
 		zERR_MESSAGE(3, 0, "D: FlushMeshBuffer_Union: " + RX_PerfString(6));
 
-
+		zERR_MESSAGE(3, zERR_END, "");
 
 		/*
 		cmd << "All: " << RX_PerfString(30) << endl;
