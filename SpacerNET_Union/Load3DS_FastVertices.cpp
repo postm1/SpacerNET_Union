@@ -73,7 +73,7 @@ namespace GOTHIC_ENGINE {
 			// Scale and round to nearest integer
 			const __m128 grid_inv = _mm_set1_ps(inv_grid);
 			__m128 scaled = _mm_mul_ps(vec, grid_inv);
-			__m128i rounded = _mm_cvtps_epi32(_mm_round_ps(scaled, _MM_FROUND_TO_NEAREST_INT));
+			__m128i rounded = _mm_cvtps_epi32(scaled);
 
 			// Store and hash coordinates
 			alignas(16) int32_t coords[4];
