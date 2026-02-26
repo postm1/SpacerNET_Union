@@ -139,7 +139,7 @@ namespace GOTHIC_ENGINE {
 		vertexMap.clear();
 		isNewMapActiveNow = false;
 
-		cmd << "ClearVertexMap" << endl;
+		//cmd << "ClearVertexMap" << endl;
 	}
 
 	void zCMesh::BuildVertexMap()

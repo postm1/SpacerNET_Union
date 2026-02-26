@@ -93,9 +93,9 @@ namespace GOTHIC_ENGINE {
 
 		ClearVertexMap();
 		isLoading3DSNow = true;
-		cmd << "Load 3ds from disk..." << endl;
+		//cmd << "Load 3ds from disk..." << endl;
 		Load3dsFile(fileName);
-		cmd << "Load 3ds end..." << endl;
+		//cmd << "Load 3ds end..." << endl;
 
 		FlushMeshBuffer_Union();
 
