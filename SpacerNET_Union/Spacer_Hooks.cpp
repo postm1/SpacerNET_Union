@@ -896,7 +896,7 @@ namespace GOTHIC_ENGINE {
 	{
 		if (theApp.options.GetIntVal("g1SkipLod"))
 		{
-			//cmd << "-----> SKIPPPPPPP" << endl;
+			cmd << "-----> SKIPPPPPPP CREATING LOD" << endl;
 			return;
 		}
 
