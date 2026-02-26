@@ -24,56 +24,110 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!vob->GetHomeWorld()) return FALSE;
 
-		zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
 		zCWorld* wld = vob->GetHomeWorld();
 
 		vob->ignoredByTraceRay = true;
 
-		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -10000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_TEST_WATER)) {
-			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
-				zVEC3 newpos = wld->traceRayReport.foundIntersection;
+		struct TraceResult
+		{
+			zVEC3 newPos;
+			zCPolygon* polyIntersect = nullptr;
+			bool foundVob = false;
+			bool hit = false;
+		};
 
-				if (wld->traceRayReport.foundPoly)
-				{
-					polyIntersect = wld->traceRayReport.foundPoly;
+		auto traceHit = [&](const zVEC3& dir, int additionalFlags) {
+			TraceResult result;
+
+			if (wld->TraceRayNearestHit(centerPos, dir, vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN | zTRACERAY_POLY_TEST_WATER | additionalFlags)) {
+				if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
+					result.hit = true;
+					result.newPos = wld->traceRayReport.foundIntersection;
+
+					if (wld->traceRayReport.foundPoly)
+					{
+						result.polyIntersect = wld->traceRayReport.foundPoly;
+					}
+
+					result.foundVob = wld->traceRayReport.foundVob ? foundVob = true : foundVob = false;
 				}
+			}
 
-				foundVob = wld->traceRayReport.foundVob ? foundVob = true : foundVob = false;
+			return result;
+		};
 
-				centerPos = newpos;
+		// trace a ray upwards from the Vob to the current height of the camera
+
+		zREAL upDistance = 0.0f;
+		if (ogame->GetCamera() && ogame->GetCamera()->connectedVob)
+		{
+			zREAL camY = ogame->GetCamera()->connectedVob->GetPositionWorld()[VY];
+			upDistance = camY - centerPos[VY];
+		}
+
+		TraceResult upTrace;
+		if (upDistance > 0.0f)
+		{
+			upTrace = traceHit(zVEC3(0, upDistance, 0), zTRACERAY_POLY_2SIDED);
+		}
+
+		auto applyTraceResult = [&](const TraceResult& traceResult) {
+			centerPos = traceResult.newPos;
+			polyIntersect = traceResult.polyIntersect;
+			foundVob = traceResult.foundVob;
+		};
+
+		if (upTrace.hit && upTrace.polyIntersect)
+		{
+			zVEC3 faceNormal = upTrace.polyIntersect->GetNormal();
+			// respect only upward facing polygons
+			if (faceNormal[VY] > 0.0f)
+			{
+				applyTraceResult(upTrace);
 				vob->ignoredByTraceRay = false;
-				return TRUE;
+				return true;
 			}
 		}
+
+		// if there was no hit (or it was a ceiling polygon) trace a ray downwards
+
+		TraceResult downTrace = traceHit(zVEC3(0, -5000, 0), 0);
+
 		vob->ignoredByTraceRay = false;
-		return FALSE;
+
+		if (downTrace.hit)
+		{
+			applyTraceResult(downTrace);
+			return true;
+		}
+
+		return false;
 	}
 
-	bool GetFloorPosition(zCVob* vob, zVEC3& centerPos)
+	bool GetFloorPosition(zCVob* vob, zVEC3& centerPos, bool ignoreBBox)
 	{
-		if (!vob->GetHomeWorld()) return FALSE;
-
-		zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
-		zCWorld* wld = vob->GetHomeWorld();
-
-		if (wld->TraceRayNearestHit(centerPos, zVEC3(0, -5000, 0), vob, zTRACERAY_STAT_POLY | zTRACERAY_VOB_IGNORE_NO_CD_DYN)) {
-			if (wld->traceRayReport.foundPoly || wld->traceRayReport.foundVob) {
-				zVEC3 newpos = wld->traceRayReport.foundIntersection;
-				newpos[VY] += diff + 2;
-				centerPos = newpos;
-				return TRUE;
+		zCPolygon* polyIntersect;
+		bool foundVob;
+		if (GetFloorPositionForVobHelper(vob, centerPos, polyIntersect, foundVob))
+		{
+			if (!ignoreBBox)
+			{
+				zREAL diff = vob->GetPositionWorld()[VY] - vob->GetBBox3DWorld().mins[VY];
+				centerPos[VY] += diff;
 			}
+			centerPos[VY] += 2;
+			return TRUE;
 		}
 		return FALSE;
 	}
 
 
-	void SetOnFloor(zCVob* vob)
+	void SetOnFloor_impl(zCVob* vob, bool ignoreBBox)
 	{
 
 		zVEC3 newPos = vob->GetPositionWorld();
 
-		if (GetFloorPosition(vob, newPos)) {
+		if (GetFloorPosition(vob, newPos, ignoreBBox)) {
 			HandleVobTranslation(vob, newPos);
 		}
 
@@ -83,6 +137,11 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+	}
+
+	void SetOnFloor(zCVob* vob)
+	{
+		SetOnFloor_impl(vob, false);
 	}
 
 
@@ -152,6 +211,71 @@ namespace GOTHIC_ENGINE {
 		vobsToMove.DeleteListDatas();
 	}
 
+	// align a Vob according to the ground normal
+	bool AlignVobToGround(zCVob* vob)
+	{
+		if (!vob || !vob->GetHomeWorld())
+		{
+			return false;
+		}
+
+		const zVEC3 currentPosition = vob->GetPositionWorld();
+
+		zCPolygon* polyIntersect = NULL;
+		bool foundVob = false;
+
+		zVEC3 currentPositionOnGround = currentPosition;
+
+		if (GetFloorPositionForVobHelper(vob, currentPositionOnGround, polyIntersect, foundVob))
+		{
+			if (polyIntersect)
+			{
+				zVEC3 groundNormal = polyIntersect->GetNormal();
+
+				zMAT4 newMatrix;
+
+				newMatrix.SetTranslation(currentPosition);
+
+				// align to the ground by using the ground normal as up-vector
+				zVEC3 newUp = groundNormal.Normalize();
+
+				// use the current at-vector but project it orthogonal to the normal
+				zVEC3 currentAt = -vob->GetAtVectorWorld();
+				zVEC3 newAt = (currentAt - (zVEC3(currentAt.Dot(newUp)) * newUp));
+
+				// if the at-vector was parallel to the normal, choose an arbitrary orthogonal vector
+				if (newAt.Length() < 0.001f)
+				{
+					if (fabs(newUp.n[0]) < 0.999f)
+					{
+						newAt = zVEC3(1, 0, 0).Cross(newUp).Normalize();
+					}
+					else
+					{
+						newAt = zVEC3(0, 0, 1).Cross(newUp).Normalize();
+					}
+				}
+				else
+				{
+					newAt.Normalize();
+				}
+
+				zVEC3 newRight = newAt.Cross(newUp).Normalize();
+
+				newAt = newRight.Cross(newUp).Normalize();
+
+				newMatrix.SetRightVector(newRight);
+				newMatrix.SetUpVector(newUp);
+				newMatrix.SetAtVector(newAt);
+
+				HandleVobRotationMatrix(vob, newMatrix);
+
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 	bool IsVobMover(zCVob* pVob)
 	{
@@ -1721,10 +1845,38 @@ namespace GOTHIC_ENGINE {
 				}
 
 				print.PrintRed(GetLang("TOOL_FLOOR"));
-				SetOnFloor(pickedVob);
+				SetOnFloor_impl(pickedVob, false);
 			}
 
+			if (keys.KeyPressed("VOB_FLOOR_IGNORE_BBOX", true))
+			{
+				if (CheckIfVobBlocked(theApp.pickedVob))
+				{
+					return;
+				}
 
+				print.PrintRed(GetLang("TOOL_FLOOR_IGNORE_BBOX"));
+				SetOnFloor_impl(pickedVob, true);
+			}
+			if (keys.KeyPressed("VOB_ALIGN_TO_GROUND", true))
+			{
+				if (pickedVob)
+				{
+					if (CheckIfVobBlocked(theApp.pickedVob))
+					{
+						return;
+					}
+
+					if (AlignVobToGround(pickedVob))
+					{
+						print.PrintGreen(GetLang("VOB_ALIGNED_TO_GROUND"));
+					}
+					else
+					{
+						print.PrintRed(GetLang("VOB_ALIGN_TO_GROUND_FAILED"));
+					}
+				}
+			}
 
 			if (keys.KeyPressed("VOB_DELETE", true))
 			{
