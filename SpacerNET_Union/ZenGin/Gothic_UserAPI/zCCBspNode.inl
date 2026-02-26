@@ -4,3 +4,4 @@
 // Add your methods here
 
 int zCCBspNode::OutdoorKillRedundantLeafs_Union();
+void zCCBspNode::LODGenerate_Union(zCMesh* pMesh);

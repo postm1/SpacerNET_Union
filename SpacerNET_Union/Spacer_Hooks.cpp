@@ -890,6 +890,19 @@ namespace GOTHIC_ENGINE {
 
 #if ENGINE == Engine_G1
 
+
+	HOOK ivk_zCCBspNode_LODGenerate PATCH(&zCCBspNode::LODGenerate, &zCCBspNode::LODGenerate_Union);
+	void zCCBspNode::LODGenerate_Union(zCMesh* pMesh)
+	{
+		if (theApp.options.GetIntVal("g1SkipLod"))
+		{
+			//cmd << "-----> SKIPPPPPPP" << endl;
+			return;
+		}
+
+		THISCALL(ivk_zCCBspNode_LODGenerate)(pMesh);
+	}
+
 	HOOK ivk_zCVob_SetVisual AS(&zCVob::SetVisual, &zCVob::SetVisual_Union);
 	void zCVob::SetVisual_Union(const zSTRING& name)
 	{
