@@ -156,43 +156,66 @@ namespace GOTHIC_ENGINE {
 		}
 
 		
+		zSTRING lastPointName = "";
 
+		zCVobWaypoint* waypoint = dynamic_cast<zCVobWaypoint*>(pickedVob);
 
-		if (!dynamic_cast<zCVobWaypoint*>(pickedVob))
+		bool isFreepoint = false;
+
+		if (!waypoint)
 		{
-			print.PrintRed(GetLang("UNION_NO_WAYPOINT"));
-			return;
-		}
-
-		if (lastWPName.IsEmpty())
-		{
-			if (!pickedVob)
+			if (dynamic_cast<zCVobSpot*>(pickedVob))
 			{
-				print.PrintWin(GetLang("UNION_NO_WAYPOINT_TEMPLATE"));
-				return;
+				className = "zCVobSpot";
+				isFreepoint = true;
+				lastPointName = pickedVob->GetVobName();
 			}
 			else
 			{
-				lastWPName = pickedVob->GetVobName();
+				print.PrintRed(GetLang("UNION_NO_WAYPOINT"));
+				return;
 			}
-
 		}
-
-
-
-
-
-		zCVob* newvob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance(className));
-
-		if (newvob)
+		else
 		{
-
-			newvob->SetVobName(zSTRING(GetNextWayPointName(lastWPName)));
-			print.PrintWin(ToStr GetLang("UNION_WP_INSERT") + ToStr newvob->GetVobName());
-			CreateNewWaypoint(newvob, lastAddToNet);
-			zinput->ClearKey(MOUSE_LEFT);
-			ClearLMB();
+			if (lastWPName.IsEmpty())
+			{
+				if (!pickedVob)
+				{
+					print.PrintWin(GetLang("UNION_NO_WAYPOINT_TEMPLATE"));
+					return;
+				}
+				else
+				{
+					lastWPName = pickedVob->GetVobName();
+				}
+			}
+			lastPointName = lastWPName;
 		}
+
+
+
+
+
+
+		if (isFreepoint)
+		{
+			CString newPointName = GetNextFreePointName(lastPointName);
+			print.PrintWin(ToStr GetLang("UNION_WP_INSERT") + ToStr newPointName);
+			CreateNewFreepoint(className, newPointName, false, true);
+		}
+		else
+		{
+			zCVob* newvob = dynamic_cast<zCVob*>(zCObject::CreateNewInstance(className));
+			if (newvob)
+			{
+				newvob->SetVobName(zSTRING(GetNextWayPointName(lastPointName)));
+				print.PrintWin(ToStr GetLang("UNION_WP_INSERT") + ToStr newvob->GetVobName());
+				CreateNewWaypoint(newvob, lastAddToNet);
+			}
+		}
+		zinput->ClearKey(MOUSE_LEFT);
+		ClearLMB();
 	}
 
 	void SpacerApp::CreateNewWaypointFromNet(CString classNamePtr, CString vobNamePtr, bool addToNet, bool autoGenerate)
