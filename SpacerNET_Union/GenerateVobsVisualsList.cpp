@@ -272,26 +272,36 @@ namespace GOTHIC_ENGINE {
 	void CreateHtmlReport(CString path)
 	{
 
-		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title><style type=\"text/css\" media=\"screen\">html,body{font-family:serif;,sans-serif;\
-color:#222222;background:#fefefe;}p{font-size:20px}table{border-collapse:collapse;border:1px solid grey;font-size:14px;}th{font-size:bold;background-color:#E1E15D;}td,th{border:1px solid grey;padding:5px}\
-tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_orange{color:#FF6E00;} .texture_word_red{color:#FF001E;} #table_report tr:nth-child(odd) { background-color: #E4E4E4; color: #222222;}\
- td.high-poly {color: #FD7228; font-weight: bold; }</style></head>";
+		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title>\
+<style type=\"text/css\" media=\"screen\">\
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222222;padding:20px}\
+h1{font-size:24px;margin:20px 0;color:#2c3e50}\
+p{font-size:18px;margin:15px 0}\
+.page-container{max-width:1900px;margin:0 auto;width:100%}\
+table{width:100%;border-collapse:collapse;background:white;border:2px solid #444;margin:20px 0}\
+th{background:#E1E15D;color:#222;font-weight:bold;padding:10px;border:1px solid #444;text-align:left}\
+td{padding:8px;border:1px solid #444}\
+#table_report tr:nth-child(even){background-color:#E4E4E4}\
+#table_report tr:nth-child(odd){background-color:#ffffff}\
+tr.warning{background-color:#e17a42!important}\
+tr.warning td{background-color:#e17a42;color:#222;border:1px solid #444}\
+tr.error{background-color:#ff4444!important}\
+tr.error td{background-color:#ff4444;color:#222;border:1px solid #444}\
+.texture_word_orange{color:#FF6E00;font-weight:bold}\
+.texture_word_red{color:#FF001E;font-weight:bold}\
+td.high-poly{color:#FD7228;font-weight:bold}\
+.report-time{background:#D84B8C;padding:15px;border:2px solid #A12D5E;border-radius:8px;margin:20px 0;color:white;font-size:22px;font-weight:bold;text-align:center}\
+</style></head><body>";
 
-		const CString endFile = "</body></html>";
+		const CString endFile = "</div></body></html>";
 
-		// Сохраняем список в файл
 		std::ofstream outfile;
 		outfile.open(path, std::ios_base::trunc);
 
-
+		
 		outfile << header;
 
-		outfile << "<div style='margin-bottom: 25px; padding: 15px; background-color: #FFB700; width:1000px;"  // Темно-розовый
-			<< "border-radius: 8px; border: 2px solid #A12D5E; box-shadow: 0 4px 8px rgba(0,0,0,0.2);'>"  // Темная рамка и тень
-			<< "<p style='margin:0; font-size: 22px; font-weight: bold; color: white; text-align: left; "
-			<< "text-shadow: 2px 2px 4px rgba(0,0,0,0.3);'>" 
-			<< "Report generated: " << GetTimeForReport()
-			<< "</p></div>";
+		outfile << "<div class=\"page-container\"><div class = \"report-time\">Report generated: " + GetTimeForReport() + "</div>"; 
 
 		outfile << "<body><p><b>There is a list of all vobs' visuals in the location.</b></p>";
 
@@ -314,9 +324,8 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 
 				if (checkName.Length() == 0 || checkName == ' ' || checkName.Shrink().Length() == 0)
 				{
-					pair->GetValue()->fileType = "EMPTY VISUAL";
-					pair->GetValue()->vdfOrWork = "-";
-					pair->GetValue()->texturesNames.InsertEnd("-");
+					pair->GetValue()->fileType = "-";
+					pair->GetValue()->workOnly = true;
 					pair->GetValue()->vdfName = "-";
 					continue;
 				}
