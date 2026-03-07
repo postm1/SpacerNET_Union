@@ -503,7 +503,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 
 		
 
-		outfile << "<p><b>Not found or _WORK textures</b></p><table id=\"table_bad_tex\"><tr><th>Visual name</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
+		outfile << "<p><b>Not found or _WORK textures</b></p><table id=\"table_bad_tex\"><tr><th>Visual name</th><th>Texture TEX</th><th>Texture TGA</th><th>Type</th></tr>";
 
 		auto meshTexturesProblems = GetLocationMeshTexturesList();
 
@@ -548,6 +548,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 				outfile << "<td>";
 				outfile << "<span class=\"texture_word_orange\">" << originalName << "</span>";
 				outfile << "</td>";
+				outfile << "<td>File is only in _WORK</td>";
 				outfile << "</tr>";
 
 			}
@@ -563,6 +564,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 				outfile << "<td>";
 				outfile << "<span class=\"texture_word_red\">" << originalName << "</span>";
 				outfile << "</td>";
+				outfile << "<td>NOT FOUND</td>";
 				outfile << "</tr>";
 			}
 
