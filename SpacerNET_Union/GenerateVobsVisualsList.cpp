@@ -290,7 +290,7 @@ tr.error td{background-color:#ff4444;color:#222;border:1px solid #444}\
 .texture_word_orange{color:#FF6E00;font-weight:bold}\
 .texture_word_red{color:#FF001E;font-weight:bold}\
 td.high-poly{color:#FD7228;font-weight:bold}\
-.report-time{background:#D84B8C;padding:15px;border:2px solid #A12D5E;border-radius:8px;margin:20px 0;color:white;font-size:22px;font-weight:bold;text-align:center}\
+.report-time{background:#2897FF;padding:15px;border:2px solid #444444;margin:20px 0;color:white;font-size:22px;font-weight:bold;text-align:center}\
 </style></head><body>";
 
 		const CString endFile = "</div></body></html>";
