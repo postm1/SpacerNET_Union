@@ -58,12 +58,14 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::FindVobsVisualsUnique(CString path)
 	{
-
+		static const zSTRING INVISIBLE_FILEPREFIX = "INVISIBLE_";
 		zCArray<zCVob*> result;
 
 
 		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, result, 0);
 
+
+		
 
 		int num = result.GetNumInList();
 
@@ -71,13 +73,11 @@ namespace GOTHIC_ENGINE {
 		{
 			auto pVob = result.GetSafe(i);
 
-			if (pVob && pVob->visual)
+			if (pVob && pVob->visual && !pVob->visual->GetObjectName().HasWord(INVISIBLE_FILEPREFIX))
 			{
 				if (pVob->IsPFX() || dynamic_cast<zCVobLevelCompo*>(pVob)) continue;
 
 				CString key = pVob->visual->GetVisualName();
-
-				
 
 				auto& foundPair = searchVisualUniqList[key];
 
@@ -106,6 +106,11 @@ namespace GOTHIC_ENGINE {
 		{
 			return;
 		}
+		
+		if (!pair->GetValue())
+		{
+			return;
+		}
 
 		// TGA Decal
 		if (auto pDecal = visual->CastTo<zCDecal>())
@@ -115,6 +120,7 @@ namespace GOTHIC_ENGINE {
 			if (mat && mat->texture)
 			{
 				pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+				pair->GetValue()->polygons = 2;
 			}
 		}
 
@@ -267,9 +273,9 @@ namespace GOTHIC_ENGINE {
 	{
 
 		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title><style type=\"text/css\" media=\"screen\">html,body{font-family:serif;,sans-serif;\
-color:#222222;}p{font-size:20px}table{border-collapse:collapse;border:1px solid grey;font-size:14px;}th{font-size:bold;background-color:#E1E15D;}td,th{border:1px solid grey;padding:5px}\
-tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_orange{color:#FF6E00;} .texture_word_red{color:#FF001E;} #table_report tr:nth-child(odd) { background-color: #E4E4E4; color: #222222;} td.high-poly {color: #FD7228; font-weight: bold; }</style></head><body><p>\
-<b>There is a list of all vobs' visuals in the location.</b></p>";
+color:#222222;background:#fefefe;}p{font-size:20px}table{border-collapse:collapse;border:1px solid grey;font-size:14px;}th{font-size:bold;background-color:#E1E15D;}td,th{border:1px solid grey;padding:5px}\
+tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_orange{color:#FF6E00;} .texture_word_red{color:#FF001E;} #table_report tr:nth-child(odd) { background-color: #E4E4E4; color: #222222;}\
+ td.high-poly {color: #FD7228; font-weight: bold; }</style></head>";
 
 		const CString endFile = "</body></html>";
 
@@ -280,12 +286,21 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 
 		outfile << header;
 
-		badTextures.Clear();
+		outfile << "<div style='margin-bottom: 25px; padding: 15px; background-color: #FFB700; width:1000px;"  // Темно-розовый
+			<< "border-radius: 8px; border: 2px solid #A12D5E; box-shadow: 0 4px 8px rgba(0,0,0,0.2);'>"  // Темная рамка и тень
+			<< "<p style='margin:0; font-size: 22px; font-weight: bold; color: white; text-align: left; "
+			<< "text-shadow: 2px 2px 4px rgba(0,0,0,0.3);'>" 
+			<< "Report generated: " << GetTimeForReport()
+			<< "</p></div>";
+
+		outfile << "<body><p><b>There is a list of all vobs' visuals in the location.</b></p>";
 
 		auto arr = searchVisualUniqList.GetArray();
 
 		bool foundAnyBadEntry = false;
 		
+		
+
 
 		for (uint i = 0; i < arr.GetNum(); i++)
 		{
@@ -295,6 +310,17 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 			{
 				CString originVisualName = pair->GetKey().Upper();
 				CString searchName = originVisualName;
+				CString checkName = originVisualName;
+
+				if (checkName.Length() == 0 || checkName == ' ' || checkName.Shrink().Length() == 0)
+				{
+					pair->GetValue()->fileType = "EMPTY VISUAL";
+					pair->GetValue()->vdfOrWork = "-";
+					pair->GetValue()->texturesNames.InsertEnd("-");
+					pair->GetValue()->vdfName = "-";
+					continue;
+				}
+
 
 
 				// search name & filetype
@@ -334,64 +360,67 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 					ExtractVisualInfo(curVob->GetVisual(), pair);
 				}
 
-				// VDF NAME
-				char* volumeNamePtr = NULL;
-				long length = vdf_getvolumename(searchName.ToChar(), volumeNamePtr);
+				char* api_name_search = searchName.ToChar();
 
-				if (volumeNamePtr)
-				{
-					string volumeNameVdf = volumeNamePtr;
+				//cmd << "api_name_search: '" << api_name_search << "'" << endl;
 
-					pair->GetValue()->vdfName = volumeNameVdf;
+				auto resultVDF = vdf_fexists(api_name_search, VDF_VIRTUAL);
+				auto resultWORK = vdf_fexists(api_name_search, VDF_PHYSICAL);
 
-					delete[] volumeNamePtr;
-				}
-				else
-				{
-					//cmd << "NoName: " << searchName << endl;
-					//continue;
-					//pair->GetValue()->vdfName = "-";
-				}
+				bool foundVDF = (resultVDF & VDF_VIRTUAL) == VDF_VIRTUAL;
+				bool foundWORK = (resultWORK & VDF_PHYSICAL) == VDF_PHYSICAL;
+
 				
 
+				char* volumeNamePtr = NULL;
 
-				bool foundVirtual = false;
+				if (foundVDF)
+				{
+					long length = vdf_getvolumename(api_name_search, volumeNamePtr);
 
-				auto result = vdf_fexists(searchName.ToChar(), VDF_VIRTUAL);
+					if (volumeNamePtr && length > 0)
+					{
+						pair->GetValue()->vdfName = volumeNamePtr;
+						delete[] volumeNamePtr;
+					}
+				}
 
-				if ((result & VDF_VIRTUAL) == VDF_VIRTUAL)
+
+				if (foundVDF && foundWORK)
+				{
+					pair->GetValue()->vdfOrWork = "VDF & _WORK";
+					pair->GetValue()->vdf = true;
+					pair->GetValue()->work = true;
+					pair->GetValue()->workOnly = false;
+					pair->GetValue()->notFound = false;
+				}
+				else if (foundVDF && !foundWORK) // VDF ONLY
 				{
 					pair->GetValue()->vdfOrWork = "VDF";
 					pair->GetValue()->vdf = true;
-					foundVirtual = true;
+					pair->GetValue()->work = false;
+					pair->GetValue()->workOnly = false;
+					pair->GetValue()->notFound = false;
 				}
-
-
-				result = vdf_fexists(searchName.ToChar(), VDF_PHYSICAL);
-
-				if ((result & VDF_PHYSICAL) == VDF_PHYSICAL)
+				else if (!foundVDF && foundWORK) // WORK ONLY
 				{
-					if (foundVirtual)
-					{
-						pair->GetValue()->vdfOrWork += " & _WORK";
-						pair->GetValue()->work = true;
-					}
-					else
-					{
-						pair->GetValue()->vdfOrWork = "_WORK";
-						pair->GetValue()->vdfName = "-";
-						pair->GetValue()->workOnly = true;
-					}
+					pair->GetValue()->vdfOrWork = "_WORK";
+					pair->GetValue()->vdf = false;
+					pair->GetValue()->work = true;
+					pair->GetValue()->workOnly = true;
+					pair->GetValue()->notFound = false;
+					pair->GetValue()->vdfName = "-"; // 
 				}
-
-
-				if (result == 0 && !foundVirtual)
+				else // !foundVDF && !foundWORK
 				{
 					pair->GetValue()->vdfOrWork = "NOT FOUND";
+					pair->GetValue()->vdf = false;
+					pair->GetValue()->work = false;
+					pair->GetValue()->workOnly = false;
 					pair->GetValue()->notFound = true;
 					pair->GetValue()->vdfName = "-";
-					//cmd << "NotFound: '" << pair->GetKey() << "'\n";
 				}
+				
 			}
 		}
 
@@ -462,6 +491,8 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 		{
 			outfile << "</table><br>";
 		}
+
+		
 
 		outfile << "<p><b>Not found or _WORK textures</b></p><table id=\"table_bad_tex\"><tr><th>Visual name</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 
@@ -613,7 +644,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 		
 
 
-
+		
 		//=====================================================================
 		outfile << "<p><b>Normal visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>\
 VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
@@ -699,7 +730,9 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 
 		outfile << "</table><br>";
 
+		
 
+		
 		zCArray<zCVob*> resultArray;
 
 
@@ -743,11 +776,7 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 								zSTRING name = info.PickWord(1, ":", zSTR_SKIP);
 								int num = info.PickWord(3, ":", zSTR_SKIP).ToInt();
 								if (num <= 0) num = 1;
-								/*
-								zCPar_Symbol* sym		= parser.GetSymbol(name);
-								zCPar_Symbol* classSym	= sym?parser.GetSymbol(parser.GetBaseClass(sym)):0;
-								if (classSym && (classSym->name == oCItem::GetStaticClassDef()->GetScriptClassName()) )
-								*/
+								
 								int index = parser->GetIndex(name);
 								if (index >= 0 && parser->MatchClass(index, oCItem::classDef->scriptClassName))
 								{
@@ -805,13 +834,15 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 		}
 
 		outfile << "</table><br>";
+		
 
 		searchItems.DeleteListDatas();
+		
 
 		outfile << endFile;
 
 		DeleteAndClearMap(searchVisualUniqList);
-
+		badTextures.Clear();
 
 		outfile.close();
 	}

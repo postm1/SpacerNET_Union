@@ -1883,5 +1883,20 @@ namespace GOTHIC_ENGINE {
 
 		pointer();
 	}
+
+	CString GetTimeForReport()
+	{
+		time_t rawTime;
+		struct tm* timeInfo;
+		char timeBuffer[80];
+
+		time(&rawTime);
+		timeInfo = localtime(&rawTime);
+
+		strftime(timeBuffer, sizeof(timeBuffer), "%d %B %Y %H:%M:%S", timeInfo);
+		CString reportTime = timeBuffer;
+
+		return reportTime;
+	}
 }
 
