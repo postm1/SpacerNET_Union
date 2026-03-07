@@ -1202,6 +1202,13 @@ namespace GOTHIC_ENGINE {
 
 	int Union_FileExists(CString searchName)
 	{
+		CString checkName = searchName;
+
+		if (checkName.Length() == 0 || checkName == " " || checkName.Shrink().Length() == 0)
+		{
+			return 0;
+		}
+
 		bool foundVirtual = false;
 
 		auto result = vdf_fexists(searchName.ToChar(), VDF_DEFAULT);
