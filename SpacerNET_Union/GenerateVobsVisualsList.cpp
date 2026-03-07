@@ -349,7 +349,8 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 				else
 				{
 					//cmd << "NoName: " << searchName << endl;
-					continue;
+					//continue;
+					//pair->GetValue()->vdfName = "-";
 				}
 				
 
@@ -496,7 +497,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 			else if (fileTypeExist == 1)
 			{
 				outfile << "<tr>";
-				outfile << "<td>Location mesh</td>";
+				outfile << "<td>[LOCATION MESH]</td>";
 
 
 
@@ -513,7 +514,7 @@ tr.warning{background-color:#e17a42}tr.error{background-color:red}.texture_word_
 			else
 			{
 				outfile << "<tr>";
-				outfile << "<td>Location mesh</td>";
+				outfile << "<td>[LOCATION MESH]</td>";
 
 
 				outfile << "<td>";
