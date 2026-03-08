@@ -147,6 +147,8 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("VOB_ONEMODE", "0_50");
 		defaultValues.Insert("VOB_DISABLE_SELECT", "0_5");
 		defaultValues.Insert("VOB_FLOOR", "8_33");
+		defaultValues.Insert("VOB_FLOOR_IGNORE_BBOX", "2_33");
+		defaultValues.Insert("VOB_ALIGN_TO_GROUND", "4_33");
 		defaultValues.Insert("VOB_RESET_AXIS", "8_19");
 		defaultValues.Insert("VOB_TRANS_FORWARD", "0_17");
 		defaultValues.Insert("VOB_TRANS_BACKWARD", "0_31");

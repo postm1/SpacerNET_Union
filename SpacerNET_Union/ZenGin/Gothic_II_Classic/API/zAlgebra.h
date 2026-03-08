@@ -884,23 +884,23 @@ namespace Gothic_II_Classic {
 
     void SetUpVector( const zVEC3& a0 )
     {
-      v[0][2] = a0.n[VX];
-      v[1][2] = a0.n[VY];
-      v[2][2] = a0.n[VZ];
-    }
-
-    void SetRightVector( const zVEC3& a0 )
-    {
       v[0][1] = a0.n[VX];
       v[1][1] = a0.n[VY];
       v[2][1] = a0.n[VZ];
     }
 
-    void SetAtVector( const zVEC3& a0 )
+    void SetRightVector( const zVEC3& a0 )
     {
       v[0][0] = a0.n[VX];
       v[1][0] = a0.n[VY];
       v[2][0] = a0.n[VZ];
+    }
+
+    void SetAtVector( const zVEC3& a0 )
+    {
+      v[0][2] = a0.n[VX];
+      v[1][2] = a0.n[VY];
+      v[2][2] = a0.n[VZ];
     }
 
     zMAT4& Translate( const zVEC3& a0 )
