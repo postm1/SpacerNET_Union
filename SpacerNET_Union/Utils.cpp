@@ -1071,6 +1071,10 @@ namespace GOTHIC_ENGINE {
 
 		for (uint i = 0; i < names.GetNum(); i++) {
 
+			if (names[i].Length() == 0)
+			{
+				continue;
+			}
 			//cmd << names[i] << endl;
 
 			bool_t isVirtual = vdf_fexists(names[i].ToChar(), VDF_VIRTUAL);
