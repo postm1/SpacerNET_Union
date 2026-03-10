@@ -122,6 +122,8 @@ namespace GOTHIC_ENGINE {
 			float distAngle = 35.0f;
 			bool ignoreNoColl = true;
 			int radiusShowPolys = 8000;
+			float maxStretchRatio = 15.0f;  
+			float maxUVCoordinate = 5000.0f;
 
 			zCArray<zCPolygon*> badPolys;
 			zCArray<zCPolygon*> allPolys;
@@ -132,6 +134,7 @@ namespace GOTHIC_ENGINE {
 		void UV_GatherPolygons();
 		void UV_FindErrors_ClearAll();
 		void UV_FindBadPolys();
+		bool IsBadUV(zCPolygon* poly);
 		void UV_Loop();
 		void UV_PrintPolyData(zCPolygon* poly);
 		zCView* pUVShowView = NULL;

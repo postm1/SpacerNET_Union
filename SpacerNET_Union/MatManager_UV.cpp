@@ -253,10 +253,101 @@ namespace GOTHIC_ENGINE {
 		return true;
 	}
 
+
+	bool MatManager::IsBadUV(zCPolygon* poly)
+	{
+		// 1. Получаем координаты
+		zVEC3 v0 = poly->vertex[0]->position;
+		zVEC3 v1 = poly->vertex[1]->position;
+		zVEC3 v2 = poly->vertex[2]->position;
+
+		zVEC3 uv0 = zVEC3(poly->feature[0]->texu, poly->feature[0]->texv, 0);
+		zVEC3 uv1 = zVEC3(poly->feature[1]->texu, poly->feature[1]->texv, 0);
+		zVEC3 uv2 = zVEC3(poly->feature[2]->texu, poly->feature[2]->texv, 0);
+
+		// --- ПРОВЕРКА 1: Выход за границы (OOB) ---
+		float maxUV = uvStruct.maxUVCoordinate;
+		if (std::fabs(uv0[0]) > maxUV || std::fabs(uv0[1]) > maxUV ||
+			std::fabs(uv1[0]) > maxUV || std::fabs(uv1[1]) > maxUV ||
+			std::fabs(uv2[0]) > maxUV || std::fabs(uv2[1]) > maxUV)
+		{
+			return true;
+		}
+
+		// --- ПРОВЕРКА 2: Абсолютная площадь UV
+		float u1 = uv1[0] - uv0[0], v1_uv = uv1[1] - uv0[1];
+		float u2 = uv2[0] - uv0[0], v2_uv = uv2[1] - uv0[1];
+		float areaUV = 0.5f * std::fabs(u1 * v2_uv - v1_uv * u2);
+
+		if (areaUV < uvStruct.minArea || areaUV > uvStruct.maxArea)
+		{
+			return true;
+		}
+
+		// --- ПРОВЕРКА 3: Экстремальное растяжение (Stretch Ratio) ---
+		zVEC3 edge3d1 = v1 - v0;
+		zVEC3 edge3d2 = v2 - v0;
+
+		float len3D[3] = { edge3d1.Length(), edge3d2.Length(), (v2 - v1).Length() };
+		float lenUV[3] = {
+			std::hypot(u1, v1_uv),
+			std::hypot(u2, v2_uv),
+			std::hypot(uv2[0] - uv1[0], uv2[1] - uv1[1])
+		};
+
+		float minRatio = 999999.0f;
+		float maxRatio = 0.0f;
+
+		for (int i = 0; i < 3; ++i) {
+			if (len3D[i] > 1e-4f) { // Защита от деления на ноль для микро-полигонов
+				float ratio = lenUV[i] / len3D[i];
+				if (ratio < minRatio) minRatio = ratio;
+				if (ratio > maxRatio) maxRatio = ratio;
+			}
+		}
+
+		float stretchFactor = (minRatio > 1e-6f) ? (maxRatio / minRatio) : 9999.0f;
+		if (stretchFactor > uvStruct.maxStretchRatio)
+		{
+			return true;
+		}
+
+		// --- ПРОВЕРКА 4: Искажение углов
+		float angles3d[3], anglesUV[3];
+		ComputeAndSortAngles(v0, v1, v2, angles3d);
+		ComputeAndSortUVAngles(uv0, uv1, uv2, anglesUV);
+
+		float max_angle_diff = Radian(uvStruct.distAngle);
+
+		for (int i = 0; i < 3; ++i) {
+			// Обязательная защита: если acos вернул NaN (из-за погрешностей float), пропускаем
+			if (std::isnan(angles3d[i]) || std::isnan(anglesUV[i])) continue;
+
+			if (std::fabs(angles3d[i] - anglesUV[i]) > max_angle_diff) {
+				return true;
+			}
+		}
+
+
+		return false;
+	}
+
 	void MatManager::UV_FindBadPolys()
 	{
 		uvStruct.badPolys.DeleteList();
 
+		for (int i = 0; i < uvStruct.allPolys.GetNumInList(); i++)
+		{
+			if (auto poly = uvStruct.allPolys.GetSafe(i))
+			{
+				if (IsBadUV(poly))
+				{
+					uvStruct.badPolys.InsertEnd(poly);
+				}
+			}
+		}
+
+		/*
 		for (int i = 0; i < uvStruct.allPolys.GetNumInList(); i++)
 		{
 			if (auto poly = uvStruct.allPolys.GetSafe(i))
@@ -287,6 +378,7 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 		}
+		*/
 	}
 
 
