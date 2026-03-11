@@ -234,6 +234,8 @@ namespace GOTHIC_ENGINE {
 
 				zMAT4 newMatrix;
 
+				newMatrix.MakeIdentity();
+
 				newMatrix.SetTranslation(currentPosition);
 
 				// align to the ground by using the ground normal as up-vector
