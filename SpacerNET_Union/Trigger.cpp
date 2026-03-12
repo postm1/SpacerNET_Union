@@ -149,6 +149,8 @@ namespace GOTHIC_ENGINE {
 
 		if (!moverVob) return;
 
+		theApp.SetChangesWereMade(true);
+
 		zREAL position((float)m_kf_pos);
 
 		if (
@@ -166,6 +168,8 @@ namespace GOTHIC_ENGINE {
 		if (!moverVob) return;
 		if (moverVob->keyframeList.GetNumInList() == 0) return;
 
+		theApp.SetChangesWereMade(true);
+
 		auto pos = moverVob->GetPositionWorld();
 		
 		moverVob->keyframeList.DeleteList();
@@ -181,6 +185,8 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!moverVob) return;
 		if (moverVob->keyframeList.GetNumInList() == 0) return;
+
+		theApp.SetChangesWereMade(true);
 
 		auto pos = moverVob->keyframeList.GetSafe(0).pos;
 		auto quat = moverVob->keyframeList.GetSafe(0).quat;
@@ -203,6 +209,8 @@ namespace GOTHIC_ENGINE {
 		if (!moverVob) return;
 
 		if (moverVob->keyframeList.GetNumInList() == 0) return;
+
+		theApp.SetChangesWereMade(true);
 
 		//cmd << "Remove key: " << m_kf_pos << endl;
 
@@ -264,6 +272,8 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!pickedVob) return;
 
+		theApp.SetChangesWereMade(true);
+
 		zCMover* pMover = dynamic_cast<zCMover*>(pickedVob);
 
 		if (pMover)
@@ -292,8 +302,11 @@ namespace GOTHIC_ENGINE {
 
 		if (!pickedVob) return;
 
+
 		int index = actionIndex;
 		if (index<0) return;
+
+		theApp.SetChangesWereMade(true);
 
 		zCEventCore* eventCore = new zCEventCore((zCEventCore::zTEventCoreSubType)index, event_sourcevob, event_sourcevob, 10000.0f, 0, zVEC3(0));
 
@@ -310,6 +323,8 @@ namespace GOTHIC_ENGINE {
 	{
 		if (moverVob)
 		{
+			theApp.SetChangesWereMade(true);
+
 			zCMover::zTMov_Keyframe KF = zCMover::GetKeyframe(moverVob);
 			int numInList = moverVob->keyframeList.GetNumInList();
 
@@ -346,6 +361,7 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SetCurrentKey(int key)
 	{
 		m_kf_pos = key;
+		theApp.SetChangesWereMade(true);
 	}
 
 	void SpacerApp::SetMover()
