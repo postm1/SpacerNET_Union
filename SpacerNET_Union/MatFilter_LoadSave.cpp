@@ -311,6 +311,8 @@ namespace GOTHIC_ENGINE {
 
 		cmd << "Saving Matlib.ini" << endl;
 
+		theApp.SetChangesWereMade(true);
+
 		zoptions->ChangeDir(DIR_TOOLS_DATA);
 
 		zFILE* f = zfactory->CreateZFile(MATLIB_FILENAME);

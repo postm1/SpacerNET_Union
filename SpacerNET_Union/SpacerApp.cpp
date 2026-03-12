@@ -2464,6 +2464,8 @@ namespace GOTHIC_ENGINE {
 			//vob->SetPositionWorld(vob->GetPositionWorld());
 
 		}
+
+		SetChangesWereMade(true);
 		//Message::Box("Apply 5");
 		//cmd << "ApplyProps for vob 5 " << AHEX32((uint)current_object) << endl;
 	}
