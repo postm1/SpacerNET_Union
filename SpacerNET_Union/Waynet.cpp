@@ -25,6 +25,7 @@ namespace GOTHIC_ENGINE {
 				waynet->DeleteWay(wp1, wp2);
 			}
 
+			SetChangesWereMade(true);
 			//print.PrintWin("Toggle waynet...", GFX_RED);
 		}
 	}
@@ -44,6 +45,8 @@ namespace GOTHIC_ENGINE {
 			{
 				waynet->CreateWay(wp1, wp2);
 			}
+
+			SetChangesWereMade(true);
 		}
 	}
 	
@@ -65,6 +68,7 @@ namespace GOTHIC_ENGINE {
 			{
 				waynet->DeleteWay(wp1, wp2);
 			}
+			SetChangesWereMade(true);
 		}
 	}
 

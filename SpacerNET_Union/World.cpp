@@ -117,6 +117,7 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::SaveFile(zSTRING worldName, int type)
 	{
 		timeNotSaved = 0;
+		SetChangesWereMade(false);
 
 		nograss.PrepareObjectsSaveGame();
 
@@ -377,6 +378,7 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::LoadMesh(zSTRING worldName)
 	{
 		timeNotSaved = 0;
+		SetChangesWereMade(false);
 
 		mm.CleanSelection();
 
@@ -716,6 +718,7 @@ namespace GOTHIC_ENGINE {
 		RX_End(7);
 
 		timeNotSaved = 0;
+		SetChangesWereMade(false);
 		restorator.GenerateVobsPos();
 		//mm.CreateMatTree();
 		mf.FillInterfaceData();
@@ -921,6 +924,8 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+		SetChangesWereMade(true);
+
 		if (bbox)
 		{
 			delete bbox; 
@@ -1115,6 +1120,7 @@ namespace GOTHIC_ENGINE {
 
 		AddChildsToList(vob->globalVobTreeNode);
 
+		SetChangesWereMade(true);
 		
 
 		theApp.SetSelectedVob(vob, "OpenVobTree");

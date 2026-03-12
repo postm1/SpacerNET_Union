@@ -99,6 +99,7 @@ namespace GOTHIC_ENGINE {
 		this->pLightDx11 = NULL;
 
 		this->timeNotSaved = 0;
+		this->changesWereMade = false;
 
 		updateMatrix.ResetMatrixUpdate();
 		
@@ -390,6 +391,8 @@ namespace GOTHIC_ENGINE {
 		debug.CleanLines();
 
 		timeNotSaved = 0;
+
+		SetChangesWereMade(false);
 
 		compareDynList.DeleteList();
 		compareVobsAll.DeleteList();
@@ -2691,5 +2694,26 @@ namespace GOTHIC_ENGINE {
 
 		theApp.SelectObject(pVob, true, true);
 		
+	}
+
+
+	void SpacerApp::SetChangesWereMade(bool value)
+	{
+		if (changesWereMade == value)
+		{
+			return;
+		}
+
+		changesWereMade = value;
+
+		if (value)
+		{
+			PrintInfoWinMessage(GetLang("COMMON_CHANGES_WERE_MADE"), "#FF0000");
+		}
+	}
+	
+	bool SpacerApp::GetChangesWereMade()
+	{
+		return changesWereMade;
 	}
 }

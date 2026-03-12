@@ -9,6 +9,7 @@ namespace GOTHIC_ENGINE {
 	{
 		//OutFile("\n================\nInsertIntoWorld: NodesCount (pre-insert): " + A(ogame->GetWorld()->globalVobTree.CountNodes() - 1), false);
 
+		theApp.SetChangesWereMade(true);
 
 		if (dynamic_cast<zCVobWaypoint*>(newVob))
 		{
@@ -661,6 +662,8 @@ namespace GOTHIC_ENGINE {
 
 		if (vob)
 		{
+			theApp.SetChangesWereMade(true);
+
 			zSTRING info = "-> OnRemoveVob: " + Z AHEX32((uint)vob) + " Name: " + vob->GetVobName();
 
 			info += " (";
@@ -785,6 +788,8 @@ namespace GOTHIC_ENGINE {
 				print.PrintRed(GetLang("ACTION_FORBIDDEN"));
 				return;
 			}
+
+			SetChangesWereMade(true);
 
 			zCVob* parentSafe = pVob;
 

@@ -222,6 +222,7 @@ namespace GOTHIC_ENGINE {
 				bool g_bIsPlayingGame;
 				bool g_bInsertNPCs;
 				int timeNotSaved;
+				bool changesWereMade;
 			};
 
 
@@ -532,6 +533,9 @@ namespace GOTHIC_ENGINE {
 
 		void VobTypeHighLight_Loop();
 		void VobTypeHighLight_Visual_Loop();
+
+		void SetChangesWereMade(bool value);
+		bool GetChangesWereMade();
 	};
 
 }

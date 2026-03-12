@@ -222,7 +222,7 @@ namespace GOTHIC_ENGINE {
 					theApp.bboxMinsVob->SetPositionWorld(box.mins);
 					theApp.bboxMaxsVob->SetPositionWorld(box.maxs);
 					pickedVob->SetBBox3DWorld(box);
-					
+					theApp.SetChangesWereMade(true);
 					
 					return;
 				}
@@ -234,6 +234,7 @@ namespace GOTHIC_ENGINE {
 					theApp.bboxMinsVob->SetPositionWorld(box.mins);
 					theApp.bboxMaxsVob->SetPositionWorld(box.maxs);
 					pickedVob->SetBBox3DWorld(box);
+					theApp.SetChangesWereMade(true);
 					return;
 				}
 

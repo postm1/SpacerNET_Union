@@ -407,6 +407,7 @@ namespace GOTHIC_ENGINE {
 	{
 
 		theApp.updateMatrix.OnUpdateMatrix(pickedVob);
+		theApp.SetChangesWereMade(true);
 
 		if (IsVobMover(pickedVob))
 		{
@@ -541,7 +542,7 @@ namespace GOTHIC_ENGINE {
 
 	void HandleVobTranslation(zCVob* pickedVob, zVEC3 pos)
 	{
-
+		theApp.SetChangesWereMade(true);
 		//bool parentAlone = theApp.options.GetIntVal("translateParentAlone");
 
 		theApp.updateMatrix.OnUpdateMatrix(pickedVob);
@@ -817,6 +818,8 @@ namespace GOTHIC_ENGINE {
 
 			checkCopyVobSelf = false;
 
+			theApp.SetChangesWereMade(true);
+
 			CheckVobs(theApp.vobToCopy->globalVobTreeNode);
 
 			if (useHierarchy && (theApp.vobToCopy == theApp.pickedVob || checkCopyVobSelf) && !pItem && !pickedVobWaypont)
@@ -960,6 +963,8 @@ namespace GOTHIC_ENGINE {
 
 
 			}
+
+			theApp.SetChangesWereMade(true);
 			updateParentVobRemoveNode removeNode = (updateParentVobRemoveNode)GetProcAddress(theApp.module, "UpdateParentRemoveNode");
 			removeNode((uint)vob);
 			GetChildrenUpdateParent(vob->globalVobTreeNode);
