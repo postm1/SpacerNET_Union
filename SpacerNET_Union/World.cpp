@@ -314,7 +314,7 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
-
+		
 		auto load = (loadForm)GetProcAddress(theApp.module, "ShowLoadingForm");
 		load(3);
 
@@ -346,7 +346,7 @@ namespace GOTHIC_ENGINE {
 			//ogame->GetWorld()->bspTree.mesh->UnshareFeatures();
 		}
 
-
+		globalTimeDebug.Start();
 
 		zoptions->ChangeDir(DIR_WORLD);
 
@@ -357,7 +357,7 @@ namespace GOTHIC_ENGINE {
 		HandleWorldAfterSave();
 
 		//std::cout << "S4: " << zSTRING(ogame->GetWorld()->globalVobTree.CountNodes() - 1) << std::endl;
-
+		globalTimeDebug.Stop();
 		(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 	}
 
@@ -544,7 +544,7 @@ namespace GOTHIC_ENGINE {
 			(callVoidFunc)GetProcAddress(theApp.module, "ShowVdfWarning")();
 		}
 
-
+		globalTimeDebug.Start();
 		isMesh = false;
 		isMerged = false;
 		WorldPreLoad();
@@ -603,7 +603,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-		
+		globalTimeDebug.Stop();
 
 		(callVoidFunc)GetProcAddress(theApp.module, "CloseLoadingForm")();
 	}
