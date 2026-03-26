@@ -1050,7 +1050,7 @@ namespace GOTHIC_ENGINE {
 
 		if (mainTimer[TIMER_ID_CHECK_NOSAVE_TIME].Await(1000))
 		{
-			if (options.GetIntVal("warnLastSaveMsg"))
+			if (options.GetIntVal("warnLastSaveMsg") && GetChangesWereMade())
 			{
 
 
