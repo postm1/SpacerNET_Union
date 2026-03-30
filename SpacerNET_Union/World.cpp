@@ -687,6 +687,8 @@ namespace GOTHIC_ENGINE {
 #endif
 
 
+		InitMusicSystem();
+
 		if (options.GetIntVal("musicZenOff"))
 		{
 			ToggleMusic(false);
@@ -781,6 +783,7 @@ namespace GOTHIC_ENGINE {
 			
 		}
 
+		
 
 		nograss.SetPercentFromSettings(true);
 		mf.worldWasLoadedOnce = true;

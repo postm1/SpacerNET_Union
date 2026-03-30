@@ -1099,25 +1099,8 @@ namespace GOTHIC_ENGINE {
 
 			opt = !opt;
 
+			ToggleMusic(opt);
 
-			if (opt)
-			{
-				print.PrintGreen(ToStr GetLang("UNION_MUSIC_ON"));
-				zoptions->WriteInt("SOUND", "musicEnabled", 1, 0);
-				zCMusicSystem::DisableMusicSystem(FALSE);
-				zCZoneMusic::SetAutochange(TRUE);
-			}
-			else
-			{
-				print.PrintRed(ToStr GetLang("UNION_MUSIC_OFF"));
-				zoptions->WriteInt("SOUND", "musicEnabled", 0, 0);
-				zCZoneMusic::SetAutochange(FALSE);
-				zCMusicSystem::DisableMusicSystem(TRUE);
-
-				if (zsound) {
-					//zsound->StopAllSounds();
-				}
-			}
 
 		}
 

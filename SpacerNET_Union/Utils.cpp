@@ -913,19 +913,29 @@ namespace GOTHIC_ENGINE {
 		vertical = desktop.bottom;
 	}
 
+	void InitMusicSystem()
+	{
+		zBOOL musicEnabled = zoptions->ReadBool("SOUND", "musicEnabled", TRUE);
+		zCZoneMusic::SetAutochange(musicEnabled);
+		zCMusicSystem::DisableMusicSystem(!musicEnabled);
+	}
 
 	void ToggleMusic(bool mode)
 	{
 
+		zoptions->WriteInt("SOUND", "musicEnabled", (int)mode, 0);
+
 		if (mode)
 		{
-			zoptions->WriteInt("SOUND", "musicEnabled", 1, 0);
+			print.PrintGreen(ToStr GetLang("UNION_MUSIC_ON"));
+
 			zCMusicSystem::DisableMusicSystem(FALSE);
 			zCZoneMusic::SetAutochange(TRUE);
 		}
 		else
 		{
-			zoptions->WriteInt("SOUND", "musicEnabled", 0, 0);
+			print.PrintRed(ToStr GetLang("UNION_MUSIC_OFF"));
+
 			zCZoneMusic::SetAutochange(FALSE);
 			zCMusicSystem::DisableMusicSystem(TRUE);
 		}

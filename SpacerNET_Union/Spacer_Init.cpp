@@ -195,5 +195,6 @@ namespace GOTHIC_ENGINE {
 		// check for uniq mod vars
 		this->isNewBalanceMod = parser->GetSymbol("RX_TP_AZGAN_FORT") && parser->GetSymbol("RX_IsScoutUpdate") && parser->GetSymbol("RX_IsDruidUpdate") && parser->GetSymbol("AIVRX_NPC_SPEED");
 		
+		InitMusicSystem();
 	}
 }
