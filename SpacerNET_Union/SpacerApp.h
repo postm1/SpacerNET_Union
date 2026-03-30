@@ -180,6 +180,8 @@ namespace GOTHIC_ENGINE {
 			bool isNextCopyVobInsertNear;
 			bool nextInsertionIsTempPfx;
 			bool showRespawnOnVobs;
+			int spawnHour;
+			int spawnMinute;
 			int showRespawnOnVobsRadius;
 			bool bDebugSpacerLoadMesh;
 			bool showScreenInfo;

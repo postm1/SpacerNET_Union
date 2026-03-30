@@ -1557,6 +1557,21 @@ namespace GOTHIC_ENGINE {
 		__declspec(dllexport) void Extern_Spawn_ClearList()
 		{
 			theApp.ClearRespList();
+
+			
+			ogame->GetWorldTimer()->GetTime(theApp.spawnHour, theApp.spawnMinute);
+
+
+			zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
+
+			if (skyCtrl && theApp.IsDx11Active())
+			{
+				if (skyCtrl->rainFX.outdoorRainFXWeight == 0)
+				{
+					skyCtrl->m_bDontRain = TRUE;
+				}
+			}
+			
 		}
 
 		__declspec(dllexport) void Extern_Spawn_AddInList()
@@ -1568,6 +1583,9 @@ namespace GOTHIC_ENGINE {
 		__declspec(dllexport) void Extern_Spawn_Collect()
 		{
 			theApp.CollectRestList();
+
+			ogame->GetWorldTimer()->SetTime(theApp.spawnHour, theApp.spawnMinute);
+
 		}
 
 		__declspec(dllexport) void Extern_Spawn_ClearFuncList()
@@ -1836,6 +1854,7 @@ namespace GOTHIC_ENGINE {
 				case SpacerRainType::SPACER_RAIN_TYPE_STOP: {
 					
 					skyCtrl->rainFX.timeStopRain = skyCtrl->masterTime;
+					skyCtrl->m_bDontRain = TRUE;
 					
 				}; break;
 
@@ -1844,6 +1863,7 @@ namespace GOTHIC_ENGINE {
 #if ENGINE == Engine_G2A
 						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
 #endif
+						skyCtrl->m_bDontRain = FALSE;
 						zREAL weight = 0.0f;
 						skyCtrl->SetRainFXWeight(weight, 0.1F);
 					
@@ -1856,6 +1876,7 @@ namespace GOTHIC_ENGINE {
 						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
 #endif
 						zREAL weight = 0.5f;
+						skyCtrl->m_bDontRain = FALSE;
 						skyCtrl->SetRainFXWeight(weight, 0.1F);
 				}; break;
 

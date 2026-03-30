@@ -103,6 +103,8 @@ namespace GOTHIC_ENGINE {
 
 		updateMatrix.ResetMatrixUpdate();
 		
+
+		this->spawnHour = this->spawnMinute = 0;
 	}
 
 
