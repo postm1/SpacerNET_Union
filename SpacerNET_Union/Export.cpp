@@ -1561,7 +1561,7 @@ namespace GOTHIC_ENGINE {
 			
 			ogame->GetWorldTimer()->GetTime(theApp.spawnHour, theApp.spawnMinute);
 
-
+#if ENGINE == Engine_G2A
 			zCSkyControler_Outdoor* skyCtrl = dynamic_cast<zCSkyControler_Outdoor*>(ogame->GetWorld()->GetActiveSkyControler());
 
 			if (skyCtrl && theApp.IsDx11Active())
@@ -1571,6 +1571,7 @@ namespace GOTHIC_ENGINE {
 					skyCtrl->m_bDontRain = TRUE;
 				}
 			}
+#endif
 			
 		}
 
@@ -1854,16 +1855,18 @@ namespace GOTHIC_ENGINE {
 				case SpacerRainType::SPACER_RAIN_TYPE_STOP: {
 					
 					skyCtrl->rainFX.timeStopRain = skyCtrl->masterTime;
+#if ENGINE == Engine_G2A
 					skyCtrl->m_bDontRain = TRUE;
-					
+#endif				
 				}; break;
 
 				case SpacerRainType::SPACER_RAIN_TYPE_SMOOTH: {
 
 #if ENGINE == Engine_G2A
 						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
-#endif
 						skyCtrl->m_bDontRain = FALSE;
+#endif
+						
 						zREAL weight = 0.0f;
 						skyCtrl->SetRainFXWeight(weight, 0.1F);
 					
@@ -1874,9 +1877,10 @@ namespace GOTHIC_ENGINE {
 
 #if ENGINE == Engine_G2A
 						skyCtrl->SetWeatherType(zTWEATHER_RAIN);
+						skyCtrl->m_bDontRain = FALSE;
 #endif
 						zREAL weight = 0.5f;
-						skyCtrl->m_bDontRain = FALSE;
+						
 						skyCtrl->SetRainFXWeight(weight, 0.1F);
 				}; break;
 
