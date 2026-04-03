@@ -532,6 +532,10 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "g1SkipLod", "0");
 		list.Insert("g1SkipLod", set);
+
+		set = new CSetting(TYPE_INT, "SPACER", "infoWinzShowActions", "1");
+		list.Insert("infoWinzShowActions", set);
+		
 		
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
