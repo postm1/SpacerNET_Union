@@ -602,8 +602,16 @@ namespace GOTHIC_ENGINE {
 		{
 			CheckRamUsage();
 		}
-		
-		
+
+		if (mainTimer[TIMER_ID_AUTOSAVE].Await(5 * 60 * 1000))
+		{
+			if (options.GetIntVal("checkBoxAutoSave") == 1 && !theApp.g_bIsPlayingGame)
+			{
+				theApp.DoAutoSave();
+			}
+		}
+
+
 		//print.PrintRed(Z(int)player);
 
 		/*if (ogame->GetCamera())

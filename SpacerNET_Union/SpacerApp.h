@@ -538,6 +538,7 @@ namespace GOTHIC_ENGINE {
 
 		void SetChangesWereMade(bool value);
 		bool GetChangesWereMade();
+		void DoAutoSave();
 	};
 
 }

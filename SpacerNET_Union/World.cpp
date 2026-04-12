@@ -1163,4 +1163,83 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void SpacerApp::DoAutoSave()
+	{
+		zCWorld* world = ogame->GetWorld();
+		if (!world || !world->IsCompiled())
+			return;
+
+		// Next slot (0-indexed, wrap 0..9)
+		int slot    = options.GetIntVal("autoSaveSlot");
+		int newSlot = (slot + 1) % 10;
+
+		// Timestamp string e.g. "2026-04-12_14-30-00"
+		time_t t = time(nullptr);
+		struct tm lt;
+		localtime_s(&lt, &t);
+		char ts[32];
+		strftime(ts, sizeof(ts), "%Y-%m-%d_%H-%M-%S", &lt);
+
+		// Base world name: "WORLD" from e.g. "WORLD.ZEN"
+		zSTRING wfile = world->m_strlevelName;
+		wfile.Replace(".ZEN", "");
+
+		// Save like a normal save — flat filename in DIR_WORLD, then move to autosave subdir
+		char tempName[MAX_PATH];
+		sprintf_s(tempName, sizeof(tempName),
+			"%s_AS_%02d_%s.ZEN", wfile.ToChar(), newSlot + 1, ts);
+
+		zoptions->ChangeDir(DIR_WORLD);
+		HandleWorldBeforeSave();
+
+		// Temporarily save — reuse the engine's proven save path
+		nograss.PrepareObjectsSaveGame();
+		ogame->SaveWorld(zSTRING(tempName), zCWorld::zWLD_SAVE_EDITOR_COMPILED, false, false);
+		nograss.RestoreObjectsSaveGame();
+
+		HandleWorldAfterSave();
+
+		// Now move the file into autosave subdir using Win32 API
+		char worldsDirAbs[MAX_PATH] = {};
+		GetCurrentDirectoryA(MAX_PATH, worldsDirAbs);
+
+		char autosaveDir[MAX_PATH];
+		sprintf_s(autosaveDir, sizeof(autosaveDir), "%s\\autosave", worldsDirAbs);
+		CreateDirectoryA(autosaveDir, NULL);
+
+		// Delete previous file in this slot
+		char oldPattern[MAX_PATH];
+		sprintf_s(oldPattern, sizeof(oldPattern),
+			"%s\\%s_AS_%02d_*.ZEN", autosaveDir, wfile.ToChar(), newSlot + 1);
+
+		WIN32_FIND_DATAA fd;
+		HANDLE hFind = FindFirstFileA(oldPattern, &fd);
+		if (hFind != INVALID_HANDLE_VALUE)
+		{
+			do {
+				char oldPath[MAX_PATH];
+				sprintf_s(oldPath, sizeof(oldPath), "%s\\%s", autosaveDir, fd.cFileName);
+				DeleteFileA(oldPath);
+			} while (FindNextFileA(hFind, &fd));
+			FindClose(hFind);
+		}
+
+		// Move temp file → autosave dir
+		char srcPath[MAX_PATH], dstPath[MAX_PATH];
+		sprintf_s(srcPath, sizeof(srcPath), "%s\\%s", worldsDirAbs, tempName);
+		sprintf_s(dstPath, sizeof(dstPath), "%s\\%s", autosaveDir, tempName);
+
+		MoveFileA(srcPath, dstPath);
+
+		// Persist updated slot index
+		options.SetIntVal("autoSaveSlot", newSlot);
+		options.Save();
+
+		// On-screen confirmation — replace previous autosave msg, show for 30s
+		static int s_lastAutoSaveMsgId = -1;
+		print.RemoveById(s_lastAutoSaveMsgId);
+		CString msg = CString("AutoSave ") + CString(newSlot + 1) + CString(": ") + CString(ts);
+		s_lastAutoSaveMsgId = print.PrintGreenTracked(msg, 30);
+	}
+
 }
