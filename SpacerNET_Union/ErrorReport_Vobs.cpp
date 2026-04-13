@@ -798,7 +798,7 @@ namespace GOTHIC_ENGINE {
 						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
 						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
 						entry->SetObject((uint)vob);
-						entry->SetVobName(fpName);
+						entry->SetVobName(fpName + " (zCVobSpot)");
 						entry->SetMaterialName("");
 						entry->SetTextureName("");
 
@@ -820,7 +820,7 @@ namespace GOTHIC_ENGINE {
 						entry->SetErrorType(ERROR_REPORT_TYPE_CRITICAL);
 						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
 						entry->SetObject((uint)vob);
-						entry->SetVobName(wpName);
+						entry->SetVobName(wpName + " (zCVobWaypoint)");
 						entry->SetMaterialName("");
 						entry->SetTextureName("");
 
@@ -894,7 +894,7 @@ namespace GOTHIC_ENGINE {
 							entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
 							entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_NOT_UNIQ_NAME);
 							entry->SetObject((uint)vob);
-							entry->SetVobName(mobName);
+							entry->SetVobName(mobName + " (oCMobContainer)");
 							entry->SetMaterialName("");
 							entry->SetTextureName("");
 
