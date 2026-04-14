@@ -101,4 +101,30 @@ namespace GOTHIC_ENGINE {
 		zCOLOR color = zCOLOR(0, 255, 0);
 		PrintWin(text, color, time);
 	}
+
+	int MyPrint::PrintGreenTracked(zSTRING text, int time) {
+		zCOLOR color = zCOLOR(0, 255, 0);
+		PrintWinMessage msg;
+		msg.msg = text;
+		msg.amountMillisec = time * 1000;
+		msg.id = currentId++;
+		msg.color = color;
+		if (arrMsgs.GetNum() < pwMaxMsgs) {
+			arrMsgs.Insert(msg);
+		}
+		else {
+			arrMsgs.RemoveIndex(0);
+			arrMsgs.Insert(msg);
+		}
+		return msg.id;
+	}
+
+	void MyPrint::RemoveById(int id) {
+		for (int i = 0; i < arrMsgs.GetNum(); i++) {
+			if (arrMsgs.GetSafe(i).id == id) {
+				arrMsgs.RemoveIndex(i);
+				return;
+			}
+		}
+	}
 }

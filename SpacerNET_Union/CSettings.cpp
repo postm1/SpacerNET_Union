@@ -664,7 +664,14 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "GRASS", "grassToolSetOnVob", "0");
 		list.Insert("grassToolSetOnVob", set);
-	}	
+
+		// AUTOSAVE
+		set = new CSetting(TYPE_INT, "AUTOSAVE", "checkBoxAutoSave", "0");
+		list.Insert("checkBoxAutoSave", set);
+
+		set = new CSetting(TYPE_INT, "AUTOSAVE", "autoSaveSlot", "0");
+		list.Insert("autoSaveSlot", set);
+	}
 
 	CSettings::~CSettings()
 	{

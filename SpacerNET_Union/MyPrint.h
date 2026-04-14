@@ -25,5 +25,7 @@ namespace GOTHIC_ENGINE {
 		void ClearMsgs();
 		void PrintRed(zSTRING text, int time = 3);
 		void PrintGreen(zSTRING text, int time = 3);
+		int  PrintGreenTracked(zSTRING text, int time = 3); // returns msg ID for later RemoveById
+		void RemoveById(int id);
 	};
 }
