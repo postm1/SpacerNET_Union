@@ -29,6 +29,7 @@ namespace GOTHIC_ENGINE {
 		AB_Debug debug;
 
 		int isBboxChangeMod;
+		int timerAutoSave;
 
 		zCArray<zCPolygon*>* leakPolyList;
 		

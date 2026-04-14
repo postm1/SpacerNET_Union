@@ -780,10 +780,11 @@ namespace GOTHIC_ENGINE {
 
 				}
 			}
-
-			//autosave timer reset
-			mainTimer[TIMER_ID_AUTOSAVE].ResetTime();
 		}
+
+		//autosave timer reset
+		mainTimer[TIMER_ID_AUTOSAVE].ResetTime();
+		timerAutoSave = 0;
 
 		
 

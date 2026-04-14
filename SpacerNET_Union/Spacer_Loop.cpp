@@ -603,11 +603,25 @@ namespace GOTHIC_ENGINE {
 			CheckRamUsage();
 		}
 
-		if (mainTimer[TIMER_ID_AUTOSAVE].Await(5 * 60 * 1000))
+		if (mainTimer[TIMER_ID_AUTOSAVE].Await(1000))
 		{
+			const int TIME_AUTOSAVE = 5 * 60;
+
 			if (options.GetIntVal("checkBoxAutoSave") == 1 && !theApp.g_bIsPlayingGame)
 			{
-				theApp.DoAutoSave();
+				timerAutoSave += 1;
+
+				// showing the saving message beforehand (3 seconds)
+
+				if (timerAutoSave == TIME_AUTOSAVE - 3)
+				{
+					print.PrintGreen(GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"), 7);
+				}
+
+				if (timerAutoSave == TIME_AUTOSAVE)
+				{
+					theApp.DoAutoSave();
+				}
 			}
 		}
 

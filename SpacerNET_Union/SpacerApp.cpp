@@ -99,6 +99,7 @@ namespace GOTHIC_ENGINE {
 		this->pLightDx11 = NULL;
 
 		this->timeNotSaved = 0;
+		this->timerAutoSave = 0;
 		this->changesWereMade = false;
 
 		updateMatrix.ResetMatrixUpdate();
@@ -488,6 +489,7 @@ namespace GOTHIC_ENGINE {
 
 		//autosave timer reset
 		mainTimer[TIMER_ID_AUTOSAVE].ResetTime();
+		timerAutoSave = 0;
 
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearAllEntries")();
 
