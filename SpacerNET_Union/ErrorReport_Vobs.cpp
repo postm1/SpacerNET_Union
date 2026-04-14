@@ -668,23 +668,55 @@ namespace GOTHIC_ENGINE {
 							AddEntry(entry);
 						}
 
-						if (pSoundDayTime)
-						{
-							if (!parserSoundFX->GetSymbol(pSoundDayTime->soundName2))
-							{
-								auto entry = new ErrorReportEntry();
-
-								entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
-								entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SOUNDNAMEDAYTIME_NOINST);
-								entry->SetObject((uint)vob);
-								entry->SetVobName(pSoundDayTime->soundName2);
-								entry->SetMaterialName("");
-								entry->SetTextureName("");
-
-								AddEntry(entry);
-							}
-						}
+						
 					}
+				}
+
+				if (pSoundDayTime)
+				{
+					if (pSoundDayTime->soundStartTime > pSoundDayTime->soundEndTime)
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SOUNDNAMEDAYTIME_WRONGTIME);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(pSoundDayTime->GetObjectName());
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+
+					if (pSoundDayTime->soundStartTime == 0 && pSoundDayTime->soundEndTime == 0)
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SOUNDNAMEDAYTIME_NOTIME);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(pSoundDayTime->GetObjectName());
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+
+					/*
+					if (!parserSoundFX->GetSymbol(pSoundDayTime->soundName2))
+					{
+						auto entry = new ErrorReportEntry();
+
+						entry->SetErrorType(ERROR_REPORT_TYPE_WARNING);
+						entry->SetProblemType(ERROR_REPORT_PROBLEM_TYPE_SOUNDNAMEDAYTIME_NOINST);
+						entry->SetObject((uint)vob);
+						entry->SetVobName(pSoundDayTime->soundName2);
+						entry->SetMaterialName("");
+						entry->SetTextureName("");
+
+						AddEntry(entry);
+					}
+					*/
 				}
 
 				if (auto pMob = vob->CastTo<oCMobBed>())
