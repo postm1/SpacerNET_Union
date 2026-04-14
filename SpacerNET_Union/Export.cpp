@@ -421,8 +421,6 @@ namespace GOTHIC_ENGINE {
 
 			theApp.options.SetIntVal(name, value);
 			theApp.options.Apply();
-			theApp.options.Save();
-
 		}
 
 		__declspec(dllexport) void Extern_SetSettingFloat(float value)

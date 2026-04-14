@@ -780,7 +780,9 @@ namespace GOTHIC_ENGINE {
 
 				}
 			}
-			
+
+			//autosave timer reset
+			mainTimer[TIMER_ID_AUTOSAVE].ResetTime();
 		}
 
 		
@@ -1199,18 +1201,33 @@ namespace GOTHIC_ENGINE {
 
 		HandleWorldAfterSave();
 
-		// Now move the file into autosave subdir using Win32 API
-		char worldsDirAbs[MAX_PATH] = {};
-		GetCurrentDirectoryA(MAX_PATH, worldsDirAbs);
 
-		char autosaveDir[MAX_PATH];
-		sprintf_s(autosaveDir, sizeof(autosaveDir), "%s\\autosave", worldsDirAbs);
-		CreateDirectoryA(autosaveDir, NULL);
+		// =======================================================================
+
+		// Now move the file into autosave subdir using Win32 API
+
+		// Absolute path for Gothic root folder
+		zSTRING rootDir = zoptions->GetDirString(DIR_ROOT);
+
+		// Absolute path for Gothic worlds folder
+		zSTRING worldsDirAbs = rootDir + zoptions->GetDirString(DIR_WORLD);
+
+		// Absolute path for a new autosave folder
+		zSTRING autosaveDir = rootDir + "\\autosave";
+
+		/*
+		cmd << "DIR_ROOT: " << zoptions->GetDirString(DIR_ROOT) << endl;
+		cmd << "worldsDirAbs: " << worldsDirAbs << endl;
+		cmd << "autosaveDir: " << autosaveDir << endl;
+		*/
+
+		CreateDirectoryA(autosaveDir.ToChar(), NULL);
 
 		// Delete previous file in this slot
 		char oldPattern[MAX_PATH];
 		sprintf_s(oldPattern, sizeof(oldPattern),
-			"%s\\%s_AS_%02d_*.ZEN", autosaveDir, wfile.ToChar(), newSlot + 1);
+			"%s\\%s_AS_%02d_*.ZEN", autosaveDir.ToChar(), wfile.ToChar(), newSlot + 1);
+
 
 		WIN32_FIND_DATAA fd;
 		HANDLE hFind = FindFirstFileA(oldPattern, &fd);
@@ -1218,18 +1235,24 @@ namespace GOTHIC_ENGINE {
 		{
 			do {
 				char oldPath[MAX_PATH];
-				sprintf_s(oldPath, sizeof(oldPath), "%s\\%s", autosaveDir, fd.cFileName);
+				sprintf_s(oldPath, sizeof(oldPath), "%s\\%s", autosaveDir.ToChar(), fd.cFileName);
 				DeleteFileA(oldPath);
 			} while (FindNextFileA(hFind, &fd));
 			FindClose(hFind);
 		}
 
-		// Move temp file → autosave dir
-		char srcPath[MAX_PATH], dstPath[MAX_PATH];
-		sprintf_s(srcPath, sizeof(srcPath), "%s\\%s", worldsDirAbs, tempName);
-		sprintf_s(dstPath, sizeof(dstPath), "%s\\%s", autosaveDir, tempName);
+		
 
-		MoveFileA(srcPath, dstPath);
+		// Move temp file → autosave dir
+		zSTRING srcPath = worldsDirAbs + tempName; // worldsDirAbs already contains slash
+
+		zSTRING dstPath = autosaveDir + "\\" + tempName;
+
+
+		//cmd << "SRC: " << srcPath << endl;
+		//cmd << "DST: " << dstPath << endl;
+
+		MoveFileA(srcPath.ToChar(), dstPath.ToChar());
 
 		// Persist updated slot index
 		options.SetIntVal("autoSaveSlot", newSlot);
@@ -1238,8 +1261,12 @@ namespace GOTHIC_ENGINE {
 		// On-screen confirmation — replace previous autosave msg, show for 30s
 		static int s_lastAutoSaveMsgId = -1;
 		print.RemoveById(s_lastAutoSaveMsgId);
-		CString msg = CString("AutoSave ") + CString(newSlot + 1) + CString(": ") + CString(ts);
+		CString msg = CString("[AUTOSAVE]: Slot ") + CString(newSlot + 1) + CString(": ") + CString(ts);
 		s_lastAutoSaveMsgId = print.PrintGreenTracked(msg, 30);
+
+		cmd << msg << " | PATH: " << dstPath << endl;
+
+		PrintInfoWinMessage(GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD") + " | " + dstPath.ToChar());
 	}
 
 }

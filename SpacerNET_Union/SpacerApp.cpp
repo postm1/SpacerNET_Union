@@ -486,6 +486,9 @@ namespace GOTHIC_ENGINE {
 
 		mf.Reset();
 
+		//autosave timer reset
+		mainTimer[TIMER_ID_AUTOSAVE].ResetTime();
+
 		(callVoidFunc)GetProcAddress(theApp.module, "ClearAllEntries")();
 
 		if (ogame->GetWorld() && ogame->GetWorld()->GetBspTree())
