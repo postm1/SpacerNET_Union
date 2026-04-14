@@ -1167,7 +1167,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::DoAutoSave()
 	{
-		zCWorld* world = ogame->GetWorld();
+		oCWorld* world = ogame->GetGameWorld();
 		if (!world || !world->IsCompiled())
 			return;
 
@@ -1183,7 +1183,7 @@ namespace GOTHIC_ENGINE {
 		strftime(ts, sizeof(ts), "%Y-%m-%d_%H-%M-%S", &lt);
 
 		// Base world name: "WORLD" from e.g. "WORLD.ZEN"
-		zSTRING wfile = world->m_strlevelName;
+		zSTRING wfile = world->GetWorldName();
 		wfile.Replace(".ZEN", "");
 
 		// Save like a normal save — flat filename in DIR_WORLD, then move to autosave subdir
