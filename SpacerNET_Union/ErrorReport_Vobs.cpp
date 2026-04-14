@@ -702,8 +702,8 @@ namespace GOTHIC_ENGINE {
 						AddEntry(entry);
 					}
 
-					/*
-					if (!parserSoundFX->GetSymbol(pSoundDayTime->soundName2))
+					
+					if (pSoundDayTime->soundName2.Length() > 0 && !parserSoundFX->GetSymbol(pSoundDayTime->soundName2))
 					{
 						auto entry = new ErrorReportEntry();
 
@@ -716,7 +716,7 @@ namespace GOTHIC_ENGINE {
 
 						AddEntry(entry);
 					}
-					*/
+					
 				}
 
 				if (auto pMob = vob->CastTo<oCMobBed>())
