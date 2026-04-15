@@ -1263,7 +1263,7 @@ namespace GOTHIC_ENGINE {
 		static int s_lastAutoSaveMsgId = -1;
 		print.RemoveById(s_lastAutoSaveMsgId);
 		CString msg = CString("[AUTOSAVE]: Slot ") + CString(newSlot + 1) + CString(": ") + CString(ts);
-		s_lastAutoSaveMsgId = print.PrintGreenTracked(msg, 30);
+		s_lastAutoSaveMsgId = print.PrintGreenTracked(msg, 16);
 
 		cmd << msg << " | PATH: " << dstPath << endl;
 
