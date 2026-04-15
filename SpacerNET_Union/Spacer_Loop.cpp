@@ -620,6 +620,7 @@ namespace GOTHIC_ENGINE {
 
 				if (timerAutoSave == TIME_AUTOSAVE)
 				{
+					timerAutoSave = 0;
 					theApp.DoAutoSave();
 				}
 			}
