@@ -912,7 +912,7 @@ namespace GOTHIC_ENGINE {
 		// DOUBLE INSERT CRASH FIX
 		if (vob == NULL)
 		{
-			theApp.vobToCopy = NULL;
+			print.PrintRed(GetLang("CANT_INSERT_EMPTY_VOB"));
 			return;
 		}
 
@@ -1773,6 +1773,11 @@ namespace GOTHIC_ENGINE {
 
 		if (keys.KeyPressed("VOB_INSERT", true))
 		{
+			if (!theApp.vobToCopy)
+			{
+				print.PrintRed(GetLang("CANT_INSERT_EMPTY_VOB"));
+				return;
+			}
 			if (pickMode == SWM_VOBS)
 			{
 				
