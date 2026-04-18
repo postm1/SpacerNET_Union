@@ -63,7 +63,8 @@ namespace GOTHIC_ENGINE {
 	void MyPrint::Loop() {
 		if (pView && arrMsgs.GetNum()) {
 
-			
+			bool showBack = theApp.options.GetVal("bShowTextBack");
+
 
 			screen->InsertItem(pView);
 
@@ -77,25 +78,19 @@ namespace GOTHIC_ENGINE {
 				auto* pViewBack = msg.pViewBack;
 
 
-				if (pViewBack)
+				if (pViewBack && showBack)
 				{
 					screen->InsertItem(pViewBack);
 					pViewBack->ClrPrintwin();
 					pViewBack->SetPos(x - TEXT_PADDING / 2, y - TEXT_PADDING / 2);
 					pViewBack->Blit();
-					
+					screen->RemoveItem(pViewBack);
 				}
 				
 				pView->ClrPrintwin();
 				pView->SetFontColor(color);
 				pView->Print(x, y, msg.msg);
 				pView->Blit();
-
-				if (pViewBack)
-				{
-					screen->RemoveItem(pViewBack);
-				}
-				
 				
 			}
 			
