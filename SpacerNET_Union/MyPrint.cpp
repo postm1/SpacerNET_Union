@@ -20,7 +20,13 @@ namespace GOTHIC_ENGINE {
 		int isRemove = 0;
 		for (int i = 0; i < arrMsgs.GetNum(); i++) {
 			PrintWinMessage& msg = arrMsgs.GetSafe(i);
+
+			
+
 			if (msg.amountMillisec < 1) {
+
+				msg.RemoveView();
+
 				arrMsgs.RemoveIndex(i);
 				i--;
 				isRemove++;
@@ -56,6 +62,9 @@ namespace GOTHIC_ENGINE {
 
 	void MyPrint::Loop() {
 		if (pView && arrMsgs.GetNum()) {
+
+			
+
 			screen->InsertItem(pView);
 
 			for (int i = 0; i < arrMsgs.GetNum(); i++) {
@@ -63,13 +72,33 @@ namespace GOTHIC_ENGINE {
 				msg.amountMillisec -= (int)ztimer->frameTimeFloat;
 				zCOLOR& color = msg.color;
 				int x = (8192 - pView->FontSize(msg.msg)) / 2;
-				int y = 400 + i * pView->FontY();
+				int y = 400 + i * (pView->FontY() + 140);
+
+				auto* pViewBack = msg.pViewBack;
+
+
+				if (pViewBack)
+				{
+					screen->InsertItem(pViewBack);
+					pViewBack->ClrPrintwin();
+					pViewBack->SetPos(x - TEXT_PADDING / 2, y - TEXT_PADDING / 2);
+					pViewBack->Blit();
+					
+				}
+				
+				pView->ClrPrintwin();
 				pView->SetFontColor(color);
 				pView->Print(x, y, msg.msg);
-			}
-			pView->BlitText();
+				pView->Blit();
 
-			pView->ClrPrintwin();
+				if (pViewBack)
+				{
+					screen->RemoveItem(pViewBack);
+				}
+				
+				
+			}
+			
 
 			screen->RemoveItem(pView);
 
@@ -83,6 +112,15 @@ namespace GOTHIC_ENGINE {
 		msg.amountMillisec = maxTime * 1000;
 		msg.id = currentId++;
 		msg.color = color;
+
+		msg.pViewBack = new zCView(0, 0, SCREEN_MAX, SCREEN_MAX);
+		msg.pViewBack->InsertBack("BLACK.TGA");
+		msg.pViewBack->alpha = 175;
+		msg.pViewBack->SetAlphaBlendFunc(zRND_ALPHA_FUNC_BLEND);
+
+		// set size of the background
+		msg.pViewBack->SetSize(pView->FontSize(text) + TEXT_PADDING, pView->FontY() + TEXT_PADDING);
+
 		if (arrMsgs.GetNum() < pwMaxMsgs) {
 			arrMsgs.Insert(msg);
 		}
