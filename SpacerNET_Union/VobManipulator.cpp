@@ -108,7 +108,9 @@ namespace GOTHIC_ENGINE {
 	{
 		zCPolygon* polyIntersect;
 		bool foundVob;
-		if (GetFloorPositionForVobHelper(vob, centerPos, polyIntersect, foundVob))
+
+		
+		if (vob && GetFloorPositionForVobHelper(vob, centerPos, polyIntersect, foundVob))
 		{
 			if (!ignoreBBox)
 			{
@@ -310,6 +312,8 @@ namespace GOTHIC_ENGINE {
 
 	void HandleVobRotationMover(zCVob* pickedVob, int type, float angle)
 	{
+		if (!pickedVob) return;
+
 		zVEC3 pos = pickedVob->GetPositionWorld();
 		zVEC3 vobUnit = pickedVob->GetAtVectorWorld().Normalize();
 
@@ -609,6 +613,13 @@ namespace GOTHIC_ENGINE {
 		{
 			newVob = dynamic_cast<zCVob*>(farVobCurrent->CreateCopy());
 
+
+			if (!newVob)
+			{
+				cmd << "CreateCopy failed for: " << GetVobName(farVobCurrent) << endl;
+				return;
+			}
+
 			if (newVob)
 			{
 				zVEC3 pos = ogame->GetCamera()->connectedVob->GetPositionWorld();
@@ -646,7 +657,7 @@ namespace GOTHIC_ENGINE {
 						
 					}
 				}
-				else if (farParent)
+				else if (farParent && parent)
 				{
 					HandleVobTranslation(newVob, parent->GetPositionWorld() + (farVobCurrent->GetPositionWorld() - farParent->GetPositionWorld()));
 				}
@@ -749,7 +760,10 @@ namespace GOTHIC_ENGINE {
 
 		while (node != NULL)
 		{
-			Tranverse_OnCopyInsert(node, newVob, false, useHierarchy, parentRootHasChildren);
+			if (newVob)
+			{
+				Tranverse_OnCopyInsert(node, newVob, false, useHierarchy, parentRootHasChildren);
+			}
 			node = node->GetNextChild();
 		}
 	}
@@ -861,12 +875,20 @@ namespace GOTHIC_ENGINE {
 
 	void GetChildrenUpdateParent(zCTree<zCVob>* node)
 	{
+		static updateParentAddNode addNode = NULL;
+		
+		if (!addNode)
+		{
+			addNode = (updateParentAddNode)GetProcAddress(theApp.module, "updateParentAddNode");
+		}
+		
+
 		zCVob* vob = node->GetData();
 		zCVob* parentVob = vob->GetParentVob();
 
 		if (vob)
 		{
-			updateParentAddNode addNode = (updateParentAddNode)GetProcAddress(theApp.module, "updateParentAddNode");
+			
 			addNode((uint)vob, (uint)parentVob);
 		}
 
@@ -885,6 +907,14 @@ namespace GOTHIC_ENGINE {
 	{
 		zCWorld* pWorld = ogame->GetWorld();
 
+		//cmd << "HandleParentChange #1: " << (int)vob << " | " << (int)newParent << endl;
+		
+		// DOUBLE INSERT CRASH FIX
+		if (vob == NULL)
+		{
+			theApp.vobToCopy = NULL;
+			return;
+		}
 
 		if (vob == newParent)
 		{
@@ -929,10 +959,13 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		//cmd << "HandleParentChange: " << " vob: " << (int)vob << " newParent: " << (int)newParent << endl;
 
-		if (vob  && vob != newParent && pWorld)
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
+
+		if (vob && vob != newParent && pWorld)
 		{
-			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
+			
 			// if there is a new parent
 			if (newParent)
 			{
@@ -979,8 +1012,10 @@ namespace GOTHIC_ENGINE {
 			print.PrintRed(GetLang("PARENT_CHANGE_OK"));
 
 
-			theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+			
 		}
+
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 	}
 
 	SpacerToolMode selectedTool = TM_NONE;
@@ -1431,7 +1466,8 @@ namespace GOTHIC_ENGINE {
 
 	bool CheckIfVobBlocked(zCVob* pVob)
 	{
-		if (theApp.options.GetIntVal("checkBoxBlockComplexVob"))
+	
+		if (pVob && theApp.options.GetIntVal("checkBoxBlockComplexVob"))
 		{
 			if (pVob->HasChildren())
 			{
@@ -1669,6 +1705,7 @@ namespace GOTHIC_ENGINE {
 						theApp.vobToCopy = theApp.pickedVob;
 						theApp.isVobParentChange = false;
 						
+						//cmd << "COPY: " << (int)theApp.vobToCopy << endl;
 					}
 					
 				}
@@ -1730,6 +1767,7 @@ namespace GOTHIC_ENGINE {
 			print.PrintRed(GetLang("VOB_CUT_OK"));
 			theApp.vobToCopy = theApp.pickedVob;
 			theApp.isVobParentChange = true;
+			//cmd << "CUT: " << (int)theApp.vobToCopy << endl;
 
 		}
 
@@ -1739,6 +1777,9 @@ namespace GOTHIC_ENGINE {
 			{
 				
 				theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
+
+				//cmd << "VOB_INSERT: isVobParentChange: " << (int)theApp.isVobParentChange << " | PICKED: " << (int)pickedVob << " | globalParent: " << (int)theApp.globalParent << endl;
+
 				if (theApp.isVobParentChange)
 				{
 					HandleParentChange(theApp.vobToCopy, pickedVob);
