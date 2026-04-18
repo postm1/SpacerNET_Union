@@ -605,7 +605,7 @@ namespace GOTHIC_ENGINE {
 
 		if (mainTimer[TIMER_ID_AUTOSAVE].Await(1000))
 		{
-			const int TIME_AUTOSAVE = 1 * 20;
+			const int TIME_AUTOSAVE = 5 * 60;
 
 			if (options.GetIntVal("checkBoxAutoSave") == 1 && !theApp.g_bIsPlayingGame)
 			{
