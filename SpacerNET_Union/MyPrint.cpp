@@ -63,8 +63,7 @@ namespace GOTHIC_ENGINE {
 	void MyPrint::Loop() {
 		if (pView && arrMsgs.GetNum()) {
 
-			bool showBack = theApp.options.GetVal("bShowTextBack");
-
+			bool showBack = theApp.options.GetIntVal("bShowTextBack");
 
 			screen->InsertItem(pView);
 

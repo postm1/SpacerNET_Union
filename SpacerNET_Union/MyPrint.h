@@ -22,7 +22,7 @@ namespace GOTHIC_ENGINE {
 			void RemoveView()
 			{
 				SAFE_DELETE(pViewBack);
-				cmd << "Remove zCVIEw" << endl;
+				//cmd << "Remove zCVIEw" << endl;
 			}
 		};
 		int currentId;
