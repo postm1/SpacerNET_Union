@@ -141,6 +141,15 @@ namespace GOTHIC_ENGINE {
 		msg.amountMillisec = time * 1000;
 		msg.id = currentId++;
 		msg.color = color;
+
+		msg.pViewBack = new zCView(0, 0, SCREEN_MAX, SCREEN_MAX);
+		msg.pViewBack->InsertBack("BLACK.TGA");
+		msg.pViewBack->alpha = 175;
+		msg.pViewBack->SetAlphaBlendFunc(zRND_ALPHA_FUNC_BLEND);
+
+		// set size of the background
+		msg.pViewBack->SetSize(pView->FontSize(text) + TEXT_PADDING, pView->FontY() + TEXT_PADDING);
+
 		if (arrMsgs.GetNum() < pwMaxMsgs) {
 			arrMsgs.Insert(msg);
 		}
