@@ -1063,7 +1063,9 @@ namespace GOTHIC_ENGINE {
 
 				timeNotSaved += 1;
 
-				const int INTERVAL_MINUTES = 15;
+				int INTERVAL_MINUTES = options.GetIntVal("remindSaveTime");
+				zClamp(INTERVAL_MINUTES, 1, 60);
+
 				const int TICKS_PER_MINUTE = 60;
 
 				if (timeNotSaved % (INTERVAL_MINUTES * TICKS_PER_MINUTE) == 0)

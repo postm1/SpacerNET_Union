@@ -538,8 +538,12 @@ namespace GOTHIC_ENGINE {
 		
 		set = new CSetting(TYPE_INT, "SPACER", "bShowTextBack", "1");
 		list.Insert("bShowTextBack", set);
-		
-		
+
+
+		set = new CSetting(TYPE_INT, "SPACER", "remindSaveTime", "15");
+		list.Insert("remindSaveTime", set);
+
+
 		
 		set = new CSetting(TYPE_STRING, "PATH", "treeVobPath", "");
 		list.Insert("treeVobPath", set);
@@ -677,6 +681,8 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "AUTOSAVE", "autoSaveZenTime", "5");
 		list.Insert("autoSaveZenTime", set);
+
+
 	}
 
 	CSettings::~CSettings()
