@@ -1268,6 +1268,9 @@ namespace GOTHIC_ENGINE {
 		cmd << msg << " | PATH: " << dstPath << endl;
 
 		PrintInfoWinMessage(GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD") + " | " + dstPath.ToChar());
+
+		// check not save time reset
+		timeNotSaved = 0;
 	}
 
 }
