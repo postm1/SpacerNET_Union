@@ -608,8 +608,8 @@ namespace GOTHIC_ENGINE {
 			int timeAutoSaveWhen = options.GetIntVal("autoSaveZenTime") * 60;
 			bool save = options.GetIntVal("checkBoxAutoSave");
 
-			// 0-60 minutes range
-			zClamp(timeAutoSaveWhen, 0, 60 * 60);
+			// 1-60 minutes range
+			zClamp(timeAutoSaveWhen, 1 * 60, 60 * 60);
 
 			if (timeAutoSaveWhen > 0 && !theApp.g_bIsPlayingGame)
 			{
