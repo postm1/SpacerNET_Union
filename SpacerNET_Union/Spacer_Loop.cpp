@@ -611,19 +611,22 @@ namespace GOTHIC_ENGINE {
 			// 1-60 minutes range
 			zClamp(timeAutoSaveWhen, 1 * 60, 60 * 60);
 
-			if (timeAutoSaveWhen > 0 && !theApp.g_bIsPlayingGame)
+
+			if (save && !theApp.g_bIsPlayingGame)
 			{
 				timerAutoSave += 1;
 
+				print.PrintGreen(Z timerAutoSave, 1);
+
 				// showing the saving message beforehand (3 seconds)
 
-				if (timerAutoSave == timeAutoSaveWhen - 3)
+				if (timerAutoSave = timeAutoSaveWhen - 3)
 				{
 					print.PrintGreen(GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"), 7);
 					PrintInfoWinMessage("[>>] " + GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"));
 				}
 
-				if (timerAutoSave == timeAutoSaveWhen)
+				if (timerAutoSave >= timeAutoSaveWhen)
 				{
 					timerAutoSave = 0;
 					theApp.DoAutoSave();
