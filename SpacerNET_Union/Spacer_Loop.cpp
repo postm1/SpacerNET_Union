@@ -604,22 +604,26 @@ namespace GOTHIC_ENGINE {
 		}
 
 		if (mainTimer[TIMER_ID_AUTOSAVE].Await(1000))
-		{
-			const int TIME_AUTOSAVE = 5 * 60;
+		{ 
+			int timeAutoSaveWhen = options.GetIntVal("autoSaveZenTime") * 60;
+			bool save = options.GetIntVal("checkBoxAutoSave");
 
-			if (options.GetIntVal("checkBoxAutoSave") == 1 && !theApp.g_bIsPlayingGame)
+			// 0-60 minutes range
+			zClamp(timeAutoSaveWhen, 0, 60 * 60);
+
+			if (timeAutoSaveWhen > 0 && !theApp.g_bIsPlayingGame)
 			{
 				timerAutoSave += 1;
 
 				// showing the saving message beforehand (3 seconds)
 
-				if (timerAutoSave == TIME_AUTOSAVE - 3)
+				if (timerAutoSave == timeAutoSaveWhen - 3)
 				{
 					print.PrintGreen(GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"), 7);
 					PrintInfoWinMessage("[>>] " + GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"));
 				}
 
-				if (timerAutoSave == TIME_AUTOSAVE)
+				if (timerAutoSave == timeAutoSaveWhen)
 				{
 					timerAutoSave = 0;
 					theApp.DoAutoSave();
