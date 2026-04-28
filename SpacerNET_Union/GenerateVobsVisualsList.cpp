@@ -14,15 +14,19 @@ namespace GOTHIC_ENGINE {
 
 		CString textureSizeInfoStr;
 		bool isBigTexture;
+		zCMaterial* material;
 
 		VisualReportTextureInfo::VisualReportTextureInfo()
 		{
 			isBigTexture = false;
+			material = NULL;
 		}
 
 		void FillInfo(zCMaterial* mat)
 		{
 			if (!mat) return;
+
+			material = mat;
 
 			textureNameTGA = A mat->texture->GetObjectName();
 
@@ -53,6 +57,7 @@ namespace GOTHIC_ENGINE {
 		CString vdfName;
 		CString visualName;
 		std::vector<VisualReportTextureInfo> texturesList;
+		std::vector<zCMaterial*> materialsList;
 		zCVob* pVob;
 		int polygons;
 		bool isLocationMesh;
@@ -81,18 +86,26 @@ namespace GOTHIC_ENGINE {
 		{
 			if (isLocationMesh)
 			{
-				cmd << "[MESH]: " << " -> " << GetFileTypeFound() << " | ";
+				cmd << "[MESH]: " << " -> " << GetFileTypeFound() << " | " << endl;
 
+			
 				for (auto& it : texturesList)
 				{
-					cmd << it.textureNameTEX << " " << it.textureSizeInfoStr;
+					cmd << "\t" << it.material->GetName() << " -> " << it.textureNameTEX << " " << it.textureSizeInfoStr;
 				}
 
 				cmd << endl;
 			}
 			else
 			{
-				cmd << "[" << visualName << "] -> " << GetFileTypeFound() << " Amount: " << amount << " Polygons: " << polygons << endl;
+				cmd << "[" << visualName << "] -> " << GetFileTypeFound() << " | Amount: " << amount << " | Polygons: " << polygons << endl;
+
+				for (auto& it : texturesList)
+				{
+					cmd << "\t" << it.material->GetName() << " -> " << it.textureNameTEX << " | " << it.textureSizeInfoStr << endl;;
+				}
+
+				cmd << endl;
 			}
 			
 		}
@@ -110,6 +123,7 @@ namespace GOTHIC_ENGINE {
 	void CreateHtmlReport(CString path);
 	void GetLocationMeshTexturesList();
 	void GatherLocationUniqVisualsList();
+	void ExtractVisualInfo(zCVisual* visual, VisualReportEntry& reportInfo);
 
 
 	//=========================================================================
@@ -169,7 +183,7 @@ namespace GOTHIC_ENGINE {
 
 		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, result, 0);
 
-		std::unordered_set<std::string> checkedVisuals;
+		std::unordered_map<std::string, VisualReportEntry> visualMap;
 
 		//Gathering vobs by its visuals
 		int num = result.GetNumInList();
@@ -182,14 +196,16 @@ namespace GOTHIC_ENGINE {
 			{
 				if (pVob->IsPFX() || dynamic_cast<zCVobLevelCompo*>(pVob)) continue;
 
-				std::string key = pVob->visual->GetVisualName().ToChar();
+				std::string visualName = pVob->visual->GetVisualName().ToChar();
 
-				if (checkedVisuals.find(key) != checkedVisuals.end())
+				auto it = visualMap.find(visualName);
+
+				if (it != visualMap.end())
 				{
+					it->second.amount++;
 					continue;
 				}
 
-				checkedVisuals.insert(key);
 
 				VisualReportEntry entry;
 
@@ -205,8 +221,6 @@ namespace GOTHIC_ENGINE {
 				bool hasPhysical = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_PHYSICAL) & VDF_PHYSICAL) == VDF_PHYSICAL;
 
 				
-
-				entry.amount = 1;
 				entry.foundType = VDF_FILE_TYPE_NOT_FOUND;
 
 				if (hasVirtual)
@@ -217,8 +231,20 @@ namespace GOTHIC_ENGINE {
 				if (hasPhysical)
 					entry.foundType = (entry.foundType == VDF_FILE_TYPE_VDF) ? VDF_FILE_TYPE_BOTH : VDF_FILE_TYPE_WORK;
 
-				pListReport.push_back(entry);
+
+				if (pVob)
+				{
+					ExtractVisualInfo(pVob->GetVisual(), entry);
+				}
+
+				visualMap[visualName] = entry;
 			}
+		}
+
+
+		for (auto& pair : visualMap)
+		{
+			pListReport.push_back(pair.second);
 		}
 	}
 
@@ -259,7 +285,7 @@ namespace GOTHIC_ENGINE {
 			zSTRING checkName = GetRealFileName(mat->texture->GetObjectName()).ToChar();
 			char* checkNameReal = checkName.ToChar();
 
-			cmd << "MeshCheckName: '" << checkName << "'" << endl;
+			//cmd << "MeshCheckName: '" << checkName << "'" << endl;
 
 			
 
@@ -284,6 +310,8 @@ namespace GOTHIC_ENGINE {
 			VisualReportTextureInfo texInfo;
 			texInfo.FillInfo(mat);
 			entry.texturesList.push_back(texInfo);
+			entry.materialsList.push_back(mat);
+
 
 				
 			pListReport.push_back(entry);
@@ -297,17 +325,13 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	void ExtractVisualInfo(zCVisual* visual, Common::MapPair<Common::CString, VisualReportEntry*>* pair)
+	void ExtractVisualInfo(zCVisual* visual, VisualReportEntry& reportInfo)
 	{
 		if (!visual)
 		{
 			return;
 		}
-		
-		if (!pair->GetValue())
-		{
-			return;
-		}
+
 
 		// TGA Decal
 		if (auto pDecal = visual->CastTo<zCDecal>())
@@ -319,8 +343,9 @@ namespace GOTHIC_ENGINE {
 				VisualReportTextureInfo info;
 				info.FillInfo(mat);
 
-				pair->GetValue()->texturesList.push_back(info);
-				pair->GetValue()->polygons = 2;
+				reportInfo.texturesList.push_back(info);
+				reportInfo.materialsList.push_back(mat);
+				reportInfo.polygons = 2;
 			}
 		}
 
@@ -329,7 +354,7 @@ namespace GOTHIC_ENGINE {
 		{
 			//cmd << "mesh! " << curVob->GetVobName() << " visual: " << visual->GetVisualName() << endl;
 
-			pair->GetValue()->polygons += pProgMesh->GetNumTri();
+			reportInfo.polygons += pProgMesh->GetNumTri();
 
 			for (int i = 0; i < pProgMesh->numSubMeshes; i++)
 			{
@@ -342,7 +367,8 @@ namespace GOTHIC_ENGINE {
 					VisualReportTextureInfo info;
 					info.FillInfo(mat);
 
-					pair->GetValue()->texturesList.push_back(info);
+					reportInfo.texturesList.push_back(info);
+					reportInfo.materialsList.push_back(mat);
 				}
 			}
 
@@ -366,7 +392,8 @@ namespace GOTHIC_ENGINE {
 						VisualReportTextureInfo info;
 						info.FillInfo(mat);
 
-						pair->GetValue()->texturesList.push_back(info);
+						reportInfo.texturesList.push_back(info);
+						reportInfo.materialsList.push_back(mat);
 					}
 				}
 			}
@@ -392,7 +419,8 @@ namespace GOTHIC_ENGINE {
 						VisualReportTextureInfo info;
 						info.FillInfo(mat);
 
-						pair->GetValue()->texturesList.push_back(info);
+						reportInfo.texturesList.push_back(info);
+						reportInfo.materialsList.push_back(mat);
 					}
 					//cmd << pModel->meshSoftSkinList[i]->subMeshList[n].material->GetObjectName() << endl;
 				}
@@ -410,7 +438,7 @@ namespace GOTHIC_ENGINE {
 				if (!pModel->nodeList[i]->nodeVisual)
 					continue;
 
-				ExtractVisualInfo(pModel->nodeList[i]->nodeVisual, pair);
+				ExtractVisualInfo(pModel->nodeList[i]->nodeVisual, reportInfo);
 			}
 		}
 	}
