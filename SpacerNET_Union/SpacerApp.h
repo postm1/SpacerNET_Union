@@ -368,7 +368,7 @@ namespace GOTHIC_ENGINE {
 		bool IsAWorldLoaded();
 		zVEC2 GetMousePosVirt();
 		void ExportWorldMesh(zSTRING worldName);
-		void FindVobsVisualsUnique(CString path);
+		void GenerateLocationReport(CString path);
 		int IsVisualInVDF(CString visualName, CString vdfName);
 		void Reset();
 		void AddVobToFavorite(zCVob* pVob);

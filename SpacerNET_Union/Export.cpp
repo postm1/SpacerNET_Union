@@ -874,7 +874,7 @@ namespace GOTHIC_ENGINE {
 
 			CString path = Stack_PeekString();
 			
-			theApp.FindVobsVisualsUnique(path);
+			theApp.GenerateLocationReport(path);
 		}
 
 

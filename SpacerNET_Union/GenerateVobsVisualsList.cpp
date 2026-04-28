@@ -9,8 +9,10 @@ namespace GOTHIC_ENGINE {
 
 	struct VisualReportTextureInfo
 	{
-		CString textureName;
-		CString textureSizeStr;
+		CString textureNameTGA;
+		CString textureNameTEX;
+
+		CString textureSizeInfoStr;
 		bool isBigTexture;
 
 		VisualReportTextureInfo::VisualReportTextureInfo()
@@ -22,45 +24,79 @@ namespace GOTHIC_ENGINE {
 		{
 			if (!mat) return;
 
-			textureName = A mat->texture->GetObjectName();
-			textureSizeStr = A GetTextureSizeInfo(mat, isBigTexture);
+			textureNameTGA = A mat->texture->GetObjectName();
+
+			// TGA -> TEX renaming
+			zSTRING temp = textureNameTGA;
+			temp = temp.Replace(".TGA", "");
+			temp += "-C";
+			temp += ".TEX";
+			textureNameTEX = A temp;
+			
+			textureSizeInfoStr = A GetTextureSizeInfo(mat, isBigTexture);
 		}
+	};
+
+	enum VisualReportFileType
+	{
+		VDF_FILE_TYPE_NOT_FOUND = 0,
+		VDF_FILE_TYPE_VDF = 1,
+		VDF_FILE_TYPE_WORK = 2,
+		VDF_FILE_TYPE_BOTH = 3,
 	};
 
 	// generates HMTL report about used models in the current location
 	struct VisualReportEntry
 	{
 		int amount;
-		bool vdf;
-		bool work;
-		bool notFound;
-		bool workOnly;
-		CString vdfOrWork;
+		VisualReportFileType foundType;
 		CString vdfName;
-		CString fileType;
+		CString visualName;
 		std::vector<VisualReportTextureInfo> texturesList;
 		zCVob* pVob;
 		int polygons;
+		bool isLocationMesh;
 
 		VisualReportEntry::VisualReportEntry()
 		{
 			amount = 0;
 			polygons = 0;
-			vdf = false;
-			work = false;
-			workOnly = false;
-			notFound = false;
+			foundType = VDF_FILE_TYPE_NOT_FOUND;
 			pVob = false;
+			isLocationMesh = false;
+		}
+
+		zSTRING GetFileTypeFound()
+		{
+			switch (foundType)
+			{
+			case VDF_FILE_TYPE_VDF:       return "VDF";
+			case VDF_FILE_TYPE_WORK:      return "_WORK";
+			case VDF_FILE_TYPE_BOTH:      return "_WORK/VDF";
+			default:                      return "NOT FOUND";
+			}
+		}
+
+		void PrintData()
+		{
+			if (isLocationMesh)
+			{
+				cmd << "[MESH]: " << " -> " << GetFileTypeFound() << " | ";
+
+				for (auto& it : texturesList)
+				{
+					cmd << it.textureNameTEX << " " << it.textureSizeInfoStr;
+				}
+
+				cmd << endl;
+			}
+			else
+			{
+				cmd << "[" << visualName << "] -> " << GetFileTypeFound() << " Amount: " << amount << " Polygons: " << polygons << endl;
+			}
+			
 		}
 	};
-
-	struct VisualReportEntryBadTexture
-	{
-		CString name;
-		int type;
-		zCArray<CString> textures;
-	};
-
 
 	struct VisualReportEntryItem
 	{
@@ -72,11 +108,60 @@ namespace GOTHIC_ENGINE {
 	};
 
 	void CreateHtmlReport(CString path);
+	void GetLocationMeshTexturesList();
+	void GatherLocationUniqVisualsList();
 
+
+	//=========================================================================
 	Common::Map<CString, VisualReportEntry*> searchVisualUniqList;
-	Common::Map<CString, VisualReportEntryBadTexture*> badTextures;
+	std::vector<VisualReportEntry> pListReport;
 
-	void SpacerApp::FindVobsVisualsUnique(CString path)
+	void SpacerApp::GenerateLocationReport(CString path)
+	{
+
+		pListReport.clear();
+		pListReport.reserve(10000);
+
+		// Gathers vobs unique visuals
+		GatherLocationUniqVisualsList();
+
+		// Gathers info from location mesh
+		GetLocationMeshTexturesList();
+
+		// Creates html report about everything
+		//CreateHtmlReport(path);
+	}
+
+	zSTRING GetRealFileName(zSTRING originVisualName)
+	{
+		zSTRING searchName = originVisualName;
+
+		if (originVisualName.EndWith(".TGA"))
+		{
+			searchName = searchName.Replace(".TGA", "");
+			searchName += "-C.TEX";
+		}
+		else if (originVisualName.EndWith(".ASC"))
+		{
+			searchName = searchName.Replace(".ASC", ".MDL");
+		}
+		else if (originVisualName.EndWith(".MDS"))
+		{
+			searchName = searchName.Replace(".MDS", ".MSB");
+		}
+		else if (originVisualName.EndWith(".MMS"))
+		{
+			searchName = searchName.Replace(".MMS", ".MMB");
+		}
+		else if (originVisualName.EndWith(".3DS"))
+		{
+			searchName = searchName.Replace(".3DS", ".MRM");
+		}
+
+		return searchName;
+	}
+
+	void GatherLocationUniqVisualsList()
 	{
 		static const zSTRING INVISIBLE_FILEPREFIX = "INVISIBLE_";
 		zCArray<zCVob*> result;
@@ -84,9 +169,9 @@ namespace GOTHIC_ENGINE {
 
 		ogame->GetWorld()->SearchVobListByBaseClass(zCVob::classDef, result, 0);
 
+		std::unordered_set<std::string> checkedVisuals;
 
-		
-
+		//Gathering vobs by its visuals
 		int num = result.GetNumInList();
 
 		for (int i = 0; i < num; i++)
@@ -97,27 +182,119 @@ namespace GOTHIC_ENGINE {
 			{
 				if (pVob->IsPFX() || dynamic_cast<zCVobLevelCompo*>(pVob)) continue;
 
-				CString key = pVob->visual->GetVisualName();
+				std::string key = pVob->visual->GetVisualName().ToChar();
 
-				auto& foundPair = searchVisualUniqList[key];
+				if (checkedVisuals.find(key) != checkedVisuals.end())
+				{
+					continue;
+				}
 
-				if (!foundPair.IsNull())
+				checkedVisuals.insert(key);
+
+				VisualReportEntry entry;
+
+
+				entry.amount = 1;
+				entry.pVob = pVob;
+				entry.visualName = A pVob->visual->GetVisualName();
+
+				zSTRING checkName = GetRealFileName(pVob->visual->GetVisualName());
+				char* checkNameReal = checkName.ToChar();
+
+				bool hasVirtual = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_VIRTUAL) & VDF_VIRTUAL) == VDF_VIRTUAL;
+				bool hasPhysical = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_PHYSICAL) & VDF_PHYSICAL) == VDF_PHYSICAL;
+
+				
+
+				entry.amount = 1;
+				entry.foundType = VDF_FILE_TYPE_NOT_FOUND;
+
+				if (hasVirtual)
 				{
-					foundPair.GetValue()->amount += 1;
+					entry.foundType = VDF_FILE_TYPE_VDF;
 				}
-				else
-				{
-					auto entry = new VisualReportEntry();
-					entry->amount = 1;
-					
-					entry->pVob = pVob;
-					searchVisualUniqList.Insert(key, entry);
-				}
+
+				if (hasPhysical)
+					entry.foundType = (entry.foundType == VDF_FILE_TYPE_VDF) ? VDF_FILE_TYPE_BOTH : VDF_FILE_TYPE_WORK;
+
+				pListReport.push_back(entry);
 			}
+		}
+	}
+
+	void GetLocationMeshTexturesList()
+	{
+		zCPolygon**& trisList = ogame->GetWorld()->bspTree.treePolyList;
+		int numPolys = ogame->GetWorld()->bspTree.numPolys;
+
+		std::unordered_set<zCMaterial*> checkedMaterials;
+		std::unordered_set<std::string> uniqueTextures;
+
+		for (int i = 0; i < numPolys; i++)
+		{
+			zCPolygon* poly = trisList[i];
+			if (poly->flags.ghostOccluder != 0) continue;
+
+			zCMaterial* mat = poly->material;
+
+			// Пропускаем если нет материала или текстуры
+			if (!mat || !mat->texture) continue;
+
+			// Проверяем не обрабатывали ли уже этот материал
+			if (checkedMaterials.find(mat) != checkedMaterials.end())
+				continue;
+
+			checkedMaterials.insert(mat);
+
+			// Получаем имя текстуры и формируем имя для проверки
+			std::string texName = A mat->texture->GetObjectName();
+
+			// Проверяем есть ли текстура вообще в uniqueTextures
+			if (uniqueTextures.find(texName) != uniqueTextures.end())
+				continue;
+
+			uniqueTextures.insert(texName);
+
+			// Формируем имя для проверки физического файла
+			zSTRING checkName = GetRealFileName(mat->texture->GetObjectName()).ToChar();
+			char* checkNameReal = checkName.ToChar();
+
+			cmd << "MeshCheckName: '" << checkName << "'" << endl;
+
+			
+
+			// Проверяем наличие текстуры
+			bool hasVirtual = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_VIRTUAL) & VDF_VIRTUAL) == VDF_VIRTUAL;
+			bool hasPhysical = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_PHYSICAL) & VDF_PHYSICAL) == VDF_PHYSICAL;
+
+			VisualReportEntry entry;
+			
+			entry.isLocationMesh = true;
+			entry.foundType = VDF_FILE_TYPE_NOT_FOUND;
+
+			if (hasVirtual)
+			{
+				entry.foundType = VDF_FILE_TYPE_VDF;
+			}
+				
+			if (hasPhysical)
+				entry.foundType = (entry.foundType == VDF_FILE_TYPE_VDF) ? VDF_FILE_TYPE_BOTH : VDF_FILE_TYPE_WORK;
+
+
+			VisualReportTextureInfo texInfo;
+			texInfo.FillInfo(mat);
+			entry.texturesList.push_back(texInfo);
+
+				
+			pListReport.push_back(entry);
 		}
 
 
-		CreateHtmlReport(path);
+		for (auto& it : pListReport)
+		{
+			it.PrintData();
+			
+		}
 	}
 
 	void ExtractVisualInfo(zCVisual* visual, Common::MapPair<Common::CString, VisualReportEntry*>* pair)
@@ -238,68 +415,7 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
-	std::vector<std::string> GetLocationMeshTexturesList()
-	{
-		zCPolygon**& trisList = ogame->GetWorld()->bspTree.treePolyList;
-		int numPolys = ogame->GetWorld()->bspTree.numPolys;
-
-		std::unordered_set<zCMaterial*> checkedMaterials;
-		std::unordered_set<std::string> uniqueTextures;
-		std::vector<std::string> result;
-
-		for (int i = 0; i < numPolys; i++)
-		{
-			zCPolygon* poly = trisList[i];
-			if (poly->flags.ghostOccluder != 0) continue;
-
-			zCMaterial* mat = poly->material;
-
-			// Пропускаем если нет материала или текстуры
-			if (!mat || !mat->texture) continue;
-
-			// Проверяем не обрабатывали ли уже этот материал
-			if (checkedMaterials.find(mat) != checkedMaterials.end())
-				continue;
-
-			checkedMaterials.insert(mat);
-
-			// Получаем имя текстуры и формируем имя для проверки
-			std::string texName = mat->texture->GetObjectName().ToChar();
-
-			// Проверяем есть ли текстура вообще в uniqueTextures
-			if (uniqueTextures.find(texName) != uniqueTextures.end())
-				continue;
-
-			// Формируем имя для проверки физического файла
-			std::string originalName = texName.substr(0, texName.length() - 4) + "-C.TEX";
-			const char* checkName = originalName.c_str();
-
-			// Проверяем наличие текстуры
-			bool hasVirtual = (vdf_fexists(const_cast<char*>(checkName), VDF_VIRTUAL) & VDF_VIRTUAL) == VDF_VIRTUAL;
-			bool hasPhysical = (vdf_fexists(const_cast<char*>(checkName), VDF_PHYSICAL) & VDF_PHYSICAL) == VDF_PHYSICAL;
-
-			// Добавляем в результат если:
-			// 1. Текстура есть только физически (hasPhysical && !hasVirtual)
-			// 2. Текстура не найдена вообще (!hasPhysical && !hasVirtual)
-			if ((hasPhysical && !hasVirtual) || (!hasPhysical && !hasVirtual))
-			{
-				uniqueTextures.insert(texName);
-				result.push_back(texName);
-
-				// Логирование для отладки
-				if (hasPhysical && !hasVirtual)
-				{
-					cmd << "PHYS only: " << texName.c_str() << endl;
-				}
-				else if (!hasPhysical && !hasVirtual)
-				{
-					cmd << "NOT FOUND: " << texName.c_str() << endl;
-				}
-			}
-		}
-
-		return result;
-	}
+#ifdef SMELALALAL
 
 	void CreateHtmlReport(CString path)
 	{
@@ -905,9 +1021,12 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size<
 		DeleteAndClearMap(searchVisualUniqList);
 		badTextures.Clear();
 
+
+		pListReport.clear();
 		outfile.close();
 	}
 
+#endif
 
 	int SpacerApp::IsVisualInVDF(CString visualName, CString vdfName)
 	{
