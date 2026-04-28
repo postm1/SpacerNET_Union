@@ -236,6 +236,13 @@ namespace GOTHIC_ENGINE {
 				entry.visualName = A pVob->visual->GetVisualName();
 
 				zSTRING checkName = GetRealFileName(pVob->visual->GetVisualName());
+
+				//FIXME ME RANDOM
+				if (rand() % 2)
+				{
+					//checkName += "ZAZA";
+				}
+
 				char* checkNameReal = checkName.ToChar();
 
 				bool hasVirtual = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_VIRTUAL) & VDF_VIRTUAL) == VDF_VIRTUAL;
@@ -497,17 +504,19 @@ namespace GOTHIC_ENGINE {
 
 		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title>\
 <style type=\"text/css\" media=\"screen\">\
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222222;padding:20px}\
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222222;padding:10px}\
 h1{font-size:24px;margin:20px 0;color:#2c3e50}\
 p{font-size:18px;margin:15px 0}\
 .page-container{max-width:1920px;margin:0 auto;width:100%}\
-table{width:100%;border-collapse:collapse;background:white;border:2px solid #444;margin:20px 0}\
-th{background:#E1E15D;color:#222;font-weight:bold;padding:10px;border:1px solid #444;text-align:left}\
-td{padding:8px;border:1px solid #444}\
+table{width:100%;border-collapse:collapse;background:white;border:2px solid #444;margin:14px 0}\
+th{background:#E1E15D;color:#222;font-weight:bold;padding:6px;border:1px solid #444;text-align:left}\
+td{padding:4px;border:1px solid #444}\
 #table_report tr:nth-child(even){background-color:#E4E4E4}\
 #table_report tr:nth-child(odd){background-color:#ffffff}\
 #table_report2 tr:nth-child(even){background-color:#E4E4E4}\
 #table_report2 tr:nth-child(odd){background-color:#ffffff}\
+#table_report3 tr:nth-child(even){background-color:#E4E4E4}\
+#table_report3 tr:nth-child(odd){background-color:#ffffff}\
 tr.warning{background-color:#e17a42!important}\
 tr.warning td{background-color:#e17a42;color:#222;border:1px solid #444}\
 tr.error{background-color:#ff4444!important}\
@@ -530,7 +539,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 
 		// WARNING VISUALS
 		outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\">\
-<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>Problem type</th></tr>";
+<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>Problem type</th></tr>";
 
 
 		for (auto& it : pListReport)
@@ -557,7 +566,6 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 					outfile << "<td>" << it.polygons << "</td>";
 				}
 				
-				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
 				outfile << "<td>" << it.GetProblemType() << "</td>";
 
 				outfile << "</tr>";
@@ -567,8 +575,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 		outfile << "</table><br>";
 
 		// WARNING MESH LOCATION
-		outfile << "<p><b>Warning location mesh</b></p><table id=\"table_report_warn2\">\
-<tr><th>Material name</th><th>Texture name TGA</th>><th>Texture name TEX</th><th>Size</th><th>_WORK/VDF</th><th>Problem type</th></tr>";
+		outfile << "<p><b>Warning location (mesh) textures table</b></p><table id=\"table_report_warn2\"><tr><th>Material name</th><th>Texture name TGA</th><th>Texture name TEX</th><th>Size</th><th>Problem type</th></tr>";
 
 
 		for (auto& it : pListReport)
@@ -597,14 +604,44 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 					outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
 				}
 
-				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
 				outfile << "<td>" << it.GetProblemType() << "</td>";
 
 				outfile << "</tr>";
 			}
 		}
 
+		outfile << "</table><br>";
 
+
+
+		// USUAL MESH LOCATION
+		outfile << "<p><b>Normal location (mesh) textures table</b></p><table id=\"table_report3\"><tr><th>Material name</th><th>Texture name TGA</th>\
+<th>Texture name TEX</th>\
+<th>Size</th><th>_WORK/VDF</th><th>VDF name</th>\
+</tr>";
+
+
+		for (auto& it : pListReport)
+		{
+			if (it.isLocationMesh && it.foundType >= VDF_FILE_TYPE_VDF) // only good textures
+			{
+				
+				outfile << "<td>" << it.materialsList[0]->GetObjectName() << "</td>";
+				outfile << "<td>" << it.texturesList[0].textureNameTGA << "</td>";
+				outfile << "<td>" << it.texturesList[0].textureNameTEX << "</td>";
+
+				outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
+				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
+				
+				outfile << "<td>" << it.vdfName << "</td>";
+
+				outfile << "</tr>";
+			}
+		}
+
+		outfile << "</table><br>";
+
+		//====================================================================================================
 		outfile << endFile;
 
 		pListReport.clear();
