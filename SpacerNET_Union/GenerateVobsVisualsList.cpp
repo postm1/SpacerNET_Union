@@ -429,7 +429,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 
 				if (foundVDF && foundWORK)
 				{
-					pair->GetValue()->vdfOrWork = "VDF & _WORK";
+					pair->GetValue()->vdfOrWork = "_WORK/VDF";
 					pair->GetValue()->vdf = true;
 					pair->GetValue()->work = true;
 					pair->GetValue()->workOnly = false;
