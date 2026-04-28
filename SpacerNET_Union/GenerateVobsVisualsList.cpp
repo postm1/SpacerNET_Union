@@ -44,8 +44,8 @@ namespace GOTHIC_ENGINE {
 	enum VisualReportFileType
 	{
 		VDF_FILE_TYPE_NOT_FOUND = 0,
-		VDF_FILE_TYPE_VDF = 1,
-		VDF_FILE_TYPE_WORK = 2,
+		VDF_FILE_TYPE_WORK = 1,
+		VDF_FILE_TYPE_VDF = 2,
 		VDF_FILE_TYPE_BOTH = 3,
 	};
 
@@ -69,6 +69,7 @@ namespace GOTHIC_ENGINE {
 			foundType = VDF_FILE_TYPE_NOT_FOUND;
 			pVob = false;
 			isLocationMesh = false;
+			vdfName = "-";
 		}
 
 		zSTRING GetFileTypeFound()
@@ -82,6 +83,17 @@ namespace GOTHIC_ENGINE {
 			}
 		}
 
+
+		zSTRING GetProblemType()
+		{
+			switch (foundType)
+			{
+			case VDF_FILE_TYPE_VDF:       return "-";
+			case VDF_FILE_TYPE_WORK:      return "FILE ONLY IN _WORK";
+			default:                      return "FILE NOT FOUND";
+			}
+		}
+		
 		void PrintData()
 		{
 			if (isLocationMesh)
@@ -127,7 +139,6 @@ namespace GOTHIC_ENGINE {
 
 
 	//=========================================================================
-	Common::Map<CString, VisualReportEntry*> searchVisualUniqList;
 	std::vector<VisualReportEntry> pListReport;
 
 	void SpacerApp::GenerateLocationReport(CString path)
@@ -143,7 +154,7 @@ namespace GOTHIC_ENGINE {
 		GetLocationMeshTexturesList();
 
 		// Creates html report about everything
-		//CreateHtmlReport(path);
+		CreateHtmlReport(path);
 	}
 
 	zSTRING GetRealFileName(zSTRING originVisualName)
@@ -197,6 +208,13 @@ namespace GOTHIC_ENGINE {
 				if (pVob->IsPFX() || dynamic_cast<zCVobLevelCompo*>(pVob)) continue;
 
 				std::string visualName = pVob->visual->GetVisualName().ToChar();
+				CString checkNameEmpty = pVob->visual->GetVisualName();
+
+				if (checkNameEmpty.Length() == 0 || checkNameEmpty == ' ' || checkNameEmpty.Shrink().Length() == 0)
+				{
+					continue;
+				}
+
 
 				auto it = visualMap.find(visualName);
 
@@ -205,6 +223,9 @@ namespace GOTHIC_ENGINE {
 					it->second.amount++;
 					continue;
 				}
+
+
+				
 
 
 				VisualReportEntry entry;
@@ -226,6 +247,16 @@ namespace GOTHIC_ENGINE {
 				if (hasVirtual)
 				{
 					entry.foundType = VDF_FILE_TYPE_VDF;
+
+					char* volumeNamePtr = NULL;
+
+					long length = vdf_getvolumename(checkNameReal, volumeNamePtr);
+
+					if (volumeNamePtr && length > 0)
+					{
+						entry.vdfName = A volumeNamePtr;
+						delete[] volumeNamePtr;
+					}
 				}
 
 				if (hasPhysical)
@@ -287,7 +318,13 @@ namespace GOTHIC_ENGINE {
 
 			//cmd << "MeshCheckName: '" << checkName << "'" << endl;
 
-			
+
+			CString checkNameEmpty = checkName;
+
+			if (checkNameEmpty.Length() == 0 || checkNameEmpty == ' ' || checkNameEmpty.Shrink().Length() == 0)
+			{
+				continue;
+			}
 
 			// Проверяем наличие текстуры
 			bool hasVirtual = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_VIRTUAL) & VDF_VIRTUAL) == VDF_VIRTUAL;
@@ -301,6 +338,18 @@ namespace GOTHIC_ENGINE {
 			if (hasVirtual)
 			{
 				entry.foundType = VDF_FILE_TYPE_VDF;
+
+
+				char* volumeNamePtr = NULL;
+
+				long length = vdf_getvolumename(checkNameReal, volumeNamePtr);
+
+				if (volumeNamePtr && length > 0)
+				{
+					entry.vdfName = A volumeNamePtr;
+					delete[] volumeNamePtr;
+				}
+			
 			}
 				
 			if (hasPhysical)
@@ -441,6 +490,84 @@ namespace GOTHIC_ENGINE {
 				ExtractVisualInfo(pModel->nodeList[i]->nodeVisual, reportInfo);
 			}
 		}
+	}
+
+	void CreateHtmlReport(CString path)
+	{
+
+		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title>\
+<style type=\"text/css\" media=\"screen\">\
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222222;padding:20px}\
+h1{font-size:24px;margin:20px 0;color:#2c3e50}\
+p{font-size:18px;margin:15px 0}\
+.page-container{max-width:1920px;margin:0 auto;width:100%}\
+table{width:100%;border-collapse:collapse;background:white;border:2px solid #444;margin:20px 0}\
+th{background:#E1E15D;color:#222;font-weight:bold;padding:10px;border:1px solid #444;text-align:left}\
+td{padding:8px;border:1px solid #444}\
+#table_report tr:nth-child(even){background-color:#E4E4E4}\
+#table_report tr:nth-child(odd){background-color:#ffffff}\
+tr.warning{background-color:#e17a42!important}\
+tr.warning td{background-color:#e17a42;color:#222;border:1px solid #444}\
+tr.error{background-color:#ff4444!important}\
+tr.error td{background-color:#ff4444;color:#222;border:1px solid #444}\
+.texture_word_orange{color:#FF6E00;font-weight:bold}\
+.texture_word_red{color:#FF001E;font-weight:bold}\
+td.high-poly{color:#FD7228;font-weight:bold}\
+.report-time{background:#2897FF;padding:15px;border:2px solid #444444;margin:20px 0;color:white;font-size:22px;font-weight:bold;text-align:center}\
+</style></head><body>";
+
+		const CString endFile = "</div></body></html>";
+
+		std::ofstream outfile;
+		outfile.open(path, std::ios_base::trunc);
+
+
+		outfile << header;
+
+		outfile << "<div class=\"page-container\"><div class = \"report-time\">Report generated: " + GetTimeForReport() + "</div>";
+
+		// WARNING VISUALS
+		outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\">\
+<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>Problem type</th></tr>";
+
+
+		for (auto& it : pListReport)
+		{
+			if (!it.isLocationMesh && it.foundType <= VDF_FILE_TYPE_WORK) // not found OR only in WORK
+			{
+				if (it.foundType == VDF_FILE_TYPE_NOT_FOUND)
+				{
+					outfile << "<tr class=\"error\">";
+				}
+				else
+				{
+					outfile << "<tr class=\"warning\">";
+				}
+		
+				outfile << "<td>" << it.visualName.Upper() << "</td>";
+				outfile << "<td>" << it.amount << "</td>";
+
+				if (it.polygons >= 2000) 
+				{
+					outfile << "<td class='high-poly'>" << it.polygons << "</td>";
+				}
+				else {
+					outfile << "<td>" << it.polygons << "</td>";
+				}
+				
+				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
+				outfile << "<td>" << it.vdfName << "</td>";
+				outfile << "<td>" << it.GetProblemType() << "</td>";
+
+				outfile << "</tr>";
+			}
+		}
+
+		outfile << endFile;
+
+		pListReport.clear();
+		outfile.close();
+
 	}
 
 #ifdef SMELALALAL
