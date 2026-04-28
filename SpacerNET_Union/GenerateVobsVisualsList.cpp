@@ -207,6 +207,11 @@ namespace GOTHIC_ENGINE {
 			{
 				if (pVob->IsPFX() || dynamic_cast<zCVobLevelCompo*>(pVob)) continue;
 
+				if (IsSpacerVob(pVob))
+				{
+					continue;
+				}
+
 				std::string visualName = pVob->visual->GetVisualName().ToChar();
 				CString checkNameEmpty = pVob->visual->GetVisualName();
 
@@ -214,6 +219,8 @@ namespace GOTHIC_ENGINE {
 				{
 					continue;
 				}
+
+				
 
 
 				auto it = visualMap.find(visualName);
@@ -237,12 +244,6 @@ namespace GOTHIC_ENGINE {
 
 				zSTRING checkName = GetRealFileName(pVob->visual->GetVisualName());
 
-				//FIXME ME RANDOM
-				if (rand() % 2)
-				{
-					//checkName += "ZAZA";
-				}
-
 				char* checkNameReal = checkName.ToChar();
 
 				bool hasVirtual = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_VIRTUAL) & VDF_VIRTUAL) == VDF_VIRTUAL;
@@ -263,6 +264,11 @@ namespace GOTHIC_ENGINE {
 					{
 						entry.vdfName = A volumeNamePtr;
 						delete[] volumeNamePtr;
+					}
+
+					if (entry.vdfName == "SpacerNET.mod")
+					{
+						continue;
 					}
 				}
 
@@ -356,6 +362,11 @@ namespace GOTHIC_ENGINE {
 					entry.vdfName = A volumeNamePtr;
 					delete[] volumeNamePtr;
 				}
+
+				if (entry.vdfName == "SpacerNET.mod")
+				{
+					continue;
+				}
 			
 			}
 				
@@ -374,11 +385,13 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+		/*
 		for (auto& it : pListReport)
 		{
 			it.PrintData();
 			
 		}
+		*/
 	}
 
 	void ExtractVisualInfo(zCVisual* visual, VisualReportEntry& reportInfo)
@@ -612,10 +625,41 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 
 		outfile << "</table><br>";
 
+		// USUAL VOBS
 
+		outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_visuals\">\
+<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th>";
+
+
+		for (auto& it : pListReport)
+		{
+			if (!it.isLocationMesh && it.foundType >= VDF_FILE_TYPE_VDF) // only good visuals
+			{
+				outfile << "<tr>";
+				outfile << "<td>" << it.visualName << "</td>";
+				outfile << "<td>" << it.amount << "</td>";
+				outfile << "<td>" << it.polygons << "</td>";
+				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
+				outfile << "<td>" << it.vdfName << "</td>";
+
+				/*
+				outfile << "<td>" << it.materialsList[0]->GetObjectName() << "</td>";
+				outfile << "<td>" << it.texturesList[0].textureNameTGA << "</td>";
+				outfile << "<td>" << it.texturesList[0].textureNameTEX << "</td>";
+
+				outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
+				*/
+
+				
+
+				outfile << "</tr>";
+			}
+		}
+
+		outfile << "</table><br>";
 
 		// USUAL MESH LOCATION
-		outfile << "<p><b>Normal location (mesh) textures table</b></p><table id=\"table_report3\"><tr><th>Material name</th><th>Texture name TGA</th>\
+		outfile << "<p><b>Normal location (mesh) textures table</b></p><table id=\"table_report_mesh\"><tr><th>Material name</th><th>Texture name TGA</th>\
 <th>Texture name TEX</th>\
 <th>Size</th><th>_WORK/VDF</th><th>VDF name</th>\
 </tr>";
