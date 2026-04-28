@@ -506,6 +506,8 @@ th{background:#E1E15D;color:#222;font-weight:bold;padding:10px;border:1px solid 
 td{padding:8px;border:1px solid #444}\
 #table_report tr:nth-child(even){background-color:#E4E4E4}\
 #table_report tr:nth-child(odd){background-color:#ffffff}\
+#table_report2 tr:nth-child(even){background-color:#E4E4E4}\
+#table_report2 tr:nth-child(odd){background-color:#ffffff}\
 tr.warning{background-color:#e17a42!important}\
 tr.warning td{background-color:#e17a42;color:#222;border:1px solid #444}\
 tr.error{background-color:#ff4444!important}\
@@ -528,7 +530,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 
 		// WARNING VISUALS
 		outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\">\
-<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>Problem type</th></tr>";
+<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>Problem type</th></tr>";
 
 
 		for (auto& it : pListReport)
@@ -556,12 +558,52 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 				}
 				
 				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
-				outfile << "<td>" << it.vdfName << "</td>";
 				outfile << "<td>" << it.GetProblemType() << "</td>";
 
 				outfile << "</tr>";
 			}
 		}
+
+		outfile << "</table><br>";
+
+		// WARNING MESH LOCATION
+		outfile << "<p><b>Warning location mesh</b></p><table id=\"table_report_warn2\">\
+<tr><th>Material name</th><th>Texture name TGA</th>><th>Texture name TEX</th><th>Size</th><th>_WORK/VDF</th><th>Problem type</th></tr>";
+
+
+		for (auto& it : pListReport)
+		{
+			if (it.isLocationMesh && it.foundType <= VDF_FILE_TYPE_WORK) // not found OR only in WORK
+			{
+				if (it.foundType == VDF_FILE_TYPE_NOT_FOUND)
+				{
+					outfile << "<tr class=\"error\">";
+				}
+				else
+				{
+					outfile << "<tr class=\"warning\">";
+				}
+
+				outfile << "<td>" << it.materialsList[0]->GetObjectName() << "</td>";
+				outfile << "<td>" << it.texturesList[0].textureNameTGA << "</td>";
+				outfile << "<td>" << it.texturesList[0].textureNameTEX << "</td>";
+
+				if (it.foundType == VDF_FILE_TYPE_NOT_FOUND)
+				{
+					outfile << "<td>-</td>";
+				}
+				else
+				{
+					outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
+				}
+
+				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
+				outfile << "<td>" << it.GetProblemType() << "</td>";
+
+				outfile << "</tr>";
+			}
+		}
+
 
 		outfile << endFile;
 
