@@ -524,12 +524,8 @@ p{font-size:18px;margin:15px 0}\
 table{width:100%;border-collapse:collapse;background:white;border:2px solid #444;margin:14px 0}\
 th{background:#E1E15D;color:#222;font-weight:bold;padding:6px;border:1px solid #444;text-align:left}\
 td{padding:4px;border:1px solid #444}\
-#table_report tr:nth-child(even){background-color:#E4E4E4}\
-#table_report tr:nth-child(odd){background-color:#ffffff}\
-#table_report2 tr:nth-child(even){background-color:#E4E4E4}\
-#table_report2 tr:nth-child(odd){background-color:#ffffff}\
-#table_report3 tr:nth-child(even){background-color:#E4E4E4}\
-#table_report3 tr:nth-child(odd){background-color:#ffffff}\
+.table_report tr:nth-child(even){background-color:#E4E4E4}\
+.table_report tr:nth-child(odd){background-color:#ffffff}\
 tr.warning{background-color:#e17a42!important}\
 tr.warning td{background-color:#e17a42;color:#222;border:1px solid #444}\
 tr.error{background-color:#ff4444!important}\
@@ -551,7 +547,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 		outfile << "<div class=\"page-container\"><div class = \"report-time\">Report generated: " + GetTimeForReport() + "</div>";
 
 		// WARNING VISUALS
-		outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\">\
+		outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\" class=\"table_report\">\
 <tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>Problem type</th></tr>";
 
 
@@ -588,7 +584,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 		outfile << "</table><br>";
 
 		// WARNING MESH LOCATION
-		outfile << "<p><b>Warning location (mesh) textures table</b></p><table id=\"table_report_warn2\"><tr><th>Material name</th><th>Texture name TGA</th><th>Texture name TEX</th><th>Size</th><th>Problem type</th></tr>";
+		outfile << "<p><b>Warning location (mesh) textures table</b></p><table id=\"table_report_mesh_warn\" class=\"table_report\"><tr><th>Material name</th><th>Texture name TGA</th><th>Texture name TEX</th><th>Size</th><th>Problem type</th></tr>";
 
 
 		for (auto& it : pListReport)
@@ -627,8 +623,8 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 
 		// USUAL VOBS
 
-		outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_visuals\">\
-<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th>";
+		outfile << "<p><b>Usual visuals table</b></p><table id=\"table_report_visuals\" class=\"table_report\">\
+<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>Material|Texture|Size</th>";
 
 
 		for (auto& it : pListReport)
@@ -638,7 +634,15 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 				outfile << "<tr>";
 				outfile << "<td>" << it.visualName << "</td>";
 				outfile << "<td>" << it.amount << "</td>";
-				outfile << "<td>" << it.polygons << "</td>";
+
+				if (it.polygons >= 3000)
+				{
+					outfile << "<td class='high-poly'>" << it.polygons << "</td>";
+				}
+				else {
+					outfile << "<td>" << it.polygons << "</td>";
+				}
+
 				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
 				outfile << "<td>" << it.vdfName << "</td>";
 
@@ -650,16 +654,58 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 				outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
 				*/
 
+				int count = it.texturesList.size();
+
+				outfile << "<td>";
+
+				for (int i = 0; i < count; i++)
+				{
+					auto& entry = it.texturesList[i];
+
+					if (entry.material)
+					{
+						if (entry.isBigTexture)
+						{
+							outfile << entry.material->GetObjectName()
+								<< " | "
+								<< entry.textureNameTGA
+								<< " | <span style='color:#E5044F; font-weight:bold;'>"
+								<< entry.textureSizeInfoStr
+								<< "</span>"
+								;
+						}
+						else
+						{
+							outfile << entry.material->GetObjectName()
+								<< " | "
+								<< entry.textureNameTGA
+								<< " | "
+								<< entry.textureSizeInfoStr
+								;
+						}
+						
+					}
+
+					if (count > 1)
+					{
+						outfile << "<br>";
+					}
+				}
+
+
+
+				outfile << "</td></tr>";
 				
 
-				outfile << "</tr>";
+				
 			}
 		}
 
 		outfile << "</table><br>";
 
+
 		// USUAL MESH LOCATION
-		outfile << "<p><b>Normal location (mesh) textures table</b></p><table id=\"table_report_mesh\"><tr><th>Material name</th><th>Texture name TGA</th>\
+		outfile << "<p><b>Normal location (mesh) textures table</b></p><table id=\"table_report_mesh\" class=\"table_report\"><tr><th>Material name</th><th>Texture name TGA</th>\
 <th>Texture name TEX</th>\
 <th>Size</th><th>_WORK/VDF</th><th>VDF name</th>\
 </tr>";
@@ -669,14 +715,28 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 		{
 			if (it.isLocationMesh && it.foundType >= VDF_FILE_TYPE_VDF) // only good textures
 			{
-				
+
 				outfile << "<td>" << it.materialsList[0]->GetObjectName() << "</td>";
 				outfile << "<td>" << it.texturesList[0].textureNameTGA << "</td>";
 				outfile << "<td>" << it.texturesList[0].textureNameTEX << "</td>";
 
-				outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
-				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
+
+				if (it.texturesList[0].isBigTexture)
+				{
+					outfile 
+						<< "<td><span style='color:#E5044F; font-weight:bold;'>"
+						<< it.texturesList[0].textureSizeInfoStr
+						<< "</span>"
+						;
+				}
+				else
+				{
+					outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
+				}
+
 				
+				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
+
 				outfile << "<td>" << it.vdfName << "</td>";
 
 				outfile << "</tr>";
