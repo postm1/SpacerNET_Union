@@ -532,7 +532,7 @@ tr.error{background-color:#ff4444!important}\
 tr.error td{background-color:#ff4444;color:#222;border:1px solid #444}\
 .texture_word_orange{color:#FF6E00;font-weight:bold}\
 .texture_word_red{color:#FF001E;font-weight:bold}\
-td.high-poly{color:#FD7228;font-weight:bold}\
+td.high-poly{color:#E5044F;font-weight:bold}\
 .report-time{background:#2897FF;padding:15px;border:2px solid #444444;margin:20px 0;color:white;font-size:22px;font-weight:bold;text-align:center}\
 </style></head><body>";
 
@@ -624,7 +624,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 		// USUAL VOBS
 
 		outfile << "<p><b>Usual visuals table</b></p><table id=\"table_report_visuals\" class=\"table_report\">\
-<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>Material|Texture|Size</th>";
+<tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>Material | Texture | Size</th>";
 
 
 		for (auto& it : pListReport)
