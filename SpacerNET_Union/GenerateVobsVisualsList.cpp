@@ -7,6 +7,26 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
+	struct VisualReportTextureInfo
+	{
+		CString textureName;
+		CString textureSizeStr;
+		bool isBigTexture;
+
+		VisualReportTextureInfo::VisualReportTextureInfo()
+		{
+			isBigTexture = false;
+		}
+
+		void FillInfo(zCMaterial* mat)
+		{
+			if (!mat) return;
+
+			textureName = A mat->texture->GetObjectName();
+			textureSizeStr = A GetTextureSizeInfo(mat, isBigTexture);
+		}
+	};
+
 	// generates HMTL report about used models in the current location
 	struct VisualReportEntry
 	{
@@ -18,8 +38,7 @@ namespace GOTHIC_ENGINE {
 		CString vdfOrWork;
 		CString vdfName;
 		CString fileType;
-		zCArray<CString> texturesNames;
-		zCArray<CString> texturesSizes;
+		std::vector<VisualReportTextureInfo> texturesList;
 		zCVob* pVob;
 		int polygons;
 
@@ -120,10 +139,10 @@ namespace GOTHIC_ENGINE {
 
 			if (mat && mat->texture)
 			{
-				pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
-				pair->GetValue()->texturesSizes.InsertEnd(GetTextureSizeInfo(mat));
+				VisualReportTextureInfo info;
+				info.FillInfo(mat);
 
-				
+				pair->GetValue()->texturesList.push_back(info);
 				pair->GetValue()->polygons = 2;
 			}
 		}
@@ -143,9 +162,10 @@ namespace GOTHIC_ENGINE {
 				if (mat && mat->texture)
 				{
 					//cmd << mat->texture->GetObjectName() << endl;
-					pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+					VisualReportTextureInfo info;
+					info.FillInfo(mat);
 
-					pair->GetValue()->texturesSizes.InsertEnd(GetTextureSizeInfo(mat));
+					pair->GetValue()->texturesList.push_back(info);
 				}
 			}
 
@@ -166,9 +186,10 @@ namespace GOTHIC_ENGINE {
 
 					if (mat && mat->texture)
 					{
-						pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+						VisualReportTextureInfo info;
+						info.FillInfo(mat);
 
-						pair->GetValue()->texturesSizes.InsertEnd(GetTextureSizeInfo(mat));
+						pair->GetValue()->texturesList.push_back(info);
 					}
 				}
 			}
@@ -191,9 +212,10 @@ namespace GOTHIC_ENGINE {
 
 					if (mat && mat->texture)
 					{
-						pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+						VisualReportTextureInfo info;
+						info.FillInfo(mat);
 
-						pair->GetValue()->texturesSizes.InsertEnd(GetTextureSizeInfo(mat));
+						pair->GetValue()->texturesList.push_back(info);
 					}
 					//cmd << pModel->meshSoftSkinList[i]->subMeshList[n].material->GetObjectName() << endl;
 				}
@@ -591,10 +613,9 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 
 			if (!pair->IsNull() && pair->GetValue()->pVob)
 			{
-				
-				for (int k = 0; k < pair->GetValue()->texturesNames.GetNumInList(); k++)
+				for (auto& pInfo : pair->GetValue()->texturesList)
 				{
-					auto nameTexture = pair->GetValue()->texturesNames.GetSafe(k);
+					auto nameTexture = pInfo.textureName;
 					auto originalName = nameTexture;
 
 					nameTexture = nameTexture.Replace(".TGA", "");
@@ -708,9 +729,9 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size<
 				{
 					outfile << "<td>";
 
-					for (int k = 0; k < pair->GetValue()->texturesNames.GetNumInList(); k++)
+					for (auto& pInfo : pair->GetValue()->texturesList)
 					{
-						auto nameTexture = pair->GetValue()->texturesNames.GetSafe(k);
+						auto nameTexture = pInfo.textureName;
 						auto originalName = nameTexture;
 
 
@@ -727,9 +748,9 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size<
 
 					outfile << "<td>";
 
-					for (int k = 0; k < pair->GetValue()->texturesNames.GetNumInList(); k++)
+					for (auto& pInfo : pair->GetValue()->texturesList)
 					{
-						auto nameTexture = pair->GetValue()->texturesNames.GetSafe(k);
+						auto nameTexture = pInfo.textureName;
 						auto originalName = nameTexture;
 						
 
@@ -742,12 +763,17 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size<
 
 					outfile << "<td>";
 
-					for (int k = 0; k < pair->GetValue()->texturesSizes.GetNumInList(); k++)
+					for (auto& pInfo : pair->GetValue()->texturesList)
 					{
-						auto pPixelSize = pair->GetValue()->texturesSizes.GetSafe(k);
-
-
-						outfile << pPixelSize << "<br>";
+						if (pInfo.isBigTexture)
+						{
+							outfile << "<span style='color:#E5044F; font-weight:bold;'>" << pInfo.textureSizeStr << "</span><br>";
+						}
+						else
+						{
+							outfile << pInfo.textureSizeStr << "<br>";
+						}
+						
 					}
 
 					outfile << "</td>";

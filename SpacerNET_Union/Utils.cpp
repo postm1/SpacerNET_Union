@@ -1921,15 +1921,24 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	zSTRING GetTextureSizeInfo(zCMaterial* mat)
+	zSTRING GetTextureSizeInfo(zCMaterial* mat, bool& bigtexture)
 	{
 		zSTRING sPixelsInfo;
 
 		if (mat && mat->texture)
 		{
-			sPixelsInfo = Z mat->texture->GetTextureInfo().sizeX
-				+ "x" + Z mat->texture->GetTextureInfo().sizeY
+			int sizeX = mat->texture->GetTextureInfo().sizeX;
+			int sizeY = mat->texture->GetTextureInfo().sizeY;
+
+
+			sPixelsInfo = Z sizeX
+				+ "x" + Z sizeY
 				;
+
+			if (sizeX > 1024 || sizeY > 1024)
+			{
+				bigtexture = true;
+			}
 		}
 
 		return sPixelsInfo;
