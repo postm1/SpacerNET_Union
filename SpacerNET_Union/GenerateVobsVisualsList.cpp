@@ -19,6 +19,7 @@ namespace GOTHIC_ENGINE {
 		CString vdfName;
 		CString fileType;
 		zCArray<CString> texturesNames;
+		zCArray<CString> texturesSizes;
 		zCVob* pVob;
 		int polygons;
 
@@ -120,6 +121,9 @@ namespace GOTHIC_ENGINE {
 			if (mat && mat->texture)
 			{
 				pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+				pair->GetValue()->texturesSizes.InsertEnd(GetTextureSizeInfo(mat));
+
+				
 				pair->GetValue()->polygons = 2;
 			}
 		}
@@ -140,6 +144,8 @@ namespace GOTHIC_ENGINE {
 				{
 					//cmd << mat->texture->GetObjectName() << endl;
 					pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+
+					pair->GetValue()->texturesSizes.InsertEnd(GetTextureSizeInfo(mat));
 				}
 			}
 
@@ -161,6 +167,8 @@ namespace GOTHIC_ENGINE {
 					if (mat && mat->texture)
 					{
 						pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+
+						pair->GetValue()->texturesSizes.InsertEnd(GetTextureSizeInfo(mat));
 					}
 				}
 			}
@@ -184,6 +192,8 @@ namespace GOTHIC_ENGINE {
 					if (mat && mat->texture)
 					{
 						pair->GetValue()->texturesNames.InsertEnd(mat->texture->GetObjectName());
+
+						pair->GetValue()->texturesSizes.InsertEnd(GetTextureSizeInfo(mat));
 					}
 					//cmd << pModel->meshSoftSkinList[i]->subMeshList[n].material->GetObjectName() << endl;
 				}
@@ -277,7 +287,7 @@ namespace GOTHIC_ENGINE {
 body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222222;padding:20px}\
 h1{font-size:24px;margin:20px 0;color:#2c3e50}\
 p{font-size:18px;margin:15px 0}\
-.page-container{max-width:1900px;margin:0 auto;width:100%}\
+.page-container{max-width:1920px;margin:0 auto;width:100%}\
 table{width:100%;border-collapse:collapse;background:white;border:2px solid #444;margin:20px 0}\
 th{background:#E1E15D;color:#222;font-weight:bold;padding:10px;border:1px solid #444;text-align:left}\
 td{padding:8px;border:1px solid #444}\
@@ -658,7 +668,7 @@ td.high-poly{color:#FD7228;font-weight:bold}\
 		
 		//=====================================================================
 		outfile << "<p><b>Normal visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>\
-VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
+VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size</th></tr>";
 
 		for (uint i = 0; i < arr.GetNum(); i++)
 		{
@@ -703,6 +713,7 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 						auto nameTexture = pair->GetValue()->texturesNames.GetSafe(k);
 						auto originalName = nameTexture;
 
+
 						nameTexture = nameTexture.Replace(".TGA", "");
 						nameTexture += "-C";
 						nameTexture += ".TEX";
@@ -720,6 +731,7 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 					{
 						auto nameTexture = pair->GetValue()->texturesNames.GetSafe(k);
 						auto originalName = nameTexture;
+						
 
 						outfile << nameTexture << "<br>";
 
@@ -727,10 +739,22 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th></tr>";
 					}
 
 					outfile << "</td>";
+
+					outfile << "<td>";
+
+					for (int k = 0; k < pair->GetValue()->texturesSizes.GetNumInList(); k++)
+					{
+						auto pPixelSize = pair->GetValue()->texturesSizes.GetSafe(k);
+
+
+						outfile << pPixelSize << "<br>";
+					}
+
+					outfile << "</td>";
 				}
 				else
 				{
-					outfile << "<td></td><td></td>";
+					outfile << "<td></td><td></td><td></td>";
 				}
 				
 

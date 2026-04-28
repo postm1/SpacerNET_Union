@@ -246,7 +246,7 @@ namespace GOTHIC_ENGINE {
 			FillBlack_ArrPixels(entry->pixels);
 			// устанавливаем новый формат расположения пикселей текстуры
 			texInfo.texFormat = zRND_TEX_FORMAT_RGB_565;
-			entry->bit = 24;
+			entry->bit = 16;
 			entry->hasAlpha = 0;
 			break;
 		}

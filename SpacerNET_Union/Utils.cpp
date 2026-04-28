@@ -1919,5 +1919,23 @@ namespace GOTHIC_ENGINE {
 
 		return reportTime;
 	}
+
+
+	zSTRING GetTextureSizeInfo(zCMaterial* mat)
+	{
+		zSTRING sPixelsInfo;
+
+		if (mat && mat->texture)
+		{
+			sPixelsInfo = Z mat->texture->GetTextureInfo().sizeX
+				+ "x" + Z mat->texture->GetTextureInfo().sizeY
+				;
+		}
+
+		return sPixelsInfo;
+	}
+
+
+	
 }
 
