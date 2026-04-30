@@ -534,6 +534,7 @@ tr.error td{background-color:#ff4444;color:#222;border:1px solid #444}\
 .texture_word_red{color:#FF001E;font-weight:bold}\
 td.high-poly{color:#E5044F;font-weight:bold}\
 .report-time{background:#2897FF;padding:15px;border:2px solid #444444;margin:20px 0;color:white;font-size:22px;font-weight:bold;text-align:center}\
+.tabs{width:100%;margin-top:10px}.tabs input{display:none}.tabs-labels{display:flex;flex-wrap:wrap;border-bottom:2px solid #444;margin-bottom:10px}.tabs-labels label{padding:10px 15px;cursor:pointer;background:#ddd;border:1px solid #444;border-bottom:none;margin-right:5px;font-weight:700}.tabs-labels label:hover{background:#ccc}.tab{display:none;background:#fff;padding:10px;border:2px solid #444}#tab1:checked~.tabs-labels label[for=tab1],#tab2:checked~.tabs-labels label[for=tab2],#tab3:checked~.tabs-labels label[for=tab3],#tab4:checked~.tabs-labels label[for=tab4],#tab5:checked~.tabs-labels label[for=tab5]{background:#fff;border-bottom:2px solid #fff;text-decoration:underline}#tab1:checked~#content1,#tab2:checked~#content2,#tab3:checked~#content3,#tab4:checked~#content4,#tab5:checked~#content5{display:block}\
 </style></head><body>";
 
 		const CString endFile = "</div></body></html>";
@@ -545,6 +546,27 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 		outfile << header;
 
 		outfile << "<div class=\"page-container\"><div class = \"report-time\">Report generated: " + GetTimeForReport() + "</div>";
+
+		outfile << R"(
+<div class="tabs">
+
+<input type="radio" name="tabs" id="tab1" checked>
+<input type="radio" name="tabs" id="tab2">
+<input type="radio" name="tabs" id="tab3">
+<input type="radio" name="tabs" id="tab4">
+<input type="radio" name="tabs" id="tab5">
+
+<div class="tabs-labels">
+<label for="tab1">Warnings (Visuals)</label>
+<label for="tab2">Warnings (Textures)</label>
+<label for="tab3">Visuals</label>
+<label for="tab4">Location mesh</label>
+<label for="tab5">Items</label>
+</div>
+)";
+
+
+		outfile << "<div class='tab' id='content1'>";
 
 		// WARNING VISUALS
 		outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\" class=\"table_report\">\
@@ -581,8 +603,10 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 			}
 		}
 
-		outfile << "</table><br>";
+		outfile << "</table>";
+		outfile << "</div>";
 
+		outfile << "<div class='tab' id='content2'>";
 		// WARNING MESH LOCATION
 		outfile << "<p><b>Warning location (mesh) textures table</b></p><table id=\"table_report_mesh_warn\" class=\"table_report\"><tr><th>Material name</th><th>Texture name TGA</th><th>Texture name TEX</th><th>Size</th><th>Problem type</th></tr>";
 
@@ -619,10 +643,11 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 			}
 		}
 
-		outfile << "</table><br>";
-
+		outfile << "</table>";
+		outfile << "</div>";
 		// USUAL VOBS
 
+		outfile << "<div class='tab' id='content3'>";
 		outfile << "<p><b>Usual visuals table</b></p><table id=\"table_report_visuals\" class=\"table_report\">\
 <tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>Material | Texture | Size</th>";
 
@@ -720,9 +745,12 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 			}
 		}
 
-		outfile << "</table><br>";
+
+		outfile << "</table>";
+		outfile << "</div>";
 
 
+		outfile << "<div class='tab' id='content4'>";
 		// USUAL MESH LOCATION
 		outfile << "<p><b>Normal location (mesh) textures table</b></p><table id=\"table_report_mesh\" class=\"table_report\"><tr><th>Material name</th><th>Texture name TGA</th>\
 <th>Texture name TEX</th>\
@@ -782,8 +810,8 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 			}
 		}
 
-		outfile << "</table><br>";
-
+		outfile << "</table>";
+		outfile << "</div>";
 
 		//=============================================================================================
 		zCArray<zCVob*> resultArray;
@@ -852,6 +880,7 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 			}
 		}
 
+		outfile << "<div class='tab' id='content5'>";
 		outfile << "<p><b>Items table</b></p><table id=\"table_report_items\" class=\"table_report\"><tr><th>Item instance</th><th>Coords</th><th>In container</th></tr>";
 
 		for (int i = 0; i < searchItems.GetNum(); i++)
@@ -886,8 +915,8 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 			}
 		}
 
-		outfile << "</table><br>";
-
+		outfile << "</table>";
+		outfile << "</div>";
 
 		searchItems.DeleteListDatas();
 
