@@ -563,18 +563,18 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 				{
 					outfile << "<tr class=\"warning\">";
 				}
-		
+
 				outfile << "<td>" << it.visualName.Upper() << "</td>";
 				outfile << "<td>" << it.amount << "</td>";
 
-				if (it.polygons >= 2000) 
+				if (it.polygons >= 2000)
 				{
 					outfile << "<td class='high-poly'>" << it.polygons << "</td>";
 				}
 				else {
 					outfile << "<td>" << it.polygons << "</td>";
 				}
-				
+
 				outfile << "<td>" << it.GetProblemType() << "</td>";
 
 				outfile << "</tr>";
@@ -702,7 +702,7 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 								<< entry.textureSizeInfoStr
 								;
 						}
-						
+
 					}
 
 					if (count > 1)
@@ -714,9 +714,9 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 
 
 				outfile << "</td></tr>";
-				
 
-				
+
+
 			}
 		}
 
@@ -762,7 +762,7 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 
 				if (it->texturesList[0].isBigTexture)
 				{
-					outfile 
+					outfile
 						<< "<td><span style='color:#E5044F; font-weight:bold;'>"
 						<< it->texturesList[0].textureSizeInfoStr
 						<< "</span>"
@@ -773,7 +773,7 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 					outfile << "<td>" << it->texturesList[0].textureSizeInfoStr << "</td>";
 				}
 
-				
+
 				outfile << "<td>" << it->GetFileTypeFound() << "</td>";
 
 				outfile << "<td>" << it->vdfName << "</td>";
@@ -784,509 +784,8 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 
 		outfile << "</table><br>";
 
-		//====================================================================================================
-		outfile << endFile;
 
-		pListReport.clear();
-		outfile.close();
-
-	}
-
-#ifdef SMELALALAL
-
-	void CreateHtmlReport(CString path)
-	{
-
-		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title>\
-<style type=\"text/css\" media=\"screen\">\
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222222;padding:20px}\
-h1{font-size:24px;margin:20px 0;color:#2c3e50}\
-p{font-size:18px;margin:15px 0}\
-.page-container{max-width:1920px;margin:0 auto;width:100%}\
-table{width:100%;border-collapse:collapse;background:white;border:2px solid #444;margin:20px 0}\
-th{background:#E1E15D;color:#222;font-weight:bold;padding:10px;border:1px solid #444;text-align:left}\
-td{padding:8px;border:1px solid #444}\
-#table_report tr:nth-child(even){background-color:#E4E4E4}\
-#table_report tr:nth-child(odd){background-color:#ffffff}\
-tr.warning{background-color:#e17a42!important}\
-tr.warning td{background-color:#e17a42;color:#222;border:1px solid #444}\
-tr.error{background-color:#ff4444!important}\
-tr.error td{background-color:#ff4444;color:#222;border:1px solid #444}\
-.texture_word_orange{color:#FF6E00;font-weight:bold}\
-.texture_word_red{color:#FF001E;font-weight:bold}\
-td.high-poly{color:#FD7228;font-weight:bold}\
-.report-time{background:#2897FF;padding:15px;border:2px solid #444444;margin:20px 0;color:white;font-size:22px;font-weight:bold;text-align:center}\
-</style></head><body>";
-
-		const CString endFile = "</div></body></html>";
-
-		std::ofstream outfile;
-		outfile.open(path, std::ios_base::trunc);
-
-		
-		outfile << header;
-
-		outfile << "<div class=\"page-container\"><div class = \"report-time\">Report generated: " + GetTimeForReport() + "</div>"; 
-
-		outfile << "<body><p><b>There is a list of all vobs' visuals in the location.</b></p>";
-
-		auto arr = searchVisualUniqList.GetArray();
-
-		bool foundAnyBadEntry = false;
-		
-		
-
-
-		for (uint i = 0; i < arr.GetNum(); i++)
-		{
-			auto pair = arr.GetSafe(i);
-
-			if (!pair->IsNull())
-			{
-				CString originVisualName = pair->GetKey().Upper();
-				CString searchName = originVisualName;
-				CString checkName = originVisualName;
-
-				if (checkName.Length() == 0 || checkName == ' ' || checkName.Shrink().Length() == 0)
-				{
-					pair->GetValue()->fileType = "-";
-					pair->GetValue()->workOnly = true;
-					pair->GetValue()->vdfName = "-";
-					continue;
-				}
-
-
-
-				// search name & filetype
-				if (originVisualName.EndWith(".TGA"))
-				{
-					pair->GetValue()->fileType = "TEXTURE";
-					searchName = searchName.Replace(".TGA", "");
-					searchName += "-C";
-					searchName += ".TEX";
-				}
-				else if (originVisualName.EndWith(".ASC"))
-				{
-					pair->GetValue()->fileType = "ANIM";
-					searchName = searchName.Replace(".ASC", ".MDL");
-				}
-				else if (originVisualName.EndWith(".MDS"))
-				{
-					pair->GetValue()->fileType = "ANIM";
-					searchName = searchName.Replace(".MDS", ".MSB");
-				}
-				else if (originVisualName.EndWith(".MMS"))
-				{
-					pair->GetValue()->fileType = "ANIM";
-					searchName = searchName.Replace(".MMS", ".MMB");
-				}
-				else
-				{
-					pair->GetValue()->fileType = "3DS";
-					searchName = searchName.Replace(".3DS", ".MRM");
-				}
-
-				// adding information about textures from submeshes
-				if (/*pair->GetValue()->fileType == "3DS" &&*/ pair->GetValue()->pVob != NULL)
-				{
-					auto curVob = pair->GetValue()->pVob;
-
-					ExtractVisualInfo(curVob->GetVisual(), pair);
-				}
-
-				char* api_name_search = searchName.ToChar();
-
-				//cmd << "api_name_search: '" << api_name_search << "'" << endl;
-
-				auto resultVDF = vdf_fexists(api_name_search, VDF_VIRTUAL);
-				auto resultWORK = vdf_fexists(api_name_search, VDF_PHYSICAL);
-
-				bool foundVDF = (resultVDF & VDF_VIRTUAL) == VDF_VIRTUAL;
-				bool foundWORK = (resultWORK & VDF_PHYSICAL) == VDF_PHYSICAL;
-
-				
-
-				char* volumeNamePtr = NULL;
-
-				if (foundVDF)
-				{
-					long length = vdf_getvolumename(api_name_search, volumeNamePtr);
-
-					if (volumeNamePtr && length > 0)
-					{
-						pair->GetValue()->vdfName = volumeNamePtr;
-						delete[] volumeNamePtr;
-					}
-				}
-
-
-				if (foundVDF && foundWORK)
-				{
-					pair->GetValue()->vdfOrWork = "_WORK/VDF";
-					pair->GetValue()->vdf = true;
-					pair->GetValue()->work = true;
-					pair->GetValue()->workOnly = false;
-					pair->GetValue()->notFound = false;
-				}
-				else if (foundVDF && !foundWORK) // VDF ONLY
-				{
-					pair->GetValue()->vdfOrWork = "VDF";
-					pair->GetValue()->vdf = true;
-					pair->GetValue()->work = false;
-					pair->GetValue()->workOnly = false;
-					pair->GetValue()->notFound = false;
-				}
-				else if (!foundVDF && foundWORK) // WORK ONLY
-				{
-					pair->GetValue()->vdfOrWork = "_WORK";
-					pair->GetValue()->vdf = false;
-					pair->GetValue()->work = true;
-					pair->GetValue()->workOnly = true;
-					pair->GetValue()->notFound = false;
-					pair->GetValue()->vdfName = "-"; // 
-				}
-				else // !foundVDF && !foundWORK
-				{
-					pair->GetValue()->vdfOrWork = "NOT FOUND";
-					pair->GetValue()->vdf = false;
-					pair->GetValue()->work = false;
-					pair->GetValue()->workOnly = false;
-					pair->GetValue()->notFound = true;
-					pair->GetValue()->vdfName = "-";
-				}
-				
-			}
-		}
-
-
-		for (uint i = 0; i < arr.GetNum(); i++)
-		{
-			auto pair = arr.GetSafe(i);
-
-			if (!pair->IsNull())
-			{
-
-				CString visualName = pair->GetKey().Upper();
-
-
-				if (pair->GetValue()->notFound)
-				{
-					if (!foundAnyBadEntry)
-					{
-						foundAnyBadEntry = true;
-
-						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\"><tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
-					}
-
-					outfile << "<tr class=\"error\">";
-				}
-				else if (pair->GetValue()->workOnly)
-				{
-					if (!foundAnyBadEntry)
-					{
-						foundAnyBadEntry = true;
-
-						outfile << "<p><b>Warning visuals table</b></p><table id=\"table_report_warn\"><tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>File type</th></tr>";
-					}
-
-					outfile << "<tr class=\"warning\">";
-				}
-				else
-				{
-					continue;
-				}
-
-
-				
-
-
-				outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
-				outfile << "<td>" << pair->GetValue()->amount << "</td>";
-
-				if (pair->GetValue()->polygons >= 2000) {
-					outfile << "<td class='high-poly'>" << pair->GetValue()->polygons << "</td>";
-				}
-				else {
-					outfile << "<td>" << pair->GetValue()->polygons << "</td>";
-				}
-				outfile << "<td>" << pair->GetValue()->vdfOrWork << "</td>";
-				outfile << "<td>" << pair->GetValue()->vdfName << "</td>";
-				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
-				
-
-				
-				
-				outfile << "</tr>";
-			}
-
-		}
-
-		if (foundAnyBadEntry)
-		{
-			outfile << "</table><br>";
-		}
-
-		
-
-		outfile << "<p><b>Not found or _WORK textures</b></p><table id=\"table_bad_tex\"><tr><th>Visual name</th><th>Texture TEX</th><th>Texture TGA</th><th>Type</th></tr>";
-
-		auto meshTexturesProblems = GetLocationMeshTexturesList();
-
-		//print.PrintGreen(Z (int)meshTexturesProblems.size());
-
-		for (auto& entry : meshTexturesProblems)
-		{
-			auto originalName = entry;
-
-			if (entry.size() >= 4 && entry.substr(entry.size() - 4) == ".TGA") {
-				entry = entry.substr(0, entry.size() - 4);
-			}
-
-			zSTRING nameTexture = entry.c_str();
-			
-
-
-			//cmd << "Replace: " << nameTexture  << endl;
-
-			nameTexture += "-C";
-			nameTexture += ".TEX";
-
-			int fileTypeExist = Union_FileExists(nameTexture);
-
-			//cmd << "File: " << nameTexture << " -> " << fileTypeExist << endl;
-
-			if (fileTypeExist == 2)
-			{
-				//outfile << originalName << "<br>";
-			}
-			else if (fileTypeExist == 1)
-			{
-				outfile << "<tr>";
-				outfile << "<td>[LOCATION MESH]</td>";
-
-
-
-
-				outfile << "<td>";
-				outfile << "<span class=\"texture_word_orange\">" << nameTexture << "</span>";
-				outfile << "</td>";
-				outfile << "<td>";
-				outfile << "<span class=\"texture_word_orange\">" << originalName << "</span>";
-				outfile << "</td>";
-				outfile << "<td>File is only in _WORK</td>";
-				outfile << "</tr>";
-
-			}
-			else
-			{
-				outfile << "<tr>";
-				outfile << "<td>[LOCATION MESH]</td>";
-
-
-				outfile << "<td>";
-				outfile << "<span class=\"texture_word_red\">" << nameTexture << "</span>";
-				outfile << "</td>";
-				outfile << "<td>";
-				outfile << "<span class=\"texture_word_red\">" << originalName << "</span>";
-				outfile << "</td>";
-				outfile << "<td>NOT FOUND</td>";
-				outfile << "</tr>";
-			}
-
-
-			//cmd << entry.c_str() << endl;
-		}
-
-		//auto arrBad = badTextures.GetArray();
-
-		for (uint i = 0; i < arr.GetNum(); i++)
-		{
-			auto pair = arr.GetSafe(i);
-			bool foundOk = false;
-
-			if (!pair->IsNull() && pair->GetValue()->pVob)
-			{
-				for (auto& pInfo : pair->GetValue()->texturesList)
-				{
-					auto nameTexture = pInfo.textureName;
-					auto originalName = nameTexture;
-
-					nameTexture = nameTexture.Replace(".TGA", "");
-					nameTexture += "-C";
-					nameTexture += ".TEX";
-
-					int fileTypeExist = Union_FileExists(nameTexture);
-
-					//cmd << nameTexture << " Type: " << fileTypeExist << endl;
-
-					if (fileTypeExist == 2)
-					{
-						//outfile << originalName << "<br>";
-					}
-					else if (fileTypeExist == 1)
-					{
-						if (!foundOk)
-						{
-							outfile << "<tr>";
-							outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
-						}
-
-						
-
-
-						outfile << "<td>";
-						outfile << "<span class=\"texture_word_orange\">" << nameTexture << "</span>";
-						outfile << "</td>";
-						outfile << "<td>";
-						outfile << "<span class=\"texture_word_orange\">" << originalName << "</span>";
-						outfile << "</td>";
-						outfile << "</tr>";
-							
-					}
-					else
-					{
-						if (!foundOk)
-						{
-							outfile << "<tr>";
-							outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
-						}
-
-
-						outfile << "<td>";
-						outfile << "<span class=\"texture_word_red\">" << nameTexture << "</span>";
-						outfile << "</td>";
-						outfile << "<td>";
-						outfile << "<span class=\"texture_word_red\">" << originalName << "</span>";
-						outfile << "</td>";
-						outfile << "</tr>";
-					}
-
-
-
-				}
-
-				if (foundOk)
-				{
-					//outfile << "</td>";
-					//outfile << "</tr>";
-				}
-				
-			}
-
-		}
-
-		outfile << "</table><br>";
-		
-
-
-		
-		//=====================================================================
-		outfile << "<p><b>Normal visuals table</b></p><table id=\"table_report\"><tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>\
-VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size</th></tr>";
-
-		for (uint i = 0; i < arr.GetNum(); i++)
-		{
-			auto pair = arr.GetSafe(i);
-
-			if (!pair->IsNull())
-			{
-
-				CString visualName = pair->GetKey().Upper();
-
-
-				if (!pair->GetValue()->notFound && !pair->GetValue()->workOnly)
-				{
-					outfile << "<tr>";
-				}
-				else
-				{
-					continue;
-				}
-
-
-
-
-				outfile << "<td>'" << pair->GetKey().Upper() << "'</td>";
-				outfile << "<td>" << pair->GetValue()->amount << "</td>";
-				if (pair->GetValue()->polygons >= 2000) {
-					outfile << "<td class='high-poly'>" << pair->GetValue()->polygons << "</td>";
-				}
-				else {
-					outfile << "<td>" << pair->GetValue()->polygons << "</td>";
-				}
-				outfile << "<td>" << pair->GetValue()->vdfOrWork << "</td>";
-				outfile << "<td>" << pair->GetValue()->vdfName << "</td>";
-				outfile << "<td>" << pair->GetValue()->fileType << "</td>";
-
-				if (pair->GetValue()->pVob)
-				{
-					outfile << "<td>";
-
-					for (auto& pInfo : pair->GetValue()->texturesList)
-					{
-						auto nameTexture = pInfo.textureName;
-						auto originalName = nameTexture;
-
-
-						nameTexture = nameTexture.Replace(".TGA", "");
-						nameTexture += "-C";
-						nameTexture += ".TEX";
-
-						outfile << nameTexture << "<br>";
-
-
-					}
-
-					outfile  << "</td>";
-
-					outfile << "<td>";
-
-					for (auto& pInfo : pair->GetValue()->texturesList)
-					{
-						auto nameTexture = pInfo.textureName;
-						auto originalName = nameTexture;
-						
-
-						outfile << nameTexture << "<br>";
-
-
-					}
-
-					outfile << "</td>";
-
-					outfile << "<td>";
-
-					for (auto& pInfo : pair->GetValue()->texturesList)
-					{
-						if (pInfo.isBigTexture)
-						{
-							outfile << "<span style='color:#E5044F; font-weight:bold;'>" << pInfo.textureSizeStr << "</span><br>";
-						}
-						else
-						{
-							outfile << pInfo.textureSizeStr << "<br>";
-						}
-						
-					}
-
-					outfile << "</td>";
-				}
-				else
-				{
-					outfile << "<td></td><td></td><td></td>";
-				}
-				
-
-				outfile << "</tr>";
-			}
-
-		}
-
-		outfile << "</table><br>";
-
-		
-
-		
+		//=============================================================================================
 		zCArray<zCVob*> resultArray;
 
 
@@ -1330,7 +829,7 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size<
 								zSTRING name = info.PickWord(1, ":", zSTR_SKIP);
 								int num = info.PickWord(3, ":", zSTR_SKIP).ToInt();
 								if (num <= 0) num = 1;
-								
+
 								int index = parser->GetIndex(name);
 								if (index >= 0 && parser->MatchClass(index, oCItem::classDef->scriptClassName))
 								{
@@ -1349,11 +848,11 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size<
 					}
 				}
 
-				
+
 			}
 		}
 
-		outfile << "<p><b>Items table</b></p><table id=\"table_report_items\"><tr><th>Item instance</th><th>Coords</th><th>In container</th></tr>";
+		outfile << "<p><b>Items table</b></p><table id=\"table_report_items\" class=\"table_report\"><tr><th>Item instance</th><th>Coords</th><th>In container</th></tr>";
 
 		for (int i = 0; i < searchItems.GetNum(); i++)
 		{
@@ -1375,35 +874,30 @@ VDF name</th><th>File type</th><th>Texture TEX</th><th>Texture TGA</th><th>Size<
 					{
 						outfile << "<td>" << "yes" << "</td>";
 					}
-					
+
 				}
 				else
 				{
 					outfile << "<td>" << "-" << "</td>";
 				}
-				
+
 
 				outfile << "</tr>";
 			}
 		}
 
 		outfile << "</table><br>";
-		
+
 
 		searchItems.DeleteListDatas();
-		
 
+		//====================================================================================================
 		outfile << endFile;
-
-		DeleteAndClearMap(searchVisualUniqList);
-		badTextures.Clear();
-
 
 		pListReport.clear();
 		outfile.close();
-	}
 
-#endif
+	}
 
 	int SpacerApp::IsVisualInVDF(CString visualName, CString vdfName)
 	{
