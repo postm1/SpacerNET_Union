@@ -517,7 +517,8 @@ namespace GOTHIC_ENGINE {
 
 		const CString header = "<!DOCTYPE html><html><head><title>Vobs visuals report</title>\
 <style type=\"text/css\" media=\"screen\">\
-body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222222;padding:10px}\
+body{font-family:'Segoe UI',Arial,sans-serif;background:#f5f5f5;color:#222222;padding:10px;overflow-y:scroll;}\
+html{scrollbar-gutter: stable;}\
 h1{font-size:24px;margin:20px 0;color:#2c3e50}\
 p{font-size:18px;margin:15px 0}\
 .page-container{max-width:1920px;margin:0 auto;width:100%}\
@@ -545,7 +546,21 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 
 		outfile << header;
 
-		outfile << "<div class=\"page-container\"><div class = \"report-time\">Report generated: " + GetTimeForReport() + "</div>";
+
+		int pos = path.SearchReverse("\\");
+
+		CString result;
+
+		if (pos != -1)
+		{
+			result = path.Copy(pos + 1, path.Length() - (pos + 1));
+		}
+		else
+		{
+			result = path; // если слеша нет
+		}
+
+		outfile << "<div class=\"page-container\"><div class = \"report-time\">Report generated: " + GetTimeForReport() + " | " + result + "</div>";
 
 		outfile << R"(
 <div class="tabs">
