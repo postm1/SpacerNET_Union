@@ -627,24 +627,43 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 <tr><th>Visual name</th><th>Amount</th><th>Polygons</th><th>_WORK/VDF</th><th>VDF name</th><th>Material | Texture | Size</th>";
 
 
+		std::vector<VisualReportEntry*> usualVisuals;
 		for (auto& it : pListReport)
 		{
-			if (!it.isLocationMesh && it.foundType >= VDF_FILE_TYPE_VDF) // only good visuals
+			if (!it.isLocationMesh && it.foundType >= VDF_FILE_TYPE_VDF)
+			{
+				usualVisuals.push_back(&it);
+			}
+		}
+		std::sort(usualVisuals.begin(), usualVisuals.end(),
+			[](const VisualReportEntry* a, const VisualReportEntry* b) {
+
+				std::string sa = a->visualName;
+				std::string sb = b->visualName;
+
+				std::transform(sa.begin(), sa.end(), sa.begin(), ::tolower);
+				std::transform(sb.begin(), sb.end(), sb.begin(), ::tolower);
+				return sa < sb;
+			});
+
+		for (auto& it : usualVisuals)
+		{
+			if (!it->isLocationMesh && it->foundType >= VDF_FILE_TYPE_VDF) // only good visuals
 			{
 				outfile << "<tr>";
-				outfile << "<td>" << it.visualName << "</td>";
-				outfile << "<td>" << it.amount << "</td>";
+				outfile << "<td>" << it->visualName << "</td>";
+				outfile << "<td>" << it->amount << "</td>";
 
-				if (it.polygons >= 3000)
+				if (it->polygons >= 3000)
 				{
-					outfile << "<td class='high-poly'>" << it.polygons << "</td>";
+					outfile << "<td class='high-poly'>" << it->polygons << "</td>";
 				}
 				else {
-					outfile << "<td>" << it.polygons << "</td>";
+					outfile << "<td>" << it->polygons << "</td>";
 				}
 
-				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
-				outfile << "<td>" << it.vdfName << "</td>";
+				outfile << "<td>" << it->GetFileTypeFound() << "</td>";
+				outfile << "<td>" << it->vdfName << "</td>";
 
 				/*
 				outfile << "<td>" << it.materialsList[0]->GetObjectName() << "</td>";
@@ -654,13 +673,13 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 				outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
 				*/
 
-				int count = it.texturesList.size();
+				int count = it->texturesList.size();
 
 				outfile << "<td>";
 
 				for (int i = 0; i < count; i++)
 				{
-					auto& entry = it.texturesList[i];
+					auto& entry = it->texturesList[i];
 
 					if (entry.material)
 					{
@@ -711,33 +730,53 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 </tr>";
 
 
+		std::vector<VisualReportEntry*> usualMeshes;
 		for (auto& it : pListReport)
 		{
-			if (it.isLocationMesh && it.foundType >= VDF_FILE_TYPE_VDF) // only good textures
+			if (it.isLocationMesh && it.foundType >= VDF_FILE_TYPE_VDF)
+			{
+				usualMeshes.push_back(&it);
+			}
+		}
+		std::sort(usualMeshes.begin(), usualMeshes.end(),
+			[](const VisualReportEntry* a, const VisualReportEntry* b) {
+
+
+				std::string sa = a->materialsList[0]->GetObjectName();
+				std::string sb = b->materialsList[0]->GetObjectName();
+
+				std::transform(sa.begin(), sa.end(), sa.begin(), ::tolower);
+				std::transform(sb.begin(), sb.end(), sb.begin(), ::tolower);
+				return sa < sb;
+			});
+
+		for (auto& it : usualMeshes)
+		{
+			if (it->isLocationMesh && it->foundType >= VDF_FILE_TYPE_VDF) // only good textures
 			{
 
-				outfile << "<td>" << it.materialsList[0]->GetObjectName() << "</td>";
-				outfile << "<td>" << it.texturesList[0].textureNameTGA << "</td>";
-				outfile << "<td>" << it.texturesList[0].textureNameTEX << "</td>";
+				outfile << "<td>" << it->materialsList[0]->GetObjectName() << "</td>";
+				outfile << "<td>" << it->texturesList[0].textureNameTGA << "</td>";
+				outfile << "<td>" << it->texturesList[0].textureNameTEX << "</td>";
 
 
-				if (it.texturesList[0].isBigTexture)
+				if (it->texturesList[0].isBigTexture)
 				{
 					outfile 
 						<< "<td><span style='color:#E5044F; font-weight:bold;'>"
-						<< it.texturesList[0].textureSizeInfoStr
+						<< it->texturesList[0].textureSizeInfoStr
 						<< "</span>"
 						;
 				}
 				else
 				{
-					outfile << "<td>" << it.texturesList[0].textureSizeInfoStr << "</td>";
+					outfile << "<td>" << it->texturesList[0].textureSizeInfoStr << "</td>";
 				}
 
 				
-				outfile << "<td>" << it.GetFileTypeFound() << "</td>";
+				outfile << "<td>" << it->GetFileTypeFound() << "</td>";
 
-				outfile << "<td>" << it.vdfName << "</td>";
+				outfile << "<td>" << it->vdfName << "</td>";
 
 				outfile << "</tr>";
 			}
