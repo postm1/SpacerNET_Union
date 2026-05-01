@@ -1007,8 +1007,6 @@ namespace GOTHIC_ENGINE {
 		HandleWorldBeforeSave();
 		ogame->GetWorld()->SaveVobSubtree(path, pickedVob, 0, 0);
 		HandleWorldAfterSave();
-
-		print.PrintRed(GetLang("UNION_VOBTREE_SAVE"));
 	}
 
 	zCVob* SpacerApp::GetParentVob(zCVob* candidate)
