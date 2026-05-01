@@ -344,7 +344,7 @@ namespace GOTHIC_ENGINE {
 						{
 							visualNotFound.InsertEnd(textureName);
 
-							cmd << "NoTexture: " << textureName << endl;
+							//cmd << "NoTexture: " << textureName << endl;
 						}
 					}
 					

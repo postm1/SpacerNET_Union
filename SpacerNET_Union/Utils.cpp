@@ -1735,16 +1735,7 @@ namespace GOTHIC_ENGINE {
 		return pWP || pFP;
 	}
 
-	zSTRING GetMaterialInfoAsString(zCMaterial* mat)
-	{
-		zSTRING text = "Mat: " + mat->GetName()
-			+ " | Texture: " + mat->texture->GetObjectName() 
-			+ " | noCollDet: " + Z mat->noCollDet
-			+ " | MatGroup: " + Z mat->GetMatGroupString()		
-			;
-
-		return text;
-	}
+	
 #if ENGINE >= Engine_G2
 	zBOOL zVEC3::IsEqualEps(const zVEC3& b) const {								// fuzzy compare with small epsilon
 		return ((zAbs(zREAL(n[0] - b.n[0])) < zALG_EQUAL_EPSILON) &&
@@ -1944,7 +1935,21 @@ namespace GOTHIC_ENGINE {
 		return sPixelsInfo;
 	}
 
+	zSTRING GetMaterialInfoAsString(zCMaterial* mat)
+	{
+		bool isBigTexture = false;
 
+		zSTRING textureSizeInfoStr = A GetTextureSizeInfo(mat, isBigTexture);
+
+		zSTRING text = "Mat: " + mat->GetName()
+			+ " | Texture: " + mat->texture->GetObjectName()
+			+ " | " + textureSizeInfoStr
+			+ " | noCollDet: " + Z mat->noCollDet
+			+ " | MatGroup: " + Z mat->GetMatGroupString()
+			;
+
+		return text;
+	}
 	
 }
 
