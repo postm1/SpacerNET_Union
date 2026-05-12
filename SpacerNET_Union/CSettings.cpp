@@ -682,6 +682,8 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "AUTOSAVE", "autoSaveZenTime", "5");
 		list.Insert("autoSaveZenTime", set);
 
+		set = new CSetting(TYPE_INT, "SPACER", "showStatusBar", "1");
+		list.Insert("showStatusBar", set);
 
 	}
 
