@@ -620,7 +620,7 @@ namespace GOTHIC_ENGINE {
 
 				// showing the saving message beforehand (3 seconds)
 
-				if (timerAutoSave == timeAutoSaveWhen - 3)
+				if (timerAutoSave == timeAutoSaveWhen - 3 && CanDoAutoSaveWorld())
 				{
 					print.PrintGreen(GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"), 7);
 					PrintInfoWinMessage("[>>] " + GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"));

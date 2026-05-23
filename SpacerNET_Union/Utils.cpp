@@ -1950,6 +1950,16 @@ namespace GOTHIC_ENGINE {
 
 		return text;
 	}
+
+	bool CanDoAutoSaveWorld()
+	{
+		oCWorld* world = ogame->GetGameWorld();
+		if (!world || !world->IsCompiled())
+			return false;
+
+
+		return true;
+	}
 	
 }
 

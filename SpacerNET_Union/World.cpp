@@ -1167,8 +1167,11 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::DoAutoSave()
 	{
 		oCWorld* world = ogame->GetGameWorld();
-		if (!world || !world->IsCompiled())
+		
+		if (!CanDoAutoSaveWorld())
+		{
 			return;
+		}
 
 		// Next slot (0-indexed, wrap 0..9)
 		int slot    = options.GetIntVal("autoSaveSlot");
