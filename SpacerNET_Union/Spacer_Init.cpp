@@ -110,6 +110,15 @@ namespace GOTHIC_ENGINE {
 		CreateDirectory("_work\\data\\meshes\\_compiled\\", NULL);
 
 
+		zSTRING filePath = zoptions->GetDirString(DIR_ROOT) + Z "\\data\\Union_Raw_Input.vdf";
+
+		if (FileExists(filePath.ToChar()))
+		{
+			MessageBox(0, "SpacerNET is not compatible with Union_Raw_Input plugin!", 0, 0);
+			exit(0);
+		}
+
+
 		if (!IsDx11Active())
 		{
 			//if (zrenderer) zrenderer->Vid_SetScreenMode(zRND_SCRMODE_HIDE);

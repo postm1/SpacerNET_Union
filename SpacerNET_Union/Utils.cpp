@@ -1975,5 +1975,9 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 	
+	bool FileExists(const std::string& filename) {
+		std::ifstream file(filename.c_str());
+		return file.good();
+	}
 }
 
