@@ -144,7 +144,15 @@ namespace GOTHIC_ENGINE {
 			return getLang();
 		}
 
+		__declspec(dllexport) void SPC_SetNextInsertBlocked(int value)
+		{
+			theApp.nextInsertBlocked = (bool)value;
+		}
 
+		__declspec(dllexport) int SPC_GetNextInsertBlocked()
+		{
+			return (int)theApp.nextInsertBlocked;
+		}
 
 		/*__declspec(dllexport) BOOL SPC_SelectObjects(zCArray<zCVob*>& arr_vobs)
 		{
