@@ -1960,6 +1960,20 @@ namespace GOTHIC_ENGINE {
 
 		return true;
 	}
+
+	inline void DrawPolygon(zCPolygon* p, const zCOLOR& clr, int drawFlag)
+	{
+		if (!p)
+			return;
+
+		for (unsigned char i = 0; i < p->polyNumVert; i++)
+		{
+			zVEC3 vtx1 = p->vertex[i]->position;
+			int next = (i + 1 >= p->polyNumVert) ? 0 : i + 1;
+			zVEC3 vtx2 = p->vertex[next]->position;
+			zlineCache->Line3D(vtx1, vtx2, clr, drawFlag);
+		}
+	}
 	
 }
 

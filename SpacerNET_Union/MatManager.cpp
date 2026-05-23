@@ -33,30 +33,16 @@ namespace GOTHIC_ENGINE {
 
 		if (selection)
 		{
-			
-
 			auto poly = selection->GetPolygon();
+			DrawPolygon(poly, GFX_RED, 0);
 
-			if (poly)
+			// Draw the polygon's normal for better visual in UV errors mod
+			if (uvStruct.badPolys.GetNumInList() > 0)
 			{
-				zVEC3 pos0 = poly->vertex[0]->position;
-				zVEC3 pos1 = poly->vertex[1]->position;
-				zVEC3 pos2 = poly->vertex[2]->position;
+				int lenNormal = sqrt(poly->GetArea());
 
-
-				zlineCache->Line3D(pos0, pos1, GFX_RED, 0);
-				zlineCache->Line3D(pos1, pos2, GFX_RED, 0);
-				zlineCache->Line3D(pos2, pos0, GFX_RED, 0);
-
-				if (uvStruct.badPolys.GetNumInList() > 0)
-				{
-					int lenNormal = sqrt(poly->GetArea());
-
-					zClamp(lenNormal, 100, 800);
-					zlineCache->Line3D(poly->GetCenter(), poly->GetCenter() + poly->GetNormal() * lenNormal, GFX_GREEN, 0);
-
-					//UV_PrintPolyData(poly);
-				}
+				zClamp(lenNormal, 100, 800);
+				zlineCache->Line3D(poly->GetCenter(), poly->GetCenter() + poly->GetNormal() * lenNormal, GFX_GREEN, 0);
 			}
 		}
 	}
