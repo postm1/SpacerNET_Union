@@ -1979,5 +1979,71 @@ namespace GOTHIC_ENGINE {
 		std::ifstream file(filename.c_str());
 		return file.good();
 	}
+
+	int GetAmountInContainer(const std::string& data, const std::string& name) {
+		if (data.empty() || name.empty()) {
+			return 0;
+		}
+
+		std::stringstream ss(data);
+		std::string item;
+
+		while (std::getline(ss, item, ',')) {
+			// Remove spaces
+			size_t start = item.find_first_not_of(" \t");
+			if (start == std::string::npos) continue;
+			item = item.substr(start);
+
+			size_t end = item.find_last_not_of(" \t");
+			if (end != std::string::npos) {
+				item = item.substr(0, end + 1);
+			}
+
+			size_t colonPos = item.find(':');
+			std::string itemName;
+			int count = 1; 
+
+			if (colonPos != std::string::npos) {
+				
+				itemName = item.substr(0, colonPos);
+				std::string countStr = item.substr(colonPos + 1);
+
+				
+				size_t countStart = countStr.find_first_not_of(" \t");
+				if (countStart != std::string::npos) {
+					countStr = countStr.substr(countStart);
+				}
+				size_t countEnd = countStr.find_last_not_of(" \t");
+				if (countEnd != std::string::npos) {
+					countStr = countStr.substr(0, countEnd + 1);
+				}
+
+				if (!countStr.empty()) {
+					count = std::stoi(countStr);
+				}
+			}
+			else {
+				
+				itemName = item;
+			}
+
+	
+			size_t nameStart = itemName.find_first_not_of(" \t");
+			if (nameStart != std::string::npos) {
+				itemName = itemName.substr(nameStart);
+			}
+			size_t nameEnd = itemName.find_last_not_of(" \t");
+			if (nameEnd != std::string::npos) {
+				itemName = itemName.substr(0, nameEnd + 1);
+			}
+
+
+			if (itemName.find(name) != std::string::npos) {
+				return count;
+			}
+		}
+
+		return 0; // Не найдено
+	}
 }
 

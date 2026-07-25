@@ -818,7 +818,27 @@ baseOK = (baseName == A classDef->GetBaseClassName());
 						continue;
 					}
 
-					Stack_PushString(GetVobName(vob));
+					zSTRING name = GetVobName(vob);
+
+					if (searchOCItem)
+					{
+						if (auto pCont = vob->CastTo<oCMobContainer>())
+						{
+							std::string itemNameSearch = theApp.search.searchVobNameGlobal.Upper().ToChar();
+
+							if (itemNameSearch.length() > 0)
+							{
+								std::string contains = pCont->contains.Upper().ToChar();
+
+
+								name += " | [x" + Z GetAmountInContainer(contains, itemNameSearch) + "]";
+							}
+							
+						}
+					}
+					
+
+					Stack_PushString(name);
 
 					callFunc((uint)vob);
 
