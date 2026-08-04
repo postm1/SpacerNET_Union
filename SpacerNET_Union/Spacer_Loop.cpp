@@ -802,6 +802,17 @@ namespace GOTHIC_ENGINE {
 
 					PrintDebug(zSTRING(GetLang("TOOL_BBOX_EDIT_MODE_SELECTED")));
 					screen->SetFontColor(zCOLOR(255, 255, 255));
+
+					if (pickedVob)
+					{
+						auto box = pickedVob->GetBBox3DWorld();
+
+						screen->SetFontColor(zCOLOR(240, 123, 14));
+
+						PrintDebug("mins: " + box.mins.ToString());
+						PrintDebug("maxs: " + box.maxs.ToString());
+					}
+					
 				}
 
 
