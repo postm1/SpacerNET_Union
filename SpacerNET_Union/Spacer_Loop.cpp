@@ -532,6 +532,11 @@ namespace GOTHIC_ENGINE {
 				pViewVobInfo->SetFontColor(zCOLOR(255, 255, 255, 255));
 
 				ExtractVisualInfoShow(visual, startY, startX, longestLine, textToCopy);
+
+				if (auto pMob = pVob->CastTo<oCMOB>())
+				{
+					textToCopy += " | Scheme: " + pMob->GetScemeName();
+				}
 			}
 			else
 			{
