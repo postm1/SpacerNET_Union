@@ -4,81 +4,164 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	// set decal for bbox position and direction
-	void SpacerApp::SetBBoxDecalPosAndSize(
-		zCVob* sides[6],
-		zVEC3 points[8],
-		int index,
-		int a,
-		int b,
-		int c,
-		int d,
-		bool horizontal /* = false */
+
+	enum BBoxDecalSide
+	{
+		BBOX_SIDE_LEFT = 0,
+		BBOX_SIDE_RIGHT,
+		BBOX_SIDE_FRONT,
+		BBOX_SIDE_BACK,
+		BBOX_SIDE_BOTTOM,
+		BBOX_SIDE_TOP
+	};
+
+
+	void SpacerApp::SetBBoxDecalAABB(
+		zCVob* side,
+		const zTBBox3D& bbox,
+		int sideType
 	)
 	{
-		if (!sides[index])
-		{
+		if (!side)
 			return;
-		}
 
-		sides[index]->SetPositionWorld(
-			(points[a] + points[b] + points[c] + points[d]) / 4.0f
-		);
-
-		auto visual = sides[index]->GetVisual();
+		auto visual = side->GetVisual();
 
 		if (!visual)
 		{
-			sides[index]->SetShowVisual(FALSE);
+			side->SetShowVisual(FALSE);
 			return;
 		}
 
-		auto dec = visual->CastTo<zCDecal>();
+		auto decal = visual->CastTo<zCDecal>();
 
-		if (!dec)
+		if (!decal)
 		{
-			sides[index]->SetShowVisual(FALSE);
+			side->SetShowVisual(FALSE);
 			return;
 		}
 
-		// a-b и a-c должны быть соседними рЄбрами плоскости
-		const float sizeX = (points[a] - points[b]).Length();
-		const float sizeY = (points[a] - points[c]).Length();
+		const zVEC3& mins = bbox.mins;
+		const zVEC3& maxs = bbox.maxs;
 
-		// ќставл€ю /2, как было у теб€.
-		// ≈сли твой SetDecalDim ожидает полный размер, убери /2.
-		dec->SetDecalDim(
-			abs(sizeX * 0.5f),
-			abs(sizeY * 0.5f)
-		);
+		const float sizeX = maxs[VX] - mins[VX];
+		const float sizeY = maxs[VY] - mins[VY];
+		const float sizeZ = maxs[VZ] - mins[VZ];
 
-		sides[index]->ResetRotationsWorld();
+		const float centerX = (mins[VX] + maxs[VX]) * 0.5f;
+		const float centerY = (mins[VY] + maxs[VY]) * 0.5f;
+		const float centerZ = (mins[VZ] + maxs[VZ]) * 0.5f;
 
-		if (horizontal)
+		side->ResetRotationsWorld();
+
+		switch (sideType)
 		{
-			//
-			// Decal по умолчанию стоит вертикально.
-			// ѕоворачиваем его в XZ-плоскость.
-			//
-			// decal2Sided = true, поэтому верх/низ нормали
-			// дл€ нашей задачи значени€ не имеет.
-			//
-			sides[index]->RotateWorldX(90.0f);
-		}
-		else
+			// YZ
+		case BBOX_SIDE_LEFT:
 		{
-			//
-			// “во€ текуща€ логика боковых граней
-			//
-			auto dir = (points[a] - points[b]).Normalize();
+			side->SetPositionWorld(
+				zVEC3(mins[VX], centerY, centerZ)
+			);
 
-			sides[index]->SetHeadingAtWorld(dir);
-			sides[index]->RotateWorldY(90.0f);
+			decal->SetDecalDim(
+				sizeZ * 0.5f,
+				sizeY * 0.5f
+			);
+
+			// decal -> YZ plane
+			side->RotateWorldY(90.0f);
+
+			break;
 		}
 
-		sides[index]->SetShowVisual(TRUE);
+		// YZ
+		case BBOX_SIDE_RIGHT:
+		{
+			side->SetPositionWorld(
+				zVEC3(maxs[VX], centerY, centerZ)
+			);
+
+			decal->SetDecalDim(
+				sizeZ * 0.5f,
+				sizeY * 0.5f
+			);
+
+			side->RotateWorldY(90.0f);
+
+			break;
+		}
+
+		// XY
+		case BBOX_SIDE_FRONT:
+		{
+			side->SetPositionWorld(
+				zVEC3(centerX, centerY, mins[VZ])
+			);
+
+			decal->SetDecalDim(
+				sizeX * 0.5f,
+				sizeY * 0.5f
+			);
+
+			// default decal plane
+			break;
+		}
+
+		// XY
+		case BBOX_SIDE_BACK:
+		{
+			side->SetPositionWorld(
+				zVEC3(centerX, centerY, maxs[VZ])
+			);
+
+			decal->SetDecalDim(
+				sizeX * 0.5f,
+				sizeY * 0.5f
+			);
+
+			// decal2Sided == true,
+			// so no 180 rotation
+			break;
+		}
+
+		// XZ
+		case BBOX_SIDE_BOTTOM:
+		{
+			side->SetPositionWorld(
+				zVEC3(centerX, mins[VY], centerZ)
+			);
+
+			decal->SetDecalDim(
+				sizeX * 0.5f,
+				sizeZ * 0.5f
+			);
+
+			// XY -> XZ
+			side->RotateWorldX(90.0f);
+
+			break;
+		}
+
+		// XZ
+		case BBOX_SIDE_TOP:
+		{
+			side->SetPositionWorld(
+				zVEC3(centerX, maxs[VY], centerZ)
+			);
+
+			decal->SetDecalDim(
+				sizeX * 0.5f,
+				sizeZ * 0.5f
+			);
+
+			side->RotateWorldX(90.0f);
+
+			break;
+		}
+		}
+
+		side->SetShowVisual(TRUE);
 	}
-
 
 
 	void SpacerApp::ClearBboxDecal()
@@ -212,68 +295,43 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::BBoxDecal_Render()
 	{
+
 		if (!sidesInit)
-		{
 			return;
-		}
 
-		if (pickedVob)
-		{
-			if (pickedVob->visual)
-			{
-				return;
-			}
+		if (!pickedVob)
+			return;
 
-			if (!options.GetIntVal("bShowBboxModel"))
-			{
-				return;
-			}
+		if (pickedVob->visual)
+			return;
 
-			auto pZone = pickedVob->CastTo<zCZone>();
-			auto pTrigger = pickedVob->CastTo<zCTriggerBase>();
-			auto pDamage = pickedVob->CastTo<zCTouchDamage>();
-			auto pTouchAni = pickedVob->CastTo<zCTouchAnimate>();
+		if (!options.GetIntVal("bShowBboxModel"))
+			return;
 
-			auto pFog = pickedVob->CastTo<zCZoneZFog>();
+		auto pZone = pickedVob->CastTo<zCZone>();
+		auto pTrigger = pickedVob->CastTo<zCTriggerBase>();
+		auto pDamage = pickedVob->CastTo<zCTouchDamage>();
+		auto pTouchAni = pickedVob->CastTo<zCTouchAnimate>();
 
-			if (pFog)
-			{
-				return;
-			}
+		auto pFog = pickedVob->CastTo<zCZoneZFog>();
 
-			if (pTrigger || pZone || pDamage || pTouchAni)
-			{
-				//check bbox size
-				if (pickedVob->bbox3D.maxs.Distance(pickedVob->bbox3D.mins) >= 5)
-				{
+		if (pFog)
+			return;
 
-					pickedVob->bbox3D.GetCornerPoints(points);
+		if (!(pTrigger || pZone || pDamage || pTouchAni))
+			return;
 
-					for (int i = 0; i < 8; i++)
-					{
-						//debug.AddLine(points[i], points[i] + zVEC3(0, 100, 0), GFX_GREEN, 20, false, Z i, Z i);
-					}
+		const zTBBox3D& bbox = pickedVob->bbox3D;
 
-					// 4 sides
-					SetBBoxDecalPosAndSize(sides, points, 0, 0, 5, 3, 7, false);
-					SetBBoxDecalPosAndSize(sides, points, 1, 2, 6, 4, 1, false);
-					SetBBoxDecalPosAndSize(sides, points, 2, 0, 2, 3, 4, false);
-					SetBBoxDecalPosAndSize(sides, points, 3, 5, 6, 7, 1, false);
+		if (bbox.maxs.Distance(bbox.mins) < 5.0f)
+			return;
 
-					// up / down
-					SetBBoxDecalPosAndSize(sides, points, 4, 0, 2, 5, 6, true);
-					SetBBoxDecalPosAndSize(sides, points, 5, 3, 4, 7, 1, true);
-
-
-					SetBBoxDecalPosAndSize(sides, points, 0, 0, 5, 3, 7);
-					SetBBoxDecalPosAndSize(sides, points, 1, 2, 6, 4, 1);
-					SetBBoxDecalPosAndSize(sides, points, 2, 0, 2, 3, 4);
-					SetBBoxDecalPosAndSize(sides, points, 3, 5, 6, 7, 1);
-				}
-			}
-
-
-		}
+		SetBBoxDecalAABB(sides[0], bbox, BBOX_SIDE_LEFT);
+		SetBBoxDecalAABB(sides[1], bbox, BBOX_SIDE_RIGHT);
+		SetBBoxDecalAABB(sides[2], bbox, BBOX_SIDE_FRONT);
+		SetBBoxDecalAABB(sides[3], bbox, BBOX_SIDE_BACK);
+		SetBBoxDecalAABB(sides[4], bbox, BBOX_SIDE_BOTTOM);
+		SetBBoxDecalAABB(sides[5], bbox, BBOX_SIDE_TOP);
 	}
 
 }
