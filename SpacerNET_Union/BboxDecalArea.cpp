@@ -4,29 +4,78 @@
 namespace GOTHIC_ENGINE {
 	// Add your code here . . .
 
-	//set decal for bbox position and direction
-	void SpacerApp::SetBBoxDecalPosAndSize(zCVob* sides[6], zVEC3 points[8], int index, int a, int b, int c, int d)
+	// set decal for bbox position and direction
+	void SpacerApp::SetBBoxDecalPosAndSize(
+		zCVob* sides[6],
+		zVEC3 points[8],
+		int index,
+		int a,
+		int b,
+		int c,
+		int d,
+		bool horizontal /* = false */
+	)
 	{
-		sides[index]->SetPositionWorld((points[a] + points[b] + points[c] + points[d]) / 4);
-
-		if (!sides[index]->GetVisual())
+		if (!sides[index])
 		{
 			return;
 		}
 
-		zCDecal* dec = ((zCDecal*)sides[index]->GetVisual()->CastTo<zCDecal>());
+		sides[index]->SetPositionWorld(
+			(points[a] + points[b] + points[c] + points[d]) / 4.0f
+		);
 
-		if (dec)
+		auto visual = sides[index]->GetVisual();
+
+		if (!visual)
 		{
-			dec->SetDecalDim(abs((points[a] - points[b]).Length() / 2), abs((points[a] - points[c]).Length() / 2));
-
+			sides[index]->SetShowVisual(FALSE);
+			return;
 		}
 
-		auto dir = (points[a] - points[b]).Normalize();
+		auto dec = visual->CastTo<zCDecal>();
+
+		if (!dec)
+		{
+			sides[index]->SetShowVisual(FALSE);
+			return;
+		}
+
+		// a-b и a-c должны быть соседними рЄбрами плоскости
+		const float sizeX = (points[a] - points[b]).Length();
+		const float sizeY = (points[a] - points[c]).Length();
+
+		// ќставл€ю /2, как было у теб€.
+		// ≈сли твой SetDecalDim ожидает полный размер, убери /2.
+		dec->SetDecalDim(
+			abs(sizeX * 0.5f),
+			abs(sizeY * 0.5f)
+		);
 
 		sides[index]->ResetRotationsWorld();
-		sides[index]->SetHeadingAtWorld(dir);
-		sides[index]->RotateWorldY(90.0f);
+
+		if (horizontal)
+		{
+			//
+			// Decal по умолчанию стоит вертикально.
+			// ѕоворачиваем его в XZ-плоскость.
+			//
+			// decal2Sided = true, поэтому верх/низ нормали
+			// дл€ нашей задачи значени€ не имеет.
+			//
+			sides[index]->RotateWorldX(90.0f);
+		}
+		else
+		{
+			//
+			// “во€ текуща€ логика боковых граней
+			//
+			auto dir = (points[a] - points[b]).Normalize();
+
+			sides[index]->SetHeadingAtWorld(dir);
+			sides[index]->RotateWorldY(90.0f);
+		}
+
 		sides[index]->SetShowVisual(TRUE);
 	}
 
@@ -36,11 +85,6 @@ namespace GOTHIC_ENGINE {
 	{
 
 		if (!sidesInit)
-		{
-			return;
-		}
-
-		if (!options.GetIntVal("bShowBboxModel"))
 		{
 			return;
 		}
@@ -74,10 +118,6 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::ClearBboxDecalReset()
 	{
-		if (!options.GetIntVal("bShowBboxModel"))
-		{
-			return;
-		}
 
 		if (!sidesInit)
 		{
@@ -106,6 +146,11 @@ namespace GOTHIC_ENGINE {
 	void SpacerApp::BBoxDecal_OnLevelLoaded()
 	{
 		if (!options.GetIntVal("bShowBboxModel"))
+		{
+			return;
+		}
+
+		if (sidesInit)
 		{
 			return;
 		}
@@ -147,7 +192,7 @@ namespace GOTHIC_ENGINE {
 			}
 			
 
-			side->SetShowVisual(TRUE);
+			side->SetShowVisual(FALSE);
 			side->dontWriteIntoArchive = true;
 			side->SetSleeping(FALSE);
 			side->SetDrawBBox3D(FALSE);
@@ -208,6 +253,17 @@ namespace GOTHIC_ENGINE {
 					{
 						//debug.AddLine(points[i], points[i] + zVEC3(0, 100, 0), GFX_GREEN, 20, false, Z i, Z i);
 					}
+
+					// 4 sides
+					SetBBoxDecalPosAndSize(sides, points, 0, 0, 5, 3, 7, false);
+					SetBBoxDecalPosAndSize(sides, points, 1, 2, 6, 4, 1, false);
+					SetBBoxDecalPosAndSize(sides, points, 2, 0, 2, 3, 4, false);
+					SetBBoxDecalPosAndSize(sides, points, 3, 5, 6, 7, 1, false);
+
+					// up / down
+					SetBBoxDecalPosAndSize(sides, points, 4, 0, 2, 5, 6, true);
+					SetBBoxDecalPosAndSize(sides, points, 5, 3, 4, 7, 1, true);
+
 
 					SetBBoxDecalPosAndSize(sides, points, 0, 0, 5, 3, 7);
 					SetBBoxDecalPosAndSize(sides, points, 1, 2, 6, 4, 1);

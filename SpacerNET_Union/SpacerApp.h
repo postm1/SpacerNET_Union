@@ -524,7 +524,7 @@ namespace GOTHIC_ENGINE {
 		void ClearBboxDecal();
 		void ClearBboxDecalReset();
 		void BBoxDecal_OnLevelLoaded();
-		void SetBBoxDecalPosAndSize(zCVob* sides[6], zVEC3 points[8], int index, int a, int b, int c, int d);
+		void SetBBoxDecalPosAndSize(zCVob* sides[6], zVEC3 points[8], int index, int a, int b, int c, int d, bool horizontal = false);
 		void BBoxDecal_Render();
 
 		zCVob* sides[6];
