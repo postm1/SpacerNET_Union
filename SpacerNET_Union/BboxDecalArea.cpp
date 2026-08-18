@@ -252,7 +252,7 @@ namespace GOTHIC_ENGINE {
 		decalMat->SetName("MAT_SPACER_HELPER_RED");
 		decalMat->SetTexture(textureName);
 		decalMat->rndAlphaBlendFunc = zRND_ALPHA_FUNC_ADD;
-		decalMat->color.alpha = 50;
+		decalMat->color.alpha = 115;
 		decalMat->AddRef();
 		//decalMat->SetUsage(zCMaterial::zMAT_USAGE_LEVEL);
 		
