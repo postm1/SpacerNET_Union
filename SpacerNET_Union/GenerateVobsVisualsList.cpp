@@ -991,9 +991,5 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 		return (volumeNameVdf.Upper() == vdfName);
 	}
 
-	void SpacerApp::ToggleNoGrass()
-	{
-		nograss.hideActive = !nograss.hideActive;
-		nograss.SetPercentFromSettings(true);
-	}
+	
 }

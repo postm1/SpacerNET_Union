@@ -2727,4 +2727,10 @@ namespace GOTHIC_ENGINE {
 	{
 		return changesWereMade;
 	}
+
+	void SpacerApp::ToggleNoGrass()
+	{
+		nograss.hideActive = !nograss.hideActive;
+		nograss.SetPercentFromSettings(true);
+	}
 }
