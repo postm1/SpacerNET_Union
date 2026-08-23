@@ -2651,6 +2651,9 @@ namespace GOTHIC_ENGINE {
 
 				theApp.selectNextVobForce = true;
 
+
+				pos = zVEC3(0, 100, 0);
+
 				newvob->SetPositionWorld(pos + dir * 50);
 				newvob->SetHeadingWorld(pos);
 
