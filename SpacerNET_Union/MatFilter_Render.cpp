@@ -8,6 +8,8 @@ namespace GOTHIC_ENGINE {
 	// Output texture size (in pixels):
 	const int OUTPUT_SIZEX = 128;
 	const int OUTPUT_SIZEY = 128;
+	const int OUTPUT_PIXELS = OUTPUT_SIZEX * OUTPUT_SIZEY;
+	const int MAX_CACHED_PREVIEWS = 128;
 
 	//DWORD arr_pixels[OUTPUT_SIZEX * OUTPUT_SIZEY];
 
@@ -28,12 +30,9 @@ namespace GOTHIC_ENGINE {
 		// (RGBA = 0, 0, 0, 255)
 		DWORD FillColor = RGBA_2_DWORD(0, 0, 0, 255);
 
-		// number of pixels in the array
-		int numEle = sizeof(arr_pixels) / 4;
-		for (int i = 0; i < numEle; i++)
+		for (int i = 0; i < OUTPUT_PIXELS; i++)
 		{
-			// and fill them with black
-			memcpy(&arr_pixels[i], &FillColor, 4);
+			arr_pixels[i] = FillColor;
 		}
 	}
 
@@ -42,7 +41,7 @@ namespace GOTHIC_ENGINE {
 	void FillAlpha_ArrPixels(DWORD* arr_pixels)
 	{
 		// заполняем массив прозрачными пикселями
-		memset(&arr_pixels, 0, sizeof(arr_pixels));
+		memset(arr_pixels, 0, OUTPUT_PIXELS * sizeof(DWORD));
 	}
 
 
@@ -100,12 +99,12 @@ namespace GOTHIC_ENGINE {
 			theApp.exports.MatFilter_UpdateTextureAlphaInfo();
 
 			//cmd << "MatFilter_UpdateTextureAlphaInfo 2" << endl;
-			
+
 		}
-		
+
 	}
 
-	
+
 
 	void RenderTextureByPixels3(const zSTRING& texName, zSTRING originalName)
 	{
@@ -128,17 +127,19 @@ namespace GOTHIC_ENGINE {
 
 		//cmd << "RenderTextureByPixels3: try texture: " << texName << endl;
 		// Direct3D девайс для Г2А
-		
+
 
 		//cmd << "RenderTextureByPixels3: " << pListCache.GetNumInList() << endl;
 
-		
-		
+
+
 		for (int i = 0; i < pListCache.GetNumInList(); i++)
 		{
 			if (auto entry = pListCache.GetSafe(i))
 			{
-				if (entry->name == texName)
+				// texName may be the generated -C.TEX path, while entry->name
+				// stores the material name used by the interface.
+				if (entry->name == originalName)
 				{
 					if (cleanTextureCache)
 					{
@@ -168,7 +169,7 @@ namespace GOTHIC_ENGINE {
 				}
 			}
 		}
-		
+
 
 		RX_Begin(3);
 		// ставим актуальную директорию - директорию с текстурами (не знаю на сколько это важно!)
@@ -194,7 +195,7 @@ namespace GOTHIC_ENGINE {
 			// выходим
 			return;
 		}
-		
+
 		// берём информацию о текстуре, расположенной в памяти конверт-менеджера
 		zCTextureInfo texInfo = texConv->GetTextureInfo();
 
@@ -208,8 +209,6 @@ namespace GOTHIC_ENGINE {
 		entry->bUseCenterAligment = mf.bUseCenterAligment;
 		entry->bUseAlphaChannels = mf.bUseAlphaChannels;
 		entry->bResizeSmallTextures = mf.bResizeSmallTextures;
-
-		pListCache.InsertEnd(entry);
 
 		// Конвертируем текстуру в нужный формат:
 		// перебираем формат исходной текстуры
@@ -252,7 +251,7 @@ namespace GOTHIC_ENGINE {
 		}
 
 
-	
+
 		entry->x = texInfo.sizeX;
 		entry->y = texInfo.sizeY;
 
@@ -287,6 +286,7 @@ namespace GOTHIC_ENGINE {
 		if (!result)
 		{
 			cmd << "Convert process #1 failed!" << endl;
+			delete entry;
 
 			// удаляем конвертёр
 			delete texConv;
@@ -362,6 +362,7 @@ namespace GOTHIC_ENGINE {
 		if (!result)
 		{
 			cmd << "Convert process #2 failed!" << endl;
+			delete entry;
 
 			// удаляем конвертёр
 			delete texConv;
@@ -381,13 +382,13 @@ namespace GOTHIC_ENGINE {
 		int offsetY = 0;
 
 
-		
 
-		
+
+
 		// если включено центрирование малых текстур
 		if (mf.bUseCenterAligment)
 		{
-			
+
 			// есть смысл центрировать только тогда,
 			// когда хотябы один из размеров текстуры
 			// меньше соотв. размера выходного изображения
@@ -398,7 +399,7 @@ namespace GOTHIC_ENGINE {
 				offsetY = (OUTPUT_SIZEY - texInfo.sizeY) / 2;
 		}
 
-		
+
 		int count = 0;
 
 		//cmd << "Format: " << texInfo.texFormat << endl;
@@ -407,54 +408,63 @@ namespace GOTHIC_ENGINE {
 
 
 		// пробегаемся по вертикальным строкам пикселей
-			for (int y = 0; y < texInfo.sizeY; y++)
+		for (int y = 0; y < texInfo.sizeY; y++)
+		{
+			// пробегаемся по горизонтальным пикселям
+			for (int x = 0; x < texInfo.sizeX; x++)
 			{
-				// пробегаемся по горизонтальным пикселям
-				for (int x = 0; x < texInfo.sizeX; x++)
+				// получаем RGBA цвет точки по координатам текстуры
+				zVEC4 col = texConv->GetRGBAAtTexel(x, y);
+
+				// если нужно исключить альфа-каналы у пикселей
+				if (!mf.bUseAlphaChannels)
+					// исключаем прозрачность
+					col[3] = 255;
+
+
+				//***********************************
+				// Преобразоваие BGRA/RGBA -> DWORD
+				//***********************************
+				// если нужно преобразовать BGRA -> DWORD
+				if (bUseOriginalColor)
 				{
-					// получаем RGBA цвет точки по координатам текстуры
-					zVEC4 col = texConv->GetRGBAAtTexel(x, y);
-
-					// если нужно исключить альфа-каналы у пикселей
-					if (!mf.bUseAlphaChannels)
-						// исключаем прозрачность
-						col[3] = 255;
-
-
-					//***********************************
-					// Преобразоваие BGRA/RGBA -> DWORD
-					//***********************************
-					// если нужно преобразовать BGRA -> DWORD
-					if (bUseOriginalColor)
-					{
-						// преобразуем цвет пикселя в 4-х байтное целое число
-						COL = RGBA_2_DWORD((int)col[2], (int)col[1], (int)col[0], (int)col[3]);
-					}
-					else // иначе, нужно использовать преобразование RGBA -> DWORD
-					{
-						// преобразуем цвет пикселя в 4-х байтное целое число
-						COL = RGBA_2_DWORD((int)col[0], (int)col[1], (int)col[2], (int)col[3]);
-					}
-
-					// записываем цвет пикселя в соотв. ячейку массива пикселей текстуры
-					// (с учётом центровки изображения)
-					//arr_pixels[(y + offsetY) * OUTPUT_SIZEX + (x + offsetX)] = COL;
-
-					entry->pixels[(y + offsetY) * OUTPUT_SIZEX + (x + offsetX)] = COL;
-
-					count += 1;
+					// преобразуем цвет пикселя в 4-х байтное целое число
+					COL = RGBA_2_DWORD((int)col[2], (int)col[1], (int)col[0], (int)col[3]);
 				}
+				else // иначе, нужно использовать преобразование RGBA -> DWORD
+				{
+					// преобразуем цвет пикселя в 4-х байтное целое число
+					COL = RGBA_2_DWORD((int)col[0], (int)col[1], (int)col[2], (int)col[3]);
+				}
+
+				// записываем цвет пикселя в соотв. ячейку массива пикселей текстуры
+				// (с учётом центровки изображения)
+				//arr_pixels[(y + offsetY) * OUTPUT_SIZEX + (x + offsetX)] = COL;
+
+				entry->pixels[(y + offsetY) * OUTPUT_SIZEX + (x + offsetX)] = COL;
+
+				count += 1;
 			}
+		}
 
 		RX_End(3);
 
 		//cmd << texName << " convert: " << RX_PerfString(3) << " originalColor: " << bUseOriginalColor << endl;
 
-		
+		while (pListCache.GetNumInList() >= MAX_CACHED_PREVIEWS)
+		{
+			MatFilterRenderEntry* oldest = pListCache.GetSafe(0);
+			if (oldest)
+				delete oldest;
+			pListCache.RemoveOrderIndex(0);
+		}
+		pListCache.InsertEnd(entry);
+
+
 
 		RenderTexture_Send(entry);
 
-		
+
 
 		delete texConv;
 	}
@@ -464,7 +474,7 @@ namespace GOTHIC_ENGINE {
 
 	void MatFilter::Loop()
 	{
-	
+
 		if (lastName != "")
 		{
 			//RenderTextureByPixels3(Z lastName);
@@ -482,7 +492,7 @@ namespace GOTHIC_ENGINE {
 
 
 
-	
+
 
 
 
@@ -507,7 +517,7 @@ namespace GOTHIC_ENGINE {
 
 
 		// объявляем окончание для скомпилированных текстур
-		
+
 		zSTRING innerFormatName = originalName + cTEX;
 
 		auto result = vdf_fexists(innerFormatName.ToChar(), VDF_DEFAULT);
