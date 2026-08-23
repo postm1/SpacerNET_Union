@@ -1,4 +1,4 @@
-// Supported with union (c) 2020 Union team
+п»ї// Supported with union (c) 2020 Union team
 // Union SOURCE file
 
 #include <iostream>
@@ -307,25 +307,25 @@ namespace GOTHIC_ENGINE {
 
 			zCMaterial* mat = poly->material;
 
-			// Пропускаем если нет материала или текстуры
+			// РџСЂРѕРїСѓСЃРєР°РµРј РµСЃР»Рё РЅРµС‚ РјР°С‚РµСЂРёР°Р»Р° РёР»Рё С‚РµРєСЃС‚СѓСЂС‹
 			if (!mat || !mat->texture) continue;
 
-			// Проверяем не обрабатывали ли уже этот материал
+			// РџСЂРѕРІРµСЂСЏРµРј РЅРµ РѕР±СЂР°Р±Р°С‚С‹РІР°Р»Рё Р»Рё СѓР¶Рµ СЌС‚РѕС‚ РјР°С‚РµСЂРёР°Р»
 			if (checkedMaterials.find(mat) != checkedMaterials.end())
 				continue;
 
 			checkedMaterials.insert(mat);
 
-			// Получаем имя текстуры и формируем имя для проверки
+			// РџРѕР»СѓС‡Р°РµРј РёРјСЏ С‚РµРєСЃС‚СѓСЂС‹ Рё С„РѕСЂРјРёСЂСѓРµРј РёРјСЏ РґР»СЏ РїСЂРѕРІРµСЂРєРё
 			std::string texName = A mat->texture->GetObjectName();
 
-			// Проверяем есть ли текстура вообще в uniqueTextures
+			// РџСЂРѕРІРµСЂСЏРµРј РµСЃС‚СЊ Р»Рё С‚РµРєСЃС‚СѓСЂР° РІРѕРѕР±С‰Рµ РІ uniqueTextures
 			if (uniqueTextures.find(texName) != uniqueTextures.end())
 				continue;
 
 			uniqueTextures.insert(texName);
 
-			// Формируем имя для проверки физического файла
+			// Р¤РѕСЂРјРёСЂСѓРµРј РёРјСЏ РґР»СЏ РїСЂРѕРІРµСЂРєРё С„РёР·РёС‡РµСЃРєРѕРіРѕ С„Р°Р№Р»Р°
 			zSTRING checkName = GetRealFileName(mat->texture->GetObjectName()).ToChar();
 			char* checkNameReal = checkName.ToChar();
 
@@ -339,7 +339,7 @@ namespace GOTHIC_ENGINE {
 				continue;
 			}
 
-			// Проверяем наличие текстуры
+			// РџСЂРѕРІРµСЂСЏРµРј РЅР°Р»РёС‡РёРµ С‚РµРєСЃС‚СѓСЂС‹
 			bool hasVirtual = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_VIRTUAL) & VDF_VIRTUAL) == VDF_VIRTUAL;
 			bool hasPhysical = (vdf_fexists(const_cast<char*>(checkNameReal), VDF_PHYSICAL) & VDF_PHYSICAL) == VDF_PHYSICAL;
 
@@ -503,7 +503,7 @@ namespace GOTHIC_ENGINE {
 					continue;
 				}
 
-				// если нет визуала узла
+				// РµСЃР»Рё РЅРµС‚ РІРёР·СѓР°Р»Р° СѓР·Р»Р°
 				if (!pModel->nodeList[i]->nodeVisual)
 					continue;
 
@@ -523,7 +523,7 @@ h1{font-size:24px;margin:20px 0;color:#2c3e50}\
 p{font-size:18px;margin:15px 0}\
 .page-container{max-width:1920px;margin:0 auto;width:100%}\
 table{width:100%;border-collapse:collapse;background:white;border:2px solid #444;margin:14px 0}\
-th{background:#E1E15D;color:#222;font-weight:bold;padding:6px;border:1px solid #444;text-align:left}\
+th{background:#E1E15D;color:#222;font-weight:bold;padding:6px;border:1px solid #444;text-align:left;cursor:pointer;user-select:none;white-space:nowrap}\
 td{padding:4px;border:1px solid #444}\
 .table_report tr:nth-child(even){background-color:#E4E4E4}\
 .table_report tr:nth-child(odd){background-color:#ffffff}\
@@ -538,7 +538,7 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 .tabs{width:100%;margin-top:10px}.tabs input{display:none}.tabs-labels{display:flex;flex-wrap:wrap;border-bottom:2px solid #444;margin-bottom:10px}.tabs-labels label{padding:10px 15px;cursor:pointer;background:#ddd;border:1px solid #444;border-bottom:none;margin-right:5px;font-weight:700}.tabs-labels label:hover{background:#ccc}.tab{display:none;background:#fff;padding:10px;border:2px solid #444}#tab1:checked~.tabs-labels label[for=tab1],#tab2:checked~.tabs-labels label[for=tab2],#tab3:checked~.tabs-labels label[for=tab3],#tab4:checked~.tabs-labels label[for=tab4],#tab5:checked~.tabs-labels label[for=tab5]{background:#fff;border-bottom:2px solid #fff;text-decoration:underline}#tab1:checked~#content1,#tab2:checked~#content2,#tab3:checked~#content3,#tab4:checked~#content4,#tab5:checked~#content5{display:block}\
 </style></head><body>";
 
-		const CString endFile = "</div></body></html>";
+		const CString endFile = R"(</div><script>document.querySelectorAll('.table_report').forEach(t=>t.querySelectorAll('th').forEach((h,i)=>{h.dataset.o=h.innerHTML;h.innerHTML+=' &#8597;';h.onclick=()=>{let b=t.tBodies[0],d=h.d=!h.d,r=[...b.rows].filter(x=>!x.querySelector('th'));t.querySelectorAll('th').forEach(x=>x.innerHTML=x.dataset.o+' &#8597;');h.innerHTML=h.dataset.o+(d?' &#9650;':' &#9660;');r.sort((a,c)=>{let x=a.cells[i].innerText.trim(),y=c.cells[i].innerText.trim(),nx=Number(x),ny=Number(y),v=x!==''&&y!==''&&!isNaN(nx)&&!isNaN(ny)?nx-ny:x.localeCompare(y,undefined,{numeric:true,sensitivity:'base'});return d?v:-v});r.forEach(x=>b.appendChild(x))}}))</script></body></html>)";
 
 		std::ofstream outfile;
 		outfile.open(path, std::ios_base::trunc);
@@ -557,7 +557,7 @@ td.high-poly{color:#E5044F;font-weight:bold}\
 		}
 		else
 		{
-			result = path; // если слеша нет
+			result = path; // РµСЃР»Рё СЃР»РµС€Р° РЅРµС‚
 		}
 
 		outfile << "<div class=\"page-container\"><div class = \"report-time\">Report generated: " + GetTimeForReport() + " | " + result + "</div>";
