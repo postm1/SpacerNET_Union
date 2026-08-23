@@ -1259,6 +1259,7 @@ namespace GOTHIC_ENGINE {
 			//print.PrintRed(Z theApp.filterPickVobIndex);
 		}
 
+
 		__declspec(dllexport) void Extern_Light_AddPreset()
 		{
 			CString presetName = Stack_PeekString();
@@ -1267,7 +1268,7 @@ namespace GOTHIC_ENGINE {
 
 			preset->presetName = presetName.ToChar();
 			theApp.UpdateLightPresetData(preset->lightData);
-			
+
 			zCVobLight::lightPresetList.Insert(preset);
 		}
 
@@ -1402,6 +1403,24 @@ namespace GOTHIC_ENGINE {
 			return true;
 		}
 
+		// Applies the data currently pushed by the C# Light preset editor.
+		// This intentionally ignores vobLightSelected: preset edits must work
+		// even while a light vob is selected in the world.
+		__declspec(dllexport) int Extern_Light_ApplyPresetChanges()
+		{
+			CString presetName = Stack_PeekString();
+			if (presetName == "")
+				return false;
+
+			int idx = theApp.GetLightPresetIdx(presetName);
+			zCVobLightPreset* preset = zCVobLight::lightPresetList.GetSafe(idx);
+			if (!preset)
+				return false;
+
+			theApp.UpdateLightPresetData(preset->lightData);
+			return true;
+		}
+
 		__declspec(dllexport) void Extern_Light_DynamicCompile(bool toggle)
 		{
 			theApp.dynLightCompile = toggle;
@@ -1412,6 +1431,7 @@ namespace GOTHIC_ENGINE {
 				PlaySoundGame(ToStr "CS_IAI_ME_ME");
 			}
 		}
+
 
 
 		__declspec(dllexport) int Extern_IsGameModActive()
