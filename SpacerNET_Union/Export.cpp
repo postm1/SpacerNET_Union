@@ -172,6 +172,12 @@ namespace GOTHIC_ENGINE {
 		}
 
 
+		__declspec(dllexport) void Extern_ChangeVobParent(uint child, uint parent)
+		{
+
+			HandleParentChange((zCVob*)child, (zCVob*)parent);
+		}
+
 		__declspec(dllexport) int Extern_CanBeGlobalParent(uint vob) {
 
 			void* ptr = (void*)vob;
