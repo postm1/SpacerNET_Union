@@ -1086,4 +1086,182 @@ namespace GOTHIC_ENGINE {
 		};
 	}
 #endif
+
+	// Fix draw lines, zEngine had bad math
+
+	void __cdecl Alg_ClipAtZ0_Hook(zVEC3& p1, zVEC3& p2);
+
+
+#if ENGINE == Engine_G1
+	CInvoke <void(__cdecl*)(zVEC3&, zVEC3&)>
+		Alg_ClipAtZ0_Hooked(
+			0x00508540,
+			Alg_ClipAtZ0_Hook,
+			IVK_AUTO
+		);
+#endif
+
+#if ENGINE == Engine_G2A
+	CInvoke <void(__cdecl*)(zVEC3&, zVEC3&)>
+		Alg_ClipAtZ0_Hooked(
+			0x00518230,
+			Alg_ClipAtZ0_Hook,
+			IVK_AUTO
+		);
+#endif
+
+
+	void __cdecl Alg_ClipAtZ0_Hook(zVEC3& p1, zVEC3& p2)
+	{
+		constexpr float CLIP_Z = 10.0f;
+
+
+		//cmd << " Alg_ClipAtZ0_Hook: " << p1.ToString() + " | " << p2.ToString() << endl;
+
+		if ((p1[VZ] >= 0.0f && p2[VZ] >= 0.0f) ||
+			(p1[VZ] <= 0.0f && p2[VZ] <= 0.0f))
+			return;
+
+		const zVEC3 d = p2 - p1;
+
+		if (fabsf(d[VZ]) < 0.000001f)
+			return;
+
+		const float t = (CLIP_Z - p1[VZ]) / d[VZ];
+
+		zVEC3 p = p1 + d * t;
+		p[VZ] = CLIP_Z;
+
+		if (p1[VZ] < 0.0f)
+			p1 = p;
+		else
+			p2 = p;
+	}
+
+	
+
+	//0x007AC060 public: virtual int __thiscall zCView::ClipLine(int &,int &,int &,int &)
+
+	HOOK ivk_zCView_ClipLine AS(&zCView::ClipLine, &zCView::ClipLine_Union);
+
+	int zCView::ClipLine_Union(int& x0, int& y0, int& x1, int& y1)
+	{
+		/*
+		cmd << " ClipLine_Union: [" << x0 << " | " << y0 << "] | ["
+			<< x1 << " | " << y1 << "]"
+			<< endl;
+		*/
+
+		int code1, code2, outcode;
+		int x, y;
+
+		const int cx1 = 0;
+		const int cy1 = 0;
+
+		const int cx2 = this->psizex - 1;
+		const int cy2 = this->psizey - 1;
+
+		code1 = this->GetCode(x0, y0);
+		code2 = this->GetCode(x1, y1);
+
+		for (;;)
+		{
+			if (code1 == 0 && code2 == 0)
+				return 1;
+
+			if ((code1 & code2) != 0)
+				return 0;
+
+			outcode = code1 ? code1 : code2;
+
+			if (outcode & 8)
+			{
+				const double dy =
+					(double)y1 - (double)y0;
+
+				if (dy == 0.0)
+					return 0;
+
+				const double t =
+					((double)cy2 - (double)y0) / dy;
+
+				x = (int)(
+					(double)x0 +
+					((double)x1 - (double)x0) * t
+					);
+
+				y = cy2;
+			}
+			else if (outcode & 4)
+			{
+				const double dy =
+					(double)y1 - (double)y0;
+
+				if (dy == 0.0)
+					return 0;
+
+				const double t =
+					((double)cy1 - (double)y0) / dy;
+
+				x = (int)(
+					(double)x0 +
+					((double)x1 - (double)x0) * t
+					);
+
+				y = cy1;
+			}
+			else if (outcode & 2)
+			{
+				const double dx =
+					(double)x1 - (double)x0;
+
+				if (dx == 0.0)
+					return 0;
+
+				const double t =
+					((double)cx2 - (double)x0) / dx;
+
+				y = (int)(
+					(double)y0 +
+					((double)y1 - (double)y0) * t
+					);
+
+				x = cx2;
+			}
+			else // left
+			{
+				const double dx =
+					(double)x1 - (double)x0;
+
+				if (dx == 0.0)
+					return 0;
+
+				const double t =
+					((double)cx1 - (double)x0) / dx;
+
+				y = (int)(
+					(double)y0 +
+					((double)y1 - (double)y0) * t
+					);
+
+				x = cx1;
+			}
+
+			if (outcode == code1)
+			{
+				x0 = x;
+				y0 = y;
+				code1 = this->GetCode(x0, y0);
+			}
+			else
+			{
+				x1 = x;
+				y1 = y;
+				code2 = this->GetCode(x1, y1);
+			}
+		}
+
+
+		return THISCALL(ivk_zCView_ClipLine)(x0, y0, x1, y1);
+	}
 }
