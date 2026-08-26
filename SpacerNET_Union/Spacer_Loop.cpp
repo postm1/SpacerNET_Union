@@ -627,13 +627,23 @@ namespace GOTHIC_ENGINE {
 
 				if (timerAutoSave == timeAutoSaveWhen - 3 && CanDoAutoSaveWorld())
 				{
-					print.PrintGreen(GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"), 7);
-					PrintInfoWinMessage("[>>] " + GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"));
+					if (changesAfterAutoSaveWereMade)
+					{
+						print.PrintGreen(GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"), 7);
+						PrintInfoWinMessage("[>>] " + GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD"));
+					}
+					else
+					{
+						PrintInfoWinMessage("[>>] " + GetLang("WIN_INFO_SHOW_ACTION_AUTOSAVE_WORLD_REJECT"));
+						timerAutoSave = 0;
+					}
+					
 				}
 
 				if (timerAutoSave >= timeAutoSaveWhen)
 				{
 					timerAutoSave = 0;
+
 					theApp.DoAutoSave();
 				}
 			}

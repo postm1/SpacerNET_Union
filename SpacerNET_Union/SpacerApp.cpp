@@ -101,6 +101,7 @@ namespace GOTHIC_ENGINE {
 		this->timeNotSaved = 0;
 		this->timerAutoSave = 0;
 		this->changesWereMade = false;
+		this->changesAfterAutoSaveWereMade = false;
 
 		updateMatrix.ResetMatrixUpdate();
 		
@@ -2713,6 +2714,8 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::SetChangesWereMade(bool value)
 	{
+		changesAfterAutoSaveWereMade = value;
+
 		if (changesWereMade == value)
 		{
 			return;

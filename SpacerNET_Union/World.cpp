@@ -1173,6 +1173,8 @@ namespace GOTHIC_ENGINE {
 			return;
 		}
 
+		changesAfterAutoSaveWereMade = false;
+
 		// Next slot (0-indexed, wrap 0..9)
 		int slot    = options.GetIntVal("autoSaveSlot");
 		int newSlot = (slot + 1) % 10;

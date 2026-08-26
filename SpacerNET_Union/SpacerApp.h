@@ -226,6 +226,7 @@ namespace GOTHIC_ENGINE {
 				bool g_bInsertNPCs;
 				int timeNotSaved;
 				bool changesWereMade;
+				bool changesAfterAutoSaveWereMade;
 			};
 
 
