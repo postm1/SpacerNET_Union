@@ -1926,6 +1926,14 @@ namespace GOTHIC_ENGINE {
 
 			theApp.vobListVisualStr = visualName.Upper();
 		}
+
+
+		__declspec(dllexport) int Extern_CheckBadVisuals()
+		{
+			return (int)theApp.foundBadVisualNoExist;
+		}
+
+		
 	}
 
 }
