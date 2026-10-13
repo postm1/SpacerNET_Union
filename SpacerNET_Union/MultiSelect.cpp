@@ -6,6 +6,8 @@ namespace GOTHIC_ENGINE {
 
 	MultiSelect::MultiSelect() {
 		BoundsView = Null;
+		Locked = False;
+		TraceRayEnabled = False;
 	}
 
 
@@ -31,6 +33,12 @@ namespace GOTHIC_ENGINE {
 
 
 
+	void MultiSelect::CancelPick() {
+		if (Locked && BoundsView)
+			screen->RemoveItem(BoundsView);
+		Locked = False;
+	}
+
 	void MultiSelect::DoPick() {
 
 		if (keys.KeyPressed("VOB_DISABLE_SELECT", true))
@@ -47,9 +55,16 @@ namespace GOTHIC_ENGINE {
 
 		}
 
+		if (!theApp.GameFocused()) {
+			CancelPick();
+			DrawDx11();
+			return;
+		}
+
 		if (!Locked && zMouseKeyPressed(Left)) {
 			PickBegin = theApp.GetMousePosVirt();
 			Locked = True;
+			DrawBounds();
 			screen->InsertItem(BoundsView);
 
 		}
@@ -223,6 +238,8 @@ namespace GOTHIC_ENGINE {
 
 	void MultiSelect::ClearSelection() 
 	{
+		CancelPick();
+
 		for (uint i = 0; i < theApp.SelectedVobs.GetNum(); i++)
 			theApp.SelectedVobs[i]->SetDrawBBox3D(False);
 
@@ -236,6 +253,66 @@ namespace GOTHIC_ENGINE {
 		{
 			
 		}
+	}
+
+	int MultiSelect::ReparentSelected(zCVob* newParent)
+	{
+		if (theApp.GetPickMode() != SWM_MULTISELECT || theApp.SelectedVobs.GetNum() == 0
+			|| !ogame || !ogame->GetWorld())
+			return 0;
+
+		CancelPick();
+		zCWorld* world = ogame->GetWorld();
+		zCArray<zCVob*> worldVobs;
+		world->SearchVobListByBaseClass(zCVob::classDef, worldVobs, 0);
+
+		// Check membership before dereferencing pointers received from the interface.
+		if (!newParent || !worldVobs.IsInList(newParent) || newParent == ogame->GetCameraVob()
+			|| newParent->dontWriteIntoArchive || !newParent->globalVobTreeNode)
+		{
+			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
+			return 0;
+		}
+
+		zCArray<zCVob*> vobsToReparent;
+		for (uint i = 0; i < theApp.SelectedVobs.GetNum(); i++)
+		{
+			zCVob* vob = theApp.SelectedVobs[i];
+			if (!vob || !worldVobs.IsInList(vob))
+			{
+				print.PrintRed(GetLang("MULTISELECT_INVALID_SELECTION"));
+				return 0;
+			}
+
+			if (vob == newParent || vob->GetParentVob() == newParent)
+				continue;
+
+			if (vob == ogame->GetCameraVob() || vob->dontWriteIntoArchive || !vob->globalVobTreeNode)
+			{
+				print.PrintRed(GetLang("CANT_APPLY_PARENT"));
+				return 0;
+			}
+
+			// Validate the whole batch before changing the hierarchy.
+			if (!CanChangeVobParent(vob, newParent))
+				return 0;
+			vobsToReparent.InsertEnd(vob);
+		}
+
+		if (vobsToReparent.GetNumInList() == 0)
+			return 0;
+
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, FALSE);
+		for (int i = 0; i < vobsToReparent.GetNumInList(); i++)
+			HandleParentChange(vobsToReparent[i], newParent, false);
+		theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
+
+		// The single-object helper hides boxes while changing parent.
+		for (uint i = 0; i < theApp.SelectedVobs.GetNum(); i++)
+			theApp.SelectedVobs[i]->SetDrawBBox3D(True);
+
+		print.PrintRed(GetLang("PARENT_CHANGE_OK"));
+		return vobsToReparent.GetNumInList();
 	}
 
 	void MultiSelect::DrawDx11()

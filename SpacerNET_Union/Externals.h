@@ -70,7 +70,8 @@ namespace GOTHIC_ENGINE {
 		extern void SetSelectedTool(SpacerToolMode tool); \
 		extern bool IsVirtualFile(CString fileName); \
 		extern void HandleInsertVobCopy(zCVob* pickedVob); \
-		extern void HandleParentChange(zCVob* vob, zCVob* newParent); \
+		extern bool CanChangeVobParent(zCVob* vob, zCVob* newParent); \
+		extern void HandleParentChange(zCVob* vob, zCVob* newParent, bool selectVob = true); \
 		extern void CALL_OnCreateVob(zCVob* pVob); \
 		extern void CALL_OnDeleteVob(zCVob* pVob); \
 		extern void CALL_OnApplyDataToVob(zCVob* pVob); \

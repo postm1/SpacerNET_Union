@@ -380,6 +380,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::Reset()
 	{
+		Selector.ClearSelection();
 		sidesInit = false;
 
 		if (g_bIsPlayingGame)
