@@ -14,6 +14,7 @@ namespace GOTHIC_ENGINE {
 
 		MultiSelect();
 		void DrawBounds();
+		void CancelPick();
 		void DoPick();
 		void PickSingle(zCVob* vob);
 		void PickBounds();
@@ -22,6 +23,7 @@ namespace GOTHIC_ENGINE {
 		void ClearSelection();
 		void RemoveSelected();
 		void SaveSelected();
+		int ReparentSelected(zCVob* newParent);
 		void DrawDx11();
 		void ManageKeys();
 	};

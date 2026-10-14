@@ -178,6 +178,18 @@ namespace GOTHIC_ENGINE {
 			HandleParentChange((zCVob*)child, (zCVob*)parent);
 		}
 
+		__declspec(dllexport) int Extern_GetMultiSelectionCount()
+		{
+			if (!ogame || !ogame->GetWorld() || theApp.GetPickMode() != SWM_MULTISELECT)
+				return 0;
+			return theApp.SelectedVobs.GetNum();
+		}
+
+		__declspec(dllexport) int Extern_ReparentSelectedVobs(uint parent)
+		{
+			return Selector.ReparentSelected((zCVob*)parent);
+		}
+
 		__declspec(dllexport) int Extern_CanBeGlobalParent(uint vob) {
 
 			void* ptr = (void*)vob;

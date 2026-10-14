@@ -902,24 +902,18 @@ namespace GOTHIC_ENGINE {
 	}
 
 
-	//vob - The vob whose parent we are changing; newParent - new parent
-	void HandleParentChange(zCVob* vob, zCVob* newParent)
+	bool CanChangeVobParent(zCVob* vob, zCVob* newParent)
 	{
-		zCWorld* pWorld = ogame->GetWorld();
-
-		//cmd << "HandleParentChange #1: " << (int)vob << " | " << (int)newParent << endl;
-		
-		// DOUBLE INSERT CRASH FIX
 		if (vob == NULL)
 		{
 			print.PrintRed(GetLang("CANT_INSERT_EMPTY_VOB"));
-			return;
+			return false;
 		}
 
 		if (vob == newParent)
 		{
 			print.PrintRed(GetLang("CANT_CHANGE_PARENT_INTO_ITSELF"));
-			return;
+			return false;
 		}
 
 		//print.PrintRed(Z(int)newParent);
@@ -927,7 +921,7 @@ namespace GOTHIC_ENGINE {
 		if (newParent && vob->HasChildrenRec(newParent))
 		{
 			print.PrintRed(GetLang("CANT_CHANGE_PARENT_INTO_ITSELF"));
-			return;
+			return false;
 		}
 
 
@@ -935,7 +929,7 @@ namespace GOTHIC_ENGINE {
 		{
 			print.PrintRed(GetLang("CANT_APPLY_PARENT_VOB"));
 
-			return;
+			return false;
 
 		};
 
@@ -950,14 +944,25 @@ namespace GOTHIC_ENGINE {
 
 			print.PrintRed(GetLang("CANT_APPLY_PARENT"));
 
-			return;
+			return false;
 		}
 
 		if (dynamic_cast<oCItem*>(newParent))
 		{
 			print.PrintRed(GetLang("PARENT_ERROR_OCITEM"));
-			return;
+			return false;
 		}
+
+		return true;
+	}
+
+	//vob - The vob whose parent we are changing; newParent - new parent
+	void HandleParentChange(zCVob* vob, zCVob* newParent, bool selectVob)
+	{
+		if (!ogame || !ogame->GetWorld() || !CanChangeVobParent(vob, newParent))
+			return;
+
+		zCWorld* pWorld = ogame->GetWorld();
 
 		//cmd << "HandleParentChange: " << " vob: " << (int)vob << " newParent: " << (int)newParent << endl;
 
@@ -991,6 +996,7 @@ namespace GOTHIC_ENGINE {
 				}
 				else
 				{
+					theApp.exports.toggleUIElement(UI_ALL_VOBS_TREE_LIST, TRUE);
 					return;
 				}
 
@@ -1003,13 +1009,14 @@ namespace GOTHIC_ENGINE {
 			GetChildrenUpdateParent(vob->globalVobTreeNode);
 
 
-			theApp.SetSelectedVob(vob, "Control+V");
-			auto onSelect = (onSelectNode)GetProcAddress(theApp.module, "SelectNode");
-			onSelect((uint32)theApp.pickedVob);
-
-			theApp.vobToCopy = NULL;
-
-			print.PrintRed(GetLang("PARENT_CHANGE_OK"));
+			if (selectVob)
+			{
+				theApp.SetSelectedVob(vob, "Control+V");
+				auto onSelect = (onSelectNode)GetProcAddress(theApp.module, "SelectNode");
+				onSelect((uint32)theApp.pickedVob);
+				theApp.vobToCopy = NULL;
+				print.PrintRed(GetLang("PARENT_CHANGE_OK"));
+			}
 
 
 			
