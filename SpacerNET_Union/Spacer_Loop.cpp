@@ -201,7 +201,114 @@ namespace GOTHIC_ENGINE {
 		}
 	}
 
+	void SpacerApp::RenderTextScreen(zCView* pView, zVEC3 pos, zSTRING text, zCOLOR color)
+	{
+		auto pCamera = ogame->GetCamera();
+		if (!pCamera) return;
 
+		float fPixelPosX = FLT_MAX, fPixelPosY = FLT_MAX;
+		if (pos[0] != FLT_MAX) {
+			pCamera->Activate();
+			zVEC3 vec = pCamera->camMatrix * pos;
+			if (vec[2] > 0)
+				pCamera->Project(&vec, fPixelPosX, fPixelPosY);
+		}
+
+		if (fPixelPosX != FLT_MAX) {
+			fPixelPosX -= screen->nax(screen->FontSize(text) / 2);
+			int x = screen->anx(fPixelPosX);
+			int y = screen->any(fPixelPosY);
+
+			zClamp(y, screen->FontY(), 8191 - screen->FontY());
+			zClamp(x, 0, 8191 - screen->FontSize(text));
+
+			auto safeColor = pView->fontColor;
+
+			pView->SetFontColor(color);
+			pView->Print(x, y, text);
+			pView->SetFontColor(safeColor);
+		}
+	}
+
+	void SpacerApp::RenderAxis()
+	{
+		if (!ogame->GetCamera() || !ogame->GetCamera()->GetVob())
+			return;
+
+		static zCView* pViewBack = NULL;
+		static bool isActive = false;
+
+		if (!theApp.options.GetIntVal("showAxisSystem"))
+		{
+			if (isActive)
+			{
+				isActive = false;
+				screen->RemoveItem(pViewBack);
+			}
+			
+			return;
+		}
+
+		if (!isActive)
+		{
+			if (!pViewBack)
+			{
+				pViewBack = new zCView(0, 0, SCREEN_MAX, SCREEN_MAX);
+				pViewBack->SetFont("FONT_OLD_10_WHITE.TGA");
+				pViewBack->SetFontColor(zCOLOR(255, 255, 255, 255));
+
+				pViewBack->SetSizeSquare(1800);
+				pViewBack->InsertBack("BLACK.TGA");
+				pViewBack->alphafunc = zRND_ALPHA_FUNC_BLEND;
+				pViewBack->alpha = 120;
+
+				pViewBack->SetCenterXY();
+				pViewBack->SetY(20);
+			}
+			
+			screen->InsertItem(pViewBack);
+
+			isActive = true;
+		}
+
+		auto vob = ogame->GetCamera()->GetVob();
+
+
+		zVEC3 camPos = vob->GetPositionWorld();
+		zVEC3 camAt = vob->GetAtVectorWorld();
+		zVEC3 camUp = vob->GetUpVectorWorld();
+		zVEC3 camRight = vob->GetRightVectorWorld();
+
+		// Отступаем от камеры вперед на 250 юнитов (чтобы не резалось ближней плоскостью)
+		// И поднимаем вверх по ЛОКАЛЬНОЙ оси Y камеры на 50 юнитов (чтобы виджет был чуть выше центра)
+		zVEC3 pos = camPos + camAt * 250.0f + camUp * 120.0f;
+
+
+		//pos += vob->GetAtVectorWorld() * 250;
+		//pos += zVEC3(0, 100, 0);
+
+		auto dt = ztimer->frameTimeFloat / 2;
+		float sizeAxis = 30;
+
+		/*
+		debug.AddLine(pos, pos + zVEC3(sizeAxis, 0, 0), GFX_RED, 1, false, "x", "x");
+		debug.AddLine(pos, pos + zVEC3(0, sizeAxis, 0), GFX_GREEN, 1, false, "y", "y");
+		debug.AddLine(pos, pos + zVEC3(0, 0, sizeAxis), GFX_YELLOW, 1, false, "z", "z");
+		*/
+
+		pViewBack->ClrPrintwin();
+
+		zlineCache->Line3D(pos, pos + zVEC3(sizeAxis, 0, 0), GFX_RED, 0);
+		zlineCache->Line3D(pos, pos + zVEC3(0, sizeAxis, 0), GFX_GREEN, 0);
+		zlineCache->Line3D(pos, pos + zVEC3(0, 0, sizeAxis), GFX_YELLOW, 0);
+
+
+		RenderTextScreen(pViewBack, pos + zVEC3(sizeAxis, 0, 0), "x", GFX_RED);
+		RenderTextScreen(pViewBack, pos + zVEC3(0, sizeAxis, 0), "y", GFX_GREEN);
+		RenderTextScreen(pViewBack, pos + zVEC3(0, 0, sizeAxis), "z", GFX_YELLOW);
+		
+
+	}
 
 	void SpacerApp::RenderPortals()
 	{
@@ -810,6 +917,10 @@ namespace GOTHIC_ENGINE {
 					RenderPortals();
 				}
 
+
+				RenderAxis();
+
+				
 
 				if (GetSelectedTool() == TM_BBOXEDIT)
 				{

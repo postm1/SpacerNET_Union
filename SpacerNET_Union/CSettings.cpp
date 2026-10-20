@@ -241,7 +241,9 @@ namespace GOTHIC_ENGINE {
 		set = new CSetting(TYPE_INT, "CAMERA", "showPortalsInfo", "1");
 		list.Insert("showPortalsInfo", set);
 
-
+		set = new CSetting(TYPE_INT, "CAMERA", "showAxisSystem", "1");
+		list.Insert("showAxisSystem", set);
+		
 
 		set = new CSetting(TYPE_INT, "CAMERA", "hideCamWindows", "1");
 		list.Insert("hideCamWindows", set);

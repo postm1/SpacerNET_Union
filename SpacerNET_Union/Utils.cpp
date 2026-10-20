@@ -417,7 +417,7 @@ namespace GOTHIC_ENGINE {
 
 		if (fileList)
 		{
-			for (long i = 0; i < numInList; i++)
+			for (uint i = 0; i < numInList; i++)
 			{
 				delete[] fileList[i];
 			}

@@ -305,6 +305,8 @@ namespace GOTHIC_ENGINE {
 		void PluginLoop();
 		void KeysLoop();
 		void RenderPortals();
+		void RenderAxis();
+		void RenderTextScreen(zCView* pView, zVEC3 pos, zSTRING text, zCOLOR color);
 		void RemoveMobInterHelpVobs();
 		void HideMobInterHelpVobs();
 		void CheckForBadPlugins();
