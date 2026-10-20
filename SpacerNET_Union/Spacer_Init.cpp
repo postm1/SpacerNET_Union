@@ -134,6 +134,7 @@ namespace GOTHIC_ENGINE {
 
 		//
 		options.SetIntVal("itemLocatorOnlyByName", 0);
+		options.SetIntVal("showAxisSystem", 0);
 
 		visualEditorActive = false;
 
