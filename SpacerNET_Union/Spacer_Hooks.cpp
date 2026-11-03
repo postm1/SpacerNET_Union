@@ -450,10 +450,12 @@ namespace GOTHIC_ENGINE {
 
 		zCVobLight::LoadLightPresets();
 
+		auto addPresetList = GetProcAddress(theApp.module, "AddLightPresetToList");
+
 		for (int i = 0; i < zCVobLight::lightPresetList.GetNumInList(); ++i)
 		{
 			Stack_PushString(zCVobLight::lightPresetList[i]->presetName);
-			GetProcAddress(theApp.module, "AddLightPresetToList")();
+			addPresetList();
 		}
 	}
 

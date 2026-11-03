@@ -1377,6 +1377,13 @@ namespace GOTHIC_ENGINE {
 			int idx = theApp.GetLightPresetIdx(presetName);
 
 			zCVobLightPreset* preset = zCVobLight::lightPresetList.GetSafe(idx);
+
+			if (!preset)
+			{
+				print.PrintRed("No light preset found with name: " + presetName);
+				return;
+			}
+
 			theApp.UpdateLightPresetView(preset->lightData);
 		}
 
@@ -1434,6 +1441,8 @@ namespace GOTHIC_ENGINE {
 			zCVobLightPreset* preset = zCVobLight::lightPresetList.GetSafe(idx);
 			if (!preset)
 				return false;
+
+			cmd << "Preset update: " << presetName << endl;
 
 			theApp.UpdateLightPresetData(preset->lightData);
 			return true;
