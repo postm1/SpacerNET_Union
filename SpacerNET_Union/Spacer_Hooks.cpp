@@ -908,81 +908,50 @@ namespace GOTHIC_ENGINE {
 	{
 		if (!name.Length() || s_ignoreVisuals)
 			return;
-		zSTRING sName = name;
-		sName.Upper();
 
+		// Working with copy of the name
+		zSTRING sName = name;
 
 		if (theApp.options.GetIntVal("bFixBadNamesOnLoad") && sName.Length() > 0)
 		{
+			// Spaces trim
 			if (sName.EndWith(' ') || sName.StartWith(' '))
 			{
 				cmd << "Remove symbol 'space' in name: '" << sName << "'" << endl;
 
 				CString text = GetLang("MSG_LOAD_AUTOFIX_SPACE_IN_NAME");
-
 				text += "'" + A sName.ToChar() + "'";
-
 				PrintInfoWinMessage(text, "#0000FF");
 
 				sName.TrimLeft(' ');
 				sName.TrimRight(' ');
 			}
 
-			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT && sName.Contains(".3DS"))
+			// 3DS in the middle
+			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT)
 			{
-				if (!sName.EndWith(".3DS"))
+				zSTRING sUpper = sName;
+				sUpper.Upper();
+
+				if (sUpper.Contains(".3DS") && !sUpper.EndWith(".3DS"))
 				{
-
-					int pos = sName.Search(".3DS", 1);
-
-					//cmd << "Fix .3DS in : '" << s << "'";
-
-					CString originalName = sName;
-
+					int pos = sUpper.Search(".3DS", 1);
 					if (pos != -1)
 					{
+						CString originalName = sName;
 						sName.Delete(pos + 4, sName.Length() - (pos + 4));
+
+						CString text = GetLang("MSG_LOAD_AUTOFIX_3DS_END");
+						text += "'" + originalName + "' => '" + sName.ToChar() + "'";
+						PrintInfoWinMessage(text, "#0000FF");
+						cmd << text << endl;
 					}
-
-					//cmd << " => Result: '" << s << "'" << endl;
-
-					CString text = GetLang("MSG_LOAD_AUTOFIX_3DS_END");
-
-					text += "'" + originalName + "' => '" + sName.ToChar() + "'";
-
-					PrintInfoWinMessage(text, "#0000FF");
-
-					cmd << text << endl;
 				}
 			}
 		}
 
-		if (visual && !visual->GetVisualName().Compare(sName))
-			return;
 
-		zCVisual* pVisual = zCVisual::LoadVisual(sName);
-		if (!pVisual)
-		{
-			zerr->Fault("D: (zCVob::SetVisual): could not load visual '" + name +
-				"' for vobName '" + GetObjectName() + "' of class '" + _GetClassDef()->className + "'");
-
-			if (this->GetVobType() != zVOB_TYPE_LEVEL_COMPONENT)
-			{
-				zSTRING message = GetLang("MSG_LOAD_NO_VISUAL_FOUND") + ": '";
-
-				PrintInfoWinMessage(message
-					+ name
-					+ "' | vobName '"
-					+ GetVobName()
-					+ "' | class '"
-					+ GetClassDef()->className
-					+ "'");
-			}
-			return;
-		}
-		if (pVisual != visual)
-			SetVisual(pVisual);
-		pVisual->Release();
+		THISCALL(ivk_zCVob_SetVisual)(sName);
 	}
 #elif ENGINE == Engine_G2A
 
