@@ -100,6 +100,7 @@ namespace GOTHIC_ENGINE {
 		{
 			do
 			{
+				const DWORD frameStart = GetTickCount();
 				sysEvent();
 
 				POINT   mPos;
@@ -154,6 +155,15 @@ namespace GOTHIC_ENGINE {
 				{
 
 					theApp.RenderStartScreen();
+				}
+
+				const int maxFps = theApp.options.GetIntVal("maxFPS");
+				if (maxFps > 0)
+				{
+					const DWORD frameBudget = (DWORD)(1000.0 / maxFps + 0.999999);
+					const DWORD elapsed = GetTickCount() - frameStart;
+					if (elapsed < frameBudget)
+						Sleep(frameBudget - elapsed);
 				}
 			} while (!exitGame);
 		}
