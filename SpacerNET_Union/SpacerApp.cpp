@@ -380,7 +380,7 @@ namespace GOTHIC_ENGINE {
 
 	void SpacerApp::Reset()
 	{
-		Selector.ClearSelection();
+		Selector.Reset();
 		sidesInit = false;
 
 		if (g_bIsPlayingGame)
@@ -541,6 +541,18 @@ namespace GOTHIC_ENGINE {
 		{
 			
 
+            if (GetPickMode() == SWM_MULTISELECT) {
+                if (GetSelectedVob()) SetSelectedVob(NULL);
+                ControllerEvents.SelectedVobs.Clear();
+                ControllerEvents.PickedVob = NULL;
+                ControllerEvents.PickMode = zPM_DISABLED;
+                ControllerEvents.MotionMode = zMM_NONE;
+                ControllerEvents.CameraMoving = zCM_DISABLED;
+                if (GameFocused() && !Selector.InputBlocked()) CameraMoving();
+                Selector.ManageKeys();
+                return;
+            }
+            Selector.InvalidateUndo(); // Other editing modes must not undo stale group snapshots.
 			if (GameFocused())
 			{
 				if (isGrattControlActive)
@@ -918,6 +930,12 @@ namespace GOTHIC_ENGINE {
 
 	}
 
+    bool MultiSelect::InputBlocked() {
+        // Main-window focus also includes edit controls, so ask the actual interface.
+        auto blocked = (int(__cdecl*)())GetProcAddress(theApp.module, "IsMultiSelectionInputBlocked");
+        return !blocked || blocked() != 0;
+    }
+
 	void SpacerApp::UpdateGrattController()
 	{
 		theApp.TryPickMouse();
@@ -929,6 +947,7 @@ namespace GOTHIC_ENGINE {
 
 		ControllerEvents.CursorPosition = zVEC2(ax, ay);
 		ControllerEvents.PickedVob = pickedVob;
+        ControllerEvents.PickMode = GetPickMode() == SWM_VOBS ? zPM_VOBS : zPM_POLYS;
 
 
 	}

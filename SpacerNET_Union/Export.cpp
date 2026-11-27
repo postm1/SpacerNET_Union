@@ -182,8 +182,48 @@ namespace GOTHIC_ENGINE {
 		{
 			if (!ogame || !ogame->GetWorld() || theApp.GetPickMode() != SWM_MULTISELECT)
 				return 0;
-			return theApp.SelectedVobs.GetNum();
+			return Selector.GetCount();
 		}
+
+
+        // Group-selection ABI: docs/GROUP_SELECTION_API.md defines IDs, ownership and results.
+        __declspec(dllexport) void Extern_SetMultiSelectionFilter(int filter) {
+            Selector.SetFilter(filter);
+        }
+        __declspec(dllexport) int Extern_ChangeMultiSelection(uint vob, int action) {
+            return Selector.ChangeSelection((zCVob*)vob, action);
+        }
+        __declspec(dllexport) int Extern_GetMultiSelectionVobs(uint* vobs, int capacity) {
+            // Query with (nullptr, 0); fill at most capacity addresses but return total size.
+            if (!ogame || !ogame->GetWorld() || theApp.GetPickMode() != SWM_MULTISELECT) return 0;
+            int count = Selector.GetCount();
+            if (vobs && capacity > 0)
+                for (int i = 0; i < count && i < capacity; ++i)
+                    vobs[i] = (uint)theApp.SelectedVobs[i];
+            return count;
+        }
+        __declspec(dllexport) void Extern_SetMultiSelectionThroughWalls(int enabled) {
+            Selector.CancelPick();
+            theApp.options.SetIntVal("multiSelectionThroughWalls", enabled != 0);
+        }
+        __declspec(dllexport) int Extern_MoveSelectedVobs(float x, float y, float z) {
+            return Selector.Translate(x, y, z);
+        }
+        __declspec(dllexport) void Extern_SetMultiSelectionTransformMode(int mode) {
+            Selector.SetTransformMode(mode);
+        }
+        __declspec(dllexport) int Extern_RotateSelectedVobs(float x, float y, float z) {
+            return Selector.Rotate(x, y, z);
+        }
+        __declspec(dllexport) int Extern_UndoSelectionMove() {
+            return Selector.UndoTranslation();
+        }
+        __declspec(dllexport) int Extern_CanUndoSelectionMove() {
+            return Selector.CanUndoTranslation() ? 1 : 0;
+        }
+        __declspec(dllexport) void Extern_ClearMultiSelection() {
+            Selector.ClearSelection();
+        }
 
 		__declspec(dllexport) int Extern_ReparentSelectedVobs(uint parent)
 		{

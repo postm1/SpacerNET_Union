@@ -80,6 +80,8 @@
     <RootNamespace>SpacerNET_Union</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <ProjectName>SpacerNET_Union</ProjectName>
+    <UnionSdkRoot Condition="'$(UnionSdkRoot)' == ''">$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l</UnionSdkRoot>
+    <DirectX7SdkRoot Condition="'$(DirectX7SdkRoot)' == ''">$(ALLUSERSPROFILE)\Union\SDK\DirectX7</DirectX7SdkRoot>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MP Debug|Win32'" Label="Configuration">
@@ -263,127 +265,127 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MP Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MP x2 Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G2A Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G2 Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G1A Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G1 Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MP Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MP x4 MT Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MP x2 MD Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='MP x2 MT Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G2A Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G2A MT Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G2 Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G2 MT Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G1A Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G1A MT Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G1 Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='G1 MT Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <OutDir>$(SolutionDir)Bin\</OutDir>
-    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Include\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\include\;$(IncludePath)</IncludePath>
-    <LibraryPath>$(ProjectDir)vdfs\;$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Lib\;$(ALLUSERSPROFILE)\Union\SDK\DirectX7\Lib\;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(ProjectDir)\;$(ProjectDir)\vdfs\;$(ProjectDir)\ZenGin\Gothic_UserAPI\;$(UnionSdkRoot)\Include\;$(DirectX7SdkRoot)\include\;$(IncludePath)</IncludePath>
+    <LibraryPath>$(ProjectDir)vdfs\;$(UnionSdkRoot)\Lib\;$(DirectX7SdkRoot)\Lib\;$(LibraryPath)</LibraryPath>
     <TargetName>SpacerUnionNet</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='MP Debug|Win32'">
@@ -403,7 +405,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -427,7 +429,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -450,7 +452,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -473,7 +475,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -496,7 +498,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -519,7 +521,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -547,7 +549,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -575,7 +577,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -603,7 +605,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -631,7 +633,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -660,7 +662,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -688,7 +690,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -715,7 +717,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -743,7 +745,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -770,7 +772,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -798,7 +800,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -825,7 +827,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -853,7 +855,7 @@
       <ProgramDatabaseFile>$(SolutionDir)PDB\$(TargetName).pdb</ProgramDatabaseFile>
     </Link>
     <PreBuildEvent>
-      <Command>$(ALLUSERSPROFILE)\Union\SDK\Union\v1.0l\Build\beforebuild.exe $(SolutionDir)</Command>
+      <Command>"$(UnionSdkRoot)\Build\beforebuild.exe" "$(SolutionDir)."</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
@@ -1050,6 +1052,7 @@
       <SubType>
       </SubType>
     </ClInclude>
+    <ClInclude Include="MultiSelectionRules.hpp" />
     <ClInclude Include="MultiSelect.h">
       <SubType>
       </SubType>

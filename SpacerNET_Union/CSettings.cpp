@@ -404,6 +404,12 @@ namespace GOTHIC_ENGINE {
 
 		set = new CSetting(TYPE_INT, "SPACER", "bToggleWorkMode", "0");
 		list.Insert("bToggleWorkMode", set);
+        set = new CSetting(TYPE_INT, "SPACER", "multiSelectionFilter", "0");
+        list.Insert("multiSelectionFilter", set);
+        set = new CSetting(TYPE_INT, "SPACER", "multiSelectionTransformMode", "0");
+        list.Insert("multiSelectionTransformMode", set);
+        set = new CSetting(TYPE_INT, "SPACER", "multiSelectionThroughWalls", "0");
+        list.Insert("multiSelectionThroughWalls", set);
 
 		set = new CSetting(TYPE_INT, "SPACER", "bToggleNewController", "0");
 		list.Insert("bToggleNewController", set);
