@@ -657,6 +657,7 @@ namespace GOTHIC_ENGINE {
 	//rx_remove rx_onremove
 	void SpacerApp::OnRemoveVob(zCVob* vob)
 	{
+        Selector.ForgetVob(vob);
 
 		
 

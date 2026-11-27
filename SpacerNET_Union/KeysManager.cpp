@@ -150,6 +150,8 @@ namespace GOTHIC_ENGINE {
 		defaultValues.Insert("VOB_FLOOR_IGNORE_BBOX", "2_33");
 		defaultValues.Insert("VOB_ALIGN_TO_GROUND", "4_33");
 		defaultValues.Insert("VOB_RESET_AXIS", "8_19");
+        defaultValues.Insert("MULTI_UNDO", "2_44");
+        defaultValues.Insert("MULTI_PARENT_CUT", "2_45");
 		defaultValues.Insert("VOB_TRANS_FORWARD", "0_17");
 		defaultValues.Insert("VOB_TRANS_BACKWARD", "0_31");
 		defaultValues.Insert("VOB_TRANS_LEFT", "0_30");

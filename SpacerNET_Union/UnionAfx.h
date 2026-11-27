@@ -18,6 +18,9 @@ extern "C" {
 }
 
 #include <unordered_set>
+#include <vector>
+#include <algorithm>
+#include "MultiSelectionRules.hpp"
 #include <regex>
 
 #pragma comment (lib, "Psapi.lib")

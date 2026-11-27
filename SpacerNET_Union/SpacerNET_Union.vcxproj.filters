@@ -2945,6 +2945,9 @@
     <ClInclude Include="MatManager.cpp">
       <Filter>Plugin\Workspace\Plugin\Main\Materials\MatManager</Filter>
     </ClInclude>
+    <ClInclude Include="MultiSelectionRules.hpp">
+      <Filter>Plugin\Workspace\Plugin\Main\Movement\Multiselection</Filter>
+    </ClInclude>
     <ClInclude Include="MultiSelect.h">
       <Filter>Plugin\Workspace\Plugin\Main\Movement\Multiselection</Filter>
     </ClInclude>
